@@ -154,9 +154,6 @@ const F = {
  fdt_users:["当日首充总额 · 人数","同首充人数。",""],
  fdt_amount:["当日首充总额 · 金额","首充用户在这段时间内的全部充值，包括首笔和之后的追加。","首充用户本时段充值合计"],
  fdt_avg:["当日首充总额 · 人均","新用户首日平均充多少。","当日首充总额 ÷ 人数"],
- d3_users:["三充 · 人数","第 3 笔充值发生在这段时间的人数，用来看新用户能不能留到第三次充值。",""],
- d3_amount:["三充 · 金额","上面这些人第 3 笔充值的金额合计。",""],
- d3_avg:["三充 · 人均","","三充金额 ÷ 三充人数"],
  dep_users:["充值 · 人数","充值成功的人数，同一人只算一次。",""],
  dep_amount:["充值 · 金额","充值成功的金额合计，失败、取消的订单不算。",""],
  dep_avg:["充值 · 人均","","充值金额 ÷ 充值人数"],
@@ -196,7 +193,7 @@ const F = {
  b_dep:["充值金额","同时段充值成功金额，和运营报表一致。",""]
 };
 const ACT_DESC = {1:"次日 00:30 按前一天有效投注的 1.5% 发放",2:"被邀请人首充后给邀请人的奖励",3:"对应哪个活动待确认（Q5）",4:"新用户首充后的转盘奖励",5:"老用户充值后的转盘奖励",6:"VIP 等级提升时发放",7:"每天第一笔充值加送 10%",8:"次日 01:00 按前一天净亏损发放",9:"大额充值后的转盘奖励",10:"会员答谢日当天发放",11:"首充金额按比例返利",12:"含义待确认（Q5）",13:"含义待确认（Q5），不计入汇总"};
-const OPS = [["当时人数",["online","bettors","registers"]],["首充",["fd_users","fd_amount","fd_avg","fd_agent","fd_official"]],["转换率",["conv_rate"]],["当日首充总额",["fdt_users","fdt_amount","fdt_avg"]],["三充",["d3_users","d3_amount","d3_avg"]],["充值",["dep_users","dep_amount","dep_avg","dep_daily_avg"]],["取款",["wd_users","wd_count","wd_amount","wd_avg"]],["盈亏金额",["net"]],["杀率",["kill_rate"]],["裂变",["fission_users","fission_rate"]],["佣金明细",["comm_users","comm_amount","comm_ratio"]],["留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg"]],["平台报表",["valid_bet","bet_multiple","profit_rate","ggr"]],["优惠",["promo_amount","promo_ratio"]]];
+const OPS = [["当时人数",["online","bettors","registers"]],["首充",["fd_users","fd_amount","fd_avg","fd_agent","fd_official"]],["转换率",["conv_rate"]],["当日首充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_avg","dep_daily_avg"]],["取款",["wd_users","wd_count","wd_amount","wd_avg"]],["盈亏金额",["net"]],["杀率",["kill_rate"]],["裂变",["fission_users","fission_rate"]],["佣金明细",["comm_users","comm_amount","comm_ratio"]],["留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg"]],["平台报表",["valid_bet","bet_multiple","profit_rate","ggr"]],["优惠",["promo_amount","promo_ratio"]]];
 const FMT = k => /rate|ratio/.test(k)?"pct":/multiple|count_avg/.test(k)?"x":/amount|avg|net|bet$|ggr/.test(k)&&!/users/.test(k)?"money":"int";
 const R = {
  r1:{t:"每小时数据",d:"每小时一行，整点后 5 分钟内出上一小时的数据。",daily:false,bonus:false},

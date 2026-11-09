@@ -139,7 +139,6 @@ tbody tr:hover td{background:var(--accent-soft)}
     <label class="field">查询日期<span class="dr"><input type="date" id="d1" aria-label="开始日期"><span class="tilde">~</span><input type="date" id="d2" aria-label="结束日期"></span></label>
     <div class="quick" role="group" aria-label="快捷日期"><button class="btn q" type="button" data-q="tw">本周报表</button><button class="btn q" type="button" data-q="lw">上周</button><button class="btn q" type="button" data-q="tm">本月报表</button><button class="btn q" type="button" data-q="lm">上月报表</button></div>
     <label class="field" id="f-board">榜单<select id="board"><option value="dep">存款前 50</option><option value="wd">取款前 50</option></select></label>
-    <label class="field">站点<select id="site"><option>789games</option></select></label>
     <span class="spacer"></span>
     <button class="btn primary" id="b-search" type="button">搜索</button>
     <button class="btn" id="b-refresh" type="button">刷新</button>
@@ -368,7 +367,7 @@ $("#b-search").onclick=()=>{checkRange();render();};
 $("#b-refresh").onclick=()=>{$("#upd").textContent="2026-11-02 11:06";render();toast("已刷新，数据为最新（原型演示）");};
 document.querySelectorAll(".quick .q").forEach(b=>b.onclick=()=>{const [a,c]=quick(b.dataset.q);setRange(a,c,b.dataset.q);checkRange();render();});
 ["#d1","#d2"].forEach(x=>$(x).onchange=()=>setRange($("#d1").value,$("#d2").value,""));
-["#site","#board"].forEach(x=>$(x).onchange=render);
+$("#board").onchange=render;
 function route(){const h=location.hash.slice(1);cur=R[h]?h:"r1";hidden.clear();defaults();render();$(".tablewrap").scrollLeft=0;}
 addEventListener("hashchange",route); route();
 </script>

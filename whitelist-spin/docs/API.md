@@ -9,13 +9,10 @@
 | GET | `/config/list` | 活动列表 |
 | POST | `/create` · `/update` | 保存活动，规则写在 configJson 里 |
 | POST | `/delete` | 软删除；只有关闭、且没有未使用次数的活动可以删 |
-| POST | `/grant` | 单个发放 |
-| GET | `/grant/csvTemplate` | 下载批量导入模板 |
-| POST | `/grant/importCsv` | 上传 CSV，返回预览结果和 batchId |
-| POST | `/grant/confirm` | 按 batchId 确认批量发放 |
-| POST | `/grant/page` | 发放记录列表 |
-| GET | `/grant/{grantId}` | 发放记录详情，含每次抽奖明细 |
-| POST | `/grant/void` | 作废剩余次数，需填原因 |
+| GET | `/whitelist/csvTemplate` | 下载白名单模板（表头 phone） |
+| POST | `/whitelist/importCsv` | FormData(activityId, file)；须先保存活动；返回 totalRows / validRows / invalidRows / duplicateInFile / insertedRows / existedRows / batchId |
+| GET | `/whitelist/exportCsv?activityId=` | 已导入文件下载 |
+| GET | `/whitelist/summary?activityId=` | 名单状态：总数、未注册、已注册生效、最近更新时间、操作人 |
 | POST | `/query` · `/queryTotalReward` | 统计明细和汇总 |
 
 ### configJson
@@ -65,55 +62,24 @@
 - 有 FREE 转：`freeProbability` 之和 = 100；
 - 有 PAID 转：渠道 ≥ 1；每档 min ≤ max（max 空 = 无穷大）、rewardItems ≤ 2 且概率和 = 100、slotIndex 在 0–9；同类型档位区间不重叠。
 
-### 发放
+### 白名单
 
-单个发放的请求：
-
-```json
-{"activityId": "1301", "userId": 123456, "spinCount": 1, "spinType": "TEMPLATE", "remark": "按活动转数 1 轮"}
-```
-
-服务端规则：
-
-- 校验用户是否存在；
-- 校验次数上限；
-- 按“次数 × 该类型最高奖”预估成本，超过剩余预算则拒绝；
-- 写入发放记录和操作日志。
-
-CSV 模板：
-
-```
-userId,spinCount,spinType,remark
-123456,1,TEMPLATE,按活动转数 1 轮
-208871,2,PAID,补偿
-```
-
-### 发放记录 grant
+沿用老用户充值转盘现有导入接口与表结构（按手机号）。名单内用户各获得 1 轮转数（`spins` 全部），以“名单记录”为单位记已用次数：
 
 | 字段 | 说明 |
 |---|---|
-| grantId | 记录ID |
-| activityId | 活动 |
-| userId | 用户 |
-| spinType | TEMPLATE / FREE / PAID（TEMPLATE 按转数设置展开为逐转次数） |
-| spinCount | 发放次数 |
-| usedCount | 已使用次数 |
-| status | UNUSED / IN_USE / USED_UP / VOID / EXPIRED |
-| source | SINGLE / BATCH |
-| batchId | 批量导入时的批次号 |
-| remark | 备注 |
-| operator | 操作人 |
-| createdAt | 操作时间 |
-| voidReason | 作废原因 |
-| voidBy | 作废操作人 |
-| voidAt | 作废时间 |
+| activityId / phone / userId | userId 在注册后回填，未注册为空 |
+| status | UNREGISTERED / ACTIVE |
+| usedCount | 已转次数（≤ spins 数） |
+| batchId | 导入批次 |
+| createdAt / operator | 导入时间、操作人 |
 
 ## 2. 前台接口
 
 | 方法 | 路径 | 返回 |
 |---|---|---|
 | GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`currentSpinType`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
-| POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`grantId`、`drawId` |
+| POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`drawId` |
 
 draw 的处理流程：
 
@@ -121,7 +87,7 @@ draw 的处理流程：
    - 活动开启且在有效期内；
    - 预算充足；
    - 用户还有剩余次数。
-2. 加锁，取最早发放、仍有剩余次数的那条记录的下一转；若下一转是 PAID 且未解锁（没有满足渠道 / 人群范围、并命中档位的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
+2. 加锁，取该用户名单记录的下一转；若下一转是 PAID 且未解锁（没有满足渠道 / 人群范围、并命中档位的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
 3. FREE 转按 `freeProbability` 抽格；PAID 转按解锁它的那笔充值匹配档位（首次 / 非首次 + 金额），按档位 rewardItems 抽格。
 4. 写入抽奖明细和稽核：稽核金额 = amount × 该类型流水倍数。
 5. 返回结果，前端转到 `slotIndex` 对应的格子后停下。

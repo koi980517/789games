@@ -24,39 +24,46 @@
 {
   "receiveType": 0,
   "needKyc": false,
+  "spins": [{"no": 1, "type": "FREE"}, {"no": 2, "type": "FREE"}, {"no": 3, "type": "PAID"}],
   "slots": [
-    {"index": 0, "type": "DEPOSIT", "amount": 7890, "probability": 0},
-    {"index": 1, "type": "DEPOSIT", "amount": 789,  "probability": 5},
-    {"index": 2, "type": "DEPOSIT", "amount": 78.9, "probability": 25},
-    {"index": 3, "type": "FREE",    "amount": 2.34, "probability": 30},
-    {"index": 4, "type": "FREE",    "amount": 1.23, "probability": 35},
-    {"index": 5, "type": "FREE",    "amount": 4.56, "probability": 20},
-    {"index": 6, "type": "FREE",    "amount": 12.3, "probability": 5},
-    {"index": 7, "type": "DEPOSIT", "amount": 23.4, "probability": 40},
-    {"index": 8, "type": "DEPOSIT", "amount": 45.6, "probability": 30},
-    {"index": 9, "type": "FREE",    "amount": 7.89, "probability": 10}
+    {"index": 0, "amount": 7890, "freeProbability": 0},
+    {"index": 1, "amount": 789,  "freeProbability": 0},
+    {"index": 2, "amount": 78.9, "freeProbability": 0},
+    {"index": 3, "amount": 2.34, "freeProbability": 30},
+    {"index": 4, "amount": 1.23, "freeProbability": 35},
+    {"index": 5, "amount": 4.56, "freeProbability": 20},
+    {"index": 6, "amount": 12.3, "freeProbability": 5},
+    {"index": 7, "amount": 23.4, "freeProbability": 0},
+    {"index": 8, "amount": 45.6, "freeProbability": 0},
+    {"index": 9, "amount": 7.89, "freeProbability": 10}
   ],
-  "spins": [{"no": 1, "type": "FREE"}, {"no": 2, "type": "FREE"}, {"no": 3, "type": "DEPOSIT"}],
-  "needRecharge": false,
-  "rechargeCountCondition": {"relation": "gte", "count": 1},
-  "rechargeChannels": ["PayMongo", "Traxion Pay", "PayCools"],
-  "minDepositAmount": 100,
-  "depositNeedPrincipal": false,
   "freeWithdrawWaterMult": 1,
   "freeNeedBonus": true,
-  "depositWithdrawWaterMult": 2,
-  "depositNeedBonus": true,
+  "paid": {
+    "needRecharge": false,
+    "rechargeCountCondition": {"relation": "gte", "count": 1},
+    "rechargeChannels": ["PayMongo", "Traxion Pay", "PayCools"],
+    "firstTimeRewards": [
+      {"minRecharge": 500, "maxRecharge": 1000, "rewardItems": [{"slotIndex": 7, "probability": 80}, {"slotIndex": 8, "probability": 20}]}
+    ],
+    "nonFirstTimeRewards": [
+      {"minRecharge": 500, "maxRecharge": 1000, "rewardItems": [{"slotIndex": 6, "probability": 80}, {"slotIndex": 7, "probability": 20}]}
+    ],
+    "firstTimeWithdrawWaterMult": 2, "firstTimeNeedPrincipal": false, "firstTimeNeedBonus": true,
+    "nonFirstTimeWithdrawWaterMult": 3, "nonFirstTimeNeedPrincipal": false, "nonFirstTimeNeedBonus": true
+  },
   "rewardPopupText": "Get ₱ {bonus} From Lucky Spin",
   "grantPopupText": "You've got {count} Lucky Spins! Spin now to win up to ₱{max}"
 }
 ```
 
+`paid` 的档位结构沿用老转盘 `firstTimeRewards` / `nonFirstTimeRewards`，区别是奖励用 `slotIndex` 指向盘面格（金额取 `slots[slotIndex].amount`），保证转盘能停在对应格。
+
 保存时服务端需要校验：
 
-- `slots` 必须正好 10 个；
-- FREE、DEPOSIT 两组的 `probability` 各自之和都等于 100；
-- 每组至少有一个格子的 `probability` 大于 0；
-- `spins` 1–10 个；有 FREE 转才校验 FREE 组，有 DEPOSIT 转才校验 DEPOSIT 组和充值设置（渠道 ≥1、`minDepositAmount` > 0）。
+- `spins` 1–10 个，type 为 FREE / PAID；`slots` 正好 10 个，amount > 0；
+- 有 FREE 转：`freeProbability` 之和 = 100；
+- 有 PAID 转：渠道 ≥ 1；每档 min ≤ max（max 空 = 无穷大）、rewardItems ≤ 2 且概率和 = 100、slotIndex 在 0–9；同类型档位区间不重叠。
 
 ### 发放
 
@@ -78,7 +85,7 @@ CSV 模板：
 ```
 userId,spinCount,spinType,remark
 123456,1,TEMPLATE,按活动转数 1 轮
-208871,2,DEPOSIT,补偿
+208871,2,PAID,补偿
 ```
 
 ### 发放记录 grant
@@ -88,7 +95,7 @@ userId,spinCount,spinType,remark
 | grantId | 记录ID |
 | activityId | 活动 |
 | userId | 用户 |
-| spinType | TEMPLATE / FREE / DEPOSIT（TEMPLATE 按转数设置展开为逐转次数） |
+| spinType | TEMPLATE / FREE / PAID（TEMPLATE 按转数设置展开为逐转次数） |
 | spinCount | 发放次数 |
 | usedCount | 已使用次数 |
 | status | UNUSED / IN_USE / USED_UP / VOID / EXPIRED |
@@ -114,8 +121,8 @@ draw 的处理流程：
    - 活动开启且在有效期内；
    - 预算充足；
    - 用户还有剩余次数。
-2. 加锁，取最早发放、仍有剩余次数的那条记录的下一转；若下一转是 DEPOSIT 且未解锁（无满足充值设置的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
-3. 按这条记录的 `spinType`，在同类型的格子里按概率抽出一格。
+2. 加锁，取最早发放、仍有剩余次数的那条记录的下一转；若下一转是 PAID 且未解锁（没有满足渠道 / 人群范围、并命中档位的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
+3. FREE 转按 `freeProbability` 抽格；PAID 转按解锁它的那笔充值匹配档位（首次 / 非首次 + 金额），按档位 rewardItems 抽格。
 4. 写入抽奖明细和稽核：稽核金额 = amount × 该类型流水倍数。
 5. 返回结果，前端转到 `slotIndex` 对应的格子后停下。
 

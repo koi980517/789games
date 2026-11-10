@@ -33,7 +33,9 @@
 | 08 | `H5Result.dc.html` | 中奖弹窗、次数用完 |
 | 09 | `Linked.dc.html` | 前后端联调演示（可交互） |
 
-原型放在 Claude 设计画布「白名单转盘原型」里（共 9 张画板，07 和 09 可以交互）。画布默认私有，需要查看请找 Koi 开通分享。
+**可直接打开的原型**：[whitelist-spin-prototype.html](whitelist-spin-prototype.html)（单文件，下载后用浏览器打开即可；左侧切换 9 张画板，07 转盘可试玩、09 联调可改配置并抽奖）。在 GitHub 上点进文件后选 Download raw file 下载。
+
+原型源文件在 Claude 设计画布「白名单转盘原型」里，需要编辑请找 Koi。
 
 ## 核心规则一览
 

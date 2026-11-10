@@ -21,10 +21,9 @@
 {
   "receiveType": 0,
   "needKyc": false,
-  "slots": [7890, 789, 78.9, 2.34, 1.23, 4.56, 12.3, 23.4, 45.6, 7.89],
   "wheels": [
-    {"wheelId": "W1", "name": "免费转盘1", "probabilities": [0, 0, 0, 30, 35, 20, 5, 0, 0, 10]},
-    {"wheelId": "W2", "name": "免费转盘2", "probabilities": [0, 1, 9, 0, 0, 0, 20, 40, 30, 0]}
+    {"wheelId": "W1", "name": "免费转盘1", "amounts": [7890, 789, 78.9, 2.34, 1.23, 4.56, 12.3, 23.4, 45.6, 7.89], "probabilities": [0, 0, 0, 30, 35, 20, 5, 0, 0, 10]},
+    {"wheelId": "W2", "name": "免费转盘2", "amounts": [7890, 888, 188, 88, 58, 38, 28, 18, 12.3, 8.8], "probabilities": [0, 1, 4, 10, 15, 20, 20, 15, 10, 5]}
   ],
   "spins": [{"no": 1, "wheelId": "W1"}, {"no": 2, "wheelId": "W1"}, {"no": 3, "wheelId": "W2"}],
   "withdrawWaterMult": 1,
@@ -39,7 +38,7 @@
 
 保存时服务端需要校验：
 
-- `slots` 正好 10 个，金额 > 0；`wheels` 1–5 个，每个 `probabilities` 10 个整数、合计 100；
+- `wheels` 1–5 个，每个 `amounts` 10 个且 > 0、`probabilities` 10 个整数且合计 100；
 - `spins` 1–10 个，`wheelId` 必须存在；每个转盘至少被 1 转使用；
 - `wagerScope`：CATEGORIES 至少 1 类，GAMES 至少 1 个游戏 ID。
 
@@ -59,7 +58,7 @@
 
 | 方法 | 路径 | 返回 |
 |---|---|---|
-| GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`nextSpinNo`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
+| GET | `/api/activity/whitelistSpin/info` | `spins[]`（每转的 wheelId + 该转盘 10 格金额，不返回概率）、`remaining`、`nextSpinNo`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
 | POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`drawId` |
 
 draw 的处理流程：
@@ -76,3 +75,12 @@ draw 的处理流程：
 `winners` 也可以单独提供 `GET /api/activity/whitelistSpin/winners` 供前端每 60 秒刷新；账号脱敏在服务端完成，不返回 userId。
 
 draw 需要支持幂等：前端带上 `requestId`，避免重复点击时重复扣次数。
+
+## 3. 预算告警与自动关闭
+
+- 顶部告警复用 `/api/admin/msg/get`（budgetAlertNum）与 `/api/admin/msg/budgetAlert/list`，新增 `activityTypeCode = whitelistSpin`（i18n `global.budgetAlertActivityType.whitelistSpin` = 白名单转盘活动），行字段：activitySource、activityId、activityName、budgetConsumptionRate。
+- 每次发奖后判断：`totalBudget - issuedRewardAmount < minReward`（被使用转盘中概率 > 0 的最小金额）→ 置 `activitySwitch = OFF`、`autoClosedReason = BUDGET_INSUFFICIENT`，写操作日志；draw 接口返回活动已结束。
+
+## 4. 权限码
+
+活动中心 1014 下新增 101419 白名单转盘：10141901 活动配置-查看、10141902 新增/修改、10141903 开启/关闭、10141904 删除、10141905 白名单导入、10141906 已导入名单下载、10141907 活动统计-查看、10141908 活动统计-导出。

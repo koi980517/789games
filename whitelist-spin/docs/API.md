@@ -36,6 +36,12 @@
     {"index": 8, "type": "DEPOSIT", "amount": 45.6, "probability": 30},
     {"index": 9, "type": "FREE",    "amount": 7.89, "probability": 10}
   ],
+  "spins": [{"no": 1, "type": "FREE"}, {"no": 2, "type": "FREE"}, {"no": 3, "type": "DEPOSIT"}],
+  "needRecharge": false,
+  "rechargeCountCondition": {"relation": "gte", "count": 1},
+  "rechargeChannels": ["PayMongo", "Traxion Pay", "PayCools"],
+  "minDepositAmount": 100,
+  "depositNeedPrincipal": false,
   "freeWithdrawWaterMult": 1,
   "freeNeedBonus": true,
   "depositWithdrawWaterMult": 2,
@@ -49,14 +55,15 @@
 
 - `slots` 必须正好 10 个；
 - FREE、DEPOSIT 两组的 `probability` 各自之和都等于 100；
-- 每组至少有一个格子的 `probability` 大于 0。
+- 每组至少有一个格子的 `probability` 大于 0；
+- `spins` 1–10 个；有 FREE 转才校验 FREE 组，有 DEPOSIT 转才校验 DEPOSIT 组和充值设置（渠道 ≥1、`minDepositAmount` > 0）。
 
 ### 发放
 
 单个发放的请求：
 
 ```json
-{"activityId": "1301", "userId": 123456, "spinCount": 2, "spinType": "DEPOSIT", "remark": "11/08 充值掉单补偿"}
+{"activityId": "1301", "userId": 123456, "spinCount": 1, "spinType": "TEMPLATE", "remark": "按活动转数 1 轮"}
 ```
 
 服务端规则：
@@ -70,7 +77,8 @@ CSV 模板：
 
 ```
 userId,spinCount,spinType,remark
-123456,2,DEPOSIT,补偿
+123456,1,TEMPLATE,按活动转数 1 轮
+208871,2,DEPOSIT,补偿
 ```
 
 ### 发放记录 grant
@@ -80,7 +88,7 @@ userId,spinCount,spinType,remark
 | grantId | 记录ID |
 | activityId | 活动 |
 | userId | 用户 |
-| spinType | FREE / DEPOSIT |
+| spinType | TEMPLATE / FREE / DEPOSIT（TEMPLATE 按转数设置展开为逐转次数） |
 | spinCount | 发放次数 |
 | usedCount | 已使用次数 |
 | status | UNUSED / IN_USE / USED_UP / VOID / EXPIRED |
@@ -106,7 +114,7 @@ draw 的处理流程：
    - 活动开启且在有效期内；
    - 预算充足；
    - 用户还有剩余次数。
-2. 加锁，取最早发放、仍有剩余次数的那条记录，先扣减它的 `usedCount`。
+2. 加锁，取最早发放、仍有剩余次数的那条记录的下一转；若下一转是 DEPOSIT 且未解锁（无满足充值设置的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
 3. 按这条记录的 `spinType`，在同类型的格子里按概率抽出一格。
 4. 写入抽奖明细和稽核：稽核金额 = amount × 该类型流水倍数。
 5. 返回结果，前端转到 `slotIndex` 对应的格子后停下。

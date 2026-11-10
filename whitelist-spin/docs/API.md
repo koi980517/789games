@@ -97,7 +97,7 @@ userId,spinCount,spinType,remark
 
 | 方法 | 路径 | 返回 |
 |---|---|---|
-| GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`currentSpinType`、`expireTime`、`jackpot`、`showGrantPopup` |
+| GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`currentSpinType`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
 | POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`grantId`、`drawId` |
 
 draw 的处理流程：
@@ -110,5 +110,7 @@ draw 的处理流程：
 3. 按这条记录的 `spinType`，在同类型的格子里按概率抽出一格。
 4. 写入抽奖明细和稽核：稽核金额 = amount × 该类型流水倍数。
 5. 返回结果，前端转到 `slotIndex` 对应的格子后停下。
+
+`winners` 也可以单独提供 `GET /api/activity/whitelistSpin/winners` 供前端每 60 秒刷新；账号脱敏在服务端完成，不返回 userId。
 
 draw 需要支持幂等：前端带上 `requestId`，避免重复点击时重复扣次数。

@@ -21,46 +21,27 @@
 {
   "receiveType": 0,
   "needKyc": false,
-  "spins": [{"no": 1, "type": "FREE"}, {"no": 2, "type": "FREE"}, {"no": 3, "type": "PAID"}],
-  "slots": [
-    {"index": 0, "amount": 7890, "freeProbability": 0},
-    {"index": 1, "amount": 789,  "freeProbability": 0},
-    {"index": 2, "amount": 78.9, "freeProbability": 0},
-    {"index": 3, "amount": 2.34, "freeProbability": 30},
-    {"index": 4, "amount": 1.23, "freeProbability": 35},
-    {"index": 5, "amount": 4.56, "freeProbability": 20},
-    {"index": 6, "amount": 12.3, "freeProbability": 5},
-    {"index": 7, "amount": 23.4, "freeProbability": 0},
-    {"index": 8, "amount": 45.6, "freeProbability": 0},
-    {"index": 9, "amount": 7.89, "freeProbability": 10}
+  "slots": [7890, 789, 78.9, 2.34, 1.23, 4.56, 12.3, 23.4, 45.6, 7.89],
+  "wheels": [
+    {"wheelId": "W1", "name": "免费转盘1", "probabilities": [0, 0, 0, 30, 35, 20, 5, 0, 0, 10]},
+    {"wheelId": "W2", "name": "免费转盘2", "probabilities": [0, 1, 9, 0, 0, 0, 20, 40, 30, 0]}
   ],
-  "freeWithdrawWaterMult": 1,
-  "freeNeedBonus": true,
-  "paid": {
-    "needRecharge": false,
-    "rechargeCountCondition": {"relation": "gte", "count": 1},
-    "rechargeChannels": ["PayMongo", "Traxion Pay", "PayCools"],
-    "firstTimeRewards": [
-      {"minRecharge": 500, "maxRecharge": 1000, "rewardItems": [{"slotIndex": 7, "probability": 80}, {"slotIndex": 8, "probability": 20}]}
-    ],
-    "nonFirstTimeRewards": [
-      {"minRecharge": 500, "maxRecharge": 1000, "rewardItems": [{"slotIndex": 6, "probability": 80}, {"slotIndex": 7, "probability": 20}]}
-    ],
-    "firstTimeWithdrawWaterMult": 2, "firstTimeNeedPrincipal": false, "firstTimeNeedBonus": true,
-    "nonFirstTimeWithdrawWaterMult": 3, "nonFirstTimeNeedPrincipal": false, "nonFirstTimeNeedBonus": true
-  },
+  "spins": [{"no": 1, "wheelId": "W1"}, {"no": 2, "wheelId": "W1"}, {"no": 3, "wheelId": "W2"}],
+  "withdrawWaterMult": 1,
+  "needBonus": true,
+  "wagerScope": {"type": "GAMES", "categories": [], "gameIds": ["JL-101", "JL-102", "PG-117"]},
   "rewardPopupText": "Get ₱ {bonus} From Lucky Spin",
   "grantPopupText": "You've got {count} Lucky Spins! Spin now to win up to ₱{max}"
 }
 ```
 
-`paid` 的档位结构沿用老转盘 `firstTimeRewards` / `nonFirstTimeRewards`，区别是奖励用 `slotIndex` 指向盘面格（金额取 `slots[slotIndex].amount`），保证转盘能停在对应格。
+`wagerScope.type`：`ALL` 全部游戏 / `CATEGORIES`（`categories` 取后端 6 类分类码：SLOT、CASINO、POKER、BINGO、ARCADE、FISHING）/ `GAMES`（`gameIds` 为后端游戏 ID）。游戏树复用返水活动「选择指定游戏」接口（分类 → 厂商 → 游戏 ID）。
 
 保存时服务端需要校验：
 
-- `spins` 1–10 个，type 为 FREE / PAID；`slots` 正好 10 个，amount > 0；
-- 有 FREE 转：`freeProbability` 之和 = 100；
-- 有 PAID 转：渠道 ≥ 1；每档 min ≤ max（max 空 = 无穷大）、rewardItems ≤ 2 且概率和 = 100、slotIndex 在 0–9；同类型档位区间不重叠。
+- `slots` 正好 10 个，金额 > 0；`wheels` 1–5 个，每个 `probabilities` 10 个整数、合计 100；
+- `spins` 1–10 个，`wheelId` 必须存在；每个转盘至少被 1 转使用；
+- `wagerScope`：CATEGORIES 至少 1 类，GAMES 至少 1 个游戏 ID。
 
 ### 白名单
 
@@ -78,7 +59,7 @@
 
 | 方法 | 路径 | 返回 |
 |---|---|---|
-| GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`currentSpinType`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
+| GET | `/api/activity/whitelistSpin/info` | `slots[10]`（只含 index、amount，不返回概率和类型）、`remaining`、`nextSpinNo`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
 | POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`drawId` |
 
 draw 的处理流程：
@@ -87,9 +68,9 @@ draw 的处理流程：
    - 活动开启且在有效期内；
    - 预算充足；
    - 用户还有剩余次数。
-2. 加锁，取该用户名单记录的下一转；若下一转是 PAID 且未解锁（没有满足渠道 / 人群范围、并命中档位的到账充值），返回 `needDeposit=true`，前端引导充值；否则先扣减 `usedCount`。
-3. FREE 转按 `freeProbability` 抽格；PAID 转按解锁它的那笔充值匹配档位（首次 / 非首次 + 金额），按档位 rewardItems 抽格。
-4. 写入抽奖明细和稽核：稽核金额 = amount × 该类型流水倍数。
+2. 加锁，取该用户名单记录的下一转，先扣减 `usedCount`。
+3. 按这一转 `wheelId` 对应转盘的 `probabilities` 抽格。
+4. 写入抽奖明细和稽核：稽核金额 = amount × `withdrawWaterMult`，稽核只统计 `wagerScope` 内游戏的有效投注。
 5. 返回结果，前端转到 `slotIndex` 对应的格子后停下。
 
 `winners` 也可以单独提供 `GET /api/activity/whitelistSpin/winners` 供前端每 60 秒刷新；账号脱敏在服务端完成，不返回 userId。

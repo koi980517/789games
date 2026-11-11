@@ -30,9 +30,8 @@
 | 05 | `H5Entry.dc.html` | 前台首页入口和“获得次数”弹窗 |
 | 06 | `H5Wheel.dc.html` | 前台 10 格转盘（可试玩） |
 | 07 | `H5Result.dc.html` | 中奖弹窗、次数用完 |
-| 08 | `Linked.dc.html` | 前后端联调演示（可交互） |
 
-**可直接打开的原型**：[whitelist-spin-prototype.html](whitelist-spin-prototype.html)（单文件，下载后用浏览器打开即可；左侧切换 8 张画板，06 转盘可试玩、08 联调可改配置并抽奖）。在 GitHub 上点进文件后选 Download raw file 下载。
+**可直接打开的原型**：[whitelist-spin-prototype.html](whitelist-spin-prototype.html)（单文件，下载后用浏览器打开即可；左侧切换 7 张画板，06 转盘可试玩）。在 GitHub 上点进文件后选 Download raw file 下载。
 
 原型源文件在 Claude 设计画布「白名单转盘原型」里，需要编辑请找 Koi。
 

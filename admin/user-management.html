@@ -1,0 +1,742 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<title>用户管理功能原型</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0;font-size:14px}img{max-width:100%}</style>
+</head>
+<body>
+<style>
+/* Layout: backoffice clone (top bar + side menu + page) with a sticky spec panel on the right that explains whatever was clicked */
+:root{
+  --bg:#eef2f3; --panel:#ffffff; --ink:#1d2a2e; --quiet:#5f6f74; --line:#dde4e6; --soft:#f5f8f8;
+  --brand:#1d6b67; --brand-ink:#ffffff; --brand-soft:#e3f0ee; --add:#e2952b; --add-ink:#ffffff;
+  --warn:#a85a12; --warn-soft:#fbf0e3; --ok:#2e7d4a; --ok-soft:#e5f4ea; --off:#a85a12; --link:#1d6b67;
+  --font:"Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif; --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12181a; --panel:#1a2225; --ink:#e3eaec; --quiet:#97a7ac; --line:#2b3639; --soft:#20292c;
+  --brand:#4fb0a8; --brand-ink:#0d1a19; --brand-soft:#1d3331; --add:#e9a548; --add-ink:#1b1305;
+  --warn:#e9a25d; --warn-soft:#352816; --ok:#6cc58c; --ok-soft:#1b3123; --off:#e9a25d; --link:#6fc7bf; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12181a; --panel:#1a2225; --ink:#e3eaec; --quiet:#97a7ac; --line:#2b3639; --soft:#20292c;
+  --brand:#4fb0a8; --brand-ink:#0d1a19; --brand-soft:#1d3331; --add:#e9a548; --add-ink:#1b1305;
+  --warn:#e9a25d; --warn-soft:#352816; --ok:#6cc58c; --ok-soft:#1b3123; --off:#e9a25d; --link:#6fc7bf; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:13px/1.55 var(--font)}
+button{font:inherit;cursor:pointer}
+code{font-family:var(--mono);font-size:12px;background:var(--soft);border:1px solid var(--line);border-radius:3px;padding:0 4px;word-break:break-all}
+.top{background:var(--brand);color:var(--brand-ink);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+.top b{font-size:15px}
+.pill{border:1px solid currentColor;border-radius:999px;padding:0 8px;font-size:12px;opacity:.9}
+.top .sp{flex:1}
+.top label{display:flex;gap:6px;align-items:center;font-size:12px;cursor:pointer}
+.shell{display:grid;grid-template-columns:190px minmax(0,1fr) 340px;min-height:calc(100vh - 44px)}
+.menu{background:var(--panel);border-right:1px solid var(--line);padding:10px 0}
+.menu .grp{padding:8px 16px 4px;color:var(--quiet);font-size:12px;letter-spacing:.04em}
+.menu a{display:block;padding:7px 16px 7px 28px;color:var(--ink);text-decoration:none}
+.menu a.on{background:var(--brand);color:var(--brand-ink)}
+.menu a.dim{color:var(--quiet);pointer-events:none}
+.menu a.child{padding-left:42px;font-size:12px}
+.page{min-width:0;padding:16px;display:flex;flex-direction:column;gap:12px}
+.crumb{color:var(--quiet);font-size:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.bar .lab{color:var(--quiet)}
+.bar .grow{flex:1}
+select,input[type=text],input[type=number],input[type=password],textarea{font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:5px 8px;min-width:0}
+textarea{width:100%;min-height:56px}
+.btn{border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);border-radius:4px;padding:5px 14px}
+.btn.ghost{background:transparent;color:var(--brand)}
+.btn.add{background:var(--add);border-color:var(--add);color:var(--add-ink)}
+.btn.plain{background:transparent;border-color:var(--line);color:var(--ink)}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th,td{border-bottom:1px solid var(--line);padding:8px;text-align:center;vertical-align:middle}
+th{background:var(--soft);font-weight:600;font-size:12px;color:var(--quiet)}
+td.l,th.l{text-align:left}
+.tag{display:inline-block;border-radius:3px;padding:0 6px;font-size:12px}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.off{background:var(--warn-soft);color:var(--off)}
+.ops{display:flex;flex-wrap:wrap;gap:2px 10px;justify-content:center;max-width:280px;margin:auto}
+.lk{background:none;border:0;padding:0;color:var(--link)}
+.num{text-decoration:underline}
+.pager{display:flex;justify-content:flex-end;gap:10px;color:var(--quiet);padding-top:10px;font-variant-numeric:tabular-nums}
+[data-spec]{position:relative}
+body.mark [data-spec]{outline:1px dashed var(--warn);outline-offset:2px}
+body.mark [data-spec].issue::after{content:"!";position:absolute;top:-8px;right:-8px;width:15px;height:15px;border-radius:50%;background:var(--warn);color:var(--panel);font-size:10px;line-height:15px;text-align:center;font-weight:700}
+.sel{box-shadow:0 0 0 2px var(--brand)}
+.spec{border-left:1px solid var(--line);background:var(--panel);padding:16px;position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto}
+.spec h2{font-size:15px;margin:0 0 4px;text-wrap:balance}
+.spec .k{color:var(--quiet);font-size:12px;letter-spacing:.04em;margin:12px 0 2px}
+.spec p,.spec ul{margin:0}
+.spec ul{padding-left:18px}
+.chip{display:inline-block;font-size:12px;border-radius:3px;padding:0 6px;background:var(--brand-soft);color:var(--brand)}
+.warnbox{background:var(--warn-soft);color:var(--warn);border-radius:4px;padding:8px 10px;margin-top:4px}
+.hint{color:var(--quiet);font-size:12px}
+.list h3{font-size:14px;margin:0 0 8px}
+.list td,.list th{text-align:left;vertical-align:top;font-size:12px}
+.list tr{cursor:pointer}
+.list tr:hover td{background:var(--soft)}
+.list .flag{color:var(--warn);font-weight:600}
+.modal{position:fixed;inset:0;background:rgba(10,20,22,.45);display:flex;align-items:center;justify-content:center;padding:16px;z-index:20}
+.dlg{background:var(--panel);border-radius:6px;width:min(560px,100%);max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.dlg header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);font-weight:600}
+.dlg .x{background:none;border:0;color:var(--quiet);font-size:18px}
+.dlg .bd{padding:16px 18px;display:grid;grid-template-columns:120px minmax(0,1fr);gap:10px 12px;align-items:center}
+.dlg .bd .lab{text-align:right;color:var(--quiet)}
+.dlg .bd .lab.req::before{content:"* ";color:#d14b4b}
+.dlg .bd .ro{color:var(--ink)}
+.dlg .bd .full{grid-column:1/-1}
+.dlg footer{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+.radios{display:flex;flex-wrap:wrap;gap:4px 14px}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px 20px}
+.form .f{display:flex;flex-direction:column;gap:4px}
+.form .f .lab.req::before{content:"* ";color:#d14b4b}
+.form .f .lab{color:var(--quiet);font-size:12px}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin:10px 0}
+.tabs span{padding:5px 10px;border-bottom:2px solid transparent;color:var(--quiet)}
+.tabs span.on{border-color:var(--brand);color:var(--ink)}
+.share{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.share label{display:flex;justify-content:space-between;gap:6px;align-items:center;border:1px solid var(--line);border-radius:4px;padding:4px 8px}
+.share input{width:60px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:4px;z-index:30}
+.empty{color:var(--quiet);padding:30px;text-align:center}
+.lg{width:100%;height:auto;display:block}
+.lg .bx{fill:var(--panel);stroke:var(--quiet);stroke-width:1.2}
+.lg .bx.main{fill:var(--brand-soft);stroke:var(--brand);stroke-width:1.6}
+.lg .bx.cfg{fill:var(--soft);stroke:var(--line);stroke-dasharray:0}
+.lg .bx.bad{stroke:var(--warn)}
+.lg .ttl{font:600 14px var(--font);fill:var(--ink)}
+.lg .ln{font:12px var(--font);fill:var(--quiet)}
+.lg .lb{font:11.5px var(--font);fill:var(--quiet)}
+.lg .lb.bad{fill:var(--warn);font-weight:600}
+.lg .ed{fill:none;stroke:var(--quiet);stroke-width:1.2}
+.lg .ed.dash{stroke-dasharray:5 4}
+.lg .ed.bad{stroke:var(--warn)}
+.lg .hd{font:600 15px var(--font);fill:var(--ink)}
+.rpt th,.rpt td{white-space:nowrap}
+.mx td,.mx th{text-align:left;vertical-align:top;font-size:12px}
+.mx td:first-child{font-weight:600;white-space:nowrap}
+@media (max-width:1100px){.shell{grid-template-columns:170px minmax(0,1fr)}.spec{grid-column:1/-1;position:static;max-height:none;border-left:0;border-top:1px solid var(--line)}}
+@media (max-width:720px){.shell{grid-template-columns:minmax(0,1fr)}.menu{display:none}.dlg .bd{grid-template-columns:1fr}.dlg .bd .lab{text-align:left}}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+</style>
+
+<div class="top">
+  <b>789games 运营后台</b><span class="pill">功能原型 · 用户管理</span><span class="pill">QA 实测 2026-11-10</span>
+  <span class="sp"></span>
+  <label><input type="checkbox" id="markToggle" checked> 显示标注（虚线 = 有说明，! = 有疑点）</label>
+</div>
+
+<div class="shell">
+  <nav class="menu" aria-label="菜单">
+    <div class="grp">用户管理</div>
+    <a href="#station" id="m-station" class="on">投注站</a>
+    <a href="#station-add" class="child" id="m-add">新增投注站</a>
+    <a href="#sub-account" class="child" id="m-sub">子账号管理</a>
+    <a href="#sub-role" class="child" id="m-role">子账号角色权限</a>
+    <a href="#station-ip" class="child" id="m-ip">IP 管理</a>
+    <a href="#big-agent" id="m-big-agent">大代理</a>
+    <a href="#user-bill" class="child" id="m-user-bill">资金明细</a>
+    <a href="#agent-invite" class="child" id="m-agent-invite">代理邀请码列表</a>
+    <a href="#agent-vip-bill" class="child" id="m-agent-vip-bill">代理直属会员账单</a>
+    <a href="#agent" id="m-agent">代理</a>
+    <a href="#member" id="m-member">会员</a>
+    <div class="grp">平台概况 · 代理数据</div>
+    <a href="#rpt-login" id="m-rpt-login">代理登录数据报表</a>
+    <a href="#rpt-recharge" id="m-rpt-recharge">代理充值留存</a>
+    <a href="#rpt-attr" id="m-rpt-attr">代理关系归属表</a>
+    <a href="#rpt-retention" id="m-rpt-retention">代理用户留存报表</a>
+    <div class="grp">汇总</div>
+    <a href="#issues" id="m-issues">疑点汇总</a>
+    <a href="#logic" id="m-logic">逻辑图</a>
+  </nav>
+  <main class="page" id="page"></main>
+  <aside class="spec" id="spec" aria-live="polite"></aside>
+</div>
+<div id="modalRoot"></div>
+
+<script>
+const STATIONS=[
+ {acc:'koi8888',name:'eeee',mem:0,agt:1,team:1,st:'正常',time:'2026-11-06 16:16',g:'关闭',rm:''},
+ {acc:'Sandy999888',name:'sandy',mem:0,agt:2,team:4,st:'正常',time:'2026-10-19 11:08',g:'关闭',rm:'666'},
+ {acc:'ceshishijian',name:'ceshishijian',mem:0,agt:4,team:94,st:'正常',time:'2025-10-30 17:44',g:'关闭',rm:''},
+ {acc:'test outlet',name:'bb wave',mem:0,agt:2,team:44,st:'正常',time:'2026-03-11 18:05',g:'开启',rm:''},
+ {acc:'KLbbc',name:'KLbbc',mem:0,agt:4,team:92,st:'正常',time:'2025-05-26 16:54',g:'关闭',rm:''},
+ {acc:'777',name:'777',mem:0,agt:1,team:2,st:'正常',time:'2025-05-24 14:37',g:'关闭',rm:''},
+ {acc:'666',name:'kobe',mem:0,agt:0,team:0,st:'正常',time:'2025-05-22 18:01',g:'关闭',rm:''},
+ {acc:'pasay001',name:'bb wave',mem:7,agt:166,team:2164762,st:'正常',time:'2025-04-26 17:03',g:'开启',rm:'111'}
+];
+const BIG=[
+ {id:'9055579',acc:'xinzterst',nick:'xi***st',up:'pasay001',tag:'',d:3,m:1,team:5,time:'25-12-04 13:49'},
+ {id:'992107536',acc:'sandy999888777666555',nick:'sa***55',up:'Sandy999888',tag:'789Agent',d:0,m:0,team:0,time:'26-10-19 11:58'},
+ {id:'992107518',acc:'henny8882222',nick:'he***22',up:'ceshishijian',tag:'',d:0,m:0,team:0,time:'26-10-16 23:27'},
+ {id:'992045656',acc:'5ji-wanghong',nick:'5j***ng',up:'pasay001',tag:'',d:1,m:7,team:8,time:'26-09-14 11:13'},
+ {id:'992044707',acc:'5-ji-agent',nick:'5-***nt',up:'pasay001',tag:'',d:0,m:239,team:239,time:'26-08-27 10:38'},
+ {id:'9079562',acc:'google_vi',nick:'go***vi',up:'pasay001',tag:'',d:207,m:51427,team:51468,time:'26-04-27 03:05'},
+ {id:'9068552',acc:'edtestddl',nick:'ed***dl',up:'pasay001',tag:'789Agent',d:0,m:10010,team:10021,time:'26-04-01 06:41'}
+];
+const AGT=[
+ {id:'992107537',acc:'sandy888777666555',nick:'sa***55',up:'sandy999888777666',tag:'JUST Agent',d:0,m:1,team:1,time:'26-10-19 12:03',rm:'777888'},
+ {id:'992107532',acc:'henny888123333',nick:'he***33',up:'5ji-wanghong',tag:'',d:0,m:0,team:0,time:'26-10-19 11:15',rm:''},
+ {id:'992042821',acc:'Dance1236',nick:'Da***36',up:'google_vi',tag:'JUST Agent',d:0,m:23,team:23,time:'26-07-07 17:16',rm:''},
+ {id:'992042491',acc:'GG_BID_156',nick:'GG_BID_156',up:'Google_Ads_GR',tag:'',d:0,m:1,team:0,time:'26-06-18 11:15',rm:''},
+ {id:'992042486',acc:'happy001',nick:'ha***01',up:'google_vi',tag:'',d:0,m:7,team:7,time:'26-06-17 16:15',rm:''},
+ {id:'992042091',acc:'JILLL111',nick:'JI***11',up:'google_vi',tag:'',d:0,m:3,team:2,time:'26-05-20 02:35',rm:''},
+ {id:'992042031',acc:'CS11111',nick:'CS***11',up:'PH_PHP_dl',tag:'',d:0,m:0,team:0,time:'26-05-15 22:12',rm:''}
+];
+const MEM=[
+ {id:'992107887',acc:'Player9tmx62588',nick:'Pl***88',up:'google_vi',inv:'-',dev:'H5_ANDROID',lv:'Lv 0',lvl:'普通账号',bal:'118.800',dep:'0.000',depN:0,reg:'26-11-10 13:59',away:0,online:1,kyc:'完全验证'},
+ {id:'992107381',acc:'Playerdmqt60012',nick:'Pl***12',up:'5ji-wanghong',inv:'Playere5nvy0777',dev:'PC_WIN',lv:'Lv 0',lvl:'VIP账号',bal:'0.000',dep:'0.000',depN:0,reg:'26-10-06 12:30',away:31},
+ {id:'992045673',acc:'Player3zt312547',nick:'Pl***47',up:'5ji-wanghong',inv:'Playere5nvy0777',dev:'PC_MAC',lv:'Lv 16',lvl:'普通账号',bal:'503,078.000',dep:'20,000.000',depN:4,reg:'26-09-14 14:31',away:52},
+ {id:'992045672',acc:'Playerq7gs25675',nick:'Pl***75',up:'5ji-wanghong',inv:'Playere5nvy0777',dev:'PC_MAC',lv:'Lv 0',lvl:'普通账号',bal:'503,078.000',dep:'5,000.000',depN:1,reg:'26-09-14 14:30',away:53},
+ {id:'992045661',acc:'Playerjsvpg1906',nick:'Pl***06',up:'5ji-wanghong',inv:'Playergmsvs7070',dev:'H5_ANDROID',lv:'Lv 0',lvl:'普通账号',bal:'503,078.000',dep:'0.000',depN:0,reg:'26-09-14 11:20',away:46}
+];
+const STATION_NAMES=['eeee','sandy','ceshishijian','bb wave','KLbbc','777','kobe','bb wave'];
+const COMM_PLANS=['None','佣金测试','Jobe测试','Betting Station','爱的华子','leo佣金方案测试','Commission plan','10月宿务代理佣金方案','sjceshi','123123xc'];
+const LAYERS=['Default layer','Tier 1','Tier 2','Tier 3 (VIP)','Tier 4 (SVIP)','Tier 5 (SVIP)','Tier 6 (SVIP)','Tier 7 (SVIP)','Tier 8 (SVIP)'];
+const TRANSFER_OPTS=['Sandy999888(SANDY)','ceshishijian(CESHISHIJIAN)','test outlet(DOUBLE EAGLE AMUSEMENT AND LEISURE CORPORATION)','KLbbc(KL分舵)','777(777)','666(我是说)','pasay001(LIFE)'];
+
+// view: which page the entry belongs to; type; does; fields; api; note; issue
+const SPEC={
+ 'f-status':{v:'station',n:'筛选：状态',t:'筛选',does:'按投注站账号状态筛选列表。',fields:['所有 / 正常 / 冻结 / 停用'],api:'POST /api/admin/user/queryzdl（随「搜索」提交）',note:'编辑弹窗里还能把状态设为「待审核」，但筛选里没有这个选项。',issue:true},
+ 'f-search':{v:'station',n:'搜索：账号 / 名称',t:'筛选',does:'先选按账号还是按名称，再输入关键字查询。',fields:['账号 / 名称','查询关键字'],api:'POST /api/admin/user/queryzdl，body: searchType 等'},
+ 'f-google':{v:'station',n:'筛选：Google验证码',t:'筛选',does:'按投注站是否开启 Google 登录二次验证筛选。',fields:['全部 / 开启 / 关闭']},
+ 'btn-search':{v:'station',n:'搜索',t:'按钮',does:'按当前筛选条件重新查询投注站列表。',api:'POST /api/admin/user/queryzdl，body: userType, platformId, searchType, page, pageSize',note:'接口名 queryzdl 即「总代理」：投注站在系统里按总代理类型存储。'},
+ 'btn-add':{v:'station',n:'+ 新增投注站',t:'跳转页面',does:'进入新增投注站页面，填写账号、门店资料、权限开关和各厂商占成。',api:'#/betting-station-add'},
+ 'col-members':{v:'station',n:'列：会员数',t:'列表字段',does:'投注站下的会员数量。',note:'QA 8 个投注站里只有 pasay001 不为 0，口径（直属会员还是整线会员）待确认。',issue:true},
+ 'col-agents':{v:'station',n:'列：代理数（可点击）',t:'链接',does:'点击数字跳到大代理列表，只看该投注站下的大代理；页面有「返回上一级」。',api:'#/agent-list?superId={投注站ID}；POST /api/admin/user/queryagentlist，body 含 superId、bigAgent、filterTest',note:'大代理列表默认勾选「过滤测试用户」。koi8888 代理数 = 1，点进去是 No Data，数字和结果对不上。',issue:true},
+ 'col-team':{v:'station',n:'列：直属代理/直属会员/团队数',t:'列表字段',does:'投注站的团队规模。',note:'表头写的是三个数，列表只显示一个数（团队数）。团队数 = query_code 以投注站路径开头的所有下级（不含自己）。',issue:true},
+ 'col-status':{v:'station',n:'列：状态',t:'列表字段',does:'账号状态标签，在「编辑」里修改。',fields:['正常 / 冻结 / 停用 / 待审核']},
+ 'col-google':{v:'station',n:'列：Google验证码',t:'列表字段',does:'是否开启登录二次验证，只展示。',note:'查看验证码用行操作「Google验证码」；开关在新增/编辑门店资料里。'},
+ 'op-edit':{v:'station',n:'编辑',t:'弹窗',does:'修改投注站登录账号的状态、密码、备注和电话，可清除今日密码错误次数。',fields:['账号（只读）','状态：待审核 / 正常 / 冻结 / 停用','登录密码','备注','电话','电话','今日密码错误次数 + 清除'],api:'打开时 GET /api/admin/user/getpasswrongtimes/{id}',note:'「电话」出现两次，标签重复。门店资料（经纬度、店长等）不在这里改，要从「投注站详情 → 编辑」进入。',issue:true},
+ 'op-deposit':{v:'station',n:'押金调整',t:'弹窗',does:'调整投注站押金。',fields:['当前押金（只读）','* 调整押金'],note:'没有说明填写的是调整后的金额还是增减值。',issue:true},
+ 'op-add':{v:'station',n:'增加额度',t:'弹窗',does:'增加投注站可用额度。',fields:['押金（只读）','可用额度（只读）','* 增加额度'],note:'押金、可用额度、基准额度三者关系待确认。',issue:true},
+ 'op-sub':{v:'station',n:'减少额度',t:'弹窗',does:'减少投注站可用额度。',fields:['押金（只读）','可用额度（只读）','* 减少额度'],note:'同「增加额度」。'},
+ 'op-detail':{v:'station',n:'投注站详情',t:'弹窗',does:'查看门店资料；弹窗里的「编辑」是门店资料唯一的修改入口。',fields:['代码、名称、类型（直营/非直营）','纬度、经度、地址、国家/省份/城市','店长、手机、营业开始/结束时间','充值 / 提现 / KYC / 预约提款权限、Google验证码'],api:'POST /api/admin/betting-station/detail/{id}；POST /api/admin/game/config/getPlatformConfig'},
+ 'op-transfer':{v:'station',n:'用户转移',t:'弹窗',does:'把该投注站下的用户转到另一个投注站。',fields:['当前代理（只读，名称显示为大写）','新代理：下拉，列出其他投注站，格式「账号(名称)」'],api:'打开时 POST /api/admin/user/queryzdl',note:'下拉里的名称和列表「名称」不一致：test outlet 列表为 bb wave，下拉为 DOUBLE EAGLE…；pasay001 下拉为 LIFE。转移范围（直属还是整线）待确认。',issue:true},
+ 'op-subacc':{v:'station',n:'子账号管理',t:'跳转页面',does:'管理该投注站的员工子账号。',api:'#/sub-account-management'},
+ 'op-role':{v:'station',n:'子账号角色权限管理',t:'跳转页面',does:'定义该投注站子账号可用的角色和菜单权限。',api:'#/sub-account-permissions'},
+ 'op-gauth':{v:'station',n:'Google验证码',t:'弹窗',does:'查看投注站账号当前的 Google 验证码，带「不要泄露」提示。',fields:['投注站账号','当前验证码'],note:'只能查看，不能开关。'},
+ 'op-base':{v:'station',n:'设置基准额度',t:'弹窗',does:'按方向增加或扣减投注站基准额度。',fields:['当前额度（只读）','* 修改方向：增加 / 扣减','* 修改金额','备注'],note:'和「增加/减少额度」的区别待确认。',issue:true},
+ 'op-ip':{v:'station',n:'添加IP',t:'跳转页面',does:'进入该投注站的 IP 白名单列表。',api:'#/ip-management',note:'按钮叫「添加IP」，实际进入的是 IP 列表页。'},
+ 'add-account':{v:'station-add',n:'账号',t:'表单',does:'投注站的登录账号。',fields:['代理账号','登录密码']},
+ 'add-basic':{v:'station-add',n:'基础资料',t:'表单',does:'投注站代码、名称和经营类型。',fields:['* 代码','* 名称','* 类型：直营 / 非直营']},
+ 'add-store':{v:'station-add',n:'门店信息',t:'表单',does:'门店位置、联系人和营业时间。',fields:['* 纬度、* 经度','* 店长、* 手机','* 营业开始 / 结束时间','* 地区（国家/省份/城市级联）、* 地址','站点图片：jpg/png/gif/webp/pag/webm，≤ 2MB'],api:'GET /api/admin/area/tree'},
+ 'add-perm':{v:'station-add',n:'权限开关',t:'表单',does:'控制门店能否办理充值、提现、KYC、预约提款，以及是否开启 Google 二次验证。',fields:['* 充值权限 是/否','* 提现权限 是/否','* KYC权限 是/否','* 预约提款权限 是/否','* Google验证码 开启/关闭']},
+ 'add-share':{v:'station-add',n:'占成 / 三方配置',t:'表单',does:'设置体育占成和各三方厂商的占成比例，按游戏类型分标签，支持快捷设置。',fields:['体育占成 0~100.00%','分类：全部 / 彩票 / 真人 / 电子 / 捕鱼 / 棋牌 / 体育 / 迷你游戏','每个厂商一个 % 输入框（0~100）'],api:'GET /api/admin/gamefirm/getGameFirmList；GET /api/admin/game-category/list；POST /api/admin/game/config/getPlatformConfig'},
+ 'add-submit':{v:'station-add',n:'返回 / 提交',t:'按钮',does:'「返回」回到列表；「提交」创建投注站。',note:'创建后系统自动生成一个「超级管理员」子账号和角色。'},
+ 'sa-filter':{v:'sub-account',n:'筛选：账号 / 名称 / 状态',t:'筛选',does:'查询该投注站的子账号。',api:'POST /api/admin/betting-station-sub/query，body: bettingStationId, page, pageSize'},
+ 'sa-add':{v:'sub-account',n:'+ 新增子账号',t:'弹窗',does:'新建员工子账号并指定角色。',fields:['字段同「编辑」（推断，本轮未打开成功）'],issue:true,note:'弹窗字段待补。'},
+ 'sa-view':{v:'sub-account',n:'查看',t:'弹窗',does:'查看子账号资料。',fields:['账号、名称、账号角色','电话号码、邮箱、备注、状态'],api:'GET /api/admin/betting-station-sub/get/{id}'},
+ 'sa-edit':{v:'sub-account',n:'编辑',t:'弹窗',does:'修改子账号资料、角色和状态。',fields:['* 账号','密码','* 账号角色（下拉，来自角色权限管理）','* 名称','电话号码、邮箱、备注','* 状态：正常 / 停用','今日密码错误次数 + 清除'],api:'POST /api/admin/agentRole/all（角色下拉）；GET /api/admin/user/getpasswrongtimes/{id}'},
+ 'sa-del':{v:'sub-account',n:'删除',t:'确认框',does:'删除子账号，需二次确认。',note:'「超级管理员」这一行的编辑和删除在后台是灰掉的（11-10 核对），普通子账号才能编辑、删除。'},
+ 'sa-gauth':{v:'sub-account',n:'Google验证码',t:'弹窗',does:'查看子账号的 Google 验证码，同投注站的验证码弹窗。'},
+ 'sa-back':{v:'sub-account',n:'返回',t:'按钮',does:'回到投注站列表。'},
+ 'ro-filter':{v:'sub-role',n:'筛选：角色名称',t:'筛选',does:'查询角色。',api:'POST /api/admin/agentRole/query，body: bettingStationId, page, pageSize'},
+ 'ro-add':{v:'sub-role',n:'+ 新增角色',t:'弹窗',does:'新建角色并勾选可用菜单。',api:'GET /api/admin/agentRole/menu/（可分配的菜单树）',note:'弹窗字段待补（本轮未打开）；原型里按角色名 + 菜单勾选推断。',issue:true},
+ 'ro-view':{v:'sub-role',n:'查看 / 编辑 / 删除',t:'弹窗 / 确认框',does:'查看、修改或删除角色。默认有「超级管理员」角色。',note:'字段待补。'},
+ 'ip-add':{v:'station-ip',n:'新增',t:'弹窗',does:'添加一条投注站 IP 白名单。',note:'弹窗字段待补（本轮未打开）；原型里按 IP + 备注推断。',issue:true},
+ 'ip-refresh':{v:'station-ip',n:'刷新',t:'按钮',does:'重新查询 IP 列表。',api:'POST /api/admin/stationIp/query，body: bettingStationId'},
+ 'ip-list':{v:'station-ip',n:'IP 列表',t:'列表',does:'该投注站允许的 IP。',fields:['IP、备注、创建时间、操作人、更新时间、更新人、操作']},
+ // 大代理
+ 'b-filter':{v:'big-agent',n:'筛选区',t:'筛选',does:'按状态、搜索类型+关键字、标签、国家、未登录天数、上级代理筛选大代理；默认勾选「过滤测试用户」。',fields:['状态：所有 / 待审核 / 正常 / 冻结 / 停用 / 整线停用','类型：账号 / 名称 / 邀请码 / 手机号 + 查询关键字','标签：sandy999 / 789Agent / Bonus Hunter / Night-Time Active / Big Depositor','国家：菲律賓','未登录天数、上级代理','☑ 过滤测试用户（默认勾选）'],api:'POST /api/admin/user/queryagentlist，body: searchType, filterTest, creditSystem, page, pageSize, userType, platformId, superId, bigAgent；GET /api/admin/nation/listAll；GET /api/admin/lable/queryAll/1'},
+ 'b-add':{v:'big-agent',n:'新增大代理',t:'弹窗',does:'在某个投注站下新建大代理。',fields:['* 上级代理：投注站下拉（koi8888 / Sandy999888 / … / pasay001）','* 代理账号、* 登录密码','* 代理名称、* 国家、* 币种','标签','☐ 内部测试账号','* 是否可以开代理：是 / 否（开启后不可关闭）'],api:'POST /api/admin/user/queryAddAgentDl；GET /api/admin/nation/list；GET /api/admin/lable/queryAll/1',note:'打开弹窗时浏览器会把当前管理员的账号和密码自动填进「代理账号」「登录密码」，容易误用管理员密码建号；建议输入框加 autocomplete="new-password"。',issue:true},
+ 'b-col-acc':{v:'big-agent',n:'列：账号信息块',t:'列表字段',does:'一格里显示代理id、账号、昵称、上级代理（投注站）、账号类型、国家、币种、代理标签。'},
+ 'b-col-team':{v:'big-agent',n:'列：直属代理/直属会员/团队数',t:'链接',does:'前两个数字可点：直属代理 → 代理列表（只看该大代理下）；直属会员 → 会员列表。',api:'#/sub-agent-list?queryCode=…&superUserId=…；#/vip-list?queryCode=…&superUserId=…',note:'点「直属会员」进入会员页时列表不会自动查询，直接显示 No Data（xinzterst 直属会员 = 1）。口径：直属看 super_id 一层；团队数看 query_code 前缀，不限层级、含代理和会员、不含自己。会员邀请会员的人 super_id 仍是该代理，所以同时算直属会员和团队数。',issue:true},
+ 'b-col-money':{v:'big-agent',n:'列：余额 / 佣金余额',t:'列表字段',does:'大代理钱包余额和佣金余额。',note:'789games 已去掉代理返佣（GAM-8），佣金余额的意义待确认。'},
+ 'b-edit':{v:'big-agent',n:'编辑',t:'弹窗',does:'修改大代理资料、层级、标签和开代理权限。',fields:['账号（只读）','登录密码','会员层级：Default layer / Tier 1–8','真实姓名、电话、邮箱、QQ','提款密码','备注','标签','是否可以开代理：是 / 否（一旦开启不可关闭）','今日密码错误次数 + 清除'],api:'GET /api/admin/user/getpasswrongtimes/{id}；charge/cfg/queryparamcfgbyparam/rech_bank、rech_levels；lable/queryAll/1；user/queryuserbank/{id}'},
+ 'b-status':{v:'big-agent',n:'状态',t:'弹窗',does:'修改账号状态；「整线停用」会连带停用整条线。',fields:['正常 / 冻结 / 停用 / 整线停用'],note:'整线停用的影响范围（下级代理、会员是否同时停用）待确认。'},
+ 'b-gauth':{v:'big-agent',n:'Google验证码',t:'弹窗',does:'查看大代理的 Google 验证码绑定状态和当前验证码。',fields:['账号','Google验证码：未绑定 / 已绑定','当前验证码']},
+ 'b-comm':{v:'big-agent',n:'佣金配置',t:'弹窗',does:'给大代理选一个佣金方案（单选）。',fields:['None / 佣金测试 / Jobe测试 / Betting Station / 爱的华子 / leo佣金方案测试 / Commission plan / 10月宿务代理佣金方案 / sjceshi / 123123xc'],api:'GET /api/admin/agentEarningsConfig/queryCfgListByAgentId/{id}',note:'方案来自「代理结算 → 佣金方案管理」；QA 里大部分是测试方案。弹窗加载较慢（约 2 秒）。'},
+ 'b-line':{v:'big-agent',n:'变更代理线',t:'弹窗',does:'把整个大代理（含下级）挂到另一个投注站，可选同时挂到某个大代理下。',fields:['当前代理（只读）','* 新代理线：所属投注站（下拉）+ 所属大代理（可不选）','国家、币种（只读）'],api:'POST /api/admin/user/queryzdl；GET /api/admin/nation/listAll；GET /api/admin/currency/listAll',note:'提示：不选大代理时，该代理成为所选投注站的直属大代理。投注站下拉只显示名称，有两个「bb wave」，无法区分。',issue:true},
+ 'b-move':{v:'big-agent',n:'直属会员转移',t:'弹窗',does:'把该大代理的直属会员转给另一个代理。',fields:['当前代理（只读）','新代理（下拉）','国家、币种（只读）'],api:'POST /api/admin/user/queryagentlist（新代理下拉）',note:'提示：变更用户的测试标示与上级代理相同，转到测试代理下的会员会变成测试用户。'},
+ 'b-bill':{v:'big-agent',n:'更多 → 资金明细',t:'跳转页面',does:'查看大代理自己的账变流水。',api:'#/user-bill-list/{id}'},
+ 'b-invite':{v:'big-agent',n:'更多 → 邀请码',t:'跳转页面',does:'管理大代理的推广邀请码。',api:'#/agent-invite-list/{id}'},
+ 'b-vipbill':{v:'big-agent',n:'更多 → 会员资金明细',t:'跳转页面',does:'查看该大代理直属会员的账变。',api:'#/agent-vip-bill-list/{id}'},
+ 'b-detail':{v:'big-agent',n:'更多 → 详情',t:'弹窗',does:'查看大代理的完整个人资料，敏感字段打码，输入 Google 验证码后可查看。',fields:['头像、昵称、性别、账号、真实姓名、生日、投注站名称','身分证字号、证件类别、薪资来源','电话（含国码）、邮箱、QQ、微信、zalo、facebook、whatsapp、telegram','国籍、出生地、工作性质、当前/永久居住地（省、城市、邮编）','安全问题、安全问题回答（打码）','Google验证码 + 搜索（解码查看）'],api:'POST /api/admin/user/queryuserinfo；user/querySalarySource；queryIdentityType；querySafeQuestionType',note:'大代理的详情是会员资料模板，很多字段对代理没有意义。'},
+ 'b-quota':{v:'big-agent',n:'更多 → 额度修改',t:'弹窗',does:'人工给大代理加减余额。',fields:['账号、币种、余额（只读）','* 调整类型：增加金额 / 扣除金额','* 金额（上限 1,000,000）','* 金额类型：后台充值 / 手动添加礼金 / 手动补投注派彩 / 手动添加佣金 / 手动其他加额度','* 备注'],api:'GET /api/admin/wdactivity/getAll；GET /api/admin/currency/listAll',note:'可能走「修改余额审批」流程，待确认。'},
+ 'ub-page':{v:'user-bill',n:'资金明细',t:'页面',does:'某个账号的账变流水，按时间和交易类型查询，顶部显示总金额。',fields:['筛选：时间起~止、交易类型','列：订单号、交易时间、交易类型、交易金额、余额、备注'],api:'GET /api/admin/user/querytrantypes；GET /api/admin/currency/getSysCurrency；POST /api/admin/user/queryuserbill，body: userId, startTime, endTime, page, pageSize'},
+ 'ai-page':{v:'agent-invite',n:'代理邀请码列表',t:'页面',does:'代理名下的邀请码，每个码可复制链接、取短信推广域名、看二维码。',fields:['列：邀请码、会员类型、注册人数、创建时间','行操作：复制链接 / 短信推广域名 / 二维码'],api:'POST /api/admin/user/invite/list；getConfigByName/exclusiveAgentUrl；getConfigByName/SmsAddress'},
+ 'ai-add':{v:'agent-invite',n:'新增邀请码',t:'弹窗',does:'给代理新增一个邀请码。',fields:['邀请码：4～16 位数字、字母或下划线；留空系统自动生成'],api:'GET /api/admin/user/rebate/list/{id}'},
+ 'ai-row':{v:'agent-invite',n:'复制链接 / 短信推广域名 / 二维码',t:'按钮',does:'复制专属推广链接；复制短信用推广域名的链接；弹出二维码。',note:'链接域名来自系统参数「代理专属域名」「短信推广域名」。'},
+ 'avb-page':{v:'agent-vip-bill',n:'代理直属会员账单',t:'页面',does:'该代理所有直属会员的账变，多一列「账号」。',fields:['列：订单号、账号、交易时间、交易类型、交易金额、余额、备注'],api:'POST /api/admin/user/queryuserbill，body: dlId, startTime, endTime, page, pageSize',note:'打开页面就弹两次英文报错「Agent or betting station filters require a member account.」，要求必须带会员账号才能查。',issue:true},
+ // 代理登录数据报表
+ 'rl-filter':{v:'rpt-login',n:'筛选：代理编号 / 邀请码 / 查询时间',t:'筛选',does:'选一个或多个代理，按天查看每个代理的登录、充值和投注数据。',fields:['代理编号：多选下拉，QA 共 1,809 个代理，格式「账号(代理ID)」，数据来自已配置的代理','邀请码：输入框','查询时间：开始日期 ~ 结束日期'],api:'POST /api/admin/DashBoard/queryAgentLoginDataReport，body: page, pageSize, dlIds, startTime, endTime',note:'代理下拉一次性加载 1,809 个选项，采集时页面多次卡住。邀请码列在实测数据里都显示「--」，邀请码筛选的作用待确认。',issue:true},
+ 'rl-quick':{v:'rpt-login',n:'今日 / 昨日 / 本周 / 本月 / 上月报表',t:'快捷按钮',does:'点一下就把查询时间设成对应区间并立即查询，不用再点搜索。',fields:['本月报表 = 当月 1 日 ~ 月末（如 2026-11-01 ~ 2026-11-30）']},
+ 'rl-export':{v:'rpt-login',n:'搜索 / 导出',t:'按钮',does:'按条件查询；导出当前结果。',note:'导出会下载文件，梳理时未点击。'},
+ 'rl-cols':{v:'rpt-login',n:'列表：每个代理每天一行（19 列）',t:'列表',does:'按代理 × 日期展示，日期倒序，只到今天。',fields:['代理编号、邀请码、日期','点击次数、登录人数、活跃人数、首冲人数','新客充值金额 ⓘ：统计周期内，新注册且完成充值用户的所有成功充值金额之和','新客提款金额 ⓘ：统计周期内，新注册且完成充值用户的所有成功提款金额之和','新客人均充提差 ⓘ：（新客充值金额 − 新客提款金额）÷ 新注册且首充人数','当日充值金额 ⓘ：该代理线下所有用户，本行日期当天的充值总额','当日有效投注 ⓘ：该代理线下所有用户，本行日期当天的有效投注（打码量）总额','打码倍数 ⓘ：当日有效投注 ÷ 当日充值金额；低于 7 倍标红；当日充值为 0 显示「-」','充值人数、投注人数','登录率、活跃率、充值率、投注率（无说明）']},
+ 'rl-rate':{v:'rpt-login',n:'登录率 / 活跃率 / 充值率 / 投注率',t:'列表字段',does:'四个比率列，后台没有 ⓘ 说明。按实测数据反推：活跃率 = 活跃人数 ÷ 登录人数；充值率 = 充值人数 ÷ 登录人数；投注率 = 投注人数 ÷ 登录人数；登录率 = 登录人数 ÷ 点击次数（推断）。',note:'点击次数在实测数据里每天都是 0（google_vi 本月每天都是 0），登录率因此一直是 0.00%。点击来自前端上报（PSP-115），可能没在上报。分母为 0 时应显示「-」，现在显示 0.00%。',issue:true},
+ 'rl-click':{v:'rpt-login',n:'点击次数',t:'列表字段',does:'推广链接 / 邀请码的点击次数，来自前端上报。',note:'实测全部为 0。',issue:true},
+ // 代理充值留存
+ 'rr-filter':{v:'rpt-recharge',n:'筛选：首充日',t:'筛选',does:'按首充日期区间查询，默认近 30 天（2026-10-12 ~ 2026-11-10）；页面注明「数据每小时更新」。',api:'POST /api/admin/agentRechRetention/home，body: startDate, endDate',note:'筛选写的是「首充日」，但表格前半部分是「按发生日」统计，这个日期区间对两部分是否同一含义，待确认。',issue:true},
+ 'rr-drill':{v:'rpt-recharge',n:'逐级下钻：分类 → 是否领 789 → 配置代理 → 下级代理',t:'下钻',does:'每行一个代理关系归属分类（分类下配置代理的整个团队），分类在「代理关系归属表」维护。点名称逐级往下看，顶部面包屑可以返回上一级。',fields:['第 1 层：分类（如「谷歌」）+ 合计','第 2 层：分类 / 分类（已领789）/ 分类（未领789）','第 3 层：分类下配置的代理（如 pasay001）','第 4 层：团队合计、直属会员合计、各下级代理，可继续下钻'],api:'agentRechRetention/home → /groupSeg（groupId）→ /group（groupId, seg）→ /children（agentId, seg, page, pageSize）',note:'「已领 789 / 未领 789」的含义没有说明。QA 只有一个分类「谷歌」，但它配置的代理是 pasay001（整个投注站），分类名和内容对不上。',issue:true},
+ 'rr-cols':{v:'rpt-recharge',n:'列：按发生日 / 按首充日',t:'列表',does:'表头分两组。',fields:['按发生日：登录人数、活跃人数、新客充值金额、新客提款金额、新客人均充提差、充值人数、投注人数、活跃率、充值率、投注率','按首充日：累计充值金额、累计有效投注、打码倍数、首充人数、D2、D3、D5、D7、D14、D30、D60（显示「比例 (人数)」，未到期显示「-」）'],note:'打码倍数这里显示「0.38」，代理登录数据报表显示「0.94x」，格式不统一；这里也没有 < 7 标红。',issue:true},
+ // 代理关系归属表
+ 'ra-list':{v:'rpt-attr',n:'分类列表',t:'列表',does:'维护「代理关系归属分类」，代理充值留存按这些分类统计。',fields:['列：顺序、分类、备注、配置代理（+ 管理代理 (n)）、展开代理数、最下层代理数、最近更新、操作','行操作：查看展开、编辑、删除'],api:'POST /api/admin/agentAttr/list',note:'QA 目前只有「谷歌」1 个分类：配置代理 pasay001，展开代理数 1,784，最下层代理数 1,758。'},
+ 'ra-top':{v:'rpt-attr',n:'新建分类 / 更新 / 刷新',t:'按钮',does:'「新建分类」弹窗填分类名（≤ 64 字）和备注（≤ 255 字）。',note:'「更新」「刷新」可能触发重算，梳理时未点击，作用待确认。',issue:true},
+ 'ra-manage':{v:'rpt-attr',n:'管理代理（配置代理）',t:'弹窗',does:'给分类配置代理：在文本框粘贴代理账号名（逗号 / 空格 / 换行分隔）后点「添加」；列表里可以移除。',fields:['提示：一次最多 200 个，一个分类最多 200 个；有一个账号不合法整批都不会加','文本框：可直接粘贴系统参数 newUserStationRouteAgents 的值','列：ID、代理、嵌套、操作（移除）'],note:'文本框提示可以直接粘贴系统参数 newUserStationRouteAgents 的值，推断它就是「新用户分配到投注站代理线」的那批代理，待开发确认。'},
+ 'ra-expand':{v:'rpt-attr',n:'查看展开',t:'弹窗',does:'把分类下配置代理的整棵团队展开成列表，可勾选「只看最下面一层」。',fields:['列：ID、代理、类型（ZDL 总代理 / DL 代理）、上级 ID、所属配置代理、层数、最下层'],api:'POST /api/admin/agentAttr/tree，body: groupId, page, pageSize, leafOnly'},
+ 'ra-edit':{v:'rpt-attr',n:'编辑 / 删除',t:'弹窗 / 确认框',does:'「编辑分类」字段同新建；删除需确认（未点击）。'},
+ // 代理用户留存报表
+ 'rt-filter':{v:'rpt-retention',n:'筛选：代理编号 / 日期',t:'筛选',does:'选代理（多选）和日期区间，查看代理新用户的留存。默认近 30 天。',fields:['代理编号：1,812 项，除代理外还有 HK_A、HK_B、HK_C 三个分组项','开始日期 ~ 结束日期'],api:'POST /api/admin/user/queryAllAgent；POST /api/admin/DashBoard/queryUserRetentionNewAgent，body: startTime, endTime, pageSize',note:'HK_A / HK_B / HK_C 是什么维度没有说明。选了代理查询时页面卡住超过 3 分钟（采集时两次），没拿到数据行。',issue:true},
+ 'rt-cols':{v:'rpt-retention',n:'列：维度 + D ~ D30',t:'列表',does:'表头两层：每个日期组下面再分两行指标。',fields:['维度：代理编号、日期','D（当日新用户）：总访问人数 / 总活跃人数、注册人数 / 注册且活跃、注册且充值 / 总首冲人数、注册转化率 / 注册充值率','D1（次日）、D2 ~ D7、D14、D30：活跃人数 / 复充人数、活跃率 / 复充率'],note:'注册充值率曾被算成「全平台首充 ÷ 注册且活跃」导致超过 100%（-6193），验收时要核对。'},
+ // 代理
+ 'a-filter':{v:'agent',n:'筛选区',t:'筛选',does:'同大代理页；标签下拉是另一组代理标签。',fields:['状态、类型+关键字、国家、未登录天数、上级代理、过滤测试用户 — 同大代理','标签：JUST Agent / Mobile Only'],api:'POST /api/admin/user/queryagentlist；GET /api/admin/lable/queryAll/2'},
+ 'a-add':{v:'agent',n:'新增代理',t:'弹窗',does:'在大代理或其他代理下新建代理。',fields:['* 上级代理：下拉，混合列出大代理和代理','* 代理账号、* 登录密码、* 代理名称、* 国家、* 币种','标签','☐ 内部测试账号','☐ 是否为B端商户代理'],api:'POST /api/admin/user/queryAddAgentDl；GET /api/admin/lable/queryAll/2',note:'同新增大代理：浏览器会自动填入管理员账号密码。「B端商户代理」的含义待确认。',issue:true},
+ 'a-team':{v:'agent',n:'列：直属代理/直属会员/团队数',t:'列表字段',does:'代理的团队规模。',api:'直属代理/直属会员：count where super_id = 代理ID（DL / HY）；团队数：count where query_code like \'代理query_code%\'（不含自己）',note:'有团队数小于直属数的情况：GG_BID_156 为 0 / 1 / 0，JILLL111 为 0 / 3 / 2。后端解释：开了「会员邀请改挂代理」时，新会员 super_id 改成指定代理（计入其直属会员），但 query_code 仍挂在原邀请会员下（计入原代理团队数），两边对不上。详见逻辑图 ⑤⑥。',issue:true},
+ 'a-edit':{v:'agent',n:'编辑',t:'弹窗',does:'修改代理资料，字段同大代理，但没有「是否可以开代理」。',fields:['账号（只读）、登录密码、会员层级','真实姓名、电话、邮箱、QQ、提款密码、备注','标签（JUST Agent / Mobile Only）','今日密码错误次数 + 清除'],api:'GET getpasswrongtimes/{id}；rech_bank；rech_levels；lable/queryAll/2；queryuserbank/{id}'},
+ 'a-status':{v:'agent',n:'状态',t:'弹窗',does:'同大代理：正常 / 冻结 / 停用 / 整线停用。'},
+ 'a-gauth':{v:'agent',n:'Google验证码',t:'弹窗',does:'同大代理。'},
+ 'a-invite':{v:'agent',n:'邀请码',t:'跳转页面',does:'进入代理邀请码列表。',api:'#/agent-invite-list/{id}',note:'代理只有 4 个操作，没有佣金配置、变更代理线、会员转移、资金明细、额度修改。'},
+ // 会员
+ 'm-filter':{v:'member',n:'筛选区（约 30 项）',t:'筛选',does:'按状态、层级、等级、证件、投注站、设备、注册方式、KYC、标签、金额、时间等组合查询会员。',fields:['状态：全部 / 待审核 / 正常 / 冻结 / 停用 / 注销 / 禁止投注 / 临时冻结','用户层级 Default layer、Tier 1–8；用户等级 普通会员…至尊会员、VIP6–10；vip等级 Lv 0–30','身分证件类别（22 种）','投注站：eeee / sandy / ceshishijian / KLbbc / 777 / kobe / bb wave','设备类型：PC / H5 / Android / IOS / PC_WIN / PC_MAC / H5_IOS / H5_ANDROID','搜索类型：账号 / 会员ID / 银行卡号 / 昵称 / 真实姓名 / 邮箱 / 手机号 / zalo / facebook / whatsapp / telegram / 安全问题回答','国家、国籍、注册方式（手机号 / Google / Facebook / Apple / Telegram）','kyc 状态：从未认证 / 待提交 / 待审核 / 审核拒绝 / 完全验证','电话：不限 / 无 / 有；会员类型：平台 / Glife / Maya','标签、推广人账号、所属代理、邀请码、批量账号','金额区间、存款次数、未登录天数区间；锁定、注册、KYC 通过的时间区间','☑ 过滤测试用户'],api:'POST /api/admin/user/queryviplist，body: searchType, searchWord, userType, filterTest, agentName, regSource, lableIdList, userVipIds, nationality, platformId, queryCode …',note:'进入页面不自动查询，默认是空表。11-10 白天查询接口多次返回「系统查询繁忙，请稍后再试」（code 6059，技术处理后恢复），失败时页面没有任何提示，只显示 No Data。会员总数 2,178,947。投注站下拉只有 7 项，两个「bb wave」合成了一个。',issue:true},
+ 'm-stat':{v:'member',n:'统计条',t:'只读',does:'列表上方显示用户总金额（不含测试用户，默认打码）、当日注册、当日注册有效用户（首充）。',api:'POST /api/admin/platform/user/statistic/dailyreport'},
+ 'm-add':{v:'member',n:'新增会员',t:'弹窗',does:'后台手动建会员。',fields:['* 上级代理（下拉）','国家、币种（随上级带出）','* 投注站名称（下拉）','* 帐户、* 登录密码','* 真实姓名','会员类型：普通会员 / 代理会员'],api:'POST /api/admin/user/queryagentlist；POST /api/admin/betting-station/list',note:'提示：新增用户的测试标示与上级代理相同。同样会被浏览器自动填入管理员账号密码。',issue:true},
+ 'm-batch-info':{v:'member',n:'批量更新用户资讯',t:'弹窗',does:'用分号分隔多个账号，一次改状态、等级、层级、返水开关和标签。',fields:['* 帐户（用 ; 分隔）','状态：正常 / 冻结','用户等级、会员层级','备注','停止第三方返水：正常 / 停用；停止体育返水：正常 / 停用','添加会员标签 / 删除会员标签'],api:'GET userLevelConfig/queryConfig；rech_levels；lable/queryAll/3'},
+ 'm-batch-bal':{v:'member',n:'批量更新用户余额',t:'弹窗',does:'按「用户名 金额」批量加减余额，必须输入 Google 验证码。',fields:['* 用户金额：如 user10 100.12;user09 200.89','* 备注','* Google验证码']},
+ 'm-export':{v:'member',n:'导出用户数据 / 导出不隐藏用户数据',t:'按钮',does:'按当前筛选导出会员；「不隐藏」版本导出未打码的敏感字段。',note:'会下载文件，本轮未点击。不隐藏导出应受权限码和操作日志约束，待确认。'},
+ 'm-import':{v:'member',n:'批量导入用户',t:'弹窗',does:'上传文件批量建会员。',fields:['点击上传（只能上传 CSV）'],note:'页面提示写成「只能上传cvs文件」，错别字。导入模板未提供下载入口。',issue:true},
+ 'm-col':{v:'member',n:'列：会员信息 / 层级团队 / 信用额度 / 存提款 / 日期信息',t:'列表字段',does:'一行显示会员全部关键信息。',fields:['会员信息：会员ID、会员名、手机号、各社交绑定、注册方式、真实姓名、昵称、上级代理、邀请人、信用值、设备类型、投注站名称、币别、国家、三方游戏用户名','层级&团队：会员层级、成长值、等级、账号类型、账号级别、会员类型','信用&额度：余额、余额宝、欠款、余额宝利息、锁定额度、会员积分','存提款：存款/提款总额与次数、活动领取金额','日期信息：新增时间、最后登录、离开天数、当前/上次登录 IP、上次登录方式、KYC 通过时间'],note:'5ji-wanghong 下多个会员余额都是 503,078.000（含存款 0 的），11-06 已记录，待确认是测试数据还是取数错误。',issue:true},
+ 'm-online':{v:'member',n:'在线 / 踢下线',t:'按钮',does:'在线会员显示「踢下线」，强制该会员退出登录。',note:'点了会立即生效，梳理时未点击。'},
+ 'm-balance':{v:'member',n:'余额（可点击）',t:'弹窗',does:'点余额数字弹出「会员余额详情」，实时查询平台钱包和各三方钱包余额。',fields:['平台钱包：118.800（示例）'],api:'POST /api/admin/thirdapi/getAllBalance，body: userId'},
+ 'm-edit':{v:'member',n:'编辑用户',t:'弹窗',does:'修改会员的账号状态、实名和 KYC 资料、联系方式、层级、投注站、返水开关、第三方授权登录和标签，共 48 个字段。',fields:['账号（只读）、状态：待审核 / 正常 / 冻结 / 停用 / 禁止投注 / 临时冻结、登录密码','真实姓名、名 / 中间名（可勾「无」）/ 姓、vip生日、昵称、性别（女 / 男 / 其他）','会员层级、投注站名称（下拉）','生日、身分证字号、薪资来源（6 项）、身分证件类别（22 项）','电话前缀国码、手机号、邮箱、国籍（下拉）、出生地、工作性质（下拉）','当前地址、省/城市、邮编；永久居住地、省/城市、邮编','QQ、微信、zalo、whatsapp、telegram、facebook','安全问题（10 项）、安全问题回答、提款密码','备注、* 新增备注（必填）','停止第三方返水、停止体育返水、当天最大充值返利次数','Google / Apple / Facebook / Telegram 授权登录开关','会员标签（多选）、今日密码错误次数 + 清除'],api:'POST /api/admin/user/queryuserinfo；kycRiskControlList/getKycRiskReasonAndStatus；user/getSelfExclusionDayRange；lable/queryAll/3；userLevelConfig/queryConfig；rech_bank；rech_levels；getpasswrongtimes/{id}',note:'「新增备注」是必填项，任何修改都要写备注。手机号在编辑弹窗里明文显示，列表里打码。'},
+ 'm-detail':{v:'member',n:'详情',t:'弹窗',does:'只读查看会员完整资料，敏感字段打码，输入 Google 验证码点「搜索」后可解码。字段同大代理「详情」。',api:'POST /api/admin/user/queryuserinfo，body: notFilterBlank, userId'},
+ 'm-wd':{v:'member',n:'更多 → 编辑提款信息',t:'弹窗',does:'查看和申请修改会员的提款账户。改动走申请，不直接生效。',fields:['列表：提款类型、开户银行/虚拟币合约、银行卡号/虚拟币地址、分行地址、申请理由、操作','按钮：添加提款信息、新增或修改申请、删除申请、返回'],api:'GET /api/admin/user/queryuserbank/{id}；rech_bank'},
+ 'm-quota':{v:'member',n:'更多 → 额度修改',t:'弹窗',does:'人工给会员加减余额，字段同大代理额度修改。',fields:['账号、币种、余额（只读）','* 调整类型：增加金额 / 扣除金额','* 金额（有上限）','* 金额类型：后台充值 / 手动添加礼金 / 手动补投注派彩 / 手动添加佣金 / 手动其他加额度','* 备注'],api:'GET /api/admin/wdactivity/getAll；GET /api/admin/currency/listAll'},
+ 'm-agent':{v:'member',n:'更多 → 变更代理',t:'弹窗',does:'把单个会员改挂到另一个代理下。只改上级代理，不改邀请人。',fields:['当前代理（只读）','新代理（下拉）','国家、币种（只读）'],api:'POST /api/admin/user/queryagentlist',note:'提示：变更用户的测试标示与上级代理相同。'},
+ 'm-third':{v:'member',n:'更多 → 第三方游戏',t:'弹窗',does:'按厂商查看会员在各三方游戏钱包里的余额，可单个转回平台或全部转出。',fields:['全部转出','每个厂商：点击显示余额 / 转至平台（QA 共 17 个厂商）'],api:'GET /api/admin/thirdapi/thirdgames/1',note:'「转至平台」「全部转出」会立即调用三方转账，梳理时未点击。'},
+ 'm-kyc':{v:'member',n:'更多 → KYC信息',t:'弹窗',does:'查看和审核会员 KYC 资料，可以保存、通过或拒绝。',fields:['基本信息：账号 + KYC 状态、全名、名 / 中间名 / 姓、国籍、生日、出生地、工作性质、收入来源、投注站、当前地址、永久居住地（可勾「使用当前地址」）、备注','证件信息：证件类型、证件号码、证件照、EKYC 截屏','补充信息：证件背面、自拍照、收入证明','NDRP 图片','按钮：save / Pass KYC / Reject KYC'],api:'GET /api/admin/userKyc/getById/{id}；userKyc/getGameVenues；area/universal；works/queryAll；querySalarySource；queryIdentityType',note:'① 这里的「投注站」下拉是另一套名称（LAGUNA、BUENDIA PASAY、PTT PASAY、MALATE…），和投注站列表的名称对不上。② 示例会员 KYC 状态为「完全验证」，但所有证件图片都显示 FAILED。③ 按钮是英文，其余是中文。',issue:true},
+ 'm-pwd':{v:'member',n:'更多 → 修改密码 / 修改提款密码 / 修改手机号码',t:'弹窗',does:'提交修改申请，按钮是「申请」，推断进入「会员资料修改审核」流程，审核通过后生效。',fields:['修改密码：新密码、* 原因','修改提款密码：* 新提款密码、* 原因','修改手机号码：* 新手机号码、* 原因'],note:'「修改密码」的新密码没有必填标记，可以只填原因就提交，待确认。',issue:true},
+ 'm-es':{v:'member',n:'ES数据同步',t:'按钮',does:'把该会员数据重新同步到 ES（审计和报表查询用）。',note:'可能点了立即执行，本轮未点击。'},
+ 'm-bill':{v:'member',n:'资金明细',t:'跳转页面',does:'会员账变流水，同大代理资金明细页。',api:'#/user-bill-list/{id}'},
+ 'm-more':{v:'member',n:'更多（12 项）',t:'下拉菜单',does:'会员的账号安全、资金和归属操作。点开后可以逐个打开弹窗。',fields:['编辑提款信息、额度修改、变更代理、第三方游戏、KYC信息','修改密码、修改提款密码、修改手机号码（都是提交申请）','清除稽核记录 ⚠ 未点击','解锁金额 ⚠ 未点击','发送OTP ⚠ 未点击（会给会员真实手机号发短信）','发送短信 ⚠ 未点击'],note:'带 ⚠ 的可能点了就直接执行，只记录了名称。'}
+};
+const VIEWS={station:'投注站',['station-add']:'新增投注站',['sub-account']:'子账号管理',['sub-role']:'子账号角色权限管理',['station-ip']:'IP 管理',['agent-drill']:'大代理（下钻）',['big-agent']:'大代理',['user-bill']:'资金明细',['agent-invite']:'代理邀请码列表',['agent-vip-bill']:'代理直属会员账单',agent:'代理',member:'会员',issues:'疑点汇总',logic:'逻辑图',['rpt-login']:'代理登录数据报表',['rpt-recharge']:'代理充值留存',['rpt-attr']:'代理关系归属表',['rpt-retention']:'代理用户留存报表'};
+const MENU_OF={station:'station','agent-drill':'station','station-add':'add','sub-account':'sub','sub-role':'role','station-ip':'ip','big-agent':'big-agent','user-bill':'user-bill','agent-invite':'agent-invite','agent-vip-bill':'agent-vip-bill',agent:'agent',member:'member',issues:'issues',logic:'logic','rpt-login':'rpt-login','rpt-recharge':'rpt-recharge','rpt-attr':'rpt-attr','rpt-retention':'rpt-retention'};
+let rcLevel=0;
+let actx=BIG[0], banner='';
+let ctx=STATIONS[0], filt={st:'所有',by:'账号',kw:'',g:'全部'}, selected=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sp=(id,extra='')=>`data-spec="${id}" class="${extra}${SPEC[id]&&SPEC[id].issue?' issue':''}"`;
+function toast(msg){const t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),1800)}
+
+function viewName(){const h=location.hash.replace('#','');return VIEWS[h]?h:'station'}
+function render(){
+  const v=viewName();
+  document.querySelectorAll('.menu a').forEach(a=>a.classList.remove('on'));
+  const mEl=$('#m-'+MENU_OF[v]); if(mEl) mEl.classList.add('on');
+  const html={station:vStation,'station-add':vAdd,'sub-account':vSub,'sub-role':vRole,'station-ip':vIp,'agent-drill':vDrill,'big-agent':vBig,'user-bill':vBill,'agent-invite':vInvite,'agent-vip-bill':vVipBill,agent:vAgent,member:vMember,issues:vIssues,logic:vLogic,'rpt-login':vRptLogin,'rpt-recharge':vRptRecharge,'rpt-attr':vRptAttr,'rpt-retention':vRptRetention}[v]();
+  const who=['sub-account','sub-role','station-ip','agent-drill'].includes(v)?' · 当前投注站：'+esc(ctx.acc):(['user-bill','agent-invite','agent-vip-bill'].includes(v)?' · 当前账号：'+esc(actx.acc):'');
+  $('#page').innerHTML=`<div class="crumb">位置 › ${v.startsWith('rpt-')?'平台概况':(v==='issues'||v==='logic'?'汇总':'用户管理')} › ${VIEWS[v]}${who}</div>`+html+(v==='issues'||v==='logic'?'':listCard(v));
+  if(!selected||SPEC[selected].v!==v){selected=Object.keys(SPEC).find(k=>SPEC[k].v===v)||null}
+  showSpec(selected);
+}
+function vStation(){
+  const rows=STATIONS.filter(s=>(filt.st==='所有'||s.st===filt.st)&&(filt.g==='全部'||s.g===filt.g)&&(!filt.kw||(filt.by==='账号'?s.acc:s.name).toLowerCase().includes(filt.kw.toLowerCase())));
+  return `<div class="card"><div class="bar">
+   <span ${sp('f-status')}><span class="lab">筛选：</span><select id="fSt">${['所有','正常','冻结','停用'].map(o=>`<option${o===filt.st?' selected':''}>${o}</option>`).join('')}</select></span>
+   <span ${sp('f-search')}><span class="lab">搜索：</span><select id="fBy">${['账号','名称'].map(o=>`<option${o===filt.by?' selected':''}>${o}</option>`).join('')}</select> <input type="text" id="fKw" placeholder="查询关键字" value="${esc(filt.kw)}"></span>
+   <span ${sp('f-google')}><span class="lab">Google验证码：</span><select id="fG">${['全部','开启','关闭'].map(o=>`<option${o===filt.g?' selected':''}>${o}</option>`).join('')}</select></span>
+   <button ${sp('btn-search','btn ')} data-act="search">搜索</button>
+   <span class="grow"></span>
+   <button ${sp('btn-add','btn add ')} data-act="go" data-to="station-add">+ 新增投注站</button>
+  </div></div>
+  <div class="card"><div class="tw"><table>
+   <tr><th>账号</th><th>名称</th><th ${sp('col-members')}>会员数</th><th ${sp('col-agents')}>代理数</th><th ${sp('col-team')}>直属代理/直属会员/团队数</th><th ${sp('col-status')}>状态</th><th>新增时间</th><th ${sp('col-google')}>Google验证码</th><th>备注</th><th>操作</th></tr>
+   ${rows.map((s,i)=>`<tr><td>${esc(s.acc)}</td><td>${esc(s.name)}</td><td>${s.mem}</td><td><button class="lk num" data-spec="col-agents" data-act="drill" data-i="${STATIONS.indexOf(s)}">${s.agt}</button></td><td>${s.team.toLocaleString()}</td><td><span class="tag ok">${s.st}</span></td><td>${s.time}</td><td><span class="tag ${s.g==='开启'?'ok':'off'}">${s.g}</span></td><td>${esc(s.rm)}</td>
+   <td><div class="ops">${[['op-edit','编辑'],['op-deposit','押金调整'],['op-add','增加额度'],['op-sub','减少额度'],['op-detail','投注站详情'],['op-transfer','用户转移'],['op-subacc','子账号管理'],['op-role','子账号角色权限管理'],['op-gauth','Google验证码'],['op-base','设置基准额度'],['op-ip','添加IP']].map(([id,t])=>`<button ${sp(id,'lk ')} data-act="op" data-op="${id}" data-i="${STATIONS.indexOf(s)}">${t}</button>`).join('')}</div></td></tr>`).join('')||`<tr><td colspan="10" class="empty">No Data</td></tr>`}
+  </table></div><div class="pager">Total ${rows.length} · 10/page · 1</div></div>`;
+}
+function vAdd(){
+  const firms=['WE Gaming','EVO','JDB Gaming','PlayStar Gaming','SA Gaming','YGR','RICH88','King Maker','PRAGMATIC PLAY','FC Gaming','PG','Realistic'];
+  return `<div class="card"><div class="bar"><button class="btn plain" data-spec="add-submit" data-act="go" data-to="station">返回</button><b>新增投注站</b><span class="grow"></span><button ${sp('add-submit','btn ')} data-act="submit">提交</button></div></div>
+  <div class="card" ${sp('add-account')}><div class="form">${fld('代理账号','text','')}${fld('登录密码','password','')}</div></div>
+  <div class="card" ${sp('add-basic')}><div class="form">${fld('代码','text','',1)}${fld('名称','text','',1)}${rad('类型',['直营','非直营'],1)}</div></div>
+  <div class="card" ${sp('add-store')}><div class="form">${fld('纬度','text','',1)}${fld('经度','text','',1)}${fld('店长','text','',1)}${fld('手机','text','',1)}${fld('营业开始时间','text','00:00',1)}${fld('营业结束时间','text','23:59',1)}<div class="f"><span class="lab req">地区</span><select><option>PHILIPPINES / Metro Manila / Manila</option></select></div>${fld('地址','text','',1)}<div class="f"><span class="lab">站点图片上传</span><button class="btn ghost" type="button" data-act="noop">图片上传</button><span class="hint">只能上传 jpg/png/gif/webp/pag/webm 文件，且不超过 2MB</span></div></div></div>
+  <div class="card" ${sp('add-perm')}><div class="form">${rad('充值权限',['否','是'],1)}${rad('提现权限',['否','是'],1)}${rad('KYC权限',['否','是'],1)}${rad('预约提款权限',['是','否'],1)}${rad('Google验证码',['开启','关闭'],1)}</div></div>
+  <div class="card" ${sp('add-share')}><div class="form">${fld('体育占成（可设置区间 0~100.00%）','number','')}</div>
+   <div class="tabs">${['全部','彩票','真人','电子','捕鱼','棋牌','体育','迷你游戏'].map((t,i)=>`<span class="${i?'':'on'}">${t}</span>`).join('')}</div>
+   <div class="bar" style="margin-bottom:8px"><span class="lab">快捷设置：</span><input type="number" id="quick" placeholder="%" style="width:80px"><button class="btn ghost" data-act="quick">应用到全部</button></div>
+   <div class="share">${firms.map((f,i)=>`<label>${f}<span><input type="number" class="pct" id="pct${i}" min="0" max="100"> %</span></label>`).join('')}</div></div>`;
+}
+function fld(l,type,val,req){return `<div class="f"><span class="lab${req?' req':''}">${l}</span><input type="${type}" value="${esc(val)}"></div>`}
+function rad(l,opts,req){const n='r'+Math.random().toString(36).slice(2,7);return `<div class="f"><span class="lab${req?' req':''}">${l}</span><span class="radios">${opts.map((o,i)=>`<label><input type="radio" name="${n}"${i?'':' checked'}> ${o}</label>`).join('')}</span></div>`}
+function vSub(){
+  return `<div class="card"><div class="bar"><button ${sp('sa-back','btn plain ')} data-act="go" data-to="station">返回</button><b>子账号管理</b></div>
+  <div class="bar" style="margin-top:10px" ${sp('sa-filter')}><span class="lab">账号</span><input type="text"><span class="lab">名称</span><input type="text"><span class="lab">状态</span><select><option>全部</option><option>正常</option><option>停用</option></select><button class="btn">搜索</button><span class="grow"></span><button ${sp('sa-add','btn add ')} data-act="dlg" data-d="sa-add">+ 新增子账号</button></div></div>
+  <div class="card"><div class="tw"><table><tr><th>账号</th><th>名称</th><th>角色</th><th>状态</th><th>新增时间</th><th>备注</th><th>操作</th></tr>
+  <tr><td>${esc(ctx.acc)}</td><td>${esc(ctx.name.toUpperCase())}</td><td>超级管理员</td><td><span class="tag ok">正常</span></td><td>${ctx.time}</td><td></td><td><div class="ops">
+  <button ${sp('sa-view','lk ')} data-act="dlg" data-d="sa-view">查看</button><button ${sp('sa-edit','lk ')} disabled style="opacity:.45;cursor:not-allowed" title="超级管理员不可编辑">编辑</button><button ${sp('sa-del','lk ')} disabled style="opacity:.45;cursor:not-allowed" title="超级管理员不可删除">删除</button><button ${sp('sa-gauth','lk ')} data-act="dlg" data-d="op-gauth">Google验证码</button></div></td></tr></table></div><div class="pager">Total 1</div></div>`;
+}
+function vRole(){
+  return `<div class="card"><div class="bar"><button class="btn plain" data-act="go" data-to="station">返回</button><b>子账号角色权限管理</b></div>
+  <div class="bar" style="margin-top:10px" ${sp('ro-filter')}><span class="lab">角色名称：</span><input type="text"><button class="btn">搜索</button><span class="grow"></span><button ${sp('ro-add','btn add ')} data-act="dlg" data-d="ro-add">+ 新增角色</button></div></div>
+  <div class="card"><div class="tw"><table><tr><th>角色名</th><th>新增时间</th><th>备注</th><th>操作</th></tr>
+  <tr><td>超级管理员</td><td>2026-11-10 10:06</td><td></td><td><div class="ops"><button ${sp('ro-view','lk ')} data-act="dlg" data-d="ro-add" data-title="查看角色">查看</button><button ${sp('ro-view','lk ')} data-act="dlg" data-d="ro-add" data-title="编辑角色">编辑</button><button ${sp('ro-view','lk ')} data-act="dlg" data-d="sa-del">删除</button></div></td></tr></table></div><div class="pager">Total 1</div></div>`;
+}
+function vIp(){
+  return `<div class="card"><div class="bar"><button class="btn plain" data-act="go" data-to="station">返回</button><b>IP 管理</b><span class="grow"></span><button ${sp('ip-add','btn add ')} data-act="dlg" data-d="ip-add">新增</button><button ${sp('ip-refresh','btn ghost ')} data-act="noop">刷新</button></div></div>
+  <div class="card" ${sp('ip-list')}><div class="tw"><table><tr><th>IP</th><th>备注</th><th>创建时间</th><th>操作人</th><th>更新时间</th><th>更新人</th><th>操作</th></tr><tr><td colspan="7" class="empty">No Data</td></tr></table></div><div class="pager">Total 0</div></div>`;
+}
+function vDrill(){
+  return `<div class="card"><div class="bar"><button class="btn plain" data-act="go" data-to="station">返回上一级</button><b>大代理</b><span class="hint">上级 = ${esc(ctx.acc)}（superId）</span></div>
+  <div class="bar" style="margin-top:10px"><span class="lab">状态</span><select><option>所有</option></select><span class="lab">类型</span><select><option>账号</option></select><select><option>标签</option></select><select><option>请选择国家</option></select><input type="text" placeholder="查询关键字"><label ${sp('col-agents')}><input type="checkbox" checked> 过滤测试用户</label><button class="btn">搜索</button></div></div>
+  <div class="card"><div class="tw"><table><tr><th>在线</th><th>账号</th><th>直属代理/直属会员/团队数</th><th>状态</th><th>新增时间</th><th>余额</th><th>佣金余额</th><th>备注</th><th>操作</th></tr><tr><td colspan="9" class="empty">No Data（列表页显示代理数 ${ctx.agt}）</td></tr></table></div></div>`;
+}
+function agentFilters(tagOpts,specId,addSpec,addText){
+  return `<div class="card"><div class="bar" ${sp(specId)}>${banner?`<button class="btn plain" data-act="unbanner">返回</button>`:''}<span class="lab">状态</span><select><option>所有</option><option>待审核</option><option>正常</option><option>冻结</option><option>停用</option><option>整线停用</option></select>
+   <span class="lab">类型</span><select><option>账号</option><option>名称</option><option>邀请码</option><option>手机号</option></select>
+   <select><option>标签</option>${tagOpts.map(o=>`<option>${o}</option>`).join('')}</select><span class="lab">国家</span><select><option>请选择国家</option><option>菲律賓</option></select>
+   <input type="text" placeholder="查询关键字"><input type="text" placeholder="未登录天数" style="width:100px"><input type="text" placeholder="上级代理" style="width:110px">
+   <label><input type="checkbox" checked> 过滤测试用户</label><button class="btn" data-act="noop">搜索</button>
+   <button ${sp(addSpec,'btn add ')} data-act="dlg" data-d="${addSpec}">+ ${addText}</button></div>${banner?`<p class="hint" style="margin:8px 0 0">${banner}</p>`:''}</div>`;
+}
+function accBlock(a){return `<div style="text-align:left;line-height:1.6">代理id：${a.id}<br>账号：<span style="color:var(--link)">${esc(a.acc)}</span><br>昵称：${esc(a.nick)}<br>上级代理：${esc(a.up)}<br>账号类型：普通账号<br>国家：菲律賓<br>币种：PHP<br>代理标签：${esc(a.tag)}</div>`}
+function vBig(){
+  const ops=[['b-edit','编辑'],['b-status','状态'],['b-gauth','Google验证码'],['b-comm','佣金配置'],['b-line','变更代理线'],['b-move','直属会员转移']];
+  const more=[['b-bill','资金明细'],['b-invite','邀请码'],['b-vipbill','会员资金明细'],['b-detail','详情'],['b-quota','额度修改']];
+  return agentFilters(['sandy999','789Agent','Bonus Hunter','Night-Time Active','Big Depositor'],'b-filter','b-add','新增大代理')+
+  `<div class="card"><div class="tw"><table><tr><th>在线</th><th class="l" ${sp('b-col-acc')}>账号</th><th ${sp('b-col-team')}>直属代理/直属会员/团队数</th><th>状态</th><th>新增时间</th><th ${sp('b-col-money')}>余额</th><th>佣金余额</th><th>备注</th><th>操作</th></tr>
+  ${BIG.map((a,i)=>`<tr><td><span class="tag off">离线</span></td><td class="l">${accBlock(a)}</td><td><button class="lk num" data-spec="b-col-team" data-act="bdrill" data-k="d" data-i="${i}">${a.d}</button> / <button class="lk num" data-spec="b-col-team" data-act="bdrill" data-k="m" data-i="${i}">${a.m.toLocaleString()}</button> / ${a.team.toLocaleString()}</td><td><span class="tag ok">正常</span></td><td>${a.time}</td><td>0.00</td><td>0.00</td><td></td>
+  <td><div class="ops">${ops.map(([id,t])=>`<button ${sp(id,'lk ')} data-act="bop" data-op="${id}" data-i="${i}">${t}</button>`).join('')}
+  <details style="width:100%"><summary class="lk" style="cursor:pointer;list-style:none">更多…</summary><div class="ops" style="margin-top:4px">${more.map(([id,t])=>`<button ${sp(id,'lk ')} data-act="bop" data-op="${id}" data-i="${i}">${t}</button>`).join('')}</div></details></div></td></tr>`).join('')}
+  </table></div><div class="pager">Total 53（示例显示 ${BIG.length} 条）</div></div>`;
+}
+function vAgent(){
+  const ops=[['a-edit','编辑'],['a-status','状态'],['a-gauth','Google验证码'],['a-invite','邀请码']];
+  const rows=banner?AGT.filter(a=>a.up===actx.acc):AGT;
+  return agentFilters(['JUST Agent','Mobile Only'],'a-filter','a-add','新增代理')+
+  `<div class="card"><div class="tw"><table><tr><th>在线</th><th class="l">账号</th><th ${sp('a-team')}>直属代理/直属会员/团队数</th><th>状态</th><th>新增时间</th><th>余额</th><th>佣金余额</th><th>备注</th><th>操作</th></tr>
+  ${rows.map(a=>{const i=AGT.indexOf(a);const bad=a.team<a.d+a.m;return `<tr><td><span class="tag off">离线</span></td><td class="l">${accBlock(a)}</td><td ${bad?`data-spec="a-team" class="issue" style="color:var(--warn);font-weight:600"`:''}>${a.d} / ${a.m} / ${a.team}</td><td><span class="tag ok">正常</span></td><td>${a.time}</td><td>0.00</td><td>0.00</td><td>${esc(a.rm)}</td>
+  <td><div class="ops">${ops.map(([id,t])=>`<button ${sp(id,'lk ')} data-act="aop" data-op="${id}" data-i="${i}">${t}</button>`).join('')}</div></td></tr>`}).join('')||`<tr><td colspan="9" class="empty">No Data</td></tr>`}
+  </table></div><div class="pager">Total 1746（示例显示 ${rows.length} 条）</div></div>`;
+}
+function vBill(){
+  return `<div class="card"><div class="bar" ${sp('ub-page')}><button class="btn plain" data-act="go" data-to="big-agent">返回</button><input type="text" value="2026-11-10 00:00 ~ 2026-11-10 23:59" style="min-width:240px"><select><option>交易类型</option></select><button class="btn" data-act="noop">搜索</button><span class="grow"></span><b>总金额：0.00 (PHP)</b></div></div>
+  <div class="card"><div class="tw"><table><tr><th>订单号</th><th>交易时间</th><th>交易类型</th><th>交易金额</th><th>余额</th><th>备注</th></tr><tr><td colspan="6" class="empty">No Data</td></tr></table></div></div>`;
+}
+function vVipBill(){
+  return `<div class="card"><div class="bar" ${sp('avb-page')}><button class="btn plain" data-act="go" data-to="big-agent">返回</button><input type="text" value="2026-11-10 00:00 ~ 2026-11-10 23:59" style="min-width:240px"><button class="btn" data-act="noop">搜索</button><span class="grow"></span><b>总金额：0.00 (PHP)</b></div>
+  <div class="warnbox" style="margin-top:10px">Agent or betting station filters require a member account.（实测打开即弹出两次）</div></div>
+  <div class="card"><div class="tw"><table><tr><th>订单号</th><th>账号</th><th>交易时间</th><th>交易类型</th><th>交易金额</th><th>余额</th><th>备注</th></tr><tr><td colspan="7" class="empty">No Data</td></tr></table></div></div>`;
+}
+function vInvite(){
+  const has=actx.acc==='sandy888777666555';
+  return `<div class="card"><div class="bar" ${sp('ai-page')}><button class="btn plain" data-act="back-invite">返回</button><input type="text" placeholder="邀请码"><button class="btn" data-act="noop">搜索</button><span class="grow"></span><button ${sp('ai-add','btn add ')} data-act="dlg" data-d="ai-add">新增邀请码</button></div></div>
+  <div class="card"><div class="tw"><table><tr><th>邀请码</th><th>会员类型</th><th>注册人数</th><th>创建时间</th><th>操作</th></tr>
+  ${has?`<tr><td>1234_sandy</td><td>普通会员</td><td>0</td><td>2026-10-19 12:05:01</td><td><div class="ops"><button ${sp('ai-row','lk ')} data-act="copy">复制链接</button><button ${sp('ai-row','lk ')} data-act="copy">短信推广域名</button><button ${sp('ai-row','lk ')} data-act="dlg" data-d="ai-qr">二维码</button></div></td></tr>`:`<tr><td colspan="5" class="empty">No Data（示例：代理 sandy888777666555 有一个邀请码）</td></tr>`}
+  </table></div></div>`;
+}
+function vMember(){
+  const sel=(ph,opts)=>`<select><option>${ph}</option>${opts.map(o=>`<option>${o}</option>`).join('')}</select>`;
+  const showRows=window.__memSearched;
+  return `<div class="card"><div class="bar" ${sp('m-filter')}>
+  ${sel('全部状态',['待审核','正常','冻结','停用','注销','禁止投注','临时冻结'])}${sel('所有用户层级',LAYERS)}${sel('所有用户等级',['普通会员','白银会员','黄金会员','铂金会员','钻石会员','至尊会员','VIP6','VIP7','VIP8','VIP9','VIP10'])}${sel('所有身分证件类别',["Driver's License",'Philippine National ID','Valid Passport','UMID','…'])}${sel('所有投注站',['eeee','sandy','ceshishijian','KLbbc','777','kobe','bb wave'])}${sel('设备类型',['PC','H5','Android','IOS','PC_WIN','PC_MAC','H5_IOS','H5_ANDROID'])}${sel('账号',['会员ID','银行卡号','昵称','真实姓名','邮箱','手机号','zalo','facebook','whatsapp','telegram','安全问题回答'])}
+  <input type="text" placeholder="账号/名称/邮箱/手机号"><input type="text" placeholder="推广人账号" style="width:110px"><input type="text" placeholder="最小金额" style="width:90px"><input type="text" placeholder="最大金额" style="width:90px">
+  <input type="text" placeholder="锁定开始日期 ~ 结束日期" style="width:180px"><input type="text" placeholder="注册起始时间 ~ 结束时间" style="width:180px"><input type="text" placeholder="KYC通过起始 ~ 截止时间" style="width:180px">
+  ${sel('kyc 状态',['从未认证','待提交','待审核','审核拒绝','完全验证'])}<input type="text" placeholder="未登录最小天数" style="width:110px"><input type="text" placeholder="未登录最大天数" style="width:110px"><input type="text" placeholder="所属代理" id="mAgent" style="width:110px" value="5ji-wanghong"><input type="text" placeholder="存款次数大于" style="width:110px">
+  ${sel('不限制电话号码',['无电话号码','有电话号码'])}${sel('全部会员类型',['平台会员','Glife会员','Maya会员'])}<input type="text" placeholder="邀请码" style="width:90px"><input type="text" placeholder="批量输入账号，使用逗号隔开">${sel('全部标签',['Frequent Depositor','High Volume Bettor','Inactive Member','无标签'])}${sel('vip等级',['Lv 0','Lv 1','…','Lv 30'])}
+  <label><input type="checkbox" checked> 过滤测试用户</label>${sel('全部国籍',['菲律宾','其他'])}${sel('注册方式',['手机号','Google','Facebook','Apple','Telegram'])}<button class="btn" data-act="msearch">搜索</button></div>
+  <div class="bar" style="margin-top:10px;justify-content:flex-end">
+  <button ${sp('m-batch-info','btn ')} data-act="dlg" data-d="m-batch-info">批量更新用户资讯</button><button ${sp('m-add','btn ')} data-act="dlg" data-d="m-add">新增会员</button><button ${sp('m-batch-bal','btn ')} data-act="dlg" data-d="m-batch-bal">批量更新用户余额</button><button ${sp('m-export','btn ')} data-act="noexport">导出用户数据</button><button ${sp('m-export','btn ')} data-act="noexport">导出不隐藏用户数据</button><button ${sp('m-import','btn ')} data-act="dlg" data-d="m-import">批量导入用户</button></div>
+  <p ${sp('m-stat','hint ')} style="text-align:right;margin:8px 0 0;color:#c0392b">用户总金额(不含测试用户)：***显示，当日注册：4，当日注册有效用户(首充)：3</p></div>
+  <div class="card"><div class="tw"><table><tr><th>在线</th><th>头像</th><th class="l" ${sp('m-col')}>会员信息</th><th>层级&团队</th><th>信用&额度</th><th>存提款</th><th>状态</th><th>日期信息</th><th>KYC状态</th><th>会员标签</th><th>备注</th><th>操作</th></tr>
+  ${showRows?MEM.map(m=>`<tr><td>${m.online?`<span class="tag ok">在线</span><br><button ${sp('m-online','lk ')} data-act="kick">踢下线</button>`:'<span class="tag off">离线</span>'}</td><td>—</td><td class="l" style="min-width:220px">会员ID：${m.id}<br>会员名：${m.acc}<br>手机号：09•••••••<br>上级代理：${m.up}<br>邀请人：${m.inv}<br>设备类型：${m.dev}<br>投注站名称：bb wave<br>三方游戏用户名：bingo___${m.id}</td><td class="l">会员层级：Default layer<br>等级：${m.lv}<br>账号级别：${m.lvl}<br>会员类型：平台会员</td><td class="l${m.bal==='503,078.000'?' issue':''}" ${m.bal==='503,078.000'?'data-spec="m-col" style="color:var(--warn)"':''}>余额：<button ${sp('m-balance','lk ')} data-act="mbal" data-b="${m.bal}">${m.bal}</button><br>余额宝：0.000<br>欠款：0.000<br>锁定额度：0.000</td><td class="l">存款总额：${m.dep}<br>存款次数：${m.depN}<br>提款总额：0.000</td><td><span class="tag ok">正常</span></td><td class="l">新增：${m.reg}<br>离开天数：${m.away} 天<br>上次登录方式：账号</td><td><span class="tag ${m.kyc?'ok':'off'}">${m.kyc||'从未认证'}</span></td><td></td><td></td>
+  <td><div class="ops"><button ${sp('m-edit','lk ')} data-act="mop" data-op="m-edit" data-i="${MEM.indexOf(m)}">编辑用户</button><button ${sp('m-detail','lk ')} data-act="mop" data-op="m-detail" data-i="${MEM.indexOf(m)}">详情</button><button ${sp('m-es','lk ')} data-act="mop" data-op="m-es">ES数据同步</button><button ${sp('m-bill','lk ')} data-act="mop" data-op="m-bill">资金明细</button><button ${sp('m-more','lk ')} data-act="mop" data-op="m-more" data-i="${MEM.indexOf(m)}">更多…</button></div></td></tr>`).join(''):`<tr><td colspan="12" class="empty">No Data — 进入页面不会自动查询，点「搜索」看示例数据</td></tr>`}
+  </table></div><div class="pager">Total ${showRows?'2,178,947（示例显示 '+MEM.length+' 条）':0}</div></div>`;
+}
+function vIssues(){
+  const ks=Object.keys(SPEC).filter(k=>SPEC[k].issue);
+  const groups={};ks.forEach(k=>{const v=SPEC[k].v;(groups[v]=groups[v]||[]).push(k)});
+  return `<div class="card list"><h3>疑点汇总（${ks.length}）</h3><p class="hint" style="margin:0 0 10px">梳理过程中发现的问题和待确认项，按页面分组。点一行跳到对应页面并定位。</p><div class="tw"><table><tr><th>页面</th><th>功能</th><th>疑点</th></tr>
+  ${Object.entries(groups).map(([v,arr])=>arr.map((k,i)=>`<tr data-goto="${v}" data-pick="${k}">${i===0?`<td rowspan="${arr.length}"><b>${VIEWS[v]}</b></td>`:''}<td>${esc(SPEC[k].n)}</td><td class="flag">${esc(SPEC[k].note||'')}</td></tr>`).join('')).join('')}
+  </table></div></div>`;
+}
+const RL_ROWS=[
+ ['google_vi(9079562)','--','2026-11-10',0,22,6,3,'1500.00','0.00','500.00','3650.00','6.00','0.00x',5,2,'0.00%','27.27%','22.73%','9.09%'],
+ ['google_vi(9079562)','--','2026-11-09',0,27,10,8,'104,350.00','10,500.00','15,641.67','163,500.00','152,982.00','0.94x',10,3,'0.00%','37.04%','37.04%','11.11%'],
+ ['google_vi(9079562)','--','2026-11-08',0,5,1,0,'0.00','0.00','-','0.00','279,934.00','-',0,1,'0.00%','20.00%','0.00%','20.00%'],
+ ['google_vi(9079562)','--','2026-11-07',0,6,1,0,'0.00','0.00','-','0.00','54,359.40','-',0,1,'0.00%','16.67%','0.00%','16.67%'],
+ ['google_vi(9079562)','--','2026-11-06',0,24,4,0,'0.00','0.00','-','0.00','4,000,028.00','-',0,4,'0.00%','16.67%','0.00%','16.67%']];
+const RL_TIPS={7:'统计周期内，新注册且完成充值用户的所有成功充值金额之和。',8:'统计周期内，新注册且完成充值用户的所有成功提款金额之和。',9:'（新客充值金额 - 新客提款金额）÷ 新注册且首充人数。',10:'该代理线下所有用户，本行日期当天的充值总额。',11:'该代理线下所有用户，本行日期当天的有效投注（打码量）总额。',12:'当日有效投注 ÷ 当日充值金额。低于 7 倍标红，视为不健康；当日充值为 0 时显示 "-"。'};
+function vRptLogin(){
+  const H=['代理编号','邀请码','日期','点击次数','登录人数','活跃人数','首冲人数','新客充值金额','新客提款金额','新客人均充提差','当日充值金额','当日有效投注','打码倍数','充值人数','投注人数','登录率','活跃率','充值率','投注率'];
+  const hs=i=>i===3?'rl-click':(i>=15?'rl-rate':(RL_TIPS[i]?'rl-cols':null));
+  return `<div class="card"><div class="bar"><span ${sp('rl-filter')}><span class="lab">代理编号：</span><select><option>google_vi(9079562)</option><option>5ji-wanghong(992045656)</option><option>5-ji-agent(992044707)</option><option>…（共 1,809 个）</option></select> <span class="lab">邀请码：</span><input type="text" placeholder="邀请码"> <span class="lab">查询时间：</span><input type="text" value="2026-11-01 ~ 2026-11-30" style="width:190px"></span>
+  <span ${sp('rl-quick')} style="display:inline-flex;gap:0">${['今日报表','昨日报表','本周报表','本月报表','上月报表'].map((x,i)=>`<button class="btn ${i===3?'':'plain'}" data-act="noop" style="border-radius:0">${x}</button>`).join('')}</span>
+  <span class="grow"></span><button ${sp('rl-export','btn ')} data-act="noop">搜索</button><button ${sp('rl-export','btn ')} data-act="noexport">导出</button></div></div>
+  <div class="card"><div class="tw"><table class="rpt"><tr>${H.map((h,i)=>`<th ${hs(i)?sp(hs(i)):''}${RL_TIPS[i]?` title="${esc(h+'：'+RL_TIPS[i])}"`:''}>${h}${RL_TIPS[i]?' ⓘ':''}</th>`).join('')}</tr>
+  ${RL_ROWS.map(r=>`<tr>${r.map((c,i)=>`<td${i===12&&c!=='-'&&parseFloat(c)<7?' style="color:#e45d5d;font-weight:700"':''}${i===3?` ${sp('rl-click')}`:''}>${c}</td>`).join('')}</tr>`).join('')}
+  </table></div><div class="pager">Total 10（示例显示 5 条，google_vi，2026-11 本月）</div><p class="hint">表头带 ⓘ 的列，鼠标悬停可以看后台原文口径。</p></div>`;
+}
+const RC_COLS=['登录人数','活跃人数','新客充值金额','新客提款金额','新客人均充提差','充值人数','投注人数','活跃率','充值率','投注率','累计充值金额','累计有效投注','打码倍数','首充人数','D2','D3','D5','D7','D14','D30','D60'];
+const RC_LV=[
+ {crumb:['首页'],rows:[['谷歌',452,150,'4186122.00','10901.00','49705.01',111,54,'33.19%','24.56%','11.95%','4092493.00','1564453.70','0.38',89,'6.02% (5)','1.45% (1)','0.00% (0)','4.76% (3)','0.00% (0)','0.00% (0)','-'],['合计',452,150,'4186122.00','10901.00','49705.01',111,54,'33.19%','24.56%','11.95%','4092493.00','1564453.70','0.38',89,'6.02% (5)','1.45% (1)','0.00% (0)','4.76% (3)','0.00% (0)','0.00% (0)','-']],link:0},
+ {crumb:['首页','谷歌'],rows:[['谷歌',452,150,'4186122.00','10901.00','49705.01',111,54],['谷歌（已领789）',10,6,'121000.00','0.00','30250.00',5,3],['谷歌（未领789）',442,144,'4065122.00','10901.00','50677.76',106,51]],link:2},
+ {crumb:['首页','谷歌','谷歌（未领789）'],rows:[['pasay001(1034742)',442,144,'4065122.00','10901.00','50677.76']],link:0},
+ {crumb:['首页','谷歌','谷歌（未领789）','pasay001(1034742)'],rows:[['团队合计 pasay001',442,144,'4065122.00','10901.00','50677.76'],['直属会员合计',0,0,'0.00','0.00','-'],['google_vi(9079562)',220,70,'1194900.00','10500.00','30369.23'],['ddltomas(9078757)',164,52,'2865222.00','300.00','84262.41'],['5-ji-agent(992044707)',17,11,'4000.00','101.00','649.83'],['edtestddl(9068552)',5,1,'1000.00','0.00','1000.00']],link:-1}];
+function vRptRecharge(){
+  const L=RC_LV[rcLevel];
+  const cell=(r,i)=>{const c=r[i+1];return c===undefined?'<span class="hint">…</span>':c};
+  return `<div class="card"><div class="bar"><span ${sp('rr-filter')}><span class="lab">首充日：</span><input type="text" value="2026-10-12 ~ 2026-11-10" style="width:190px"> <button class="btn" data-act="noop">搜索</button></span><span class="grow"></span><span class="hint">数据每小时更新</span></div>
+  <div class="bar" style="margin-top:10px" ${sp('rr-drill')}>${L.crumb.map((c,i)=>i<L.crumb.length-1?`<button class="lk" data-act="rclv" data-l="${i}">${esc(c)}</button> ›`:`<b>${esc(c)}</b>`).join(' ')}</div>
+  <p class="hint" style="margin:6px 0 0">每行一个代理关系归属分类（分类下配置代理的整个团队），分类在「代理关系归属表」页维护。</p></div>
+  <div class="card"><div class="tw"><table class="rpt"><tr><th rowspan="2" class="l">分类</th><th colspan="10" ${sp('rr-cols')}>按发生日</th><th colspan="11" ${sp('rr-cols')}>按首充日</th></tr><tr>${RC_COLS.map(c=>`<th>${c}</th>`).join('')}</tr>
+  ${L.rows.map((r,ri)=>`<tr><td class="l">${(rcLevel<3?L.link===ri:ri>=2)?`<button class="lk num" ${sp('rr-drill')} data-act="rcdown">${esc(r[0])}</button>`:esc(r[0])}</td>${RC_COLS.map((_,i)=>`<td>${cell(r,i)}</td>`).join('')}</tr>`).join('')}
+  </table></div><p class="hint">${rcLevel?'下钻层只采集到前几列，其余用「…」表示。':''}点蓝色名称往下钻，面包屑返回上一级。</p></div>`;
+}
+function vRptAttr(){
+  return `<div class="card"><div class="bar" ${sp('ra-top')}><button class="btn" data-act="dlg" data-d="ra-new">新建分类</button><button class="btn ghost" data-act="noop">更新</button><button class="btn ghost" data-act="noop">刷新</button></div></div>
+  <div class="card" ${sp('ra-list')}><div class="tw"><table><tr><th>顺序</th><th>分类</th><th>备注</th><th>配置代理</th><th>展开代理数</th><th>最下层代理数</th><th>最近更新</th><th>操作</th></tr>
+  <tr><td>2</td><td>谷歌</td><td></td><td>pasay001 <button ${sp('ra-manage','lk ')} data-act="dlg" data-d="ra-manage">管理代理 (1)</button></td><td>1,784</td><td>1,758</td><td>2026-11-09 11:29:28</td><td><div class="ops"><button ${sp('ra-expand','lk ')} data-act="dlg" data-d="ra-expand">查看展开</button><button ${sp('ra-edit','lk ')} data-act="dlg" data-d="ra-edit">编辑</button><button ${sp('ra-edit','lk ')} data-act="dlg" data-d="sa-del">删除</button></div></td></tr></table></div></div>`;
+}
+function vRptRetention(){
+  const days=['D1 (次日)','D2','D3','D4','D5','D6','D7','D14','D30'];
+  return `<div class="card"><div class="bar" ${sp('rt-filter')}><span class="lab">代理编号：</span><select><option>请选择</option><option>HK_A（HK_A）</option><option>HK_B（HK_B）</option><option>HK_C（HK_C）</option><option>google_vi（9079562）</option><option>…（共 1,812 项）</option></select><input type="text" value="2026-10-12 ~ 2026-11-10" style="width:190px"><button class="btn" data-act="noop">搜索</button></div></div>
+  <div class="card" ${sp('rt-cols')}><div class="tw"><table class="rpt"><tr><th rowspan="2">维度</th><th colspan="4">D (当日新用户)</th>${days.map(d=>`<th colspan="2">${d}</th>`).join('')}</tr>
+  <tr><th>总访问人数<br>总活跃人数</th><th>注册人数<br>注册且活跃</th><th>注册且充值<br>总首冲人数</th><th>注册转化率<br>注册充值率</th>${days.map(()=>'<th>活跃人数<br>复充人数</th><th>活跃率<br>复充率</th>').join('')}</tr>
+  <tr><td colspan="23" class="empty">选择代理后查询（采集时查询超过 3 分钟未返回，未拿到示例数据）</td></tr></table></div><p class="hint">维度列包含「代理编号」「日期」两个子列。</p></div>`;
+}
+function vLogic(){
+  const B=(x,y,w,h,cls,title,lines,go)=>`<g${go?` data-goto-v="${go}" style="cursor:pointer"`:''}><rect class="bx ${cls}" x="${x}" y="${y}" width="${w}" height="${h}" rx="8"/><text class="ttl" x="${x+12}" y="${y+22}">${title}</text>${lines.map((l,i)=>`<text class="ln" x="${x+12}" y="${y+42+i*17}">${l}</text>`).join('')}</g>`;
+  const E=(d,cls='')=>`<path class="ed ${cls}" d="${d}" marker-end="url(#ar${cls.includes('bad')?'b':''})"/>`;
+  const L=(x,y,t,cls='',anchor='start')=>`<text class="lb ${cls}" x="${x}" y="${y}" text-anchor="${anchor}">${t}</text>`;
+  const defs=`<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--quiet)"/></marker><marker id="arb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--warn)"/></marker></defs>`;
+  // A: hierarchy + relations
+  const cx=360,cw=280,ys=[40,170,300,430],h=80;
+  const A=`<svg class="lg" viewBox="0 -44 1000 584" role="img" aria-label="四级账号靠上级代理串成一条线，配置和审核从两侧接入">${defs}
+  <text class="hd" x="20" y="-20">① 四级账号靠「上级代理」串成一条线，配置和审核从两侧接入</text>
+  ${B(cx,ys[0],cw,h,'main','投注站 · 8 个',['线下门店：店长、经纬度、营业时间','押金、可用额度、基准额度、占成'],'station')}
+  ${B(cx,ys[1],cw,h,'main','大代理 · 53 个',['上级 = 投注站；可配佣金方案','可开代理（一旦开启不可关闭）'],'big-agent')}
+  ${B(cx,ys[2],cw,h,'main','代理 · 1,746 个',['上级 = 大代理或代理，可多级嵌套','只有 编辑 / 状态 / 验证码 / 邀请码'],'agent')}
+  ${B(cx,ys[3],cw,h,'main','会员 · 2,178,947',['上级 = 任一级代理；另有「邀请人」','资金、KYC、申请类修改都在这里'],'member')}
+  ${[0,1,2].map(i=>E(`M420 ${ys[i]+h}V${ys[i+1]-2}`)+L(432,ys[i]+h+30,'上级代理')).join('')}
+  ${E(`M${cx+cw} ${ys[2]+46}H${cx+cw+24}V${ys[2]+70}H${cx+cw+2}`)}${L(cx+cw+30,ys[2]+62,'可嵌套')}
+  ${E(`M${cx+cw} ${ys[3]+46}H${cx+cw+24}V${ys[3]+70}H${cx+cw+2}`,'dash')}${L(cx+cw+30,ys[3]+62,'邀请人')}
+  ${B(20,10,270,48,'cfg','子账号管理',['员工账号，角色来自「角色权限」'])}
+  ${B(20,66,270,48,'cfg','子账号角色权限',['角色 = 可用菜单（菜单树）'])}
+  ${B(20,122,270,48,'cfg','IP 白名单（添加IP）',['投注站登录 IP 限制'])}
+  ${E('M290 34H320V58H358')}${E('M290 90H330V80H358')}${E('M290 146H340V104H358')}
+  ${B(20,230,270,64,'cfg','代理类报表',['代理登录数据 / 充值留存 / 用户留存','按「已配置代理」归因'])}
+  ${E(`M${cx} ${ys[1]+30}H310V262H292`,'dash')}<path class="ed dash" d="M${cx} ${ys[2]+30}H310V262"/>${L(300,226,'读取','','end')}
+  ${B(20,380,270,64,'cfg','会员资料修改审核',['修改密码 / 提款密码 / 手机号','提款信息（都是提交申请）'])}
+  ${B(20,456,270,64,'cfg','KYC 审核',['KYC信息：save / Pass / Reject','证件、自拍、收入证明、NDRP'])}
+  ${E(`M${cx} ${ys[3]+22}H320V412H292`)}${E(`M${cx} ${ys[3]+60}H320V488H292`)}
+  ${B(730,30,250,64,'cfg','佣金方案管理（代理结算）',['大代理「佣金配置」单选方案','789games 已去掉代理返佣'])}
+  ${E(`M730 62H680V${ys[1]+14}H${cx+cw+2}`)}
+  ${B(730,150,250,64,'cfg','会员代理标签配置',['大代理 / 代理 / 会员 各一组标签','列表筛选和编辑里选用'])}
+  ${E(`M730 182H700V${ys[3]+14}`)}${E(`M700 ${ys[1]+30}H${cx+cw+2}`)}${E(`M700 ${ys[2]+14}H${cx+cw+2}`)}${E(`M700 ${ys[3]+14}H${cx+cw+2}`)}
+  ${B(730,410,250,64,'cfg','系统参数 · 网红代理名单',['名单内会员邀请的人','归到 5ji-wanghong 大代理线'])}
+  ${E(`M730 ${ys[3]+30}H${cx+cw+2}`,'dash')}
+  </svg>`;
+  // B: navigation
+  const c1=20,c2=360,c3=740,w=180,bh=40;
+  const col2=[[20,'新增投注站','station-add'],[75,'子账号管理','sub-account'],[130,'子账号角色权限','sub-role'],[185,'IP 管理','station-ip'],[300,'大代理列表','big-agent']];
+  const col3=[[20,'代理列表','agent'],[90,'代理邀请码列表','agent-invite'],[170,'资金明细','user-bill'],[240,'代理直属会员账单','agent-vip-bill'],[320,'会员列表','member']];
+  const lab2=['新增 / 详情→编辑','子账号管理','子账号角色权限管理','添加IP','代理数'];
+  const lab3=['直属代理数','更多→邀请码','更多→资金明细','更多→会员资金明细','直属会员数'];
+  const bad2=[0,0,0,0,1], bad3=[0,0,0,1,1];
+  const N=(x,y,t,go,bad)=>`<g data-goto-v="${go}" style="cursor:pointer"><rect class="bx${bad?' bad':''}" x="${x}" y="${y}" width="${w}" height="${bh}" rx="8"/><text class="ttl" x="${x+w/2}" y="${y+25}" text-anchor="middle">${t}</text></g>`;
+  const Bn=`<svg class="lg" viewBox="0 0 1000 400" role="img" aria-label="页面跳转关系">${defs}
+  <text class="hd" x="20" y="22" style="display:none">.</text>
+  ${N(c1,190,'投注站列表','station')}
+  ${col2.map(([y,t,g],i)=>N(c2,y,t,g,bad2[i])).join('')}
+  ${col3.map(([y,t,g],i)=>N(c3,y,t,g,bad3[i])).join('')}
+  <path class="ed" d="M${c1+w} 210H240"/><path class="ed" d="M240 40V320"/>
+  ${col2.map(([y],i)=>E(`M240 ${y+20}H${c2-2}`,bad2[i]?'bad':'')+L(246,y+14,lab2[i],bad2[i]?'bad':'')).join('')}
+  <path class="ed" d="M${c2+w} 320H600"/><path class="ed" d="M600 40V340"/>
+  ${col3.map(([y],i)=>E(`M600 ${y+20}H${c3-2}`,bad3[i]?'bad':'')+L(606,y+14,lab3[i],bad3[i]?'bad':'')).join('')}
+  ${E(`M${c3+w} 40H950V110H${c3+w+2}`)}${L(956,80,'邀请码')}
+  ${E(`M${c3+w} 340H980V190H${c3+w+2}`)}${L(c3+w+6,334,'资金明细')}
+  </svg>`;
+  const mx=[
+   ['资料','编辑（状态、密码、备注、电话）；投注站详情 → 编辑（门店资料、权限开关、占成）','编辑（层级、实名、联系方式、标签、可开代理）；详情','编辑（同大代理，无「可开代理」）','编辑用户（48 字段，必填新增备注）；详情（Google 验证码解码）'],
+   ['状态','编辑里改：待审核 / 正常 / 冻结 / 停用','状态：正常 / 冻结 / 停用 / 整线停用','同大代理','编辑用户里 6 种状态；踢下线；批量更新用户资讯'],
+   ['归属','用户转移（下属用户换到另一个投注站）','变更代理线（整线换投注站或大代理）；直属会员转移','—','变更代理（单个会员，只改上级、不改邀请人）'],
+   ['资金','押金调整；增加 / 减少额度；设置基准额度','更多 → 额度修改（5 种金额类型）','—','额度修改；批量更新用户余额（需 Google 验证码）；第三方游戏转出；解锁金额'],
+   ['安全','Google验证码；子账号；角色权限；IP 白名单','Google验证码','Google验证码','修改密码 / 提款密码 / 手机号（申请）；发送OTP / 短信'],
+   ['推广 / 收益','各厂商占成','佣金配置（方案）；邀请码','邀请码','邀请人（五级代邀请好友）'],
+   ['审核','—','—','—','提款信息、修改类 → 会员资料修改审核；KYC信息 Pass / Reject'],
+   ['查询','代理数 → 大代理（下钻）','资金明细；会员资金明细；直属代理 / 直属会员数下钻','—','资金明细；余额详情；导出（含不隐藏导出）']];
+  const C=`<div class="tw"><table class="mx"><tr><th>操作类别</th><th>投注站</th><th>大代理</th><th>代理</th><th>会员</th></tr>${mx.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  const D=[
+   ['用户转移','投注站','把投注站下的用户整体转到另一个投注站','范围（直属还是整线）待确认'],
+   ['变更代理线','大代理','整个大代理连同下级换到另一个投注站，可选同时挂到某个大代理下','不选大代理 = 成为该投注站的直属大代理'],
+   ['直属会员转移','大代理','只把直属会员转给另一个代理','会员测试标识跟随新上级'],
+   ['变更代理','会员','单个会员换上级代理','只改上级代理，邀请关系（邀请人）不变']];
+  return `<div class="card"><p class="hint" style="margin:0">点图里的方框可以跳到对应页面。橙色表示有疑点。</p></div>
+  <div class="card">${A}<p class="hint" style="margin:8px 0 0">实线 = 归属或配置来源，虚线 = 读取或推广关系。邀请人关系和上级代理是两套独立关系。</p></div>
+  <div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:6px">② 页面怎么跳转：投注站和大代理是两个入口枢纽</div>${Bn}<p class="hint" style="margin:8px 0 0">橙色跳转有问题：代理数下钻默认过滤测试用户导致 No Data；直属会员数进会员页不自动查询；会员资金明细打开即报错。</p></div>
+  <div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:8px">③ 每类账号能做什么（按操作类别）</div>${C}</div>
+  <div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:8px">④ 归属调整的 4 个入口（从粗到细）</div><div class="tw"><table class="mx"><tr><th>入口</th><th>所在页面</th><th>改什么</th><th>注意</th></tr>${D.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div></div>`+vBackend();
+}
+function vBackend(){
+  const T=(h,rows)=>`<div class="tw"><table class="mx"><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.map(r=>`<tr>${r.map(c=>`<td>${esc(c)}</td>`).join('')}</tr>`).join('')}</table></div>`;
+  const K=[
+   ['直属代理','count(*) where super_id = 代理ID and user_type = DL','上级代理是他的下级代理（只算一层）'],
+   ['直属会员','count(*) where super_id = 代理ID and user_type = HY','上级代理是他的会员（只算一层，但「会员邀请会员」的人也在这里）'],
+   ['团队数','count(*) where query_code like \'代理query_code%\' and query_code != 自己','整棵树下所有人：代理 + 会员，不限层级，不含自己（UserDao.queryLowerTeamNumByQueryCodes）']];
+  const R=[
+   ['普通邀请（代理邀请码 / 会员推荐）','继承邀请人会员的上级代理 → 仍是同一个代理','邀请人 query_code + 自己ID/，如 /A/ → /A/L1/ → /A/L1/L2/','计入该代理的直属会员 + 团队数','L1…Ln 全部算进直属会员和团队数；只有会员时直属会员 = 团队数（例：Dance1236 = 23/23）'],
+   ['例外 1：会员邀请改挂代理（memberInviteAgentRouteService，网红线等配置）','改成配置指定的代理（如 5ji-wanghong）','仍挂在原邀请会员下面','团队数算原代理，直属会员算新代理','两个代理数字对不上；也解释了列表里「团队数 < 直属会员」的情况（JILLL111 0/3/2、GG_BID_156 0/1/0）'],
+   ['例外 2：邀请好友活动码（玩家ID当邀请码，invite_activity_user_code）','不设推荐人，挂默认代理或域名代理','跟随新上级代理','不进邀请人所在代理的团队，也不进直属会员','只记 invite_activity_user_id（后台显示为「邀请人」），用于活动返佣，不影响团队归属']];
+  const Q=[
+   ['A1 Playerty4248586（992107912）','自然注册','ddltomas','/1034742/9078757/992107912/','pasay001 / 无','teamNum = 0'],
+   ['B Playerw112k9946（992107913）','A1 的邀请链接 /invite/992107912','5-ji-agent（992044707）','/1034742/992044707/992107913/','992107912 / Playerty4248586','走的是例外 2：B 不在 A1 的 query_code 下，A1 团队数仍为 0'],
+   ['C Playerzibuy9240（992107915）','B 的邀请链接 /invite/992107913','5-ji-agent（992044707）','/1034742/992044707/992107915/','992107913 / Playerw112k9946','同样走例外 2：B 团队数 = 0；5-ji-agent = 0 / 253 / 253，被邀请人全部平铺在它下面'],
+   ['t1111_kol_big（992107916）','后台新增大代理（上级 pasay001，可开代理）','pasay001','/1034742/992107916/','—','网红大代理，可开代理'],
+   ['t1111_kol_01（992107926）','后台新增代理（上级 t1111_kol_big）；邀请码 kol01test','t1111_kol_big','/1034742/992107916/992107926/','—','网红代理；推广链接 = 代理专属域名/?vip=邀请码'],
+   ['M1 Playerikc358781（992107927）','代理邀请链接 /?vip=kol01test','t1111_kol_01','/1034742/992107916/992107926/992107927/','kol01test / 推荐人 t1111_kol_01','✅ 正确进入网红代理的直属会员和团队'],
+   ['M2 Player8t4x89502（992107928）','M1 的邀请好友链接 /invite/992107927','5-ji-agent','/1034742/992044707/992107928/','992107927 / 邀请人 M1','❌ 走例外 2：离开网红线，进会员推广专用线；M1 团队数 = 0'],
+   ['M3 Playerwem372931（992107929）','M2 的邀请好友链接 /invite/992107928','5-ji-agent','/1034742/992044707/992107929/','992107928 / 邀请人 M2','❌ 同 M2；kol_01 = 0/1/1，kol_big = 1/0/2'],
+   ['M4 Playerhmd772535（992107937）','临时把 M1 加入「网红代理名单」后，用 M1 的邀请好友链接','5ji-wanghong（992045656）','/1034742/992045656/992107937/','992107927 / 邀请人 M1','⚠️ 进了固定的 5ji-wanghong，不是 M1 所属的 kol_01；query_code 也在 5ji-wanghong 下（不在 M1 下）。测完已把名单恢复为 9079614']];
+  return `<div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:8px">⑤ 后端计算口径（games main 分支代码）</div>${T(['列','SQL','含义'],K)}
+  <p class="hint" style="margin:8px 0 0">备注：直属代理 / 直属会员看 super_id（上级代理），团队数看 query_code（树路径）。两个字段在大部分情况下一致，在下面的例外里会分开，所以三个数之间不一定满足「团队数 ≥ 直属代理 + 直属会员」。团队数比直属会员多出来的部分，来自直属代理以及下级代理下面的人。</p></div>
+  <div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:8px">⑥ 会员邀请会员时新会员的归属（RegisterService.register；UserService 1374–1391 行）</div>${T(['注册路径','上级代理 super_id','查询码 query_code','计入哪个代理','备注'],R)}
+  <p class="hint" style="margin:8px 0 0">备注：后台「邀请人」字段（inviteActivityUserId / Name）和「上级代理」是两套关系。看到邀请人有值，不代表这个人计入邀请人所在代理的团队数。</p></div>
+  <div class="card"><div class="hd" style="font-weight:600;font-size:15px;margin-bottom:8px">⑦ QA 实测记录（2026-11-11）</div>${T(['账号','注册方式','上级代理','query_code','邀请码 / 邀请人','结论'],Q)}
+  <p class="hint" style="margin:8px 0 0">备注：QA 的自然流量分配配置 newUserStationRouteAgents 只有 google_vi、ddltomas 两条线（不是 10 条）。前端「邀请好友」链接目前走例外 2，被邀请人归到 5-ji-agent（会员推广专用线），不进邀请人的团队。</p>
+  <p class="hint" style="margin:6px 0 0">备注：系统参数 → 推广相关 →「网红代理名单配置」只有一个会员 ID 列表，目标代理固定为 5ji-wanghong。名单内会员邀请的人全部进 5ji-wanghong，不会回到网红自己的代理；也不支持一个网红对应一个代理。实测 query_code 也跟着 5ji-wanghong，和代码分析里「query_code 仍挂在原邀请会员下」不一致，需技术确认。</p>
+  <p class="hint" style="margin:6px 0 0"><b>问：自然流量用户邀请了新好友，会不会被移动到邀请好友的数据里？</b> 答：不会。邀请人仍留在原自然线（如 ddltomas）；被邀请人统一进 5-ji-agent，只靠「邀请人」字段和邀请人关联。所以自然线只统计第一手自然用户，二手邀请的人无法按自然线拆分，要回溯只能按邀请人字段。</p></div>`;
+}
+function listCard(v){
+  const ks=Object.keys(SPEC).filter(k=>SPEC[k].v===v);
+  if(!ks.length) return '';
+  return `<div class="card list"><h3>本页功能清单（${ks.length}）</h3><div class="tw"><table><tr><th>功能</th><th>类型</th><th>作用</th><th>接口</th><th>注释</th></tr>
+  ${ks.map(k=>{const s=SPEC[k];return `<tr data-pick="${k}"><td>${esc(s.n)}</td><td><span class="chip">${s.t}</span></td><td>${esc(s.does)}</td><td>${s.api?`<code>${esc(s.api)}</code>`:''}</td><td class="${s.issue?'flag':''}">${s.note?esc(s.note):''}</td></tr>`}).join('')}</table></div></div>`;
+}
+function showSpec(id){
+  document.querySelectorAll('.sel').forEach(e=>e.classList.remove('sel'));
+  const s=SPEC[id];
+  if(!s){$('#spec').innerHTML='<p class="hint">点页面上的任意按钮、筛选或表头，这里显示它的说明。</p>';return}
+  selected=id;
+  document.querySelectorAll(`[data-spec="${id}"]`).forEach((e,i)=>{if(i<1)e.classList.add('sel')});
+  $('#spec').innerHTML=`<div class="hint">功能说明 · ${VIEWS[s.v]}</div><h2>${esc(s.n)}</h2><span class="chip">${s.t}</span>
+  <div class="k">作用</div><p>${esc(s.does)}</p>
+  ${s.fields?`<div class="k">字段 / 选项</div><ul>${s.fields.map(f=>`<li>${esc(f)}</li>`).join('')}</ul>`:''}
+  ${s.api?`<div class="k">接口 / 路由</div><p><code>${esc(s.api)}</code></p>`:''}
+  ${s.note?`<div class="k">注释</div><div class="${s.issue?'warnbox':''}">${s.issue?'疑点：':''}${esc(s.note)}</div>`:''}
+  <p class="hint" style="margin-top:16px">点页面元素切换说明；弹窗里的「确定」不会提交任何数据。</p>`;
+}
+// dialogs
+function dlg(title,rows,opts={}){
+  const body=rows.map(r=>{ if(r.full) return `<div class="full">${r.full}</div>`;
+    const lab=`<div class="lab${r.req?' req':''}">${esc(r.l)}</div>`; let c='';
+    if(r.ro!==undefined) c=`<div class="ro">${esc(r.ro)}</div>`;
+    else if(r.sel) c=`<select>${r.ph?`<option>${esc(r.ph)}</option>`:''}${r.sel.map(o=>`<option>${esc(o)}</option>`).join('')}</select>`;
+    else if(r.rad) c=`<span class="radios">${r.rad.map((o,i)=>`<label><input type="radio" name="d${esc(r.l)}"${o===r.val?' checked':''}> ${esc(o)}</label>`).join('')}</span>`;
+    else if(r.ta) c=`<textarea></textarea>`;
+    else c=`<input type="${r.type||'text'}" placeholder="${esc(r.ph||'请输入')}" value="${esc(r.val||'')}">`;
+    return lab+c+(r.after?`<div></div><div class="hint">${r.after}</div>`:''); }).join('');
+  const foot=opts.foot||`<button class="btn plain" data-close>取 消</button><button class="btn" data-ok>确 定</button>`;
+  $('#modalRoot').innerHTML=`<div class="modal" data-close><div class="dlg" role="dialog" aria-label="${esc(title)}"><header>${esc(title)}<button class="x" data-close aria-label="关闭">×</button></header><div class="bd">${body}</div><footer>${foot}</footer></div></div>`;
+}
+const DLG={
+ 'op-edit':s=>dlg('编辑',[{l:'账号:',ro:s.acc},{l:'状态:',rad:['待审核','正常','冻结','停用'],val:s.st},{l:'登录密码:',type:'password',ph:''},{l:'备注:',val:s.rm},{l:'电话:'},{l:'电话:'},{l:'今日密码错误次数:',full:'<span class="hint">今日密码错误次数：0 次</span> <button class="btn ghost" data-act="noop">清除</button>'}]),
+ 'op-deposit':s=>dlg('押金调整',[{l:'当前押金 :',ro:'0.00'},{l:'调整押金 :',req:1,type:'number'}]),
+ 'op-add':s=>dlg('增加额度',[{l:'押金 :',ro:'0.00'},{l:'可用额度 :',ro:'0.00'},{l:'增加额度 :',req:1,type:'number'}]),
+ 'op-sub':s=>dlg('减少额度',[{l:'押金 :',ro:'0.00'},{l:'可用额度 :',ro:'0.00'},{l:'减少额度 :',req:1,type:'number'}]),
+ 'op-detail':s=>dlg('投注站详情',[{l:'代码',ro:s.acc==='koi8888'?'text':'—'},{l:'名称',ro:s.name},{l:'类型',ro:'直营'},{l:'纬度 / 经度',ro:s.acc==='koi8888'?'45 / 32':'—'},{l:'店长 / 手机',ro:s.acc==='koi8888'?'ttt / 546456456':'—'},{l:'营业时间',ro:'00:00 – 23:59'},{l:'充值 / 提现权限',ro:'是 / 是'},{l:'KYC 权限',ro:'否'},{l:'预约提款权限',ro:'否'},{l:'Google验证码',ro:'否'},{l:'地址',ro:s.acc==='koi8888'?'dasdasf':'—'},{l:'国家 / 省份 / 城市',ro:'PHILIPPINES / Metro Manila / Manila'}],{foot:'<button class="btn plain" data-close>关闭</button><button class="btn" data-act="go" data-to="station-add" data-close>编辑</button>'}),
+ 'op-transfer':s=>dlg('用户转移',[{l:'当前代理:',ro:s.name.toUpperCase()},{l:'新代理:',sel:TRANSFER_OPTS.filter(o=>!o.startsWith(s.acc+'(')),ph:'请选择代理'}]),
+ 'op-gauth':s=>dlg('Google验证码',[{full:'<span class="hint">管理员请不要泄露此信息，请使用者妥善保存，不要泄露此信息</span>'},{l:'投注站账号：',ro:s.acc},{l:'当前验证码：',ro:'••••••（原型不显示）'}],{foot:'<button class="btn" data-close>确认</button>'}),
+ 'op-base':s=>dlg('设置基准额度',[{l:'当前额度:',ro:'0.00'},{l:'修改方向:',req:1,sel:['增加','扣减'],ph:'Select'},{l:'修改金额:',req:1,type:'number'},{l:'备注:',ta:1}]),
+ 'sa-add':s=>dlg('新增子账号',[{l:'账号',req:1},{l:'密码',type:'password'},{l:'账号角色',req:1,sel:['超级管理员']},{l:'名称',req:1},{l:'电话号码'},{l:'邮箱'},{l:'备注'},{l:'状态',req:1,rad:['正常','停用'],val:'正常'},{full:'<span class="hint">字段按「编辑」推断，待实测确认。</span>'}]),
+ 'sa-view':s=>dlg('查看',[{l:'账号:',ro:s.acc},{l:'名称:',ro:s.name.toUpperCase()},{l:'账号角色:',ro:''},{l:'电话号码:',ro:''},{l:'邮箱:',ro:''},{l:'备注:',ro:''},{l:'状态:',ro:'正常'}],{foot:'<button class="btn" data-close>确认</button>'}),
+ 'sa-edit':s=>dlg('编辑',[{l:'账号',req:1,val:s.acc},{l:'密码',type:'password'},{l:'账号角色',req:1,sel:['超级管理员']},{l:'名称',req:1,val:s.name.toUpperCase()},{l:'电话号码'},{l:'邮箱'},{l:'备注'},{l:'状态',req:1,rad:['正常','停用'],val:'正常'},{l:'今日密码错误次数',full:'<span class="hint">今日密码错误次数：0 次</span> <button class="btn ghost" data-act="noop">清除</button>'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确认</button>'}),
+ 'sa-del':s=>dlg('提示',[{full:'确定删除该记录吗？'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确定</button>'}),
+ 'ro-add':(s,title)=>dlg(title||'新增角色',[{l:'角色名称',req:1},{l:'备注',ta:1},{l:'菜单权限',full:'<div class="hint" style="margin-bottom:6px">菜单权限（来自 agentRole/menu，推断）</div>'+['报表','会员','充值','提现','设置'].map(m=>`<label style="margin-right:12px"><input type="checkbox"> ${m}</label>`).join('')}]),
+ 'ip-add':s=>dlg('新增 IP',[{l:'IP',req:1,ph:'例如 180.232.98.142'},{l:'备注',ta:1},{full:'<span class="hint">字段为推断，待实测确认。</span>'}]),
+ 'b-add':()=>dlg('新增大代理',[{l:'上级代理:',req:1,sel:STATIONS.map(s=>s.acc),ph:'选择'},{l:'代理账号:',req:1,ph:'（浏览器会自动填入管理员账号）'},{l:'登录密码:',req:1,type:'password',ph:'（浏览器会自动填入管理员密码）'},{l:'代理名称:',req:1},{l:'国家:',req:1,sel:['菲律賓'],ph:'Select'},{l:'币种:',req:1,sel:['PHP'],ph:'Select'},{l:'标签:',sel:['sandy999','789Agent','Bonus Hunter','Night-Time Active','Big Depositor'],ph:'选择'},{l:'',full:'<label><input type="checkbox"> 内部测试账号</label>'},{l:'是否可以开代理:',req:1,rad:['是','否'],val:'否',after:'注意：一旦开启大代理可以开代理，将不可再关闭。'}]),
+ 'b-edit':a=>dlg('编辑',[{l:'账号:',ro:a.acc},{l:'登录密码:',type:'password',ph:''},{l:'会员层级:',sel:LAYERS,ph:'Select'},{l:'真实姓名:',val:a.acc.toUpperCase()},{l:'电话:'},{l:'邮箱:'},{l:'QQ:'},{l:'提款密码:',type:'password',ph:''},{l:'备注:'},{l:'标签:',sel:['sandy999','789Agent','Bonus Hunter','Night-Time Active','Big Depositor'],ph:'标签'},{l:'是否可以开代理:',rad:['是','否'],val:'是',after:'注意：一旦开启大代理可以开代理，将不可再关闭。'},{l:'今日密码错误次数:',full:'<span class="hint">今日密码错误次数：0 次</span> <button class="btn ghost" data-act="noop">清除</button>'}]),
+ 'b-status':a=>dlg('账号状态变更',[{l:'状态',rad:['正常','冻结','停用','整线停用'],val:'正常'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确认</button>'}),
+ 'b-gauth':a=>dlg('Google验证码',[{l:'账号：',ro:a.acc},{l:'Google验证码：',ro:'未绑定'},{l:'当前验证码：',ro:''}],{foot:'<button class="btn" data-close>确认</button>'}),
+ 'b-comm':a=>dlg('佣金配置',[{l:'选择佣金方案',rad:COMM_PLANS,val:'None'}]),
+ 'b-line':a=>dlg('变更代理线',[{l:'当前代理:',ro:a.acc},{l:'新代理线:',req:1,sel:STATION_NAMES,ph:'请选择投注站（所属投注站）'},{l:'',sel:[],ph:'请选大代理（所属大代理，可不选）',after:'温馨提示：如果不选择大代理，该代理将成为所选投注站的直属大代理。'},{l:'国家:',ro:'-'},{l:'币种:',ro:'-'}]),
+ 'b-move':a=>dlg('直属会员转移',[{l:'当前代理:',ro:a.acc},{l:'新代理:',sel:BIG.filter(x=>x!==a).map(x=>x.acc),ph:'请选择代理',after:'温馨提示：变更用户的测试标示与上级代理相同。'},{l:'国家:',ro:''},{l:'币种:',ro:''}]),
+ 'b-detail':a=>dlg('详情',[{l:'昵称:',ro:a.nick},{l:'账号:',ro:a.acc},{l:'真实姓名:',ro:a.acc.toUpperCase()},{l:'投注站名称:',ro:'bb wave'},{l:'身分证字号:',ro:''},{l:'身分证件类别:',ro:'--'},{l:'薪资来源:',ro:''},{l:'电话 / 邮箱:',ro:''},{l:'QQ / 微信 / zalo:',ro:''},{l:'facebook / whatsapp / telegram:',ro:''},{l:'国籍 / 出生地 / 工作性质:',ro:''},{l:'当前居住地（省、城市、邮编）:',ro:''},{l:'永久居住地（省、城市、邮编）:',ro:''},{l:'安全问题:',ro:'--'},{l:'安全问题回答:',ro:'****************'},{l:'Google验证码:',ph:'输入6位谷歌验证码'}],{foot:'<button class="btn plain" data-close>取 消</button><button class="btn" data-act="noop">搜索</button>'}),
+ 'b-quota':a=>dlg('额度修改',[{l:'账号:',ro:a.acc},{l:'币种:',ro:'PHP'},{l:'余额:',ro:'0'},{l:'调整类型:',req:1,rad:['增加金额','扣除金额'],val:'增加金额'},{l:'金额:',req:1,type:'number',after:'金额上限：1,000,000'},{l:'金额类型:',req:1,sel:['后台充值','手动添加礼金','手动补投注派彩','手动添加佣金','手动其他加额度'],ph:'Select'},{l:'备注:',req:1,ta:1}]),
+ 'a-add':()=>dlg('新增代理',[{l:'上级代理:',req:1,sel:['koi888-01','sandy999888777666555','sandy999888777666','henny8882222','5ji-wanghong','5-ji-agent','google_vi','…'],ph:'选择'},{l:'代理账号:',req:1,ph:'（浏览器会自动填入管理员账号）'},{l:'登录密码:',req:1,type:'password',ph:''},{l:'代理名称:',req:1},{l:'国家:',req:1,sel:['菲律賓'],ph:'Select'},{l:'币种:',req:1,sel:['PHP'],ph:'Select'},{l:'标签:',sel:['JUST Agent','Mobile Only'],ph:'选择'},{l:'',full:'<label><input type="checkbox"> 内部测试账号</label>　<label><input type="checkbox"> 是否为B端商户代理</label>'}]),
+ 'a-edit':a=>dlg('编辑',[{l:'账号:',ro:a.acc},{l:'登录密码:',type:'password',ph:''},{l:'会员层级:',sel:LAYERS,ph:'Select'},{l:'真实姓名:',val:a.acc.toUpperCase()},{l:'电话:'},{l:'邮箱:'},{l:'QQ:'},{l:'提款密码:',type:'password',ph:''},{l:'备注:',val:a.rm||''},{l:'标签:',sel:['JUST Agent','Mobile Only'],ph:'标签'},{l:'今日密码错误次数:',full:'<span class="hint">今日密码错误次数：0 次</span> <button class="btn ghost" data-act="noop">清除</button>'}]),
+ 'ai-add':()=>dlg('新增邀请码',[{l:'邀请码:',ph:'4～16位数字字母或下划线',after:'留空系统自动生成'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确定</button>'}),
+ 'ai-qr':()=>dlg('二维码',[{full:'<div style="width:140px;height:140px;margin:auto;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;color:var(--quiet)">二维码图片</div>'}],{foot:'<button class="btn" data-close>关闭</button>'}),
+ 'm-add':()=>dlg('新增会员',[{l:'上级代理:',req:1,sel:['5ji-wanghong','google_vi','…'],ph:'请选择代理',after:'温馨提示：新增用户的测试标示与上级代理相同。'},{l:'国家:',ro:''},{l:'币种:',ro:''},{l:'投注站名称:',req:1,sel:['eeee','sandy','ceshishijian','KLbbc','777','kobe','bb wave'],ph:'Select'},{l:'帐户:',req:1,ph:'（浏览器会自动填入管理员账号）'},{l:'登录密码:',req:1,type:'password',ph:''},{l:'真实姓名:',req:1},{l:'会员类型:',rad:['普通会员','代理会员'],val:'普通会员'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确 定</button>'}),
+ 'm-batch-info':()=>dlg('批量更新用户资讯',[{full:'<span class="hint">提醒：批量更新用户时，使用 ; 区隔帐号</span>'},{l:'帐户:',req:1,ph:'帐户'},{l:'状态:',rad:['正常','冻结']},{l:'用户等级:',sel:['普通会员','白银会员','黄金会员','铂金会员','钻石会员','至尊会员','VIP6','VIP7','VIP8','VIP9','VIP10'],ph:'Select'},{l:'会员层级:',sel:LAYERS,ph:'Select'},{l:'备注:'},{l:'停止第三方返水:',rad:['正常','停用']},{l:'停止体育返水:',rad:['正常','停用']},{l:'添加会员标签:',sel:['Frequent Depositor','High Volume Bettor','Inactive Member'],ph:'Select'},{l:'删除会员标签:',sel:['Frequent Depositor','High Volume Bettor','Inactive Member'],ph:'Select'}]),
+ 'm-batch-bal':()=>dlg('批量更新用户余额',[{l:'用户金额:',req:1,ta:1},{l:'备注:',req:1},{l:'Google验证码:',req:1},{l:'说明:',full:'<span class="hint">1. 用户金额格式「用户名 金额」，多个会员用 ; 分隔（例如 user10 100.12;user09 200.89）<br>2. 本功能需要开启 Google 验证码，输入验证码后才可使用</span>'}]),
+ 'm-import':()=>dlg('批量导入用户',[{full:'<button class="btn ghost" data-act="noop">点击上传</button> <span class="hint">只能上传cvs文件（原文，应为 csv）</span>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'm-more':()=>dlg('更多（会员操作）',[{full:'<div class="ops" style="justify-content:flex-start;max-width:none">'+[['m-wd','编辑提款信息'],['m-quota','额度修改'],['m-agent','变更代理'],['m-third','第三方游戏'],['m-kyc','KYC信息'],['m-pwd1','修改密码'],['m-pwd2','修改提款密码'],['m-pwd3','修改手机号码']].map(([d,t])=>`<button class="lk" data-act="mdlg" data-d="${d}">${t}</button>`).join('')+'</div><p class="hint" style="margin-top:8px">以下 4 项可能点了直接执行，梳理时未点击：清除稽核记录、解锁金额、发送OTP、发送短信。</p>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'm-edit':m=>dlg('编辑用户',[{l:'账号:',ro:m.acc},{l:'状态:',rad:['待审核','正常','冻结','停用','禁止投注','临时冻结'],val:'正常'},{l:'登录密码:',type:'password',ph:''},{l:'真实姓名:',ro:'***'},{l:'名 / 中间名 / 姓:',full:'<div style="display:flex;gap:6px;flex-wrap:wrap"><input type="text" placeholder="名"><label><input type="checkbox"> 无中间名</label><input type="text" placeholder="姓"></div>'},{l:'vip生日:',ph:'MM / DD'},{l:'昵称:',val:m.nick},{l:'性别:',rad:['女','男','其他']},{l:'会员层级:',sel:LAYERS,ph:'Select'},{l:'投注站名称:',sel:['eeee','sandy','ceshishijian','KLbbc','777','kobe','bb wave'],ph:'Select'},{l:'生日:',ph:'yyyy/mm/dd'},{l:'身分证字号:'},{l:'薪资来源:',sel:['Salary','Income From Own Business','Savings','Investment','Self-employed','Others'],ph:'Select'},{l:'身分证件类别:',sel:["Driver's License",'Philippine National ID','Valid Passport','UMID','…（共 22 项）'],ph:'Select'},{l:'电话前缀国码 / 手机号:'},{l:'邮箱:'},{l:'国籍 / 出生地 / 工作性质:'},{l:'当前地址（省/城市、邮编）:'},{l:'永久居住地（省/城市、邮编）:'},{l:'QQ / 微信 / zalo:'},{l:'whatsapp / telegram / facebook:'},{l:'安全问题:',sel:['What is the name of your first pet','…（共 10 项）'],ph:'Select'},{l:'安全问题回答:'},{l:'提款密码:',type:'password',ph:''},{l:'备注:'},{l:'新增备注:',req:1},{l:'停止第三方返水:',rad:['正常','停用'],val:'正常'},{l:'停止体育返水:',rad:['正常','停用'],val:'正常'},{l:'当天最大充值返利次数:',type:'number'},{l:'授权登录:',full:'<div class="radios"><label><input type="checkbox" checked> Google</label><label><input type="checkbox" checked> Apple</label><label><input type="checkbox" checked> Facebook</label><label><input type="checkbox" checked> Telegram</label></div>'},{l:'会员标签:',full:'<div class="radios"><label><input type="checkbox"> Frequent Depositor</label><label><input type="checkbox"> High Volume Bettor</label><label><input type="checkbox"> Inactive Member</label></div>'},{l:'今日密码错误次数:',full:'<span class="hint">今日密码错误次数：0 次</span> <button class="btn ghost" data-act="noop">清除</button>'}]),
+ 'm-detail':m=>DLG['b-detail']({nick:m.nick,acc:m.acc}),
+ 'm-balance':(m,b)=>dlg('会员余额详情',[{l:'平台钱包',ro:b||'0.000'},{full:'<span class="hint">实时调用 thirdapi/getAllBalance 查询，三方钱包有余额时也会列出。</span>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'm-wd':m=>dlg('编辑提款信息',[{full:'<div class="bar" style="margin-bottom:8px"><button class="btn ghost" data-act="noop">添加提款信息</button></div><div class="tw"><table><tr><th>提款类型</th><th>开户银行/虚拟币合约</th><th>银行卡号/虚拟币地址</th><th>分行地址</th><th>申请理由</th><th>操作</th></tr><tr><td colspan="6" class="empty">No Data</td></tr></table></div><p class="hint">行操作：新增或修改申请 / 删除申请（都走申请，不直接生效）</p>'}],{foot:'<button class="btn plain" data-close>返 回</button>'}),
+ 'm-quota':m=>DLG['b-quota']({acc:m.acc}),
+ 'm-agent':m=>dlg('变更代理',[{l:'当前代理:',ro:m.up},{l:'新代理:',sel:BIG.map(x=>x.acc),ph:'请选择代理',after:'温馨提示：变更用户的测试标示与上级代理相同。'},{l:'国家:',ro:''},{l:'币种:',ro:''}]),
+ 'm-third':m=>dlg('第三方游戏',[{l:'账号',ro:m.acc},{full:'<div class="bar" style="margin-bottom:8px"><button class="btn ghost" data-act="noop">全部转出</button></div><div class="share">'+['JILI','PG','PRAGMATIC PLAY','EVO','JDB','FC','…（共 17 个厂商）'].map(f=>`<label>${f}<span><button class="lk" data-act="noop">点击显示余额</button> · <button class="lk" data-act="noop">转至平台</button></span></label>`).join('')+'</div><p class="hint">厂商名为示意，实际按 thirdapi/thirdgames 返回；转账类按钮梳理时未点击。</p>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'm-kyc':m=>dlg('KYC信息',[{full:'<b>基本信息</b>'},{l:'账号:',ro:m.acc+'　（'+(m.kyc||'从未认证')+'）'},{l:'全名 / 名 / 中间名 / 姓:'},{l:'国籍:',sel:['Filipino','…'],ph:'Select'},{l:'生日 / 出生地:'},{l:'工作性质:',sel:['Assistant','Associate','…'],ph:'Select'},{l:'收入来源:',sel:['Salary','Income From Own Business','Savings','Investment','Self-employed','Others'],ph:'Select'},{l:'投注站:',sel:['LAGUNA','BUENDIA PASAY','PTT PASAY','MALATE','PRIDEROCK PASAY','PACO','LIBERTAD PASAY','…'],ph:'Select',after:'⚠ 这里是另一套投注站名称，和投注站列表对不上'},{l:'当前地址:'},{l:'永久居住地:',full:'<label><input type="checkbox"> 使用当前地址</label>'},{l:'备注:',ta:1},{full:'<b>证件信息</b>'},{l:'证件类型:',sel:['SSS',"Driver's License",'…'],ph:'Select'},{l:'证件号码:'},{l:'证件照 / EKYC 截屏:',full:'<span class="hint">请选择上传身份证件 · <span style="color:var(--warn)">FAILED</span></span>'},{full:'<b>补充信息</b>'},{l:'证件背面 / 自拍照 / 收入证明:',full:'<span class="hint">请选择上传身份证件 · <span style="color:var(--warn)">FAILED</span></span>'},{l:'NDRP图片:',full:'<span class="hint">请选择上传身份证件 · <span style="color:var(--warn)">FAILED</span></span>'}],{foot:'<button class="btn plain" data-close>关闭</button><button class="btn ghost" data-ok>save</button><button class="btn" data-ok>Pass KYC</button><button class="btn plain" data-ok>Reject KYC</button>'}),
+ 'm-pwd1':()=>dlg('修改密码',[{l:'新密码:',type:'password',ph:'',after:'⚠ 没有必填标记'},{l:'原因:',req:1,ta:1}],{foot:'<button class="btn plain" data-close>取 消</button><button class="btn" data-ok>申请</button>'}),
+ 'm-pwd2':()=>dlg('修改提款密码',[{l:'新提款密码:',req:1,type:'password',ph:''},{l:'原因:',req:1,ta:1}],{foot:'<button class="btn plain" data-close>取 消</button><button class="btn" data-ok>申请</button>'}),
+ 'm-pwd3':()=>dlg('修改手机号码',[{l:'新手机号码:',req:1},{l:'原因:',req:1,ta:1}],{foot:'<button class="btn plain" data-close>取 消</button><button class="btn" data-ok>申请</button>'}),
+ 'ra-new':()=>dlg('新建分类',[{l:'分类',req:1,after:'0/64'},{l:'备注',ta:1,after:'0/255'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确认</button>'}),
+ 'ra-edit':()=>dlg('编辑分类',[{l:'分类',req:1,val:'谷歌',after:'2/64'},{l:'备注',ta:1,after:'0/255'}],{foot:'<button class="btn plain" data-close>取消</button><button class="btn" data-ok>确认</button>'}),
+ 'ra-manage':()=>dlg('配置代理 - 谷歌',[{full:'<p class="hint" style="margin:0 0 8px">一次最多 200 个，一个分类最多 200 个。有一个账号不合法整批都不会加。</p><textarea placeholder="代理账号名，用逗号 / 空格 / 换行分隔，可直接粘贴 newUserStationRouteAgents 的值"></textarea><div class="bar" style="margin:8px 0"><button class="btn" data-ok>添加</button></div><div class="tw"><table><tr><th>ID</th><th>代理</th><th>嵌套</th><th>操作</th></tr><tr><td>1034742</td><td>pasay001</td><td>-</td><td><button class="lk" data-act="noop">移除</button></td></tr></table></div>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'ra-expand':()=>dlg('查看展开 - 谷歌',[{full:'<label><input type="checkbox"> 只看最下面一层</label><div class="tw" style="margin-top:8px"><table><tr><th>ID</th><th>代理</th><th>类型</th><th>上级 ID</th><th>所属配置代理</th><th>层数</th><th>最下层</th></tr>'+[['1034742','pasay001','ZDL','0','0','-'],['1027608','dl','DL','1034742','1','是'],['1029672','PH_PHP_dl','DL','1034742','1','-'],['1052737','fast001','DL','1034742','1','-'],['1052759','zxcvbn','DL','1034742','1','是']].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>pasay001(1034742)</td><td>${r[4]}</td><td>${r[5]}</td></tr>`).join('')+'</table></div><p class="hint">Total 1,784（示例显示 5 条）。类型 ZDL = 总代理（投注站），DL = 代理。</p>'}],{foot:'<button class="btn plain" data-close>关闭</button>'}),
+ 'pending':(a,title)=>dlg(title||'待补',[{full:'<p>该弹窗字段待补：11-10 采集时会员查询接口返回「系统查询繁忙」，没有拿到会员数据行，无法打开行操作。</p>'}],{foot:'<button class="btn plain" data-close>关闭</button>'})
+};
+document.addEventListener('click',e=>{
+  const pick=e.target.closest('[data-pick]');
+  const gv=e.target.closest('[data-goto-v]'); if(gv){location.hash=gv.dataset.gotoV;return}
+  if(pick&&pick.dataset.goto){window.__pending=pick.dataset.pick;location.hash=pick.dataset.goto;return}
+  if(pick){showSpec(pick.dataset.pick);document.querySelector(`[data-spec="${pick.dataset.pick}"]`)?.scrollIntoView({block:'center',behavior:'smooth'});return}
+  const m=e.target.closest('.modal');
+  if(m){ if(e.target.closest('[data-ok]')){$('#modalRoot').innerHTML='';toast('原型：已模拟提交，未写入任何数据');return}
+    const act=e.target.closest('[data-act]');
+    if(act&&act.dataset.act==='go'){$('#modalRoot').innerHTML='';location.hash=act.dataset.to;return}
+    if(act&&act.dataset.act==='noop'){toast('原型：仅展示');return}
+    if(act&&act.dataset.act==='mdlg'){const d=act.dataset.d;DLG[d](window.__mctx||MEM[0]);showSpec(d.startsWith('m-pwd')?'m-pwd':d);return}
+    if(e.target.closest('[data-close]')&&(e.target.matches('[data-close]')||e.target.closest('button[data-close]'))) $('#modalRoot').innerHTML='';
+    return; }
+  const specEl=e.target.closest('[data-spec]'); if(specEl) showSpec(specEl.dataset.spec);
+  const a=e.target.closest('[data-act]'); if(!a) return;
+  const act=a.dataset.act;
+  if(act==='go'){location.hash=a.dataset.to}
+  else if(act==='search'){filt={st:$('#fSt').value,by:$('#fBy').value,kw:$('#fKw').value.trim(),g:$('#fG').value};render();toast('已按条件筛选（示例数据）')}
+  else if(act==='drill'){ctx=STATIONS[+a.dataset.i];location.hash='agent-drill'}
+  else if(act==='op'){ctx=STATIONS[+a.dataset.i];const op=a.dataset.op;
+    if(op==='op-subacc') location.hash='sub-account'; else if(op==='op-role') location.hash='sub-role'; else if(op==='op-ip') location.hash='station-ip'; else DLG[op](ctx);}
+  else if(act==='dlg'){DLG[a.dataset.d](viewName()==='big-agent'||viewName()==='agent'||viewName()==='member'||viewName()==='agent-invite'?actx:ctx,a.dataset.title)}
+  else if(act==='bop'){actx=BIG[+a.dataset.i];const op=a.dataset.op;window.__inviteFrom='big-agent';
+    if(op==='b-bill') location.hash='user-bill'; else if(op==='b-invite') location.hash='agent-invite'; else if(op==='b-vipbill') location.hash='agent-vip-bill'; else DLG[op](actx);}
+  else if(act==='aop'){actx=AGT[+a.dataset.i];const op=a.dataset.op;window.__inviteFrom='agent';
+    if(op==='a-invite') location.hash='agent-invite'; else if(op==='a-edit') DLG['a-edit'](actx); else DLG[op.replace('a-','b-')](actx);}
+  else if(act==='bdrill'){actx=BIG[+a.dataset.i];
+    if(a.dataset.k==='d'){banner=`下钻：只看大代理 ${esc(actx.acc)} 下的代理（queryCode / superUserId）。`;location.hash='agent'}
+    else{window.__memSearched=false;banner='';toast('跳到会员页：列表不会自动查询，显示 No Data');location.hash='member'}}
+  else if(act==='unbanner'){banner='';location.hash='big-agent'}
+  else if(act==='back-invite'){location.hash=window.__inviteFrom||'big-agent'}
+  else if(act==='copy'){const link='https://qa.789games.com/?code=1234_sandy';(navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject()).then(()=>toast('已复制（示例链接）')).catch(()=>toast('示例链接：'+link))}
+  else if(act==='msearch'){window.__memSearched=true;render();toast('显示 11-06 采集的示例数据（所属代理 = 5ji-wanghong）')}
+  else if(act==='noexport'){toast('原型：导出会下载文件，梳理时未点击')}
+  else if(act==='mop'){const op=a.dataset.op; if(a.dataset.i!==undefined) window.__mctx=MEM[+a.dataset.i];
+    if(op==='m-bill'){actx={acc:'会员',id:''};location.hash='user-bill'} else if(op==='m-es') toast('原型：ES数据同步可能直接执行，梳理时未点击'); else DLG[op](window.__mctx||MEM[0]);}
+  else if(act==='rclv'){rcLevel=+a.dataset.l;render()}
+  else if(act==='rcdown'){if(rcLevel<3){rcLevel++;render()}else toast('原型：下级代理可以继续下钻，示例只做到这一层')}
+  else if(act==='kick'){toast('原型：踢下线会立即生效，梳理时未点击')}
+  else if(act==='mbal'){DLG['m-balance'](null,a.dataset.b)}
+  else if(act==='submit'){toast('原型：已模拟提交，未创建投注站')}
+  else if(act==='quick'){const v=$('#quick').value;document.querySelectorAll('.pct').forEach(i=>i.value=v);toast('已应用到全部厂商')}
+  else if(act==='noop'){toast('原型：仅展示')}
+});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modalRoot').innerHTML=''});
+const mt=$('#markToggle');
+function applyMark(){document.body.classList.toggle('mark',mt.checked);try{localStorage.setItem('mark',mt.checked?'1':'0')}catch(err){}}
+try{const m=localStorage.getItem('mark'); if(m==='0') mt.checked=false}catch(err){}
+mt.addEventListener('change',applyMark); applyMark();
+window.addEventListener('hashchange',()=>{selected=window.__pending||null;window.__pending=null;if(viewName()!=='agent')banner='';render();window.scrollTo(0,0);if(selected){const el=document.querySelector(`[data-spec="${selected}"]`);el&&el.scrollIntoView({block:'center'})}});
+render();
+</script>
+
+</body>
+</html>

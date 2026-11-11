@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<title>网红代理设置原型</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0;font-size:14px}img{max-width:100%}</style>
+</head>
+<body>
+<style>
+/* 布局：仿 QA 后台「系统参数管理」页签结构，左侧原型画面，下方逻辑与开发说明 */
+:root{
+  --bg:#f3f5f6; --panel:#ffffff; --fg:#1f2a2e; --muted:#6b7a80; --line:#dfe5e8;
+  --brand:#1d7a6c; --brand-weak:#e4f2ef; --warn:#b5650d; --warn-weak:#fdf1e2;
+  --bad:#c0392b; --bad-weak:#fbe9e7; --ok:#2e8b57; --ok-weak:#e6f4ec; --chip:#eef2f4;
+  --font:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12181a; --panel:#1a2225; --fg:#e3ebee; --muted:#93a3a9; --line:#2c383c;
+  --brand:#3fb39f; --brand-weak:#173430; --warn:#e3a04f; --warn-weak:#352816;
+  --bad:#ef7b6e; --bad-weak:#3a1f1c; --ok:#5cc28a; --ok-weak:#17301f; --chip:#243034; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12181a; --panel:#1a2225; --fg:#e3ebee; --muted:#93a3a9; --line:#2c383c;
+  --brand:#3fb39f; --brand-weak:#173430; --warn:#e3a04f; --warn-weak:#352816;
+  --bad:#ef7b6e; --bad-weak:#3a1f1c; --ok:#5cc28a; --ok-weak:#17301f; --chip:#243034; color-scheme:dark}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:13px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+.body,.card>.bd,.dev{grid-template-columns:minmax(0,1fr)}
+h1{font-size:20px;margin:0;text-wrap:balance}
+h2{font-size:15px;margin:0}
+h3{font-size:13px;margin:0;color:var(--brand)}
+.sub{color:var(--muted);margin:2px 0 0}
+.crumb{color:var(--muted);font-size:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px}
+.tabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);padding:0 8px}
+.tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;padding:10px 12px;font:inherit;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand);font-weight:600}
+.tab .new{font-size:10px;background:var(--warn);color:#fff;border-radius:8px;padding:0 5px;margin-left:4px}
+.tab:focus-visible,.btn:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.body{padding:16px;display:grid;gap:16px}
+.card{border:1px solid var(--line);border-radius:6px}
+.card>.hd{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.card>.bd{padding:14px;display:grid;gap:12px}
+.hint{color:var(--muted);font-size:12px;margin:0}
+.btn{appearance:none;font:inherit;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:4px;padding:5px 12px;cursor:pointer;white-space:nowrap}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.btn.link{border:0;background:none;color:var(--brand);padding:2px 4px}
+.btn.link.danger{color:var(--bad)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+input[type=text],textarea,select{font:inherit;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:5px 8px;min-width:0}
+textarea{width:100%;box-sizing:border-box;resize:vertical;font-family:var(--mono)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.grow{flex:1 1 220px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{border-bottom:1px solid var(--line);padding:8px 10px;text-align:left;white-space:nowrap;vertical-align:middle}
+th{background:var(--chip);font-weight:600;color:var(--muted);font-size:12px}
+td.wrap-cell{white-space:normal;min-width:160px}
+.pill{display:inline-block;border-radius:10px;padding:0 8px;font-size:12px;line-height:20px}
+.pill.ok{background:var(--ok-weak);color:var(--ok)}
+.pill.off{background:var(--chip);color:var(--muted)}
+.pill.warn{background:var(--warn-weak);color:var(--warn)}
+.pill.bad{background:var(--bad-weak);color:var(--bad)}
+.code{font-family:var(--mono);font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.stat b{display:block;font-size:20px;font-variant-numeric:tabular-nums}
+.stat span{color:var(--muted);font-size:12px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin:0;padding:0;list-style:none}
+.rules li{border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:grid;gap:2px}
+.rules li strong{font-size:13px}
+.rules li span{color:var(--muted);font-size:12px}
+.rules li.alert{border-color:var(--warn);background:var(--warn-weak)}
+.flow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12px}
+.node{border:1px solid var(--line);border-radius:4px;padding:4px 8px;background:var(--panel)}
+.node.kol{border-color:var(--brand);color:var(--brand);font-weight:600}
+.node.wh{background:var(--brand-weak);border-color:var(--brand)}
+.node.ji{background:var(--chip)}
+.arrow{color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{appearance:none;border:0;background:var(--panel);color:var(--muted);font:inherit;padding:5px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--brand);color:#fff}
+.found{border:1px dashed var(--line);border-radius:4px;padding:8px 10px;font-size:12px}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.35);display:grid;place-items:center;padding:16px;z-index:20}
+.dialog{background:var(--panel);border-radius:6px;max-width:440px;width:100%;padding:18px;display:grid;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.toast{position:fixed;left:50%;top:calc(16px + env(safe-area-inset-top,0px));transform:translateX(-50%);background:var(--ok-weak);color:var(--ok);border:1px solid var(--ok);border-radius:4px;padding:6px 14px;z-index:30}
+.dev{display:grid;gap:8px}
+.dev table td{white-space:normal}
+.legacy{border:1px solid var(--line);border-radius:6px}
+.legacy .bd{padding:14px;display:grid;gap:8px}
+.ro{background:var(--chip);color:var(--muted)}
+.tag-proto{font-size:11px;color:var(--warn);border:1px solid var(--warn);border-radius:3px;padding:0 5px}
+@media (max-width:640px){.card>.hd{align-items:flex-start}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="crumb">位置 › 系统管理 › 系统参数管理</div>
+    <h1>网红代理设置 <span class="tag-proto">原型</span></h1>
+    <p class="sub">在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
+  </header>
+
+  <section class="panel">
+    <div class="tabs" role="tablist" id="tabs">
+      <button class="tab" role="tab" aria-selected="false" data-v="x">注册登陆</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="x">充值提款</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="promo" id="tab-promo">推广相关</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="x">游戏配置</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="x">系统相关配置</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="x">风控配置</button>
+      <button class="tab" role="tab" aria-selected="false" data-v="x">KYC配置</button>
+      <button class="tab" role="tab" aria-selected="true" data-v="kol" id="tab-kol">网红代理设置</button>
+    </div>
+
+    <!-- 推广相关：原文本框优化后的样子 -->
+    <div class="body" id="v-promo" hidden>
+      <div class="legacy">
+        <div class="hd" style="padding:10px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center">
+          <h3>网红代理名单配置</h3>
+          <button class="btn pri" id="go-kol">去「网红代理设置」管理</button>
+        </div>
+        <div class="bd">
+          <p class="hint"><b style="color:var(--fg)">规则：</b>名单内会员用「邀请好友」链接拉来的新会员，上级代理归入 <b class="code">5ji-wanghong</b>；不在名单的会员拉来的新会员归入 <b class="code">5-ji-agent</b>（会员推广专用线）。</p>
+          <textarea id="legacy-ta" rows="2" readonly class="ro" aria-label="当前名单（只读）"></textarea>
+          <p class="hint" id="legacy-count"></p>
+          <ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:2px">
+            <li>只管一层：名单内会员拉来的人如果再邀请，归入 5-ji-agent，除非他也在名单内。</li>
+            <li>只影响之后的新注册：加入或移出名单，已注册会员的归属都不会变。</li>
+            <li>网红本人的上级代理不变；网红用代理邀请码拉人不受名单影响。</li>
+            <li>目标代理固定为 5ji-wanghong，所有网红的下级在同一个代理下，按「邀请人」区分。</li>
+          </ul>
+          <p class="hint">优化：文本框改为只读展示，增删改在新页签「网红代理设置」里做，避免手动编辑逗号串时删错或输错 ID。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 网红代理设置 -->
+    <div class="body" id="v-kol">
+      <div class="stats" id="stats"></div>
+
+      <div class="card">
+        <div class="hd"><h2>归属规则</h2><span class="hint">现有后台逻辑，2026-11-11 QA 实测</span></div>
+        <div class="bd">
+          <div class="flow" aria-label="归属示意">
+            <span class="node kol">网红（名单内会员）</span><span class="arrow">→ 邀请好友 →</span>
+            <span class="node wh">一级：上级代理 5ji-wanghong</span><span class="arrow">→ 邀请好友 →</span>
+            <span class="node ji">二级：上级代理 5-ji-agent</span><span class="arrow">→</span>
+            <span class="node ji">三级及以后：5-ji-agent</span>
+          </div>
+          <ul class="rules">
+            <li><strong>一级进 5ji-wanghong</strong><span>名单内会员用邀请好友链接（/invite/会员ID）拉来的新会员，上级代理 = 5ji-wanghong，计入它的直属会员和团队数。</span></li>
+            <li class="alert"><strong>只管一层，不往下传</strong><span>一级会员不在名单内时，他再拉来的人归入 5-ji-agent。实测：M1 在名单 → M4 进 5ji-wanghong；M4 不在名单 → M5 进 5-ji-agent。</span></li>
+            <li><strong>只影响之后的新注册</strong><span>归属在注册那一刻决定。加入、停用或移出名单，都不会移动已注册的会员。</span></li>
+            <li><strong>网红本人不变</strong><span>加入名单不改网红自己的上级代理和团队数，网红团队数仍为 0。</span></li>
+            <li><strong>代理邀请码不受影响</strong><span>名单只管会员的「邀请好友」路径。代理邀请码（/?vip=邀请码）照常归到对应代理。</span></li>
+            <li class="alert"><strong>所有网红共用一个代理</strong><span>目标代理固定为 5ji-wanghong，不能为每个网红指定代理。要看某个网红带来的人，按「邀请人」筛选。</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 功能1 -->
+      <div class="card">
+        <div class="hd"><h2>添加网红</h2>
+          <div class="seg" role="group" aria-label="添加方式">
+            <button aria-pressed="true" id="m-one">手动添加</button>
+            <button aria-pressed="false" id="m-bulk">批量导入</button>
+          </div>
+        </div>
+        <div class="bd" id="add-one">
+          <div class="row">
+            <label for="one-id">会员ID</label>
+            <input type="text" id="one-id" placeholder="例如 992107927" inputmode="numeric" class="grow" style="max-width:240px">
+            <button class="btn" id="one-check">校验</button>
+          </div>
+          <div class="found" id="one-result">输入会员 ID 后点「校验」，确认账号和上级代理再添加。可试：992107927、992107949、992107926、123。</div>
+          <div class="row">
+            <label for="one-note">备注</label>
+            <input type="text" id="one-note" placeholder="选填，如 TikTok 网红 @xxx" class="grow">
+            <button class="btn pri" id="one-add" disabled>添加到名单</button>
+          </div>
+        </div>
+        <div class="bd" id="add-bulk" hidden>
+          <p class="hint">粘贴会员 ID，用逗号、空格或换行分隔；或上传 .txt / .csv 文件（每行一个 ID，第一列为 ID）。导入前先预览，只有「可添加」的会被加入。</p>
+          <textarea id="bulk-ta" rows="4" placeholder="992107927, 992107949&#10;992107912"></textarea>
+          <div class="row">
+            <label class="btn" for="bulk-file">上传文件</label>
+            <input type="file" id="bulk-file" accept=".txt,.csv" hidden>
+            <span class="hint" id="bulk-file-name">未选择文件</span>
+            <span style="flex:1"></span>
+            <button class="btn" id="bulk-preview">预览</button>
+          </div>
+          <div id="bulk-result" hidden>
+            <div class="tw"><table><thead><tr><th>会员ID</th><th>账号</th><th>上级代理</th><th>校验结果</th></tr></thead><tbody id="bulk-rows"></tbody></table></div>
+            <div class="row" style="margin-top:10px"><span class="hint" id="bulk-sum"></span><span style="flex:1"></span><button class="btn pri" id="bulk-add">导入可添加的会员</button></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能2 -->
+      <div class="card">
+        <div class="hd"><h2>网红列表</h2>
+          <div class="row">
+            <input type="text" id="f-q" placeholder="会员ID / 账号" style="width:160px">
+            <select id="f-st" aria-label="状态"><option value="">全部状态</option><option value="on">生效中</option><option value="off">已停用</option></select>
+          </div>
+        </div>
+        <div class="bd" style="padding:0">
+          <div class="tw"><table>
+            <thead><tr><th>会员ID</th><th>账号</th><th>网红本人上级代理</th><th>状态</th><th>一级邀请注册数<br><span style="font-weight:400">（归入 5ji-wanghong）</span></th><th>加入时间</th><th>操作人</th><th>备注</th><th>操作</th></tr></thead>
+            <tbody id="list"></tbody>
+          </table></div>
+          <p class="hint" style="padding:10px 14px">「停用」保留记录但不再生效，之后的新注册按普通会员归入 5-ji-agent；「移出」删除记录。两者都不影响已注册的会员。「查看邀请会员」跳转会员列表，按邀请人 = 该网红筛选。</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd"><h2>操作日志</h2><span class="hint">名单的每次变更都留痕</span></div>
+        <div class="bd" style="padding:0"><div class="tw"><table><thead><tr><th>时间</th><th>操作人</th><th>操作</th><th>会员ID</th><th>说明</th></tr></thead><tbody id="log"></tbody></table></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel dev">
+    <div class="card" style="border:0">
+      <div class="hd"><h2>开发说明</h2><span class="hint">给后端 / 前端的实现要点</span></div>
+      <div class="bd">
+        <div class="tw"><table>
+          <thead><tr><th>项</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>数据存储</td><td>新建网红名单表（会员ID、状态、备注、操作人、加入时间、更新时间）。上线时把现有系统参数「网红代理名单」的值 9079614 迁移进来。注册归属判断改为读表里「生效中」的记录。</td></tr>
+            <tr><td>兼容旧配置</td><td>「推广相关」页的文本框改为只读，显示当前生效名单，并放入口跳到新页签。不再允许在文本框里直接编辑。</td></tr>
+            <tr><td>添加校验</td><td>会员不存在 → 不可添加；账号类型不是会员（代理、大代理等） → 不可添加；已在名单 → 跳过；同一批里的重复 ID 只算一次；测试账号给出提示。</td></tr>
+            <tr><td>批量导入</td><td>支持粘贴和 .txt / .csv 上传，单次上限建议 500 个。先返回逐条校验结果，确认后只导入「可添加」的。</td></tr>
+            <tr><td>列表接口</td><td>分页，支持按会员ID / 账号、状态筛选。返回网红本人的账号和上级代理，以及一级邀请注册数（invite_activity_user_id = 该会员且上级代理 = 5ji-wanghong 的会员数）。</td></tr>
+            <tr><td>停用 / 移出</td><td>都需要页面内二次确认。只影响之后的新注册，不移动已注册会员。</td></tr>
+            <tr><td>操作日志</td><td>记录添加、导入、停用、启用、移出，包含操作人和时间。</td></tr>
+            <tr><td>不在本次范围</td><td>为每个网红指定独立代理，或让名单效果向下继承到二级、三级，需要改注册归属逻辑，另行评审（见测试报告第七节）。</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="mask" id="mask" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+  <h2 id="dlg-t"></h2><p id="dlg-b" style="margin:0"></p>
+  <div class="row" style="justify-content:flex-end"><button class="btn" id="dlg-no">取消</button><button class="btn pri" id="dlg-yes">确认</button></div>
+</div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+// 示例会员库（取自 QA 测试账号），用于模拟校验
+const DB={
+  '9079614':{acc:'Playere5nvy0777',sup:'—',type:'HY'},
+  '992107927':{acc:'Playerikc358781',sup:'t1111_kol_01',type:'HY'},
+  '992107949':{acc:'Playerbne058720',sup:'henny888123333',type:'HY'},
+  '992107912':{acc:'Playerty4248586',sup:'ddltomas',type:'HY'},
+  '992107937':{acc:'Playerhmd772535',sup:'5ji-wanghong',type:'HY'},
+  '992107926':{acc:'t1111_kol_01',sup:'t1111_kol_big',type:'DL'},
+  '992107532':{acc:'henny888123333',sup:'5ji-wanghong',type:'DL'}
+};
+let LIST=[
+  {id:'9079614',acc:'Playere5nvy0777',sup:'—',on:true,inv:'—',t:'迁移自原配置',by:'系统迁移',note:'原「网红代理名单」唯一 ID'},
+  {id:'992107927',acc:'Playerikc358781',sup:'t1111_kol_01',on:false,inv:1,t:'2026-11-11 15:19',by:'koi888',note:'QA 测试网红 M1，测完已停用'}
+];
+let LOG=[
+  {t:'2026-11-11 15:24',by:'koi888',op:'停用',id:'992107927',d:'QA 测试结束'},
+  {t:'2026-11-11 15:19',by:'koi888',op:'添加',id:'992107927',d:'手动添加'},
+  {t:'上线迁移',by:'系统',op:'导入',id:'9079614',d:'从系统参数迁移'}
+];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const now=()=>{const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`};
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,1800)}
+function ask(title,body,yes,cb,danger){$('#dlg-t').textContent=title;$('#dlg-b').textContent=body;const y=$('#dlg-yes');y.textContent=yes;y.className='btn '+(danger?'danger':'pri');$('#mask').hidden=false;y.onclick=()=>{$('#mask').hidden=true;cb()};y.focus()}
+$('#dlg-no').onclick=()=>$('#mask').hidden=true;
+
+function check(id){
+  if(!/^\d+$/.test(id)) return {s:'bad',m:'格式错误，只能是数字'};
+  const u=DB[id]; if(!u) return {s:'bad',m:'会员不存在'};
+  if(u.type!=='HY') return {s:'bad',m:'不是会员账号（代理）',u};
+  if(LIST.some(x=>x.id===id)) return {s:'warn',m:'已在名单',u};
+  return {s:'ok',m:'可添加',u};
+}
+function add(id,note,how){const u=DB[id];LIST.unshift({id,acc:u.acc,sup:u.sup,on:true,inv:0,t:now(),by:'koi888',note:note||''});LOG.unshift({t:now(),by:'koi888',op:how,id,d:how==='添加'?'手动添加':'批量导入'})}
+
+function render(){
+  const on=LIST.filter(x=>x.on).length;
+  const invSum=LIST.reduce((a,x)=>a+(typeof x.inv==='number'?x.inv:0),0);
+  $('#stats').innerHTML=[[on,'生效中的网红'],[LIST.length-on,'已停用'],[invSum,'一级邀请注册（有统计的）'],['5ji-wanghong','一级归入的代理']].map(([b,s])=>`<div class="stat"><b class="${typeof b==='string'?'code':''}" style="${typeof b==='string'?'font-size:15px':''}">${esc(b)}</b><span>${s}</span></div>`).join('');
+  const q=$('#f-q').value.trim().toLowerCase(),st=$('#f-st').value;
+  const rows=LIST.filter(x=>(!q||x.id.includes(q)||x.acc.toLowerCase().includes(q))&&(!st||(st==='on')===x.on));
+  $('#list').innerHTML=rows.length?rows.map(x=>`<tr>
+    <td class="code">${x.id}</td><td>${esc(x.acc)}</td><td>${esc(x.sup)}</td>
+    <td><span class="pill ${x.on?'ok':'off'}">${x.on?'生效中':'已停用'}</span></td>
+    <td>${x.inv}</td><td>${esc(x.t)}</td><td>${esc(x.by)}</td><td class="wrap-cell">${esc(x.note)}</td>
+    <td><button class="btn link" data-a="tog" data-id="${x.id}">${x.on?'停用':'启用'}</button><button class="btn link" data-a="view" data-id="${x.id}">查看邀请会员</button><button class="btn link danger" data-a="del" data-id="${x.id}">移出</button></td></tr>`).join(''):`<tr><td colspan="9" class="hint" style="text-align:center;padding:20px">没有符合条件的网红</td></tr>`;
+  $('#log').innerHTML=LOG.map(l=>`<tr><td>${esc(l.t)}</td><td>${esc(l.by)}</td><td>${esc(l.op)}</td><td class="code">${l.id}</td><td>${esc(l.d)}</td></tr>`).join('');
+  const act=LIST.filter(x=>x.on).map(x=>x.id);
+  $('#legacy-ta').value=act.join(',');
+  $('#legacy-count').textContent=`当前生效 ${act.length} 个会员 ID（只读）`;
+}
+$('#list').addEventListener('click',e=>{const b=e.target.closest('button[data-a]');if(!b)return;const x=LIST.find(r=>r.id===b.dataset.id);
+  if(b.dataset.a==='tog'){ if(x.on) ask('停用网红',`停用 ${x.acc}（${x.id}）后，他之后拉来的新会员归入 5-ji-agent。已注册会员不变。`,'停用',()=>{x.on=false;LOG.unshift({t:now(),by:'koi888',op:'停用',id:x.id,d:''});render();toast('已停用')});
+    else {x.on=true;LOG.unshift({t:now(),by:'koi888',op:'启用',id:x.id,d:''});render();toast('已启用')} }
+  if(b.dataset.a==='del') ask('移出名单',`移出 ${x.acc}（${x.id}）会删除这条记录。已归入 5ji-wanghong 的会员不变。`,'移出',()=>{LIST=LIST.filter(r=>r!==x);LOG.unshift({t:now(),by:'koi888',op:'移出',id:x.id,d:''});render();toast('已移出')},true);
+  if(b.dataset.a==='view') toast(`跳转：会员列表 › 邀请人 = ${x.id}`);
+});
+$('#f-q').oninput=render;$('#f-st').onchange=render;
+
+// 手动添加
+$('#one-check').onclick=()=>{const id=$('#one-id').value.trim();const r=check(id);
+  $('#one-result').innerHTML=`<span class="pill ${r.s}">${r.m}</span> `+(r.u?`账号 <b>${esc(r.u.acc)}</b> · 上级代理 ${esc(r.u.sup)}`:'');
+  $('#one-add').disabled=r.s!=='ok';};
+$('#one-id').oninput=()=>{$('#one-add').disabled=true};
+$('#one-add').onclick=()=>{const id=$('#one-id').value.trim();const u=DB[id];
+  ask('添加网红',`把 ${u.acc}（${id}）加入名单？之后他用邀请好友链接拉来的新会员归入 5ji-wanghong。`,'添加',()=>{add(id,$('#one-note').value.trim(),'添加');$('#one-id').value='';$('#one-note').value='';$('#one-add').disabled=true;$('#one-result').textContent='已添加。可继续输入下一个会员 ID。';render();toast('已添加')});};
+
+// 批量导入
+const seg=(one)=>{$('#m-one').setAttribute('aria-pressed',one);$('#m-bulk').setAttribute('aria-pressed',!one);$('#add-one').hidden=!one;$('#add-bulk').hidden=one};
+$('#m-one').onclick=()=>seg(true);$('#m-bulk').onclick=()=>seg(false);
+$('#bulk-file').onchange=e=>{const f=e.target.files[0];if(!f)return;$('#bulk-file-name').textContent=f.name;const rd=new FileReader();rd.onload=()=>{$('#bulk-ta').value=String(rd.result).split(/\r?\n/).map(l=>l.split(',')[0].trim()).filter(Boolean).join('\n')};rd.readAsText(f)};
+let BULK=[];
+$('#bulk-preview').onclick=()=>{const ids=$('#bulk-ta').value.split(/[\s,，]+/).map(s=>s.trim()).filter(Boolean);const seen=new Set();
+  BULK=ids.map(id=>{if(seen.has(id))return {id,r:{s:'warn',m:'本批重复'}};seen.add(id);return {id,r:check(id)}});
+  $('#bulk-rows').innerHTML=BULK.length?BULK.map(b=>`<tr><td class="code">${esc(b.id)}</td><td>${b.r.u?esc(b.r.u.acc):'—'}</td><td>${b.r.u?esc(b.r.u.sup):'—'}</td><td><span class="pill ${b.r.s}">${b.r.m}</span></td></tr>`).join(''):`<tr><td colspan="4" class="hint">没有识别到会员 ID</td></tr>`;
+  const n=BULK.filter(b=>b.r.s==='ok').length;$('#bulk-sum').textContent=`共 ${BULK.length} 个，可添加 ${n} 个，跳过 ${BULK.length-n} 个`;
+  $('#bulk-add').disabled=!n;$('#bulk-result').hidden=false;};
+$('#bulk-add').onclick=()=>{const ok=BULK.filter(b=>b.r.s==='ok');ask('批量导入',`导入 ${ok.length} 个会员到网红名单？其余 ${BULK.length-ok.length} 个会跳过。`,'导入',()=>{ok.forEach(b=>add(b.id,'批量导入','导入'));BULK=[];$('#bulk-result').hidden=true;$('#bulk-ta').value='';$('#bulk-file-name').textContent='未选择文件';render();toast(`已导入 ${ok.length} 个`)})};
+$('#bulk-ta').value='992107927, 992107949\n992107912\n992107926\n992107949\n123';
+
+// 页签
+function show(v){document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.v===v));$('#v-kol').hidden=v!=='kol';$('#v-promo').hidden=v!=='promo';}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{if(t.dataset.v==='x'){toast('原型只做「推广相关」和「网红代理设置」');return}show(t.dataset.v);history.replaceState(null,'','#'+(t.dataset.v==='kol'?'kol':'promo'))});
+$('#go-kol').onclick=()=>{show('kol');history.replaceState(null,'','#kol')};
+show(location.hash==='#promo'?'promo':'kol');
+window.addEventListener('hashchange',()=>show(location.hash==='#promo'?'promo':'kol'));
+render();
+</script>
+
+</body>
+</html>

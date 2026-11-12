@@ -58,8 +58,9 @@
 
 | 方法 | 路径 | 返回 |
 |---|---|---|
-| GET | `/api/activity/whitelistSpin/info` | `spins[]`（每转的 wheelId + 该转盘 10 格金额，不返回概率）、`remaining`、`nextSpinNo`、`expireTime`、`jackpot`、`showGrantPopup`、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
+| GET | `/api/activity/whitelistSpin/info` | `spins[]`（每转的 wheelId + 该转盘 10 格金额，不返回概率）、`remaining`、`nextSpinNo`、`expireTime`、`jackpot`、`dailyPopup`（今天是否该弹每日活动弹窗）、`popupType`（GRANT 当天有新导入批次 / REMIND）、`winners[]`（本活动最近 30 条真实中奖：`maskedAccount`、`amount`、`drawTime`，按时间倒序） |
 | POST | `/api/activity/whitelistSpin/draw` | `slotIndex`、`amount`、`remaining`、`drawId` |
+| POST | `/api/activity/whitelistSpin/popupShown` | 记录每日活动弹窗已曝光（按 userId + GMT+8 日期），当天不再返回 `dailyPopup = true` |
 
 draw 的处理流程：
 

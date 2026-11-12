@@ -180,13 +180,13 @@ table.cmp td{white-space:normal}
         <div class="bd">
           <div class="flow" aria-label="全链路归属示意">
             <span class="node kol">全链路网红（全链路名单内）</span><span class="arrow">→ 邀请好友 →</span>
-            <span class="node wh">一级：all-life-wanghong</span><span class="arrow">→</span>
-            <span class="node wh">二级：all-life-wanghong</span><span class="arrow">→</span>
-            <span class="node wh">N 级：all-life-wanghong</span>
+            <span class="node wh">一级 · all-wanghong-1</span><span class="arrow">→</span>
+            <span class="node wh">二级 · all-wanghong-2</span><span class="arrow">→</span>
+            <span class="node wh">N 级 · all-wanghong-n</span><span class="arrow">（都在 all-life-wanghong 下）</span>
           </div>
           <ul class="rules">
             <li><strong>一级到 N 级都进 all-life-wanghong</strong><span>全链路网红邀请的整条链，不限层级，上级代理都是 all-life-wanghong，并写入字段 all_life_wanghong = 网红 ID。</span></li>
-            <li><strong>注册时向上查邀请关系</strong><span>从邀请人开始往上逐层查：在全链路名单 → 命中；已带 all_life_wanghong → 继承；都不是就查它的邀请人。查到顶、出现环或超过 200 层算未命中。</span></li>
+            <li><strong>层级标记 all-wanghong-n，注册时写入</strong><span>只看直接邀请人：邀请人在全链路名单 → 新会员标记 all-wanghong-1；邀请人带 all-wanghong-n → 新会员标记 all-wanghong-(n+1)，继承 all_life_wanghong。标记在注册时写入，之后不变。</span></li>
             <li class="alert"><strong>先查全链路，再走现有规则</strong><span>未命中全链路时，才看直接邀请人是否在现有网红名单（→ 5ji-wanghong），否则 → 5-ji-agent。</span></li>
             <li class="alert"><strong>两套互不读取</strong><span>全链路只认全链路名单和 all_life_wanghong 字段；现有规则只认现有名单和 wanghong 字段。两份名单不互斥，同一会员可同时在两份里，此时他邀请的人按全链路处理。</span></li>
             <li><strong>只影响之后的新注册</strong><span>加入、停用或移出全链路名单，都不会移动已注册的会员。历史下级是否迁移待定。</span></li>
@@ -198,8 +198,8 @@ table.cmp td{white-space:normal}
               <tr><td>名单</td><td>网红代理名单（9079614）</td><td>全链路网红名单</td></tr>
               <tr><td>归属大代理</td><td class="code">5ji-wanghong</td><td class="code">all-life-wanghong</td></tr>
               <tr><td>覆盖层级</td><td>只管一级，二级起进 5-ji-agent</td><td>一级到 N 级</td></tr>
-              <tr><td>判断方式</td><td>直接邀请人是否在名单</td><td>沿邀请人链向上查</td></tr>
-              <tr><td>标记字段</td><td class="code">wanghong</td><td class="code">all_life_wanghong</td></tr>
+              <tr><td>判断方式</td><td>直接邀请人是否在名单</td><td>直接邀请人在全链路名单，或带 all-wanghong-n 标记</td></tr>
+              <tr><td>标记字段</td><td class="code">wanghong</td><td class="code">all_life_wanghong + all-wanghong-n</td></tr>
               <tr><td>报表</td><td>代理充值留存「网红」行</td><td>代理充值留存「全链路网红」行</td></tr>
             </tbody>
           </table></div>
@@ -283,7 +283,7 @@ table.cmp td{white-space:normal}
             <tr><td>停用 / 移出</td><td>都需要页面内二次确认。只影响之后的新注册，不移动已注册会员。</td></tr>
             <tr><td>操作日志</td><td>记录添加、导入、停用、启用、移出，包含操作人和时间。</td></tr>
             <tr><td>全链路网红</td><td>新增全链路名单表（结构同上，加 type 区分或单独建表）、大代理 all-life-wanghong、会员字段 all_life_wanghong、全链路开关。注册时先跑向上查询（命中 → all-life-wanghong），未命中再走现有规则。两份名单不互斥；同一会员同时在两份时，全链路优先。</td></tr>
-            <tr><td>向上查询</td><td>按 invite_activity_user_id 逐层上溯；遇到全链路名单内且生效的会员，或已带 all_life_wanghong 的会员即停止；设 200 层上限和环检测。</td></tr>
+            <tr><td>层级标记</td><td>会员表新增字段（暂称 all_wanghong_tag），注册时写入：邀请人在全链路名单 → all-wanghong-1；邀请人带 all-wanghong-n → all-wanghong-(n+1)。只看直接邀请人一层；逐层上溯（按 invite_activity_user_id，200 层上限、环检测）只用于上线前历史会员回刷。</td></tr>
             <tr><td>不在本次范围</td><td>为每个网红指定独立代理；现有网红名单的向下继承（现有规则保持只管一级）。</td></tr>
           </tbody>
         </table></div>

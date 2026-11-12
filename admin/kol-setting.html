@@ -189,7 +189,8 @@ table.cmp td{white-space:normal}
             <li><strong>层级标记 all-wanghong-n，注册时写入</strong><span>只看直接邀请人：邀请人在全链路名单 → 新会员标记 all-wanghong-1；邀请人带 all-wanghong-n → 新会员标记 all-wanghong-(n+1)，继承 all_life_wanghong。标记在注册时写入，之后不变。</span></li>
             <li class="alert"><strong>先查全链路，再走现有规则</strong><span>未命中全链路时，才看直接邀请人是否在现有网红名单（→ 5ji-wanghong），否则 → 5-ji-agent。</span></li>
             <li class="alert"><strong>两套互不读取</strong><span>全链路只认全链路名单和 all_life_wanghong 字段；现有规则只认现有名单和 wanghong 字段。两份名单不互斥，同一会员可同时在两份里，此时他邀请的人按全链路处理。</span></li>
-            <li><strong>只影响之后的新注册</strong><span>加入、停用或移出全链路名单，都不会移动已注册的会员。历史下级是否迁移待定。</span></li>
+            <li><strong>加入前的下线：补写标记</strong><span>网红通常先注册、后加入名单。添加时可勾选「同时补写已有下线」：顺着邀请关系往下逐层写 1、2…n，网红字段写成他；原来归上层网红的也改归他。只改标记，不改上级代理、佣金和历史报表（建议，待确认）。</span></li>
+            <li><strong>统计都归最近的网红</strong><span>带 all-wanghong-n 的会员自己成为全链路网红后，他下面的人从 all-wanghong-1 重新算，统计归他。</span></li>
             <li><strong>代理邀请码不受影响</strong><span>代理邀请码和自然注册不走全链路判断。全链路开关关闭时只走现有规则。</span></li>
           </ul>
           <div class="tw"><table class="cmp">
@@ -203,6 +204,18 @@ table.cmp td{white-space:normal}
               <tr><td>报表</td><td>代理充值留存「网红」行</td><td>代理充值留存「全链路网红」行</td></tr>
             </tbody>
           </table></div>
+          <h3 style="margin-top:4px">会员上的标记字段（示例，取自 QA 账号）</h3>
+          <div class="tw"><table class="cmp">
+            <thead><tr><th>会员</th><th>全链路层级</th><th>所属网红</th><th>加入网红下线时间</th><th>标记来源</th></tr></thead>
+            <tbody>
+              <tr><td>Playerbne058720（网红本人）</td><td class="code">none</td><td>—</td><td>—</td><td>名单识别</td></tr>
+              <tr><td>Player1hhf63091</td><td class="code">1</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
+              <tr><td>Player077gm6483</td><td class="code">2</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
+              <tr><td>新注册的第 3 级会员</td><td class="code">3</td><td>992107949</td><td>注册时间</td><td>注册写入</td></tr>
+              <tr><td>普通会员</td><td class="code">none</td><td>—</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table></div>
+          <p class="hint">字段存数字 n，没有标记显示 none。标记写入后不变；「加入网红下线时间」可用于报表区分加入前带来的人和加入后新增的人。</p>
         </div>
       </div>
 
@@ -226,6 +239,7 @@ table.cmp td{white-space:normal}
             <input type="text" id="one-note" placeholder="选填，如 TikTok 网红 @xxx" class="grow">
             <button class="btn pri" id="one-add" disabled>添加到名单</button>
           </div>
+          <label class="row hint" id="backfill-row" hidden><input type="checkbox" id="one-backfill" checked> 同时补写已有下线的标记（只改标记，不改上级代理）<span id="backfill-preview"></span></label>
         </div>
         <div class="bd" id="add-bulk" hidden>
           <p class="hint">粘贴会员 ID，用逗号、空格或换行分隔；或上传 .txt / .csv 文件（每行一个 ID，第一列为 ID）。导入前先预览，只有「可添加」的会被加入。</p>
@@ -283,6 +297,7 @@ table.cmp td{white-space:normal}
             <tr><td>停用 / 移出</td><td>都需要页面内二次确认。只影响之后的新注册，不移动已注册会员。</td></tr>
             <tr><td>操作日志</td><td>记录添加、导入、停用、启用、移出，包含操作人和时间。</td></tr>
             <tr><td>全链路网红</td><td>新增全链路名单表（结构同上，加 type 区分或单独建表）、大代理 all-life-wanghong、会员字段 all_life_wanghong、全链路开关。注册时先跑向上查询（命中 → all-life-wanghong），未命中再走现有规则。两份名单不互斥；同一会员同时在两份时，全链路优先。</td></tr>
+            <tr><td>加入时补写</td><td>添加全链路网红时可选补写已有下线：按邀请关系向下逐层写层级 1…n 和所属网红，记录「加入网红下线时间」和「标记来源 = 加入回写」，生成操作日志（操作人、时间、影响人数，可导出明细）。不改上级代理、query_code、佣金和历史报表。执行前返回影响人数和各级分布供确认。</td></tr>
             <tr><td>层级标记</td><td>会员表新增字段（暂称 all_wanghong_tag），注册时写入：邀请人在全链路名单 → all-wanghong-1；邀请人带 all-wanghong-n → all-wanghong-(n+1)。只看直接邀请人一层；逐层上溯（按 invite_activity_user_id，200 层上限、环检测）只用于上线前历史会员回刷。</td></tr>
             <tr><td>不在本次范围</td><td>为每个网红指定独立代理；现有网红名单的向下继承（现有规则保持只管一级）。</td></tr>
           </tbody>
@@ -315,6 +330,8 @@ let LIST=[
   {type:'all',id:'992107949',acc:'Playerbne058720',sup:'henny888123333',on:true,inv:0,t:'示例',by:'koi888',note:'示例：全链路网红'}
 ];
 let T='5ji';
+// QA 实测的邀请链：各级下线人数（用于补写预览）
+const DOWN={'992107912':[1,1],'992107927':[2,2],'992107949':[1,1,1,1,1]};
 const TN={'5ji':{name:'现有网红名单',agent:'5ji-wanghong',other:'全链路网红名单',inv:'一级邀请注册数（5ji-wanghong）',off:'5-ji-agent'},'all':{name:'全链路网红名单',agent:'all-life-wanghong',other:'现有网红名单',inv:'全链路注册数（all-life-wanghong，含各级）',off:'现有规则（5ji-wanghong 或 5-ji-agent）'}};
 let LOG=[
   {type:'all',t:'示例',by:'koi888',op:'添加',id:'992107949',d:'手动添加'},
@@ -369,10 +386,12 @@ $('#f-q').oninput=render;$('#f-st').onchange=render;
 // 手动添加
 $('#one-check').onclick=()=>{const id=$('#one-id').value.trim();const r=check(id);
   $('#one-result').innerHTML=`<span class="pill ${r.s}">${r.m}</span> `+(r.u?`账号 <b>${esc(r.u.acc)}</b> · 上级代理 ${esc(r.u.sup)}`:'');
-  $('#one-add').disabled=r.s!=='ok';};
-$('#one-id').oninput=()=>{$('#one-add').disabled=true};
+  $('#one-add').disabled=r.s!=='ok';
+  const d=DOWN[id];$('#backfill-row').hidden=!(T==='all'&&r.s==='ok');
+  $('#backfill-preview').textContent=d?`：将补写 ${d.reduce((a,b)=>a+b,0)} 人（${d.map((c,i)=>(i+1)+' 级 '+c+' 人').join('，')}）`:'：示例数据中没有已知下线';};
+$('#one-id').oninput=()=>{$('#one-add').disabled=true;$('#backfill-row').hidden=true};
 $('#one-add').onclick=()=>{const id=$('#one-id').value.trim();const u=DB[id];
-  ask('添加网红',`把 ${u.acc}（${id}）加入${TN[T].name}？${T==='5ji'?'之后他用邀请好友链接拉来的一级会员归入 5ji-wanghong。':'之后他邀请链上的一级到 N 级新会员都归入 all-life-wanghong。'}`,'添加',()=>{add(id,$('#one-note').value.trim(),'添加');$('#one-id').value='';$('#one-note').value='';$('#one-add').disabled=true;$('#one-result').textContent='已添加。可继续输入下一个会员 ID。';render();toast('已添加')});};
+  ask('添加网红',`把 ${u.acc}（${id}）加入${TN[T].name}？${T==='5ji'?'之后他用邀请好友链接拉来的一级会员归入 5ji-wanghong。':'之后他邀请链上的一级到 N 级新会员都归入 all-life-wanghong。'}`,'添加',()=>{add(id,$('#one-note').value.trim(),'添加');if(T==='all'&&$('#one-backfill').checked&&DOWN[id]){const n=DOWN[id].reduce((a,b)=>a+b,0);LIST[0].inv=n;LOG.unshift({type:T,t:now(),by:'koi888',op:'补写',id,d:'补写已有下线 '+n+' 人'})}$('#backfill-row').hidden=true;$('#one-id').value='';$('#one-note').value='';$('#one-add').disabled=true;$('#one-result').textContent='已添加。可继续输入下一个会员 ID。';render();toast('已添加')});};
 
 // 批量导入
 const seg=(one)=>{$('#m-one').setAttribute('aria-pressed',one);$('#m-bulk').setAttribute('aria-pressed',!one);$('#add-one').hidden=!one;$('#add-bulk').hidden=one};

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>余额对账简版原型</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 布局：现网后台外壳 + 一张按小时的余额对账表，单一浅色外观（跟随后台） */
+:root{
+  --bar:#1d6cae; --menu-head:#4198ca; --menu-bg:#d4e6f0; --menu-act:#bcd8ea;
+  --bg:#f0f0f0; --card:#fff; --line:#dfe3e8; --line2:#eef1f4;
+  --fg:#1f2a33; --muted:#6b7884; --primary:#3d8fd8;
+  --yellow:#ffd24d; --red:#d93636; --red-bg:#fdecec; --green:#1f8a4c; --green-bg:#e8f6ee;
+  --proto:#fff7e0; --proto-ink:#7a5a00; --badge:#de1818;
+  --font:"PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+  --num:"Inter","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:13px;margin:0}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--primary);outline-offset:1px}
+.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+.proto{background:var(--proto);color:var(--proto-ink);border-bottom:1px solid #f0dca0;display:flex;flex-wrap:wrap;gap:6px 16px;padding-block:6px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));font-size:12px}
+.proto a{color:var(--proto-ink)}
+.top{background:var(--bar);color:#fff;display:flex;align-items:center;gap:12px;height:40px;padding-left:max(12px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top .burger{display:none;background:none;border:0;color:#fff;font-size:18px}
+.top .clock{color:var(--yellow);font-family:var(--num)}
+.top .qa{background:#f39c12;border-radius:3px;padding:0 6px;font-size:11px}
+.top .sp{flex:1}
+.shell{display:flex;min-height:calc(100vh - 70px)}
+.side{width:200px;flex:0 0 200px;background:#fff;border-right:1px solid var(--line)}
+.side .hd{background:var(--menu-head);color:#fff;padding:8px 12px}
+.side ul{list-style:none;margin:0;padding:0}
+.side .l1{background:var(--menu-bg);border-bottom:1px solid #c3d8e5;padding:8px 12px}
+.side .l2{padding:7px 12px 7px 28px;border-bottom:1px solid var(--line2);display:flex;gap:6px;align-items:center}
+.side .l2.act{background:var(--menu-act);color:#0f4f86;font-weight:600}
+.tag{background:var(--badge);color:#fff;font-size:10px;padding:0 4px;border-radius:2px;font-weight:400}
+.main{flex:1;min-width:0}
+.crumb{background:#fff;border-bottom:1px solid var(--line);padding:8px 16px;color:var(--muted)}
+.crumb b{color:var(--fg);font-weight:400}
+.content{padding:14px 16px 32px;display:flex;flex-direction:column;gap:12px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:3px}
+.filters{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:12px}
+.filters label{color:var(--muted)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);padding:0 12px}
+.seg button{background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;color:var(--muted)}
+.seg button.on{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.segnote{margin-left:auto;align-self:center;color:var(--muted);font-size:12px;padding:6px 0}
+.fdate{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input[type=date]{border:1px solid var(--line);border-radius:3px;padding:3px 6px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:3px;padding:4px 10px}
+.btn.on{border-color:var(--primary);color:var(--primary)}
+.btn.pri{background:var(--primary);border-color:var(--primary);color:#fff}
+.filters .right{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chk{display:flex;gap:4px;align-items:center;color:var(--fg)!important}
+.sum{display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 12px 12px;align-items:center}
+.sum .big{font-size:15px;font-weight:600}
+.ok{color:var(--green)} .bad{color:var(--red)}
+.tablewrap{overflow-x:auto;border-top:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{border:1px solid var(--line);padding:7px 9px;white-space:nowrap;text-align:right}
+th{background:#f5f7fa;font-weight:600;color:#33414c;text-align:center}
+th small{display:block;font-weight:400;color:var(--muted)}
+th.k{background:#eaf1f8}
+td.l{text-align:left}
+td.num{font-family:var(--num);font-variant-numeric:tabular-nums}
+td.hl{background:#f7fafd;font-weight:600}
+tr.err td{background:var(--red-bg)}
+tr.wait td{color:#9aa4ad;background:#f6f7f9}
+.pill{display:inline-block;padding:0 8px;border-radius:10px;font-size:12px;line-height:20px;font-weight:600}
+.pill.ok{background:var(--green-bg);color:var(--green)}
+.pill.bad{background:#fff;color:var(--red);border:1px solid #f0b4b4}
+.hint{color:var(--red);font-size:12px}
+.note{background:#e8f2fb;border:1px solid #c6dcf0;border-radius:3px;padding:10px 14px;line-height:1.75;font-size:12px}
+.note h4{margin:0 0 4px;font-size:13px}
+.note ol,.note ul{margin:0;padding-left:18px}
+.note.b{background:#fdeef3;border-color:#f2c8d6}
+.notes{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:12px}
+.f{font-family:var(--num);background:#fff;border:1px solid #c6dcf0;border-radius:3px;padding:4px 8px;display:inline-block;margin:2px 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:#1f2a33;color:#fff;padding:8px 14px;border-radius:3px;font-size:12px;max-width:calc(100% - 32px)}
+@media (max-width:900px){.notes{grid-template-columns:1fr}}
+@media (max-width:820px){
+  .top .burger{display:block}
+  .side{position:fixed;top:0;bottom:0;left:0;z-index:25;transform:translateX(-100%);transition:transform .2s;overflow-y:auto}
+  .side.open{transform:none;box-shadow:4px 0 16px rgba(0,0,0,.2)}
+  .content{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+}
+@media (prefers-reduced-motion:reduce){.side{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <span><b>简版原型 v0.2</b> · 示例数据，非线上配置 · 时间均为 GMT+8 · 模拟“现在”= 2026-11-12 14:37</span>
+  <span>完整版：<a href="https://claude.ai/artifact/28KDgmgWzGHfUWMcrGrCx2" target="_blank" rel="noopener">玩家余额报表原型 v1.0</a>（保留）</span>
+</div>
+<header class="top">
+  <button class="burger" id="burger" aria-label="展开菜单">☰</button>
+  <span>当前时间: <span class="clock" id="clock">2026/11/12 02:37:00 -04:00</span></span>
+  <span class="qa">QA</span><span class="sp"></span><span>koi ▾</span>
+</header>
+<div class="shell">
+  <nav class="side" id="side" aria-label="菜单">
+    <div class="hd">菜单</div>
+    <ul>
+      <li class="l1">用户管理</li>
+      <li class="l1">财务管理 ▾</li>
+      <li class="l2">财务总览</li>
+      <li class="l2">资金余额</li>
+      <li class="l2 act">余额对账</li>
+      <li class="l1">提现管理</li>
+      <li class="l1">数据报表</li>
+      <li class="l1">活动配置</li>
+      <li class="l1">代理结算</li>
+    </ul>
+  </nav>
+  <main class="main">
+    <div class="crumb">位置 › 财务管理 › <b>余额对账</b></div>
+    <div class="content">
+      <section class="panel">
+        <div class="seg" id="seg" role="tablist"><button data-t="hourly" role="tab">每小时</button><button data-t="daily" role="tab">每日</button><span class="segnote" id="segnote"></span></div>
+        <div class="filters">
+          <span id="fdate" class="fdate"></span>
+          <label class="chk"><input type="checkbox" id="onlyBad"> 只看异常</label>
+          <div class="right">
+            <button class="btn" id="refresh">刷新</button>
+            <button class="btn" id="export">导出</button>
+          </div>
+        </div>
+        <div class="sum" id="sum"></div>
+        <div class="tablewrap"><table id="tbl"></table></div>
+      </section>
+
+      <div class="notes">
+        <div class="note">
+          <h4>口径（每小时整点后 5 分钟出上一小时，以 12:00–13:00 为例）</h4>
+          <ol>
+            <li><b>12 点余额</b>：12:00:00 全体玩家余额合计（可用 + 冻结）。同时取 13 点余额作期末。</li>
+            <li><b>活动彩金</b>：12:00–13:00 所有活动、返水、VIP、代理佣金入账合计。</li>
+            <li><b>GGR</b>：12:00–13:00 总派彩 − 总投注（玩家赢为正，平台赢为负）。</li>
+            <li><b>充提差</b>：余额变化扣掉彩金和玩家输赢，剩下的就应该是玩家这一小时的净充提。<br>
+              <span class="f">⑤ 充提差 = ④ 结束余额 − ① 开始余额 − ② 活动彩金 − ③ GGR</span></li>
+            <li><b>三方存提差</b>：三方支付渠道 12:00–13:00 成功存款 − 成功出款。</li>
+            <li><b>是否正常</b>：<span class="f">差额 = ⑤ 充提差 − 三方存提差</span>，|差额| ≤ ₱1 为正常，否则异常。</li>
+          </ol>
+          <p style="margin:6px 0 0"><b>每日</b>：同一套公式按自然日算，期初 = 当日 00:00 余额，期末 = 次日 00:00 余额，②③与三方都取当天合计；每天 00:05 出前一日。某天异常时，可切到「每小时」看是哪个小时。</p>
+        </div>
+        <div class="note b">
+          <h4>已确认（2026-11-12）</h4>
+          <ul>
+            <li>⑤ 充提差的口径按上面第 4 条。</li>
+            <li>后台加 / 减款、提款驳回退回不走三方：不放进公式，照常判为异常来提醒。</li>
+            <li>阈值不放宽：|差额| ≤ ₱1 才算正常，出款跨小时造成的差额也判为异常。</li>
+            <li>三方存提款先用我们平台自己的订单（三方回调成功的记录）；和三方平台的对账由专人在三方平台上核对。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const BASE=Date.UTC(2026,9,1), TODAY=42, NOWH=14; // 14:37，最后一个完整小时 13:00–14:00
+const HF=[.6,.45,.35,.3,.3,.35,.45,.6,.75,.85,.9,.95,1,1,1,1.05,1.1,1.2,1.35,1.5,1.6,1.55,1.3,.9];
+function mul(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+// 示例异常：小时序号 → 说明
+const MANUAL={}; MANUAL[TODAY*24+10]={add:300000,label:'该时段有后台加款 ₱3,000.00（不走三方）'};
+const LOST={}; LOST[TODAY*24+3]={amt:50000,label:'三方存款比平台多 ₱500.00：疑似掉单（三方成功、平台未入账）'};
+LOST[(TODAY-1)*24+21]={amt:-120000,label:'三方出款比平台多 ₱1,200.00：疑似重复出款或出款未扣余额'};
+// 生成逐小时数据（单位：分）
+const H=[]; let bal=2046000000; const r=mul(2026);
+for(let h=0;h<=TODAY*24+23;h++){
+  const hr=h%24, dow=new Date(BASE+Math.floor(h/24)*864e5).getUTCDay(), w=(dow===0||dow===6)?1.15:1;
+  const dep=Math.round(10800000*HF[hr]*w*(.8+.4*r()));
+  const wd=Math.round(dep*(.72+.22*r()));
+  const bet=Math.round(dep*(5.5+1.5*r()));
+  const pay=Math.round(bet*(.94+.04*r()));
+  const bon=Math.round(dep*(.05+.03*r()));
+  const man=MANUAL[h]?MANUAL[h].add:0, lost=LOST[h]?LOST[h].amt:0;
+  const open=bal; bal=bal+dep-wd-bet+pay+bon+man;
+  H.push({h,open,close:bal,bon,ggr:pay-bet,tdep:dep+(lost>0?lost:0),twd:wd+(lost<0?-lost:0)});
+}
+const pad=n=>String(n).padStart(2,'0');
+const dayStr=d=>{const x=new Date(BASE+d*864e5);return x.getUTCFullYear()+'-'+pad(x.getUTCMonth()+1)+'-'+pad(x.getUTCDate())};
+const strDay=s=>{const[y,m,d]=s.split('-').map(Number);return Math.round((Date.UTC(y,m-1,d)-BASE)/864e5)};
+const NF=new Intl.NumberFormat('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const m=c=>(c<0?'−':'')+NF.format(Math.abs(c)/100);
+const pm=c=>(c>0?'+':c<0?'−':'')+NF.format(Math.abs(c)/100);
+const $=id=>document.getElementById(id);
+const YD=TODAY-1;
+const wk=d=>'周'+'日一二三四五六'[new Date(BASE+d*864e5).getUTCDay()];
+const wkStart=d=>d-((new Date(BASE+d*864e5).getUTCDay()+6)%7);
+const DQ={week:['本周',()=>[wkStart(YD),YD]],lweek:['上周',()=>[wkStart(YD)-7,wkStart(YD)-1]],month:['本月',()=>[31,YD]],lmonth:['上月',()=>[0,30]]};
+let tab='hourly', day=TODAY, onlyBad=false, dq='month', range=DQ.month[1]();
+const hl=h=>pad(h%24)+':00–'+(h%24===23?'24':pad(h%24+1))+':00';
+function judge(o){
+  o.est=o.close-o.open-o.bon-o.ggr; o.tp=o.tdep-o.twd; o.diff=o.est-o.tp; o.bad=Math.abs(o.diff)>100;
+  if(o.bad&&!o.why) o.why='未知原因，请核对账变与三方对账单';
+  return o;
+}
+function hourRows(){
+  const last=day===TODAY?NOWH-1:23, rows=[];
+  for(let hr=last;hr>=0;hr--){const x=H[day*24+hr];const lab=(MANUAL[x.h]||LOST[x.h]||{}).label;
+    rows.push(judge({key:hl(hr),open:x.open,close:x.close,bon:x.bon,ggr:x.ggr,tdep:x.tdep,twd:x.twd,why:lab||''}))}
+  return rows;
+}
+function dayRows(){
+  const rows=[];
+  for(let d=range[1];d>=range[0];d--){
+    const o={key:dayStr(d),wk:wk(d),open:H[d*24].open,close:H[d*24+23].close,bon:0,ggr:0,tdep:0,twd:0,why:''};
+    const why=[];
+    for(let h=d*24;h<d*24+24;h++){const x=H[h];o.bon+=x.bon;o.ggr+=x.ggr;o.tdep+=x.tdep;o.twd+=x.twd;const l=(MANUAL[h]||LOST[h]);if(l)why.push(hl(h)+' '+l.label)}
+    o.why=why.join('；'); rows.push(judge(o));
+  }
+  return rows;
+}
+function renderFilters(){
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
+  $('segnote').textContent=tab==='hourly'?'每小时整点后 5 分钟出上一小时 · 可查最近 30 天':'每天 00:05 出前一日 · 每次最多查 92 天';
+  $('fdate').innerHTML=tab==='hourly'
+    ?'<label for="d">日期</label> <input type="date" id="d" min="'+dayStr(TODAY-29)+'" max="'+dayStr(TODAY)+'" value="'+dayStr(day)+'"> '
+      +'<button class="btn '+(day===TODAY?'on':'')+'" data-q="0">今天</button>'
+    :'<label for="d1">查询日期</label> <input type="date" id="d1" min="'+dayStr(0)+'" max="'+dayStr(YD)+'" value="'+dayStr(range[0])+'"> ~ <input type="date" id="d2" min="'+dayStr(0)+'" max="'+dayStr(YD)+'" value="'+dayStr(range[1])+'"> '
+      +Object.keys(DQ).map(k=>'<button class="btn '+(dq===k?'on':'')+'" data-dq="'+k+'">'+DQ[k][0]+'</button>').join(' ')
+      +' <button class="btn pri" id="go">搜索</button>';
+}
+function render(){
+  renderFilters();
+  const H1=tab==='hourly', rows=H1?hourRows():dayRows();
+  const nBad=rows.filter(x=>x.bad).length;
+  $('sum').innerHTML=(H1?'<span>'+dayStr(day)+' 已出 <b class="num">'+rows.length+'</b> 个小时</span>':'<span>'+dayStr(range[0])+' ~ '+dayStr(range[1])+' 共 <b class="num">'+rows.length+'</b> 天</span>')
+    +'<span class="big ok">正常 '+(rows.length-nBad)+'</span><span class="big '+(nBad?'bad':'')+'">异常 '+nBad+'</span>'
+    +(H1&&day===TODAY?'<span style="color:#6b7884">14:00–15:00 统计中，15:05 出数</span>':'')
+    +(!H1?'<span style="color:#6b7884">今天（11-12）的数据明天 00:05 出</span>':'');
+  const view=onlyBad?rows.filter(x=>x.bad):rows;
+  const lead=H1?'<th>时段</th>':'<th>日期</th><th>星期</th>';
+  const head='<tr>'+lead+(H1?'<th class="k">① 整点余额</th>':'<th class="k">① 当日0:00余额（开始）</th>')+'<th class="k">② 活动彩金<small>'+(H1?'本小时':'当日')+'</small></th><th class="k">③ GGR<small>派彩 − 投注</small></th>'
+    +(H1?'<th class="k">④ 下一整点余额</th>':'<th class="k">④ 次日0:00余额（结束）</th>')+'<th class="k">⑤ 充提差<small>④ − ① − ② − ③</small></th>'
+    +'<th>三方存款</th><th>三方出款</th><th>三方存提差</th><th>差额<small>⑤ − 三方</small></th><th>是否正常</th></tr>';
+  const cells=x=>'<td class="num">'+m(x.open)+'</td><td class="num">'+m(x.bon)+'</td><td class="num">'+m(x.ggr)+'</td><td class="num">'+m(x.close)+'</td>'
+    +'<td class="num hl">'+m(x.est)+'</td><td class="num">'+m(x.tdep)+'</td><td class="num">'+m(x.twd)+'</td><td class="num hl">'+m(x.tp)+'</td>'
+    +'<td class="num '+(x.bad?'bad':'')+'"><b>'+pm(x.diff)+'</b></td>';
+  const ncol=H1?11:12;
+  let body=view.length?view.map(x=>'<tr class="'+(x.bad?'err':'')+'">'+(H1?'<td class="l num">'+x.key+'</td>':'<td class="l num">'+x.key+'</td><td class="l">'+x.wk+'</td>')+cells(x)
+    +'<td style="text-align:center"><span class="pill '+(x.bad?'bad':'ok')+'">'+(x.bad?'异常':'正常')+'</span></td></tr>').join('')
+    :'<tr><td colspan="'+ncol+'" style="text-align:center;color:#6b7884;padding:20px">所选范围没有异常</td></tr>';
+  if(H1&&day===TODAY&&!onlyBad) body+='<tr class="wait"><td class="l num">14:00–15:00</td><td class="num">'+m(H[TODAY*24+14].open)+'</td><td colspan="9" class="l">统计中，15:05 出数</td></tr>';
+  if(!H1&&rows.length){
+    const t={open:rows[rows.length-1].open,close:rows[0].close,bon:0,ggr:0,tdep:0,twd:0,est:0,tp:0,diff:0};
+    rows.forEach(x=>{['bon','ggr','tdep','twd','est','tp','diff'].forEach(k=>t[k]+=x[k])});
+    t.bad=Math.abs(t.diff)>100;
+    body+='<tr style="background:#fbf7e9;font-weight:600"><td class="l" colspan="2">合计（'+rows.length+' 天）</td>'+cells(t)+'<td></td></tr><tr><td colspan="12" class="l" style="color:#6b7884">合计：①取最早一天、④取最新一天，其余列加总</td></tr>';
+  }
+  $('tbl').innerHTML='<thead>'+head+'</thead><tbody>'+body+'</tbody>';
+}
+let tt;function toast(s){const e=$('toast');e.textContent=s;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2400)}
+$('seg').addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(!b)return;tab=b.dataset.t;render()});
+$('fdate').addEventListener('click',e=>{
+  const q=e.target.closest('[data-q]'); if(q){day=TODAY+ +q.dataset.q;render();return}
+  const k=e.target.closest('[data-dq]'); if(k){dq=k.dataset.dq;range=DQ[dq][1]();render();return}
+  if(e.target.id==='go'){const a=strDay($('d1').value),b=strDay($('d2').value);
+    if(isNaN(a)||isNaN(b)){toast('请选择查询日期');return} if(a>b){toast('开始日期不能晚于结束日期');return}
+    if(b-a+1>92){toast('最多查询 92 天');return} range=[Math.max(a,0),Math.min(b,YD)];dq=null;render()}
+});
+$('fdate').addEventListener('change',e=>{if(e.target.id!=='d')return;const v=strDay(e.target.value);if(!isNaN(v)&&v<=TODAY&&v>=TODAY-29){day=v;render()}else toast('可查最近 30 天')});
+$('onlyBad').addEventListener('change',e=>{onlyBad=e.target.checked;render()});
+$('refresh').addEventListener('click',()=>{render();toast('已刷新')});
+$('export').addEventListener('click',()=>toast('已导出 余额对账_'+dayStr(day)+'.csv（原型不下载）'));
+$('burger').addEventListener('click',()=>$('side').classList.toggle('open'));
+let sec=0;setInterval(()=>{sec=(sec+1)%60;$('clock').textContent='2026/11/12 02:37:'+pad(sec)+' -04:00'},1000);
+render();
+})();
+</script>
+</body>
+</html>

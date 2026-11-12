@@ -166,9 +166,9 @@ const DATA = {"acts_h":[{"id":101,"name":"每日 1.5% 投注返水"},{"id":102,"
 const F = {
  time:["时间","北京时间。小时表为小时起点（13:00 = 13:00–14:00 前）；日表为完整自然日。",""],
  weekday:["星期","日期对应的星期。",""],
- online:["在线","小时表：整点时的在线人数快照，不是该小时最高或平均。日表：口径表已删除日报在线人数，需求表仍保留（待确认 Q1）。",""],
- bettors:["投注","有下注行为的去重人数，不要求有效投注。",""],
- registers:["注册","新增注册的去重人数（小时表为单小时新增）。",""],
+ online:["在线","小时表：每小时 :06 那一刻的在线人数快照，不是整点，也不是该小时最高或平均。日表：口径表已删除日报在线人数，需求表仍保留（待确认 Q1）。",""],
+ bettors:["投注","小时表：这小时新增的人——当天第一次下注落在这一小时才算，之前小时已算过的不再计，所以 24 小时相加 = 日表人数。日表：全天去重。有下注就算，不要求有效投注。",""],
+ registers:["注册","新注册人数：小时表为这小时内注册的人，日表为全天注册的人。",""],
  fd_users:["首充 · 人数","本时段完成首次成功充值的人数；首充按用户全生命周期识别。小时表为单小时首充人数。",""],
  fd_amount:["首充 · 金额","本时段首次充值金额，只算首笔。",""],
  fd_avg:["首充 · 人均","","首次充值金额 ÷ 同期首充人数"],
@@ -178,12 +178,12 @@ const F = {
  fdt_users:["当日首充总额 · 人数","当日首充总人数；小时表从 00:00 累计到该小时末。",""],
  fdt_amount:["当日首充总额 · 金额","当日首充用户当天的全部充值（首笔 + 后续）；小时表从 00:00 累计。",""],
  fdt_avg:["当日首充总额 · 人均","金额和人数是同一批人。","当日首充总额 ÷ 当日首充总人数"],
- dep_users:["充值 · 人数","按成功到账时间，充值成功的去重人数。",""],
+ dep_users:["充值 · 人数","按成功到账时间。小时表：这小时新增的人——当天第一次充值成功落在这一小时才算，之前小时已算过的不再计，所以 24 小时相加 = 日表人数。日表：全天去重。",""],
  dep_amount:["充值 · 金额","按成功到账时间统计的充值订单金额合计。",""],
  dep_daily_avg:["充值 · 平均日存","口径表未定义。上一版为「所选区间平均每天的充值金额」，只在合计行有意义（待确认 Q2）。","区间充值金额 ÷ 天数"],
  dep_avg:["充值 · 人均","","充值金额 ÷ 充值人数"],
- wd_users:["取款 · 人数","按成功出款时间，提款成功的去重人数。",""],
- wd_count:["取款 · 笔数","日表需求表此列为笔数（小时表为人数，待确认 Q3）。按成功出款时间统计的提款订单数。",""],
+ wd_users:["取款 · 人数","按成功出款时间。小时表：这小时新增的人——当天第一次提款成功落在这一小时才算，之前小时已算过的不再计，所以 24 小时相加 = 日表人数。日表：全天去重。日表也显示这一列：需求表日表只有笔数，人数由后端另给。",""],
+ wd_count:["取款 · 笔数","日表需求表此列为笔数。按成功出款时间统计的提款订单数；同一人多笔算多笔。人数见左边「人数」列。",""],
  wd_amount:["取款 · 金额","按成功出款时间统计的提款金额合计。",""],
  wd_avg:["取款 · 人均 / 平均","小时表：提款金额 ÷ 提款人数。日表需求表公式为金额 ÷ 笔数。","提款金额 ÷ 人数（日表 ÷ 笔数）"],
  net:["盈亏金额 / 存提差","口径表「充提差额」：不等于游戏收入或利润。","充值金额 − 提款金额"],
@@ -206,7 +206,7 @@ const F = {
  ggr:["平台报表 · GGR","派彩含返还本金；未扣活动、佣金等成本。","有效投注 − 派彩"],
  promo_amount:["活动奖金 / 优惠 · 金额","后台「活动费用报表」本时段全部活动费用，与代理佣金分开。",""],
  promo_ratio:["活动奖金 / 优惠 · 比例","","活动奖金金额 ÷ 充值金额"],
- act_users:["人数","活动费用报表中该活动本时段的去重参与人数。",""],
+ act_users:["人数","小时表：这小时新增参与该活动的人——当天之前小时已领过的不再计，24 小时相加 = 日表。日表：该活动全天去重参与人数。",""],
  act_amount:["金额","活动费用报表中该活动本时段的活动费用。",""],
  act_ratio:["占充值","日表需求表保留每个活动的占充值（口径表没有，Q8）。","活动金额 ÷ 充值金额"],
  total_times:["总计 · 人数","各活动人数相加，跨活动不去重（参与人次）。",""],
@@ -215,16 +215,16 @@ const F = {
 };
 const LB = { // 表头显示名（与需求表一致）
  h:{online:"在线",bettors:"投注",registers:"注册",fd_users:"人数",fd_amount:"金额",fd_avg:"人均",conv_rate:"转换率",fdt_users:"人数",fdt_amount:"金额",fdt_avg:"人均",dep_users:"人数",dep_amount:"金额",dep_daily_avg:"平均日存",dep_avg:"人均",wd_users:"人数",wd_amount:"金额",wd_avg:"人均",net:"存提差",net_rate:"存提差/充值",ret_users:"人数",ret_amount:"金额",ret_avg:"人均",ret_ratio:"留存人数占比",dep_count:"充值",dep_count_avg:"人均笔数",wd_count_b:"提款",valid_bet:"总投注",bet_multiple:"倍数（投注/充值）",kill_rate:"杀率（1-rtp）",ggr:"ggr",promo_amount:"金额",promo_ratio:"比例（奖金/充值）"},
- d:{time:"日期",weekday:"星期",online:"在线",bettors:"投注",registers:"注册",fd_users:"人数",fd_amount:"金额",fd_avg:"人均",fd_agent:"代理",fd_official:"官网",conv_rate:"转换率",fdt_users:"人数",fdt_amount:"金额",fdt_avg:"人均",dep_users:"人数",dep_amount:"金额",dep_daily_avg:"平均日存",dep_avg:"人均",wd_count:"笔数",wd_amount:"金额",wd_avg:"平均",net:"盈亏金额",net_rate:"杀率",fission_users:"人数",fission_rate:"比率",comm_users:"人数",comm_amount:"金额",comm_ratio:"占比",ret_users:"人数",ret_amount:"金额",ret_avg:"人均",ret_ratio:"留存人数占比",dep_count:"充值",dep_count_avg:"人均笔数",wd_count_b:"提款",valid_bet:"总打码",bet_multiple:"倍数",kill_rate:"盈利率（杀率）",ggr:"金额（ggr）",promo_amount:"金额",promo_ratio:"比例"}
+ d:{time:"日期",weekday:"星期",online:"在线",bettors:"投注",registers:"注册",fd_users:"人数",fd_amount:"金额",fd_avg:"人均",fd_agent:"代理",fd_official:"官网",conv_rate:"转换率",fdt_users:"人数",fdt_amount:"金额",fdt_avg:"人均",dep_users:"人数",dep_amount:"金额",dep_daily_avg:"平均日存",dep_avg:"人均",wd_users:"人数",wd_count:"笔数",wd_amount:"金额",wd_avg:"平均",net:"盈亏金额",net_rate:"杀率",fission_users:"人数",fission_rate:"比率",comm_users:"人数",comm_amount:"金额",comm_ratio:"占比",ret_users:"人数",ret_amount:"金额",ret_avg:"人均",ret_ratio:"留存人数占比",dep_count:"充值",dep_count_avg:"人均笔数",wd_count_b:"提款",valid_bet:"总打码",bet_multiple:"倍数",kill_rate:"盈利率（杀率）",ggr:"金额（ggr）",promo_amount:"金额",promo_ratio:"比例"}
 };
 const G_H=[["时间",["time"]],["当时人数",["online","bettors","registers"]],["首笔",["fd_users","fd_amount","fd_avg"]],["转换率",["conv_rate"]],["当日充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_daily_avg","dep_avg"]],["取款",["wd_users","wd_amount","wd_avg"]],["存提差",["net"]],["存提差/充值",["net_rate"]],["留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg","wd_count_b"]],["平台报表",["valid_bet","bet_multiple","kill_rate","ggr"]],["活动奖金",["promo_amount","promo_ratio"]]];
-const G_D=[["日期",["time"]],["星期",["weekday"]],["当时人数",["online","bettors","registers"]],["首充",["fd_users","fd_amount","fd_avg","fd_agent","fd_official"]],["转换率",["conv_rate"]],["当日首充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_daily_avg","dep_avg"]],["取款",["wd_count","wd_amount","wd_avg"]],["盈亏金额",["net"]],["杀率",["net_rate"]],["裂变",["fission_users","fission_rate"]],["裂变佣金明细",["comm_users","comm_amount","comm_ratio"]],["充值留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg","wd_count_b"]],["平台报表",["valid_bet","bet_multiple","kill_rate","ggr"]],["优惠",["promo_amount","promo_ratio"]]];
+const G_D=[["日期",["time"]],["星期",["weekday"]],["当时人数",["online","bettors","registers"]],["首充",["fd_users","fd_amount","fd_avg","fd_agent","fd_official"]],["转换率",["conv_rate"]],["当日首充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_daily_avg","dep_avg"]],["取款",["wd_users","wd_count","wd_amount","wd_avg"]],["盈亏金额",["net"]],["杀率",["net_rate"]],["裂变",["fission_users","fission_rate"]],["裂变佣金明细",["comm_users","comm_amount","comm_ratio"]],["充值留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg","wd_count_b"]],["平台报表",["valid_bet","bet_multiple","kill_rate","ggr"]],["优惠",["promo_amount","promo_ratio"]]];
 const ACT_DESC={101:"次日按前一天有效投注的 1.5% 发放",102:"被邀请人达成条件后给邀请人的奖励",109:"新用户完成金蛋任务的奖金",104:"新用户首充后的转盘奖励",105:"老用户充值后的转盘奖励",106:"VIP 等级提升时发放",107:"每日存款加送 10%",108:"次日按前一天净亏损发放"};
 const SINGLE=new Set(["转换率","存提差","存提差/充值","留存人数占比","盈亏金额","杀率","日期","星期","时间","充值金额"]);
 const FMT = k => /rate|ratio/.test(k)?"pct":/multiple|count_avg|^mult$/.test(k)?"x":/amount|avg|^net$|valid_bet|ggr|^dep$|^wd$|^vb$|^net$|bal|^pl$|^cash$|b_dep/.test(k)?"money":"int";
 const R = {
- r1:{t:"每小时数据",d:"每小时一行，33 列（A–AG）。HH:05 统计上一完整小时；「当日首充总额」和转换率从 00:00 累计。",kind:"tbl",daily:false},
- r2:{t:"每日数据",d:"每天一行，41 列（需求表 A–AR，隐藏的三充 3 列不做）。完整自然日，人数全天去重。",kind:"tbl",daily:true},
+ r1:{t:"每小时数据",d:"每小时一行，33 列（A–AG）。HH:05 统计上一完整小时；人数为这小时新增的人；「当日首充总额」和转换率从 00:00 累计。",kind:"tbl",daily:false},
+ r2:{t:"每日数据",d:"每天一行，41 列（需求表 A–AR，隐藏的三充 3 列不做）+ 取款人数 1 列（需求表没有，后端另给，列号显示「+」）。完整自然日，人数全天去重。",kind:"tbl",daily:true},
  r3:{t:"每小时彩金",d:"每小时一行，20 列（A–T）：8 个活动 × 人数 / 金额 + 总计 + 充值金额。",kind:"tbl",daily:false,bonus:true},
  r4:{t:"每日彩金",d:"每天一行，26 列：8 个活动 × 人数 / 金额 / 占充值 + 充值金额（活动顺序与名称按需求表）。",kind:"tbl",daily:true,bonus:true},
  r5:{t:"前50名",d:"每天两张榜：存款前 50、取款前 50。同额按会员账号排序，不足 50 有几个出几个。",kind:"top"}
@@ -287,7 +287,8 @@ function checkRange(){
   if(days>max){const na=fmtD(new Date(new Date(b).getTime()-(max-1)*864e5));setRange(na,b,"");toast((r.daily?"日表":"小时表")+"一次最多 "+max+" 天，已按结束日期往前取");}
 }
 const L=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;};
-const CL=i=>cur==="r2"&&i>=14?L(i+3):cur==="r4"&&i===25?"CQ":L(i);
+const EXTRA={r2:new Set(["wd_users"])};
+const CLK=(k,keys)=>{const ex=EXTRA[cur]||new Set();if(ex.has(k))return "+";const i=keys.filter(x=>!ex.has(x)).indexOf(k);return cur==="r2"&&i>=14?L(i+3):cur==="r4"&&i===25?"CQ":L(i);};
 function renderTbl(){
   const g=groupsFor(cur), allKeys=groupsFor(cur,true).flatMap(x=>x[1]);
   let h0="<tr>",h1="<tr>",h2="<tr>";
@@ -296,7 +297,7 @@ function renderTbl(){
     const lbs=ks.map(k=>sub(k,n));
     if(ks.length===1&&!lbs[0]){h1+=`<th rowspan="2" class="g${stick}">${n}<button class="i" type="button" data-k="${ks[0]}" aria-label="${n}说明">ⓘ</button></th>`;}
     else{h1+=`<th colspan="${ks.length}" class="g${stick}">${n}</th>`;ks.forEach((k,i)=>{h2+=`<th>${lbs[i]}<button class="i" type="button" data-k="${k}" aria-label="${n}${lbs[i]}说明">ⓘ</button></th>`});}
-    ks.forEach(k=>h0+=`<th class="col${stick}">${CL(allKeys.indexOf(k))}</th>`);
+    ks.forEach(k=>h0+=`<th class="col${stick}">${CLK(k,allKeys)}</th>`);
   });
   let body="";
   rows().forEach(x=>{body+="<tr>"+g.flatMap(([,ks])=>ks).map((k,i)=>{const[v,d]=fmt(x[k],k);return `<td${i===0?' class="stick"':(d?' class="dash"':"")}>${v}</td>`}).join("")+"</tr>"});

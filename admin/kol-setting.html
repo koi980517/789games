@@ -92,6 +92,8 @@ td.wrap-cell{white-space:normal;min-width:160px}
 .legacy{border:1px solid var(--line);border-radius:6px}
 .legacy .bd{padding:14px;display:grid;gap:8px}
 .ro{background:var(--chip);color:var(--muted)}
+.memo{margin:8px 0 0;padding:8px 12px;border:1px dashed var(--warn);border-radius:6px;background:var(--warn-weak);color:var(--fg);font-size:12px;display:flex;gap:8px;align-items:flex-start}
+.memo-tag{flex:none;background:var(--warn);color:#fff;border-radius:3px;padding:0 6px;font-size:11px;line-height:18px;margin-top:1px}
 .tag-proto{font-size:11px;color:var(--warn);border:1px solid var(--warn);border-radius:3px;padding:0 5px}
 @media (max-width:640px){.card>.hd{align-items:flex-start}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -100,8 +102,8 @@ td.wrap-cell{white-space:normal;min-width:160px}
 <div class="wrap">
   <header>
     <div class="crumb">位置 › 系统管理 › 系统参数管理</div>
-    <h1>网红代理设置 <span class="tag-proto">原型</span></h1>
-    <p class="sub">在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
+    <h1>网红代理设置</h1>
+    <p class="memo"><span class="memo-tag">备注</span>在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
   </header>
 
   <section class="panel">

@@ -11,6 +11,7 @@
 | 日期 | 2026-11-12 |
 | Wiki | [【789games】白名单转盘活动](https://wiki.bbops.ph/pages/viewpage.action?pageId=56688722) |
 | Jira | GAM-438（子任务 GAM-439 后端、GAM-440 后台前端、GAM-441 H5、GAM-444 美术、GAM-445 独立挂件） |
+| Figma 设计稿 | [Whitelist Spin Page](https://www.figma.com/design/uKRnhgAstOjz70avcyPW2l/789Games--%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2-UI-Design?node-id=4786-71991) |
 | PRD 文档 | [白名单转盘活动 PRD v1.0](https://claude.ai/artifact/WygNStUAoG38eSJrq7GtCW) |
 | 站点 | 789games（是否两站都上，待确认） |
 
@@ -31,9 +32,9 @@
 | 03 | `Stats.dc.html` | 活动统计 |
 | 04 | `OpLog.dc.html` | 操作日志：人工 + 系统操作，旧值 → 新值，筛选、翻页 |
 | 05 | `Perm.dc.html` | 权限管理 · 新增白名单转盘权限码 |
-| 06 | `H5Entry.dc.html` | 前台首页挂件 + 每日活动弹窗 |
-| 07 | `H5Wheel.dc.html` | 前台 10 格转盘（可试玩，含背景音乐、音效和静音开关） |
-| 08 | `H5Result.dc.html` | 中奖弹窗、次数用完 |
+| 06 | `H5Entry.dc.html` | 前台首页挂件 + 每日活动弹窗（按设计稿） |
+| 07 | `H5Wheel.dc.html` | 前台 10 格转盘（按设计稿，可试玩，含背景音乐、音效和静音开关） |
+| 08 | `H5Result.dc.html` | 中奖弹窗、次数用完（按设计稿，可切换） |
 
 **可直接打开的原型**：[whitelist-spin-prototype.html](whitelist-spin-prototype.html)（单文件，下载后用浏览器打开即可；左侧切换 8 张画板，07 转盘可试玩）。在 GitHub 上点进文件后选 Download raw file 下载。
 

@@ -51,7 +51,7 @@
 | 名单 | 白名单名单 | 见 2.5 |
 | 流水 | 流水倍数 / 是否含奖金 / 计入流水的游戏 | 见 2.6 |
 | 文案 | 奖励弹窗文案 | 支持 {bonus} |
-| 文案 | 每日弹窗文案（获得 / 提醒） | 只配标题，支持 {count}；留空用默认文案 |
+| 文案 | 每日弹窗标题 | 只配标题，支持 {count}；留空用默认文案 |
 
 与现网相比去掉：是否需要充值记录、人群范围、充值渠道、首次 / 非首次档位、白名单奖励档位、流水“含本金”。
 
@@ -183,12 +183,12 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 | 触发 | 每天第一次登录成功后进入首页（含 App 冷启动自动登录）。当天弹过即不再弹，换设备也不再弹；00:00 后重新计算 |
 | 计次 | 以曝光计次，由服务端按 userId + 日期记录；被更高优先级弹窗挡住、未实际展示的不计 |
 | 队列位置 | 加入前端统一弹窗队列 `fullModalList`，key `whitelist-spin`，排在 `olduser-turntable` 之后、`golden-egg` 之前；21+ / 协议弹窗优先。同步更新 `docs/modal-queue-system.html` |
-| 内容 | 只留 3 行，次数和 Spin Now 各出现一次：转盘头图 + 标题（含次数）+ 副标题（最高奖）+ 主按钮 Spin Now + 右上 ×；不显示到期时间。当天有新导入批次用「获得」标题，否则用「提醒」标题 |
-| 文案 | 后台只配标题，支持 {count}。默认：获得 "{count} Free Spins!"；提醒 "{count} Free Spins Left"。副标题固定 "Win up to ₱{max}"（{max} = 当前转盘 10 格里的最大金额，即大奖格，与转盘页 Mega Jackpot 一致，默认 ₱7,890），按钮固定 "Spin Now" |
+| 内容 | 只留 3 行，次数和 Spin Now 各出现一次：转盘头图 + 标题（含次数）+ 副标题（最高奖）+ 主按钮 Spin Now + 右上 ×；不显示到期时间。只有一版标题，不区分获得 / 提醒 |
+| 文案 | 后台只配标题，支持 {count}。默认 "{count} Free Spins!"。副标题固定 "Win up to ₱{max}"（{max} = 当前转盘 10 格里的最大金额，即大奖格，与转盘页 Mega Jackpot 一致，默认 ₱7,890），按钮固定 "Spin Now" |
 | 交互 | Spin Now 进入转盘页；× 关闭并缩向独立挂件；点遮罩不关 |
 | 埋点 | `spin_entry_view`（entry = popup）、`popup_click`、`popup_close` |
 
-接口：info 返回 `dailyPopup`（true = 今天该弹）和 `popupType`（GRANT / REMIND）；前端展示后调 `POST /api/activity/whitelistSpin/popupShown` 记曝光。
+接口：info 返回 `dailyPopup`（true = 今天该弹）；前端展示后调 `POST /api/activity/whitelistSpin/popupShown` 记曝光。
 
 ### 5.2 独立挂件（切图与需求在 GAM-444，原型 06）
 
@@ -258,7 +258,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 - 轮播只显示本活动真实中奖且已脱敏。
 - 时间一律 GMT+8，覆盖 00:00 前后跨天。
 - 每日弹窗：有资格用户当天第一次登录弹 1 次，当天再登录、换设备都不弹；跨 00:00 后再登录会弹；与老用户转盘、砸金蛋同时触发时按队列串行弹。
-- 剩余次数为 0、活动关闭或预算用完时，弹窗和挂件都不出现；当天有新导入批次用「获得」文案，否则用「提醒」文案。
+- 剩余次数为 0、活动关闭或预算用完时，弹窗和挂件都不出现；弹窗只有一版标题「{count} Free Spins!」，不区分获得 / 提醒。
 - 挂件点击进转盘页；拖动后吸边；点 × 当天隐藏、次日恢复；与现有挂件组不重叠。
 - 音乐音效：进入转盘页播放背景音乐（首次点击后开始亦可）；GO、每过一格嘀嗒、停下、中奖音效触发正确，≥ ₱789 播大奖音；点喇叭静音后全部无声，重进仍为静音；离开转盘页音乐停止。
 
@@ -287,6 +287,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 | 日期 | 变更 |
 |---|---|
+| 2026-11-13 | 每日弹窗去掉提醒版，只保留「{count} Free Spins!」，接口不再返回 popupType |
 | 2026-11-13 | 首页挂件按设计稿做成独立原型画板（06，可拖动吸边），挂件需求并入美术 GAM-444（原 GAM-445 已删除） |
 | 2026-11-13 | 原型 H5 带入 Figma 设计稿（挂件、每日弹窗、转盘页、中奖 / 次数用完弹窗），文案仍按定稿；中奖弹窗去掉重复的「Get ₱x from Lucky Spin」 |
 | 2026-11-13 | 后台新增「操作日志」页签（人工 + 系统操作，旧值 → 新值，只读，保留 365 天）及权限码 10141909 |

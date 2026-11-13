@@ -92,6 +92,15 @@ td.wrap-cell{white-space:normal;min-width:160px}
 .legacy{border:1px solid var(--line);border-radius:6px}
 .legacy .bd{padding:14px;display:grid;gap:8px}
 .ro{background:var(--chip);color:var(--muted)}
+.anno{position:relative;border:1px dashed var(--warn)!important;border-radius:6px;margin-top:6px}
+.anno::after{content:"注释 · 不开发";position:absolute;top:-9px;right:12px;background:var(--warn);color:#fff;font-size:11px;line-height:18px;padding:0 8px;border-radius:9px;font-weight:600;pointer-events:none}
+.anno-in{padding:8px 12px;background:var(--warn-weak);display:grid;gap:4px}
+body.no-anno .anno{display:none!important}
+#explain{margin-top:16px}
+.ex-hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;flex-wrap:wrap}
+.ex-bd{padding:0 14px 14px;display:grid;gap:12px}
+.ex-bd[hidden]{display:none}
+.anno-bar{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:8px}
 .memo{margin:8px 0 0;padding:8px 12px;border:1px dashed var(--warn);border-radius:6px;background:var(--warn-weak);color:var(--fg);font-size:12px;display:flex;gap:8px;align-items:flex-start}
 .memo-tag{flex:none;background:var(--warn);color:#fff;border-radius:3px;padding:0 6px;font-size:11px;line-height:18px;margin-top:1px}
 .listsw{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -106,7 +115,8 @@ table.cmp td{white-space:normal}
   <header>
     <div class="crumb">位置 › 系统管理 › 系统参数管理</div>
     <h1>网红代理设置</h1>
-    <p class="memo"><span class="memo-tag">备注</span>在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表，并新增独立的「全链路网红名单」（all-life-wanghong）。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
+    <p class="memo anno"><span class="memo-tag">备注</span>在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表，并新增独立的「全链路网红名单」（all-life-wanghong）。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
+    <div class="anno-bar"><span class="hint">虚线框 + 「注释 · 不开发」的内容只是说明，不做进页面</span><button class="btn" id="anno-tg" aria-pressed="false">隐藏注释，看开发后的页面</button></div>
   </header>
 
   <section class="panel">
@@ -132,6 +142,7 @@ table.cmp td{white-space:normal}
           <p class="hint"><b style="color:var(--fg)">规则：</b>名单内会员用「邀请好友」链接拉来的新会员，上级代理归入 <b class="code">5ji-wanghong</b>；不在名单的会员拉来的新会员归入 <b class="code">5-ji-agent</b>（会员推广专用线）。</p>
           <textarea id="legacy-ta" rows="2" readonly class="ro" aria-label="当前名单（只读）"></textarea>
           <p class="hint" id="legacy-count"></p>
+          <div class="anno"><div class="anno-in">
           <ul class="hint" style="margin:0;padding-left:18px;display:grid;gap:2px">
             <li>只管一层：名单内会员拉来的人如果再邀请，归入 5-ji-agent，除非他也在名单内。</li>
             <li>只影响之后的新注册：加入或移出名单，已注册会员的归属都不会变。</li>
@@ -139,6 +150,7 @@ table.cmp td{white-space:normal}
             <li>目标代理固定为 5ji-wanghong，所有网红的下级在同一个代理下，按「邀请人」区分。</li>
           </ul>
           <p class="hint">优化：文本框改为只读展示，增删改在新页签「网红代理设置」里做，避免手动编辑逗号串时删错或输错 ID。</p>
+          </div></div>
         </div>
       </div>
     </div>
@@ -154,70 +166,6 @@ table.cmp td{white-space:normal}
         <span class="hint">两份名单独立、不互斥；同一会员同时在两份时按全链路处理</span>
       </div>
       <div class="stats" id="stats"></div>
-
-      <div class="card" id="rules-5ji">
-        <div class="hd"><h2>现有网红规则 · 5ji-wanghong</h2><span class="hint">现有后台逻辑，2026-11-11 QA 实测，保持不变</span></div>
-        <div class="bd">
-          <div class="flow" aria-label="归属示意">
-            <span class="node kol">网红（名单内会员）</span><span class="arrow">→ 邀请好友 →</span>
-            <span class="node wh">一级：上级代理 5ji-wanghong</span><span class="arrow">→ 邀请好友 →</span>
-            <span class="node ji">二级：上级代理 5-ji-agent</span><span class="arrow">→</span>
-            <span class="node ji">三级及以后：5-ji-agent</span>
-          </div>
-          <ul class="rules">
-            <li><strong>一级进 5ji-wanghong</strong><span>名单内会员用邀请好友链接（/invite/会员ID）拉来的新会员，上级代理 = 5ji-wanghong，计入它的直属会员和团队数。</span></li>
-            <li class="alert"><strong>只管一层，不往下传</strong><span>一级会员不在名单内时，他再拉来的人归入 5-ji-agent。实测：M1 在名单 → M4 进 5ji-wanghong；M4 不在名单 → M5 进 5-ji-agent。</span></li>
-            <li><strong>只影响之后的新注册</strong><span>归属在注册那一刻决定。加入、停用或移出名单，都不会移动已注册的会员。</span></li>
-            <li><strong>网红本人不变</strong><span>加入名单不改网红自己的上级代理和团队数，网红团队数仍为 0。</span></li>
-            <li><strong>代理邀请码不受影响</strong><span>名单只管会员的「邀请好友」路径。代理邀请码（/?vip=邀请码）照常归到对应代理。</span></li>
-            <li class="alert"><strong>所有网红共用一个代理</strong><span>目标代理固定为 5ji-wanghong，不能为每个网红指定代理。要看某个网红带来的人，按「邀请人」筛选。</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="card" id="rules-all" hidden>
-        <div class="hd"><h2>全链路网红规则 · all-life-wanghong</h2><span class="hint">新增，与现有网红逻辑完全分开</span></div>
-        <div class="bd">
-          <div class="flow" aria-label="全链路归属示意">
-            <span class="node kol">全链路网红（全链路名单内）</span><span class="arrow">→ 邀请好友 →</span>
-            <span class="node wh">一级 · all-wanghong-1</span><span class="arrow">→</span>
-            <span class="node wh">二级 · all-wanghong-2</span><span class="arrow">→</span>
-            <span class="node wh">N 级 · all-wanghong-n</span><span class="arrow">（都在 all-life-wanghong 下）</span>
-          </div>
-          <ul class="rules">
-            <li><strong>一级到 N 级都进 all-life-wanghong</strong><span>全链路网红邀请的整条链，不限层级，上级代理都是 all-life-wanghong，并写入字段 all_life_wanghong = 网红 ID。</span></li>
-            <li><strong>层级标记 all-wanghong-n，注册时写入</strong><span>只看直接邀请人：邀请人在全链路名单 → 新会员标记 all-wanghong-1；邀请人带 all-wanghong-n → 新会员标记 all-wanghong-(n+1)，继承 all_life_wanghong。标记在注册时写入，之后不变。</span></li>
-            <li class="alert"><strong>先查全链路，再走现有规则</strong><span>未命中全链路时，才看直接邀请人是否在现有网红名单（→ 5ji-wanghong），否则 → 5-ji-agent。</span></li>
-            <li class="alert"><strong>两套互不读取</strong><span>全链路只认全链路名单和 all_life_wanghong 字段；现有规则只认现有名单和 wanghong 字段。两份名单不互斥，同一会员可同时在两份里，此时他邀请的人按全链路处理。</span></li>
-            <li><strong>加入前的下线：补写标记</strong><span>网红通常先注册、后加入名单。添加时可勾选「同时补写已有下线」：顺着邀请关系往下逐层写 1、2…n，网红字段写成他；原来归上层网红的也改归他。只改标记，不改上级代理、佣金和历史报表（建议，待确认）。</span></li>
-            <li><strong>统计都归最近的网红</strong><span>带 all-wanghong-n 的会员自己成为全链路网红后，他下面的人从 all-wanghong-1 重新算，统计归他。</span></li>
-            <li><strong>代理邀请码不受影响</strong><span>代理邀请码和自然注册不走全链路判断。全链路开关关闭时只走现有规则。</span></li>
-          </ul>
-          <div class="tw"><table class="cmp">
-            <thead><tr><th>项目</th><th>现有网红</th><th>全链路网红（新增）</th></tr></thead>
-            <tbody>
-              <tr><td>名单</td><td>网红代理名单（9079614）</td><td>全链路网红名单</td></tr>
-              <tr><td>归属大代理</td><td class="code">5ji-wanghong</td><td class="code">all-life-wanghong</td></tr>
-              <tr><td>覆盖层级</td><td>只管一级，二级起进 5-ji-agent</td><td>一级到 N 级</td></tr>
-              <tr><td>判断方式</td><td>直接邀请人是否在名单</td><td>直接邀请人在全链路名单，或带 all-wanghong-n 标记</td></tr>
-              <tr><td>标记字段</td><td class="code">wanghong</td><td class="code">all_life_wanghong + all-wanghong-n</td></tr>
-              <tr><td>报表</td><td>代理充值留存「网红」行</td><td>代理充值留存「全链路网红」行</td></tr>
-            </tbody>
-          </table></div>
-          <h3 style="margin-top:4px">会员上的标记字段（示例，取自 QA 账号）</h3>
-          <div class="tw"><table class="cmp">
-            <thead><tr><th>会员</th><th>全链路层级</th><th>所属网红</th><th>加入网红下线时间</th><th>标记来源</th></tr></thead>
-            <tbody>
-              <tr><td>Playerbne058720（网红本人）</td><td class="code">none</td><td>—</td><td>—</td><td>名单识别</td></tr>
-              <tr><td>Player1hhf63091</td><td class="code">1</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
-              <tr><td>Player077gm6483</td><td class="code">2</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
-              <tr><td>新注册的第 3 级会员</td><td class="code">3</td><td>992107949</td><td>注册时间</td><td>注册写入</td></tr>
-              <tr><td>普通会员</td><td class="code">none</td><td>—</td><td>—</td><td>—</td></tr>
-            </tbody>
-          </table></div>
-          <p class="hint">字段存数字 n，没有标记显示 none。标记写入后不变；「加入网红下线时间」可用于报表区分加入前带来的人和加入后新增的人。</p>
-        </div>
-      </div>
 
       <!-- 功能1 -->
       <div class="card">
@@ -282,7 +230,76 @@ table.cmp td{white-space:normal}
     </div>
   </section>
 
-  <section class="panel dev">
+  <section class="panel anno" id="explain">
+    <div class="ex-hd"><div><h2>规则解释</h2><p class="hint" id="ex-sub">当前页签：现有网红名单 · 5ji-wanghong</p></div><button class="btn" id="ex-tg" aria-expanded="true" aria-controls="ex-bd">收起</button></div>
+    <div class="ex-bd" id="ex-bd">
+        <div class="card" id="rules-5ji">
+          <div class="hd"><h2>现有网红规则 · 5ji-wanghong</h2><span class="hint">现有后台逻辑，2026-11-11 QA 实测，保持不变</span></div>
+          <div class="bd">
+            <div class="flow" aria-label="归属示意">
+              <span class="node kol">网红（名单内会员）</span><span class="arrow">→ 邀请好友 →</span>
+              <span class="node wh">一级：上级代理 5ji-wanghong</span><span class="arrow">→ 邀请好友 →</span>
+              <span class="node ji">二级：上级代理 5-ji-agent</span><span class="arrow">→</span>
+              <span class="node ji">三级及以后：5-ji-agent</span>
+            </div>
+            <ul class="rules">
+              <li><strong>一级进 5ji-wanghong</strong><span>名单内会员用邀请好友链接（/invite/会员ID）拉来的新会员，上级代理 = 5ji-wanghong，计入它的直属会员和团队数。</span></li>
+              <li class="alert"><strong>只管一层，不往下传</strong><span>一级会员不在名单内时，他再拉来的人归入 5-ji-agent。实测：M1 在名单 → M4 进 5ji-wanghong；M4 不在名单 → M5 进 5-ji-agent。</span></li>
+              <li><strong>只影响之后的新注册</strong><span>归属在注册那一刻决定。加入、停用或移出名单，都不会移动已注册的会员。</span></li>
+              <li><strong>网红本人不变</strong><span>加入名单不改网红自己的上级代理和团队数，网红团队数仍为 0。</span></li>
+              <li><strong>代理邀请码不受影响</strong><span>名单只管会员的「邀请好友」路径。代理邀请码（/?vip=邀请码）照常归到对应代理。</span></li>
+              <li class="alert"><strong>所有网红共用一个代理</strong><span>目标代理固定为 5ji-wanghong，不能为每个网红指定代理。要看某个网红带来的人，按「邀请人」筛选。</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" id="rules-all" hidden>
+          <div class="hd"><h2>全链路网红规则 · all-life-wanghong</h2><span class="hint">新增，与现有网红逻辑完全分开</span></div>
+          <div class="bd">
+            <div class="flow" aria-label="全链路归属示意">
+              <span class="node kol">全链路网红（全链路名单内）</span><span class="arrow">→ 邀请好友 →</span>
+              <span class="node wh">一级 · all-wanghong-1</span><span class="arrow">→</span>
+              <span class="node wh">二级 · all-wanghong-2</span><span class="arrow">→</span>
+              <span class="node wh">N 级 · all-wanghong-n</span><span class="arrow">（都在 all-life-wanghong 下）</span>
+            </div>
+            <ul class="rules">
+              <li><strong>一级到 N 级都进 all-life-wanghong</strong><span>全链路网红邀请的整条链，不限层级，上级代理都是 all-life-wanghong，并写入字段 all_life_wanghong = 网红 ID。</span></li>
+              <li><strong>层级标记 all-wanghong-n，注册时写入</strong><span>只看直接邀请人：邀请人在全链路名单 → 新会员标记 all-wanghong-1；邀请人带 all-wanghong-n → 新会员标记 all-wanghong-(n+1)，继承 all_life_wanghong。标记在注册时写入，之后不变。</span></li>
+              <li class="alert"><strong>先查全链路，再走现有规则</strong><span>未命中全链路时，才看直接邀请人是否在现有网红名单（→ 5ji-wanghong），否则 → 5-ji-agent。</span></li>
+              <li class="alert"><strong>两套互不读取</strong><span>全链路只认全链路名单和 all_life_wanghong 字段；现有规则只认现有名单和 wanghong 字段。两份名单不互斥，同一会员可同时在两份里，此时他邀请的人按全链路处理。</span></li>
+              <li><strong>加入前的下线：补写标记</strong><span>网红通常先注册、后加入名单。添加时可勾选「同时补写已有下线」：顺着邀请关系往下逐层写 1、2…n，网红字段写成他；原来归上层网红的也改归他。只改标记，不改上级代理、佣金和历史报表（建议，待确认）。</span></li>
+              <li><strong>统计都归最近的网红</strong><span>带 all-wanghong-n 的会员自己成为全链路网红后，他下面的人从 all-wanghong-1 重新算，统计归他。</span></li>
+              <li><strong>代理邀请码不受影响</strong><span>代理邀请码和自然注册不走全链路判断。全链路开关关闭时只走现有规则。</span></li>
+            </ul>
+            <div class="tw"><table class="cmp">
+              <thead><tr><th>项目</th><th>现有网红</th><th>全链路网红（新增）</th></tr></thead>
+              <tbody>
+                <tr><td>名单</td><td>网红代理名单（9079614）</td><td>全链路网红名单</td></tr>
+                <tr><td>归属大代理</td><td class="code">5ji-wanghong</td><td class="code">all-life-wanghong</td></tr>
+                <tr><td>覆盖层级</td><td>只管一级，二级起进 5-ji-agent</td><td>一级到 N 级</td></tr>
+                <tr><td>判断方式</td><td>直接邀请人是否在名单</td><td>直接邀请人在全链路名单，或带 all-wanghong-n 标记</td></tr>
+                <tr><td>标记字段</td><td class="code">wanghong</td><td class="code">all_life_wanghong + all-wanghong-n</td></tr>
+                <tr><td>报表</td><td>代理充值留存「网红」行</td><td>代理充值留存「全链路网红」行</td></tr>
+              </tbody>
+            </table></div>
+            <h3 style="margin-top:4px">会员上的标记字段（示例，取自 QA 账号）</h3>
+            <div class="tw"><table class="cmp">
+              <thead><tr><th>会员</th><th>全链路层级</th><th>所属网红</th><th>加入网红下线时间</th><th>标记来源</th></tr></thead>
+              <tbody>
+                <tr><td>Playerbne058720（网红本人）</td><td class="code">none</td><td>—</td><td>—</td><td>名单识别</td></tr>
+                <tr><td>Player1hhf63091</td><td class="code">1</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
+                <tr><td>Player077gm6483</td><td class="code">2</td><td>992107949</td><td>2026-11-12 09:30</td><td>加入回写</td></tr>
+                <tr><td>新注册的第 3 级会员</td><td class="code">3</td><td>992107949</td><td>注册时间</td><td>注册写入</td></tr>
+                <tr><td>普通会员</td><td class="code">none</td><td>—</td><td>—</td><td>—</td></tr>
+              </tbody>
+            </table></div>
+            <p class="hint">字段存数字 n，没有标记显示 none。标记写入后不变；「加入网红下线时间」可用于报表区分加入前带来的人和加入后新增的人。</p>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <section class="panel dev anno">
     <div class="card" style="border:0">
       <div class="hd"><h2>开发说明</h2><span class="hint">给后端 / 前端的实现要点</span></div>
       <div class="bd">
@@ -296,7 +313,7 @@ table.cmp td{white-space:normal}
             <tr><td>列表接口</td><td>分页，支持按会员ID / 账号、状态筛选。返回网红本人的账号和上级代理，以及一级邀请注册数（invite_activity_user_id = 该会员且上级代理 = 5ji-wanghong 的会员数）。</td></tr>
             <tr><td>停用 / 移出</td><td>都需要页面内二次确认。只影响之后的新注册，不移动已注册会员。</td></tr>
             <tr><td>操作日志</td><td>记录添加、导入、停用、启用、移出，包含操作人和时间。</td></tr>
-            <tr><td>全链路网红</td><td>新增全链路名单表（结构同上，加 type 区分或单独建表）、大代理 all-life-wanghong、会员字段 all_life_wanghong、全链路开关。注册时先跑向上查询（命中 → all-life-wanghong），未命中再走现有规则。两份名单不互斥；同一会员同时在两份时，全链路优先。</td></tr>
+            <tr><td>全链路网红</td><td>新增全链路名单表（结构同上，加 type 区分或单独建表）、大代理 all-life-wanghong、会员字段 all_life_wanghong、全链路开关。注册时只看直接邀请人：邀请人在全链路名单，或邀请人带层级标记 → 归入 all-life-wanghong；都不是再走现有规则。两份名单不互斥；同一会员同时在两份时，全链路优先。</td></tr>
             <tr><td>加入时补写</td><td>添加全链路网红时可选补写已有下线：按邀请关系向下逐层写层级 1…n 和所属网红，记录「加入网红下线时间」和「标记来源 = 加入回写」，生成操作日志（操作人、时间、影响人数，可导出明细）。不改上级代理、query_code、佣金和历史报表。执行前返回影响人数和各级分布供确认。</td></tr>
             <tr><td>层级标记</td><td>会员表新增字段（暂称 all_wanghong_tag），注册时写入：邀请人在全链路名单 → all-wanghong-1；邀请人带 all-wanghong-n → all-wanghong-(n+1)。只看直接邀请人一层；逐层上溯（按 invite_activity_user_id，200 层上限、环检测）只用于上线前历史会员回刷。</td></tr>
             <tr><td>不在本次范围</td><td>为每个网红指定独立代理；现有网红名单的向下继承（现有规则保持只管一级）。</td></tr>
@@ -330,6 +347,8 @@ let LIST=[
   {type:'all',id:'992107949',acc:'Playerbne058720',sup:'henny888123333',on:true,inv:0,t:'示例',by:'koi888',note:'示例：全链路网红'}
 ];
 let T='5ji';
+document.getElementById('ex-tg').onclick=e=>{const b=document.getElementById('ex-bd'),open=b.hidden;b.hidden=!open;e.currentTarget.setAttribute('aria-expanded',open);e.currentTarget.textContent=open?'收起':'展开'};
+document.getElementById('anno-tg').onclick=e=>{const on=document.body.classList.toggle('no-anno');e.currentTarget.setAttribute('aria-pressed',on);e.currentTarget.textContent=on?'显示注释':'隐藏注释，看开发后的页面'};
 // QA 实测的邀请链：各级下线人数（用于补写预览）
 const DOWN={'992107912':[1,1],'992107927':[2,2],'992107949':[1,1,1,1,1]};
 const TN={'5ji':{name:'现有网红名单',agent:'5ji-wanghong',other:'全链路网红名单',inv:'一级邀请注册数（5ji-wanghong）',off:'5-ji-agent'},'all':{name:'全链路网红名单',agent:'all-life-wanghong',other:'现有网红名单',inv:'全链路注册数（all-life-wanghong，含各级）',off:'现有规则（5ji-wanghong 或 5-ji-agent）'}};
@@ -359,7 +378,7 @@ function render(){
   const L=LIST.filter(x=>x.type===T);
   $('#t-5ji').setAttribute('aria-pressed',T==='5ji');$('#t-all').setAttribute('aria-pressed',T==='all');
   $('#th-inv').textContent=TN[T].inv;
-  $('#rules-5ji').hidden=T!=='5ji';$('#rules-all').hidden=T!=='all';
+  $('#rules-5ji').hidden=T!=='5ji';$('#rules-all').hidden=T!=='all';$('#ex-sub').textContent='当前页签：'+(T==='all'?'全链路网红名单 · all-life-wanghong':'现有网红名单 · 5ji-wanghong');
   const on=L.filter(x=>x.on).length;
   const invSum=L.reduce((a,x)=>a+(typeof x.inv==='number'?x.inv:0),0);
   $('#stats').innerHTML=[[on,'生效中的网红'],[L.length-on,'已停用'],[invSum,T==='5ji'?'一级邀请注册（有统计的）':'全链路注册（各级合计）'],[TN[T].agent,T==='5ji'?'一级归入的代理':'一级到 N 级归入的代理']].map(([b,s])=>`<div class="stat"><b class="${typeof b==='string'?'code':''}" style="${typeof b==='string'?'font-size:15px':''}">${esc(b)}</b><span>${s}</span></div>`).join('');

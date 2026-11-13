@@ -14,6 +14,7 @@
 | GET | `/whitelist/exportCsv?activityId=` | 已导入文件下载 |
 | GET | `/whitelist/summary?activityId=` | 名单状态：总数、未注册、已注册生效、最近更新时间、操作人 |
 | POST | `/query` · `/queryTotalReward` | 统计明细和汇总 |
+| GET | `/log/list` | 操作日志：activityId、opType、operator、startTime、endTime、pageNum、pageSize；返回 time、operator、opType、activityId、activityName、changes[{field, oldValue, newValue}]、ip |
 
 ### configJson
 
@@ -84,4 +85,4 @@ draw 需要支持幂等：前端带上 `requestId`，避免重复点击时重复
 
 ## 4. 权限码
 
-活动中心 1014 下新增 101419 白名单转盘：10141901 活动配置-查看、10141902 新增/修改、10141903 开启/关闭、10141904 删除、10141905 白名单导入、10141906 已导入名单下载、10141907 活动统计-查看、10141908 活动统计-导出。
+活动中心 1014 下新增 101419 白名单转盘：10141901 活动配置-查看、10141902 新增/修改、10141903 开启/关闭、10141904 删除、10141905 白名单导入、10141906 已导入名单下载、10141907 活动统计-查看、10141908 活动统计-导出、10141909 操作日志-查看。

@@ -9,6 +9,7 @@
 | 需求文档 | [白名单转盘活动 PRD v1.0](https://claude.ai/artifact/WygNStUAoG38eSJrq7GtCW) |
 | 接口草案 | [API.md](https://github.com/koi980517/789games/blob/main/whitelist-spin/docs/API.md) |
 | Wiki | [【789games】白名单转盘活动](https://wiki.bbops.ph/pages/viewpage.action?pageId=56688722) |
+| Figma 设计稿 | [789Games 用户界面 › Whitelist Spin Page](https://www.figma.com/design/uKRnhgAstOjz70avcyPW2l/789Games--%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2-UI-Design?node-id=4786-71991)（首页挂件、每日活动弹窗、转盘页、中奖 / 次数用完弹窗；弹窗文案以本 PRD 定稿为准） |
 | Jira | GAM-438 故事；子任务 GAM-439 后端、GAM-440 后台前端、GAM-441 H5、GAM-444 美术、GAM-445 独立挂件 |
 
 ## 1. 背景与范围
@@ -241,7 +242,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 | 11 | 通用 | 按钮 | 主按钮绿色渐变胶囊；次要按钮亮面绿色 8px 圆角 |
 | 12–18 | 音频 | 背景音乐、GO、转动嘀嗒、停下、普通中奖、大奖、按钮点击 | 规格见 5.3 |
 
-盘面、指针、GO 按钮分层切，方便前端做旋转动画。
+2026-11-13 设计稿已出（见资料表 Figma 链接）；弹窗内文字按前端渲染，切图不含文字。盘面、指针、GO 按钮分层切，方便前端做旋转动画。
 
 ## 6. 验收要点
 
@@ -286,6 +287,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 | 日期 | 变更 |
 |---|---|
+| 2026-11-13 | 原型 H5 带入 Figma 设计稿（挂件、每日弹窗、转盘页、中奖 / 次数用完弹窗），文案仍按定稿；中奖弹窗去掉重复的「Get ₱x from Lucky Spin」 |
 | 2026-11-13 | 后台新增「操作日志」页签（人工 + 系统操作，旧值 → 新值，只读，保留 365 天）及权限码 10141909 |
 | 2026-11-13 | 后台活动列表新增页内「预算预警」条；「已使用预算」列加消耗进度条和「预算预警」标签；弹窗副标题最高奖取大奖格（默认 ₱7,890） |
 | 2026-11-13 | 每日活动弹窗精简文案：只留标题「{count} Free Spins!」（提醒版「{count} Free Spins Left」）、副标题「Win up to ₱{max}」、按钮「Spin Now」；去掉重复的次数和 Spin now，去掉到期时间；后台只配标题 |

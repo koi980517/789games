@@ -5,12 +5,12 @@
 | 版本 | v1.0（2026-11-11 定稿；11-12 补音乐音效） |
 | 产品 | Koi |
 | 预期完成 | 2026-11-13（本周） |
-| 原型 | [whitelist-spin-prototype.html](https://koi980517.github.io/789games/whitelist-spin/whitelist-spin-prototype.html)（8 张画板，可交互） |
+| 原型 | [whitelist-spin-prototype.html](https://koi980517.github.io/789games/whitelist-spin/whitelist-spin-prototype.html)（9 张画板，可交互） |
 | 需求文档 | [白名单转盘活动 PRD v1.0](https://claude.ai/artifact/WygNStUAoG38eSJrq7GtCW) |
 | 接口草案 | [API.md](https://github.com/koi980517/789games/blob/main/whitelist-spin/docs/API.md) |
 | Wiki | [【789games】白名单转盘活动](https://wiki.bbops.ph/pages/viewpage.action?pageId=56688722) |
 | Figma 设计稿 | [789Games 用户界面 › Whitelist Spin Page](https://www.figma.com/design/uKRnhgAstOjz70avcyPW2l/789Games--%E7%94%A8%E6%88%B7%E7%95%8C%E9%9D%A2-UI-Design?node-id=4786-71991)（首页挂件、每日活动弹窗、转盘页、中奖 / 次数用完弹窗；弹窗文案以本 PRD 定稿为准） |
-| Jira | GAM-438 故事；子任务 GAM-439 后端、GAM-440 后台前端、GAM-441 H5、GAM-444 美术、GAM-445 独立挂件 |
+| Jira | GAM-438 故事；子任务 GAM-439 后端、GAM-440 后台前端、GAM-441 H5、GAM-444 美术（含首页挂件；原 GAM-445 已删除） |
 
 ## 1. 背景与范围
 
@@ -190,9 +190,9 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 接口：info 返回 `dailyPopup`（true = 今天该弹）和 `popupType`（GRANT / REMIND）；前端展示后调 `POST /api/activity/whitelistSpin/popupShown` 记曝光。
 
-### 5.2 独立挂件（GAM-445）
+### 5.2 独立挂件（切图与需求在 GAM-444，原型 06）
 
-白名单转盘做成单独的首页挂件，不并入现有挂件组（Invite / DEPOSIT Lucky Spin / 日历礼盒）。
+白名单转盘做成单独的首页挂件，不并入现有挂件组（Invite / DEPOSIT Lucky Spin / 日历礼盒）。样式按 Figma 设计稿首页的 Lucky Spin 挂件（转盘 + 字标）；交互见原型 06 画板（可拖动吸边、点击进转盘、× 当天隐藏）。
 
 | 项 | 规则 |
 |---|---|
@@ -206,7 +206,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 ### 5.3 音乐与音效
 
-转盘页自带背景音乐和 6 个音效，素材前端固定（不进后台配置），由美术 / 音频提供（GAM-444）。原型 07 画板可试听（合成音示意）。
+转盘页自带背景音乐和 6 个音效，素材前端固定（不进后台配置），由美术 / 音频提供（GAM-444）。原型 08 画板可试听（合成音示意）。
 
 | 声音 | 触发 | 说明 |
 |---|---|---|
@@ -229,7 +229,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 | # | 位置 | 资源 | 说明 |
 |---|---|---|---|
-| 1 | 首页 | 独立挂件图标 | 转盘图标，右上预留 ×N 角标位；可选轻微旋转 / 呼吸动效 |
+| 1 | 首页 | 独立挂件图标 | 按设计稿首页 Lucky Spin 挂件（转盘 + 字标，显示约 104×72）；透明底切图，右上留 ×N 角标位、左上留小 × 位；可选轻微旋转 / 呼吸动效 |
 | 2 | 首页 | 每日活动弹窗 | 头图 + 弹窗底图，标题区留文案位 |
 | 3 | 转盘页 | 页面背景 | 含 LUCKY SPIN 标题字效、副标题位 |
 | 4 | 转盘页 | 转盘盘面 | 10 格等分（每格 36°），第 1 格大奖紫底高亮，金额留空；外圈灯珠亮 / 暗两帧 |
@@ -287,6 +287,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 | 日期 | 变更 |
 |---|---|
+| 2026-11-13 | 首页挂件按设计稿做成独立原型画板（06，可拖动吸边），挂件需求并入美术 GAM-444（原 GAM-445 已删除） |
 | 2026-11-13 | 原型 H5 带入 Figma 设计稿（挂件、每日弹窗、转盘页、中奖 / 次数用完弹窗），文案仍按定稿；中奖弹窗去掉重复的「Get ₱x from Lucky Spin」 |
 | 2026-11-13 | 后台新增「操作日志」页签（人工 + 系统操作，旧值 → 新值，只读，保留 365 天）及权限码 10141909 |
 | 2026-11-13 | 后台活动列表新增页内「预算预警」条；「已使用预算」列加消耗进度条和「预算预警」标签；弹窗副标题最高奖取大奖格（默认 ₱7,890） |

@@ -50,7 +50,7 @@
 | 名单 | 白名单名单 | 见 2.5 |
 | 流水 | 流水倍数 / 是否含奖金 / 计入流水的游戏 | 见 2.6 |
 | 文案 | 奖励弹窗文案 | 支持 {bonus} |
-| 文案 | 每日弹窗文案（获得 / 提醒） | 支持 {count} {max}；留空用默认文案 |
+| 文案 | 每日弹窗文案（获得 / 提醒） | 只配标题，支持 {count}；留空用默认文案 |
 
 与现网相比去掉：是否需要充值记录、人群范围、充值渠道、首次 / 非首次档位、白名单奖励档位、流水“含本金”。
 
@@ -163,8 +163,8 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 | 触发 | 每天第一次登录成功后进入首页（含 App 冷启动自动登录）。当天弹过即不再弹，换设备也不再弹；00:00 后重新计算 |
 | 计次 | 以曝光计次，由服务端按 userId + 日期记录；被更高优先级弹窗挡住、未实际展示的不计 |
 | 队列位置 | 加入前端统一弹窗队列 `fullModalList`，key `whitelist-spin`，排在 `olduser-turntable` 之后、`golden-egg` 之前；21+ / 协议弹窗优先。同步更新 `docs/modal-queue-system.html` |
-| 内容 | 活动头图 + LUCKY SPIN + 文案 + 剩余次数 + Spin Now + ×。当天有新导入批次用「获得」文案，否则用「提醒」文案 |
-| 文案 | 后台配置，支持 {count} {max}。默认：获得 "You've got {count} Lucky Spins! Win up to ₱{max}"；提醒 "You still have {count} Lucky Spins today. Spin now!" |
+| 内容 | 只留 3 行，次数和 Spin Now 各出现一次：转盘头图 + 标题（含次数）+ 副标题（最高奖）+ 主按钮 Spin Now + 右上 ×；不显示到期时间。当天有新导入批次用「获得」标题，否则用「提醒」标题 |
+| 文案 | 后台只配标题，支持 {count}。默认：获得 "{count} Free Spins!"；提醒 "{count} Free Spins Left"。副标题固定 "Win up to ₱{max}"，按钮固定 "Spin Now" |
 | 交互 | Spin Now 进入转盘页；× 关闭并缩向独立挂件；点遮罩不关 |
 | 埋点 | `spin_entry_view`（entry = popup）、`popup_click`、`popup_close` |
 
@@ -267,6 +267,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 
 | 日期 | 变更 |
 |---|---|
+| 2026-11-13 | 每日活动弹窗精简文案：只留标题「{count} Free Spins!」（提醒版「{count} Free Spins Left」）、副标题「Win up to ₱{max}」、按钮「Spin Now」；去掉重复的次数和 Spin now，去掉到期时间；后台只配标题 |
 | 2026-11-12 | 转盘页新增背景音乐 + 6 个音效、右上角静音开关（默认自动播放，状态本地记住）；美术子任务增加音频素材 |
 | 2026-11-11 | 新增每日活动弹窗（替代获得次数提示）；新增独立挂件（GAM-445）；弹窗文案拆为获得 / 提醒 |
 | 2026-11-11 | 新增美术资源子需求（GAM-444） |

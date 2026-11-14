@@ -153,7 +153,7 @@
 3. 转盘页：紫金主题 10 格，标题 LUCKY SPIN，副标题 Mega Jackpot up to {当前转盘最大金额}；盘面显示当前这一转所用转盘的 10 格金额；左上角返回图标回首页；底座顶部显示 Remaining spins。
 4. 中奖轮播（底座）：本活动最近 30 条真实中奖，账号脱敏为前 3 + *** + 后 4 位；一次 2 条、每 2.2 秒上滚 1 条、无缝循环；≥ ₱789 高亮；每 60 秒刷新，自己抽中立即插到最前；≤ 2 条不滚动，0 条显示 Be the first to win!
 5. 抽奖：点 GO 调 draw，前端转到返回的 slotIndex 停下；停下后命中格金色闪烁、外圈光晕和星光闪动约 1.5 秒（伴随中奖音效），再弹中奖弹窗，弹窗金额放大弹出并发光。
-6. 中奖弹窗：标题 LUCKY SPIN REWARDS；关闭后入账；有剩余显示 Spin Again (n)，没有显示 Play Now。
+6. 中奖弹窗：标题 LUCKY SPIN REWARDS；关闭后入账（弹窗不展示入账 / 流水说明文案）；有剩余显示 Spin Again (n)，没有显示 Play Now。
 7. 异常：活动关闭、已结束或预算用完时提示 This event has ended。
 8. 按钮：主按钮绿色渐变胶囊；次要按钮亮面绿色 8px 圆角。
 
@@ -288,6 +288,7 @@ configJson：wheels[{wheelId, name, amounts[10], probabilities[10]}]、spins[{no
 | 日期 | 变更 |
 |---|---|
 | 2026-11-14 | 中奖后增加闪烁效果（命中格闪烁 + 外圈光晕 + 星光，约 1.5 秒后弹窗）；挂件角标改 +N、移除关闭 × |
+| 2026-11-14 | 中奖弹窗移除「Credited to Bonus Balance · 2x wagering to withdraw」提示条 |
 | 2026-11-13 | 每日弹窗去掉提醒版，只保留「{count} Free Spins!」，接口不再返回 popupType |
 | 2026-11-13 | 首页挂件按设计稿做成独立原型画板（06，可拖动吸边），挂件需求并入美术 GAM-444（原 GAM-445 已删除） |
 | 2026-11-13 | 原型 H5 带入 Figma 设计稿（挂件、每日弹窗、转盘页、中奖 / 次数用完弹窗），文案仍按定稿；中奖弹窗去掉重复的「Get ₱x from Lucky Spin」 |

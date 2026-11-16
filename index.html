@@ -1,378 +1,392 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>GAMES 运营报表原型</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>数据报表中心原型 v1.0</title>
 <style>
-/* Layout: 后台壳（顶栏 + 左侧菜单）+ 主区（筛选条 → 同步状态 → 报表表格 → 字段说明） */
+/* 外壳照 admin-1-qa 现网：深青顶栏 + 状态栏 + 左侧菜单 + 标签页；主区 = 标题、说明、筛选、显示列、更新时间条、表格 */
 :root{
-  --bg:#f3f5f4; --panel:#ffffff; --fg:#17201f; --muted:#5d6b69; --line:#dfe5e3; --line-strong:#c7d1ce;
-  --accent:#0d6b63; --accent-soft:#e2f0ee; --head:#eef3f1; --total:#fbf5e6; --total-fg:#5a4410;
-  --ok:#1f7a3f; --warn:#a15c00; --nav:#14302d; --nav-fg:#cfe3df; --nav-active:#ffffff;
-  --font-ui:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-  --font-num:"IBM Plex Sans","Noto Sans SC",system-ui,sans-serif;
+  --top:#17504c; --stat:#1d5f5a; --pri:#168078; --pri-soft:#e6f3f1; --bg:#f4f6f6; --card:#fff;
+  --line:#ebeef5; --line2:#dcdfe6; --fg:#303133; --muted:#909399; --sub:#606266;
+  --warn-bg:#fdf3e6; --warn:#c77a17; --red:#d93636; --red-bg:#fdecec; --green:#1f8a4c;
+  --new:#e8590c; --font:"PingFang SC","Helvetica Neue",Helvetica,"Microsoft YaHei",Arial,sans-serif;
+  --num:"Helvetica Neue",Helvetica,Arial,sans-serif; color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0f1514; --panel:#161e1d; --fg:#e4ecea; --muted:#94a5a2; --line:#26322f; --line-strong:#34423f;
-  --accent:#5cc2b6; --accent-soft:#1a3330; --head:#1b2523; --total:#2b2614; --total-fg:#ecd69b;
-  --ok:#5fcf86; --warn:#e7a84b; --nav:#0b1110; --nav-fg:#9fb7b2; --nav-active:#ffffff; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0f1514; --panel:#161e1d; --fg:#e4ecea; --muted:#94a5a2; --line:#26322f; --line-strong:#34423f;
-  --accent:#5cc2b6; --accent-soft:#1a3330; --head:#1b2523; --total:#2b2614; --total-fg:#ecd69b;
-  --ok:#5fcf86; --warn:#e7a84b; --nav:#0b1110; --nav-fg:#9fb7b2; --nav-active:#ffffff; color-scheme:dark}
-*{box-sizing:border-box}
-body{margin:0}
-[hidden]{display:none!important}
-body{background:var(--bg);color:var(--fg);font-family:var(--font-ui);font-size:14px;line-height:1.5}
-.top{background:var(--nav);color:var(--nav-fg);padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.top b{color:var(--nav-active);font-weight:700;letter-spacing:.02em}
-.top .crumb{font-size:13px}
-.top .tag{margin-left:auto;font-size:12px;border:1px solid currentColor;border-radius:4px;padding:1px 8px;opacity:.85}
-.shell{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:calc(100vh - 44px)}
-nav.side{background:var(--panel);border-right:1px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;gap:2px}
-nav.side .grp{font-size:12px;color:var(--muted);letter-spacing:.08em;padding:4px 10px 8px}
-nav.side a{display:flex;gap:8px;align-items:baseline;padding:8px 10px;border-radius:6px;color:var(--fg);text-decoration:none}
-nav.side a span{font-family:var(--font-num);font-size:12px;color:var(--muted);width:22px}
-nav.side a:hover{background:var(--head)}
-nav.side a[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:500}
-nav.side a[aria-current="page"] span{color:var(--accent)}
-main{padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px;min-width:0}
-h1{font-size:20px;margin:0;text-wrap:balance}
-.sub{color:var(--muted);margin:2px 0 0;font-size:13px}
-.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:end;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px}
-.field{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
-select,button{font:inherit;font-size:13px;color:var(--fg)}
-select{background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;padding:6px 8px;min-width:140px}
-.spacer{flex:1}
-.btn{border:1px solid var(--line-strong);background:var(--panel);border-radius:6px;padding:6px 12px;cursor:pointer}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--panel)}
-.btn.primary:hover{opacity:.9;color:var(--panel)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.chips .lbl{font-size:12px;color:var(--muted);margin-right:4px}
-.chip{border:1px solid var(--line-strong);border-radius:999px;padding:2px 10px;font-size:12px;background:var(--panel);cursor:pointer}
-.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.sync{display:flex;flex-wrap:wrap;gap:12px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;background:var(--panel);font-size:13px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:6px}
-.sync .muted{color:var(--muted)}
-.dr{display:flex;align-items:center;gap:6px}
-.dr input{font:inherit;font-size:13px;color:var(--fg);background:var(--panel);border:1px solid var(--line-strong);border-radius:6px;padding:5px 8px}
-.tilde{color:var(--muted)}
-.quick{display:flex;gap:0}
-.quick .btn{border-radius:0;margin-left:-1px}
-.quick .btn:first-child{border-radius:6px 0 0 6px;margin-left:0}
-.quick .btn:last-child{border-radius:0 6px 6px 0}
-.quick .btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--panel)}
-nav.side .grp.off{color:var(--muted);font-size:13px;text-transform:none;letter-spacing:0;padding:8px 10px;cursor:default}
-nav.side .grp.off::after{content:" ▸";opacity:.6}
-nav.side .grp.on{color:var(--fg);font-weight:700;font-size:13px;letter-spacing:0;padding:8px 10px}
-nav.side .grp.on::after{content:" ▾";opacity:.6}
-.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
-table{border-collapse:separate;border-spacing:0;font-family:var(--font-num);font-variant-numeric:tabular-nums;font-size:13px;white-space:nowrap}
-th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line);padding:6px 10px}
-thead th{background:var(--head);font-family:var(--font-ui);font-weight:500;position:sticky;z-index:2;text-align:center}
-thead tr:first-child th{top:0;height:22px;padding:2px 10px;font-size:11px;color:var(--muted);font-weight:400}
-thead tr:nth-child(2) th{top:27px}
-thead tr:nth-child(3) th{top:60px;font-weight:400;color:var(--muted)}
-th.g{font-weight:700;color:var(--fg)}
-td{text-align:right}
-td:first-child,th.stick{position:sticky;left:0;z-index:1;background:var(--panel);text-align:left}
-thead th.stick{z-index:3;background:var(--head)}
-tr.total td{background:var(--total);color:var(--total-fg);font-weight:600;position:sticky;bottom:0}
-table.two thead tr:nth-child(2) th{top:27px;color:var(--fg);font-weight:700}
-table.plain td:first-child{position:static}
-[hidden]{display:none!important}
-tr.total td:first-child{background:var(--total)}
-td.dash{color:var(--muted)}
-tbody tr:hover td{background:var(--accent-soft)}
-.i{border:0;background:none;color:var(--muted);cursor:help;padding:0 0 0 3px;font-size:12px;line-height:1}
-.i:hover,.i:focus-visible{color:var(--accent)}
-.pop{position:fixed;z-index:20;max-width:300px;background:var(--fg);color:var(--bg);border-radius:8px;padding:10px 12px;font-size:12.5px;line-height:1.55;box-shadow:0 6px 24px rgba(0,0,0,.18)}
-.pop b{display:block;font-size:13px;margin-bottom:2px}
-.pop code{font-family:var(--font-num);opacity:.85;display:block;margin-top:4px}
-.note{font-size:12px;color:var(--muted)}
-.gloss{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px}
-.gloss h2{font-size:16px;margin:0}
-.gl{overflow-x:auto}
-.gl table{font-family:var(--font-ui);white-space:normal;width:100%;font-variant-numeric:normal}
-.gl th,.gl td{text-align:left;vertical-align:top;border-right:0}
-.gl th{background:var(--head);font-weight:500;position:static}
-.gl td:first-child{position:static;white-space:nowrap;font-weight:500;background:none}
-.gl td.f{font-family:var(--font-num);color:var(--muted);white-space:nowrap}
-.gl tr:hover td{background:none}
-.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom,0px));background:var(--fg);color:var(--bg);padding:8px 16px;border-radius:6px;font-size:13px;z-index:30}
-@media (max-width:760px){
-  .shell{grid-template-columns:1fr}
-  nav.side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px 16px}
-  nav.side .grp{display:none}
-  nav.side a{white-space:nowrap}
-  .tablewrap{max-height:none}
-}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-</style>
-</head>
-<body>
-
-<div class="top"><b>789games 运营后台</b><span class="crumb">数据报表中心 / <span id="crumb"></span></span><span class="tag">原型 · 示例数据</span></div>
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.5 var(--font)}
+button,select,input{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
+.proto{background:#fff7e0;color:#7a5a00;border-bottom:1px solid #f0dca0;padding:6px 16px;font-size:12px;display:flex;flex-wrap:wrap;gap:4px 16px}
+.proto a{color:#7a5a00}
+.top{background:var(--top);color:#fff;height:40px;display:flex;align-items:center;gap:10px;padding:0 16px}
+.top .clk{color:#7fe0c8;font-family:var(--num)}
+.top .qa{background:#f0a23b;border-radius:3px;padding:0 6px;font-size:11px}
+.top .sp{flex:1}
+.stat{background:var(--stat);color:#fff;display:flex;gap:18px;padding:5px 16px;font-size:12px;overflow-x:auto;white-space:nowrap}
+.stat b{color:#ffd16a}.stat .r{background:#e04343;border-radius:3px;padding:0 6px}.stat .g{background:#2ea36a;border-radius:3px;padding:0 6px}
+.shell{display:flex;min-height:calc(100vh - 100px)}
+.side{width:196px;flex:0 0 196px;background:#fff;border-right:1px solid var(--line);padding:6px 0;overflow-y:auto}
+.side .g1{padding:8px 16px;color:var(--sub);display:flex;justify-content:space-between}
+.side .g1.on{color:var(--fg);font-weight:600}
+.side a{display:flex;align-items:center;gap:6px;padding:7px 16px 7px 30px;color:var(--fg);text-decoration:none}
+.side a:hover{background:#f5f7fa}
+.side a.act{background:var(--pri-soft);color:var(--pri);font-weight:600;border-right:3px solid var(--pri)}
+.tag-new{background:var(--new);color:#fff;font-size:10px;border-radius:2px;padding:0 4px;font-weight:400}
+.main{flex:1;min-width:0}
+.crumb{background:#fff;border-bottom:1px solid var(--line);padding:8px 16px;color:var(--muted)}
+.crumb b{color:var(--fg);font-weight:400}
+.tabs{background:#fff;border-bottom:1px solid var(--line);padding:6px 12px;display:flex;gap:6px;flex-wrap:wrap}
+.tabs span{border:1px solid var(--line2);border-radius:3px;padding:1px 8px;font-size:12px;color:var(--sub);background:#fff;cursor:pointer}
+.tabs span.on{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+.content{padding:14px 16px 32px}
+h1{font-size:18px;margin:0 0 4px}
+.desc{color:var(--sub);margin:0 0 12px;font-size:12px}
+.bar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:flex-end;margin-bottom:10px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--sub)}
+.dr{display:flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:3px;background:#fff;padding:2px 8px}
+.dr input{border:0;padding:3px 0;width:118px;background:none}
+select.s{border:1px solid var(--line2);border-radius:3px;background:#fff;padding:5px 8px;min-width:130px}
+.btn{border:1px solid var(--line2);background:#fff;border-radius:3px;padding:5px 12px}
+.btn:hover{color:var(--pri);border-color:#a3d0cb}
+.btn.on{color:var(--pri);border-color:var(--pri);background:var(--pri-soft)}
+.btn.pri{background:var(--pri);border-color:var(--pri);color:#fff}
+.grp{display:flex}.grp .btn{border-radius:0;margin-left:-1px}.grp .btn:first-child{border-radius:3px 0 0 3px;margin-left:0}.grp .btn:last-child{border-radius:0 3px 3px 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px;font-size:12px;color:var(--sub)}
+.chip{border:1px solid #b8dcd7;background:var(--pri-soft);color:var(--pri);border-radius:12px;padding:1px 10px;font-size:12px}
+.chip.off{background:#fff;color:var(--muted);border-color:var(--line2)}
+.upd{background:#f5f7fa;border-radius:3px;padding:7px 12px;margin-bottom:10px;font-size:12px;display:flex;flex-wrap:wrap;gap:4px 16px;color:var(--sub)}
+.upd .m{color:var(--muted)}
+.tw{overflow:auto;max-height:66vh;border:1px solid var(--line);background:#fff}
+table{border-collapse:separate;border-spacing:0;font-size:12px;white-space:nowrap}
+th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px 10px}
+thead th{background:#fff;color:var(--muted);font-weight:600;position:sticky;z-index:2;text-align:center}
+thead tr:first-child th{top:0;color:var(--fg)}
+thead tr:nth-child(2) th{top:33px}
+td{text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums}
+td.l,th.l{text-align:left}
+td:first-child,th.stk{position:sticky;left:0;z-index:1;background:#fff;text-align:left}
+thead th.stk{z-index:3}
+tbody tr:hover td{background:#f5f7fa}
+tr.tot td{background:#fbf7e9;font-weight:600;position:sticky;bottom:0}
+tr.day0 td{border-top:2px solid #b8dcd7}
+tr.last td{background:#f0f8f6}
+.i{border:0;background:none;color:#b1b3b8;padding:0 0 0 3px;font-size:12px;cursor:help}
+.i:hover,.i:focus-visible{color:var(--pri)}
+.pop{position:fixed;z-index:30;max-width:300px;background:#303133;color:#fff;border-radius:4px;padding:8px 10px;font-size:12px;line-height:1.6}
+.pop b{display:block}.pop p{margin:2px 0 0}.pop code{display:block;margin-top:4px;opacity:.85;font-family:var(--num)}
+.foot{color:var(--muted);font-size:12px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#303133;color:#fff;padding:8px 14px;border-radius:4px;font-size:12px;z-index:40}
+.v2note{border:1px dashed var(--new);background:#fff6f0;border-radius:4px;padding:8px 12px;margin-bottom:10px;font-size:12px;line-height:1.7}
+.v2note b{color:var(--new)}
+.empty{color:var(--muted);text-align:center!important;padding:24px}
+@media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
+</style></head><body>
+<div class="proto"><span><b>数据报表中心原型 · v1.0 上线版</b>（对照 admin-1-qa 2026-11-16 现网：页面、日期、按钮、ⓘ 文案）</span><span>示例数据，模拟“现在”= 2026-11-16 14:20</span><span>v2.0（新增 2 张累计表）：<a href="https://koi980517.github.io/789games/data-report-v2.0.html">data-report-v2.0.html</a></span></div>
+<header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
+<div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
-<nav class="side" aria-label="报表">
-  <div class="grp off">个人中心</div>
-  <div class="grp off">用户管理</div>
-  <div class="grp off">财务管理</div>
-  <div class="grp off">提现管理</div>
-  <div class="grp off">数据报表</div>
-  <div class="grp on">数据报表中心</div>
-  <a href="#r1" data-r="r1"><span>R1</span>每小时数据</a>
-  <a href="#r2" data-r="r2"><span>R2</span>每日数据</a>
-  <a href="#r3" data-r="r3"><span>R3</span>每小时彩金</a>
-  <a href="#r4" data-r="r4"><span>R4</span>每日彩金</a>
-  <a href="#r5" data-r="r5"><span>R5</span>前50名</a>
-</nav>
-<main>
-  <div><h1 id="ttl"></h1><p class="sub" id="desc"></p></div>
-  <div class="bar">
-    <label class="field">查询日期<span class="dr"><input type="date" id="d1" aria-label="开始日期"><span class="tilde">~</span><input type="date" id="d2" aria-label="结束日期"></span></label>
-    <div class="quick" role="group" aria-label="快捷日期"><button class="btn q" type="button" data-q="tw">本周报表</button><button class="btn q" type="button" data-q="lw">上周</button><button class="btn q" type="button" data-q="tm">本月报表</button><button class="btn q" type="button" data-q="lm">上月报表</button></div>
-    <label class="field" id="f-board">榜单<select id="board"><option value="dep">存款前 50</option><option value="wd">取款前 50</option></select></label>
-    <span class="spacer"></span>
-    <button class="btn primary" id="b-search" type="button">搜索</button>
-    <button class="btn" id="b-refresh" type="button">刷新</button>
-    <button class="btn" id="b-recalc" type="button">重算</button>
-    <button class="btn" id="b-export" type="button">导出</button>
+<nav class="side" id="side" aria-label="菜单"></nav>
+<main class="main">
+  <div class="crumb">位置 › 数据报表中心 › <b id="crumb"></b></div>
+  <div class="tabs" id="tabs"></div>
+  <div class="content">
+    <h1 id="ttl"></h1><p class="desc" id="desc"></p>
+    <div id="v2note"></div>
+    <div class="bar" id="bar"></div>
+    <div class="chips" id="chips"></div>
+    <div class="upd" id="upd"></div>
+    <div class="tw"><table id="tbl"></table></div>
+    <p class="foot">时间均为北京时间（GMT+8）。鼠标悬浮表头的 ⓘ 查看字段说明；真实分母为 0 时比率和人均显示空白。</p>
   </div>
-  <div class="chips" id="chips"></div>
-  <div class="sync" role="status">
-    <span>数据更新时间：<b id="upd">2026-11-02 11:05</b></span>
-    <span class="muted" id="updnote">小时表已更新到 10:00–11:00；点「刷新」重新查询最新数据，不重算历史</span>
-  </div>
-  <div class="tablewrap"><table id="tbl"></table></div>
-  <p class="note">时间均为北京时间（GMT+8）。点表头的 ⓘ 查看字段说明；真实分母为 0 时比率和人均显示空白；表头第一行 A、B、C… 为需求表的列号；ⓘ 里的口径来自口径表，口径表没有的取需求表批注。数据为模拟示例（11-02 到 11:00 为止；小时表和前50名只做了 10-31、11-01），仅展示版式。</p>
-  <section class="gloss" aria-labelledby="gh">
-    <h2 id="gh">字段说明</h2>
-    <div class="gl" id="gloss"></div>
-  </section>
-</main>
-</div>
-<div class="pop" id="pop" hidden></div>
-<div class="toast" id="toast" hidden></div>
+</main></div>
+<div class="pop" id="pop" hidden></div><div class="toast" id="toast" hidden></div>
 <script>
-const DATA = {"acts_h":[{"id":101,"name":"每日 1.5% 投注返水"},{"id":102,"name":"代理邀请"},{"id":109,"name":"新用户金蛋"},{"id":104,"name":"新会员789幸运转盘"},{"id":105,"name":"忠诚会员存款转盘"},{"id":106,"name":"VIP1–VIP25 升级奖金"},{"id":107,"name":"每日存款加码 10%"},{"id":108,"name":"每日亏损补助"}],"acts_d":[{"id":104,"name":"新用户转盘"},{"id":106,"name":"VIP会员奖励"},{"id":107,"name":"每日10%充值活动"},{"id":105,"name":"充值转盘"},{"id":109,"name":"新用户金蛋奖金任务"},{"id":102,"name":"邀请好友"},{"id":101,"name":"1.5%返水"},{"id":108,"name":"输返"}],"h_ops":[{"bettors":80,"registers":2,"fd_users":2,"fd_amount":300,"fd_avg":150.0,"conv_rate":1.0,"fdt_users":2,"fdt_amount":300,"fdt_avg":150.0,"dep_users":6,"dep_amount":7100,"dep_daily_avg":null,"dep_avg":1183.33,"wd_users":5,"wd_amount":6000,"wd_count":5,"net":1100,"net_rate":0.1549,"ret_users":4,"ret_amount":6800,"ret_avg":1700.0,"ret_ratio":0.6667,"dep_count":6,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":26020,"bet_multiple":3.6648,"kill_rate":0.2597,"ggr":6757.0,"promo_amount":6447,"promo_ratio":0.908,"online":21,"wd_avg":1200.0,"time":"10-31 00:00"},{"bettors":8,"registers":2,"fd_users":4,"fd_amount":5500,"fd_avg":1375.0,"conv_rate":1.5,"fdt_users":6,"fdt_amount":5800,"fdt_avg":966.67,"dep_users":7,"dep_amount":11100,"dep_daily_avg":null,"dep_avg":1585.71,"wd_users":0,"wd_amount":0,"wd_count":0,"net":11100,"net_rate":1.0,"ret_users":3,"ret_amount":5600,"ret_avg":1866.67,"ret_ratio":0.4286,"dep_count":7,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":4620,"bet_multiple":0.4162,"kill_rate":0.3009,"ggr":1390.0,"promo_amount":4678,"promo_ratio":0.4214,"online":21,"wd_avg":null,"time":"10-31 01:00"},{"bettors":2,"registers":0,"fd_users":0,"fd_amount":0,"fd_avg":null,"conv_rate":1.5,"fdt_users":6,"fdt_amount":5800,"fdt_avg":966.67,"dep_users":0,"dep_amount":0,"dep_daily_avg":null,"dep_avg":null,"wd_users":0,"wd_amount":0,"wd_count":0,"net":0,"net_rate":null,"ret_users":0,"ret_amount":0,"ret_avg":null,"ret_ratio":null,"dep_count":0,"dep_count_avg":null,"wd_count_b":0,"valid_bet":520,"bet_multiple":null,"kill_rate":0.9423,"ggr":490.0,"promo_amount":176,"promo_ratio":null,"online":21,"wd_avg":null,"time":"10-31 02:00"},{"bettors":17,"registers":0,"fd_users":1,"fd_amount":300,"fd_avg":300.0,"conv_rate":1.75,"fdt_users":7,"fdt_amount":6100,"fdt_avg":871.43,"dep_users":5,"dep_amount":6100,"dep_daily_avg":null,"dep_avg":1220.0,"wd_users":2,"wd_amount":2000,"wd_count":2,"net":4100,"net_rate":0.6721,"ret_users":4,"ret_amount":5800,"ret_avg":1450.0,"ret_ratio":0.8,"dep_count":5,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":3310,"bet_multiple":0.5426,"kill_rate":-0.5634,"ggr":-1865.0,"promo_amount":20,"promo_ratio":0.0033,"online":23,"wd_avg":1000.0,"time":"10-31 03:00"},{"bettors":24,"registers":1,"fd_users":1,"fd_amount":5000,"fd_avg":5000.0,"conv_rate":1.6,"fdt_users":8,"fdt_amount":11100,"fdt_avg":1387.5,"dep_users":3,"dep_amount":6100,"dep_daily_avg":null,"dep_avg":2033.33,"wd_users":0,"wd_amount":0,"wd_count":0,"net":6100,"net_rate":1.0,"ret_users":2,"ret_amount":1100,"ret_avg":550.0,"ret_ratio":0.6667,"dep_count":3,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":7010,"bet_multiple":1.1492,"kill_rate":0.0514,"ggr":360.0,"promo_amount":283,"promo_ratio":0.0464,"online":23,"wd_avg":null,"time":"10-31 04:00"},{"bettors":15,"registers":0,"fd_users":1,"fd_amount":500,"fd_avg":500.0,"conv_rate":1.8,"fdt_users":9,"fdt_amount":11600,"fdt_avg":1288.89,"dep_users":1,"dep_amount":500,"dep_daily_avg":null,"dep_avg":500.0,"wd_users":2,"wd_amount":2000,"wd_count":2,"net":-1500,"net_rate":-3.0,"ret_users":0,"ret_amount":0,"ret_avg":null,"ret_ratio":0.0,"dep_count":1,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":5360,"bet_multiple":10.72,"kill_rate":-0.2142,"ggr":-1148.0,"promo_amount":115,"promo_ratio":0.23,"online":21,"wd_avg":1000.0,"time":"10-31 05:00"},{"bettors":57,"registers":0,"fd_users":1,"fd_amount":5000,"fd_avg":5000.0,"conv_rate":2.0,"fdt_users":10,"fdt_amount":16600,"fdt_avg":1660.0,"dep_users":6,"dep_amount":8500,"dep_daily_avg":null,"dep_avg":1416.67,"wd_users":2,"wd_amount":2300,"wd_count":2,"net":6200,"net_rate":0.7294,"ret_users":5,"ret_amount":3500,"ret_avg":700.0,"ret_ratio":0.8333,"dep_count":6,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":13880,"bet_multiple":1.6329,"kill_rate":0.1373,"ggr":1906.0,"promo_amount":288,"promo_ratio":0.0339,"online":30,"wd_avg":1150.0,"time":"10-31 06:00"},{"bettors":79,"registers":2,"fd_users":2,"fd_amount":800,"fd_avg":400.0,"conv_rate":1.7143,"fdt_users":12,"fdt_amount":17400,"fdt_avg":1450.0,"dep_users":9,"dep_amount":11800,"dep_daily_avg":null,"dep_avg":1311.11,"wd_users":5,"wd_amount":4800,"wd_count":5,"net":7000,"net_rate":0.5932,"ret_users":7,"ret_amount":11000,"ret_avg":1571.43,"ret_ratio":0.7778,"dep_count":9,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":24160,"bet_multiple":2.0475,"kill_rate":-0.2679,"ggr":-6473.0,"promo_amount":131,"promo_ratio":0.0111,"online":31,"wd_avg":960.0,"time":"10-31 07:00"},{"bettors":104,"registers":3,"fd_users":2,"fd_amount":6000,"fd_avg":3000.0,"conv_rate":1.4,"fdt_users":14,"fdt_amount":23400,"fdt_avg":1671.43,"dep_users":10,"dep_amount":15300,"dep_daily_avg":null,"dep_avg":1530.0,"wd_users":3,"wd_amount":3200,"wd_count":3,"net":12100,"net_rate":0.7908,"ret_users":8,"ret_amount":9300,"ret_avg":1162.5,"ret_ratio":0.8,"dep_count":10,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":31870,"bet_multiple":2.083,"kill_rate":-0.0026,"ggr":-83.0,"promo_amount":324,"promo_ratio":0.0212,"online":32,"wd_avg":1066.67,"time":"10-31 08:00"},{"bettors":115,"registers":2,"fd_users":4,"fd_amount":2900,"fd_avg":725.0,"conv_rate":1.5,"fdt_users":18,"fdt_amount":26400,"fdt_avg":1466.67,"dep_users":16,"dep_amount":17900,"dep_daily_avg":null,"dep_avg":1118.75,"wd_users":6,"wd_amount":5900,"wd_count":6,"net":12000,"net_rate":0.6704,"ret_users":12,"ret_amount":14900,"ret_avg":1241.67,"ret_ratio":0.75,"dep_count":16,"dep_count_avg":1.0,"wd_count_b":6,"valid_bet":35140,"bet_multiple":1.9631,"kill_rate":0.1389,"ggr":4881.0,"promo_amount":18,"promo_ratio":0.001,"online":50,"wd_avg":983.33,"time":"10-31 09:00"},{"bettors":114,"registers":3,"fd_users":6,"fd_amount":11000,"fd_avg":1833.33,"conv_rate":1.6,"fdt_users":24,"fdt_amount":37400,"fdt_avg":1558.33,"dep_users":14,"dep_amount":15500,"dep_daily_avg":null,"dep_avg":1107.14,"wd_users":0,"wd_amount":0,"wd_count":0,"net":15500,"net_rate":1.0,"ret_users":8,"ret_amount":4500,"ret_avg":562.5,"ret_ratio":0.5714,"dep_count":14,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":35250,"bet_multiple":2.2742,"kill_rate":0.0752,"ggr":2652.0,"promo_amount":553,"promo_ratio":0.0357,"online":54,"wd_avg":null,"time":"10-31 10:00"},{"bettors":108,"registers":10,"fd_users":4,"fd_amount":9200,"fd_avg":2300.0,"conv_rate":1.12,"fdt_users":28,"fdt_amount":46600,"fdt_avg":1664.29,"dep_users":9,"dep_amount":16200,"dep_daily_avg":null,"dep_avg":1800.0,"wd_users":3,"wd_amount":4700,"wd_count":3,"net":11500,"net_rate":0.7099,"ret_users":5,"ret_amount":7000,"ret_avg":1400.0,"ret_ratio":0.5556,"dep_count":9,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":31720,"bet_multiple":1.958,"kill_rate":0.1058,"ggr":3355.0,"promo_amount":172,"promo_ratio":0.0106,"online":46,"wd_avg":1566.67,"time":"10-31 11:00"},{"bettors":127,"registers":6,"fd_users":7,"fd_amount":7900,"fd_avg":1128.57,"conv_rate":1.129,"fdt_users":35,"fdt_amount":54500,"fdt_avg":1557.14,"dep_users":17,"dep_amount":22800,"dep_daily_avg":null,"dep_avg":1341.18,"wd_users":0,"wd_amount":0,"wd_count":0,"net":22800,"net_rate":1.0,"ret_users":10,"ret_amount":14900,"ret_avg":1490.0,"ret_ratio":0.5882,"dep_count":17,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":42580,"bet_multiple":1.8675,"kill_rate":-0.1026,"ggr":-4368.0,"promo_amount":213,"promo_ratio":0.0093,"online":53,"wd_avg":null,"time":"10-31 12:00"},{"bettors":121,"registers":8,"fd_users":9,"fd_amount":7000,"fd_avg":777.78,"conv_rate":1.1282,"fdt_users":44,"fdt_amount":61500,"fdt_avg":1397.73,"dep_users":18,"dep_amount":14600,"dep_daily_avg":null,"dep_avg":811.11,"wd_users":3,"wd_amount":3400,"wd_count":3,"net":11200,"net_rate":0.7671,"ret_users":9,"ret_amount":7600,"ret_avg":844.44,"ret_ratio":0.5,"dep_count":19,"dep_count_avg":1.0556,"wd_count_b":3,"valid_bet":44470,"bet_multiple":3.0459,"kill_rate":0.0657,"ggr":2920.0,"promo_amount":188,"promo_ratio":0.0129,"online":45,"wd_avg":1133.33,"time":"10-31 13:00"},{"bettors":119,"registers":4,"fd_users":5,"fd_amount":1400,"fd_avg":280.0,"conv_rate":1.1395,"fdt_users":49,"fdt_amount":65900,"fdt_avg":1344.9,"dep_users":14,"dep_amount":14400,"dep_daily_avg":null,"dep_avg":1028.57,"wd_users":3,"wd_amount":3400,"wd_count":3,"net":11000,"net_rate":0.7639,"ret_users":9,"ret_amount":10000,"ret_avg":1111.11,"ret_ratio":0.6429,"dep_count":14,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":34340,"bet_multiple":2.3847,"kill_rate":0.1899,"ggr":6522.0,"promo_amount":634,"promo_ratio":0.044,"online":49,"wd_avg":1133.33,"time":"10-31 14:00"},{"bettors":132,"registers":3,"fd_users":7,"fd_amount":5400,"fd_avg":771.43,"conv_rate":1.2174,"fdt_users":56,"fdt_amount":73300,"fdt_avg":1308.93,"dep_users":19,"dep_amount":25200,"dep_daily_avg":null,"dep_avg":1326.32,"wd_users":3,"wd_amount":2800,"wd_count":3,"net":22400,"net_rate":0.8889,"ret_users":12,"ret_amount":17800,"ret_avg":1483.33,"ret_ratio":0.6316,"dep_count":20,"dep_count_avg":1.0526,"wd_count_b":3,"valid_bet":38190,"bet_multiple":1.5155,"kill_rate":0.2384,"ggr":9105.0,"promo_amount":382,"promo_ratio":0.0152,"online":51,"wd_avg":933.33,"time":"10-31 15:00"},{"bettors":146,"registers":4,"fd_users":3,"fd_amount":1600,"fd_avg":533.33,"conv_rate":1.18,"fdt_users":59,"fdt_amount":75100,"fdt_avg":1272.88,"dep_users":11,"dep_amount":11400,"dep_daily_avg":null,"dep_avg":1036.36,"wd_users":7,"wd_amount":6600,"wd_count":7,"net":4800,"net_rate":0.4211,"ret_users":8,"ret_amount":9600,"ret_avg":1200.0,"ret_ratio":0.7273,"dep_count":11,"dep_count_avg":1.0,"wd_count_b":7,"valid_bet":55670,"bet_multiple":4.8833,"kill_rate":0.1275,"ggr":7096.0,"promo_amount":393,"promo_ratio":0.0345,"online":59,"wd_avg":942.86,"time":"10-31 16:00"},{"bettors":150,"registers":7,"fd_users":5,"fd_amount":3600,"fd_avg":720.0,"conv_rate":1.1228,"fdt_users":64,"fdt_amount":81700,"fdt_avg":1276.56,"dep_users":18,"dep_amount":18700,"dep_daily_avg":null,"dep_avg":1038.89,"wd_users":4,"wd_amount":5800,"wd_count":4,"net":12900,"net_rate":0.6898,"ret_users":13,"ret_amount":12100,"ret_avg":930.77,"ret_ratio":0.7222,"dep_count":18,"dep_count_avg":1.0,"wd_count_b":4,"valid_bet":45150,"bet_multiple":2.4144,"kill_rate":-0.0437,"ggr":-1973.0,"promo_amount":646,"promo_ratio":0.0345,"online":61,"wd_avg":1450.0,"time":"10-31 17:00"},{"bettors":173,"registers":9,"fd_users":7,"fd_amount":5400,"fd_avg":771.43,"conv_rate":1.0758,"fdt_users":71,"fdt_amount":96600,"fdt_avg":1360.56,"dep_users":17,"dep_amount":16900,"dep_daily_avg":null,"dep_avg":994.12,"wd_users":8,"wd_amount":6300,"wd_count":8,"net":10600,"net_rate":0.6272,"ret_users":10,"ret_amount":2000,"ret_avg":200.0,"ret_ratio":0.5882,"dep_count":17,"dep_count_avg":1.0,"wd_count_b":8,"valid_bet":63170,"bet_multiple":3.7379,"kill_rate":-0.0541,"ggr":-3420.0,"promo_amount":174,"promo_ratio":0.0103,"online":57,"wd_avg":787.5,"time":"10-31 18:00"},{"bettors":209,"registers":8,"fd_users":8,"fd_amount":10100,"fd_avg":1262.5,"conv_rate":1.0676,"fdt_users":79,"fdt_amount":117800,"fdt_avg":1491.14,"dep_users":24,"dep_amount":26400,"dep_daily_avg":null,"dep_avg":1100.0,"wd_users":5,"wd_amount":4700,"wd_count":5,"net":21700,"net_rate":0.822,"ret_users":16,"ret_amount":5200,"ret_avg":325.0,"ret_ratio":0.6667,"dep_count":25,"dep_count_avg":1.0417,"wd_count_b":5,"valid_bet":79040,"bet_multiple":2.9939,"kill_rate":0.0686,"ggr":5421.0,"promo_amount":450,"promo_ratio":0.017,"online":64,"wd_avg":940.0,"time":"10-31 19:00"},{"bettors":207,"registers":12,"fd_users":8,"fd_amount":5000,"fd_avg":625.0,"conv_rate":1.0116,"fdt_users":87,"fdt_amount":123000,"fdt_avg":1413.79,"dep_users":17,"dep_amount":15700,"dep_daily_avg":null,"dep_avg":923.53,"wd_users":3,"wd_amount":5300,"wd_count":3,"net":10400,"net_rate":0.6624,"ret_users":9,"ret_amount":10500,"ret_avg":1166.67,"ret_ratio":0.5294,"dep_count":17,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":71440,"bet_multiple":4.5503,"kill_rate":0.0614,"ggr":4386.0,"promo_amount":553,"promo_ratio":0.0352,"online":73,"wd_avg":1766.67,"time":"10-31 20:00"},{"bettors":219,"registers":6,"fd_users":7,"fd_amount":2400,"fd_avg":342.86,"conv_rate":1.0217,"fdt_users":94,"fdt_amount":128500,"fdt_avg":1367.02,"dep_users":18,"dep_amount":7400,"dep_daily_avg":null,"dep_avg":411.11,"wd_users":4,"wd_amount":5500,"wd_count":4,"net":1900,"net_rate":0.2568,"ret_users":11,"ret_amount":1900,"ret_avg":172.73,"ret_ratio":0.6111,"dep_count":18,"dep_count_avg":1.0,"wd_count_b":4,"valid_bet":70540,"bet_multiple":9.5324,"kill_rate":0.0194,"ggr":1370.0,"promo_amount":753,"promo_ratio":0.1018,"online":68,"wd_avg":1375.0,"time":"10-31 21:00"},{"bettors":152,"registers":7,"fd_users":6,"fd_amount":4400,"fd_avg":733.33,"conv_rate":1.0101,"fdt_users":100,"fdt_amount":136900,"fdt_avg":1369.0,"dep_users":17,"dep_amount":15400,"dep_daily_avg":null,"dep_avg":905.88,"wd_users":3,"wd_amount":1500,"wd_count":3,"net":13900,"net_rate":0.9026,"ret_users":11,"ret_amount":7000,"ret_avg":636.36,"ret_ratio":0.6471,"dep_count":17,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":46400,"bet_multiple":3.013,"kill_rate":-0.0272,"ggr":-1260.0,"promo_amount":982,"promo_ratio":0.0638,"online":67,"wd_avg":500.0,"time":"10-31 22:00"},{"bettors":133,"registers":1,"fd_users":7,"fd_amount":6600,"fd_avg":942.86,"conv_rate":1.07,"fdt_users":107,"fdt_amount":146300,"fdt_avg":1367.29,"dep_users":16,"dep_amount":18000,"dep_daily_avg":null,"dep_avg":1125.0,"wd_users":9,"wd_amount":7400,"wd_count":9,"net":10600,"net_rate":0.5889,"ret_users":9,"ret_amount":8600,"ret_avg":955.56,"ret_ratio":0.5625,"dep_count":17,"dep_count_avg":1.0625,"wd_count_b":9,"valid_bet":46430,"bet_multiple":2.5794,"kill_rate":-0.047,"ggr":-2182.0,"promo_amount":20,"promo_ratio":0.0011,"online":40,"wd_avg":822.22,"time":"10-31 23:00"},{"bettors":56,"registers":3,"fd_users":1,"fd_amount":100,"fd_avg":100.0,"conv_rate":0.3333,"fdt_users":1,"fdt_amount":100,"fdt_avg":100.0,"dep_users":8,"dep_amount":12400,"dep_daily_avg":null,"dep_avg":1550.0,"wd_users":5,"wd_amount":6000,"wd_count":5,"net":6400,"net_rate":0.5161,"ret_users":7,"ret_amount":12300,"ret_avg":1757.14,"ret_ratio":0.875,"dep_count":8,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":19200,"bet_multiple":1.5484,"kill_rate":-0.0692,"ggr":-1328.0,"promo_amount":5820,"promo_ratio":0.4694,"online":28,"wd_avg":1200.0,"time":"11-01 00:00"},{"bettors":33,"registers":1,"fd_users":2,"fd_amount":1000,"fd_avg":500.0,"conv_rate":0.75,"fdt_users":3,"fdt_amount":1100,"fdt_avg":366.67,"dep_users":5,"dep_amount":2600,"dep_daily_avg":null,"dep_avg":520.0,"wd_users":2,"wd_amount":3200,"wd_count":2,"net":-600,"net_rate":-0.2308,"ret_users":3,"ret_amount":1600,"ret_avg":533.33,"ret_ratio":0.6,"dep_count":5,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":6300,"bet_multiple":2.4231,"kill_rate":-0.3354,"ggr":-2113.0,"promo_amount":3882,"promo_ratio":1.4931,"online":12,"wd_avg":1600.0,"time":"11-01 01:00"},{"bettors":34,"registers":0,"fd_users":1,"fd_amount":200,"fd_avg":200.0,"conv_rate":1.0,"fdt_users":4,"fdt_amount":1300,"fdt_avg":325.0,"dep_users":4,"dep_amount":5800,"dep_daily_avg":null,"dep_avg":1450.0,"wd_users":2,"wd_amount":2300,"wd_count":2,"net":3500,"net_rate":0.6034,"ret_users":3,"ret_amount":5600,"ret_avg":1866.67,"ret_ratio":0.75,"dep_count":4,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":10120,"bet_multiple":1.7448,"kill_rate":0.0232,"ggr":235.0,"promo_amount":18,"promo_ratio":0.0031,"online":20,"wd_avg":1150.0,"time":"11-01 02:00"},{"bettors":45,"registers":2,"fd_users":1,"fd_amount":500,"fd_avg":500.0,"conv_rate":0.8333,"fdt_users":5,"fdt_amount":1800,"fdt_avg":360.0,"dep_users":5,"dep_amount":8500,"dep_daily_avg":null,"dep_avg":1700.0,"wd_users":0,"wd_amount":0,"wd_count":0,"net":8500,"net_rate":1.0,"ret_users":4,"ret_amount":8000,"ret_avg":2000.0,"ret_ratio":0.8,"dep_count":5,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":12610,"bet_multiple":1.4835,"kill_rate":-0.2108,"ggr":-2658.0,"promo_amount":148,"promo_ratio":0.0174,"online":15,"wd_avg":null,"time":"11-01 03:00"},{"bettors":28,"registers":3,"fd_users":0,"fd_amount":0,"fd_avg":null,"conv_rate":0.5556,"fdt_users":5,"fdt_amount":1800,"fdt_avg":360.0,"dep_users":1,"dep_amount":500,"dep_daily_avg":null,"dep_avg":500.0,"wd_users":0,"wd_amount":0,"wd_count":0,"net":500,"net_rate":1.0,"ret_users":1,"ret_amount":500,"ret_avg":500.0,"ret_ratio":1.0,"dep_count":1,"dep_count_avg":1.0,"wd_count_b":0,"valid_bet":8420,"bet_multiple":16.84,"kill_rate":-0.3254,"ggr":-2740.0,"promo_amount":588,"promo_ratio":1.176,"online":15,"wd_avg":null,"time":"11-01 04:00"},{"bettors":47,"registers":0,"fd_users":1,"fd_amount":200,"fd_avg":200.0,"conv_rate":0.6667,"fdt_users":6,"fdt_amount":2000,"fdt_avg":333.33,"dep_users":5,"dep_amount":2000,"dep_daily_avg":null,"dep_avg":400.0,"wd_users":1,"wd_amount":3000,"wd_count":1,"net":-1000,"net_rate":-0.5,"ret_users":4,"ret_amount":1800,"ret_avg":450.0,"ret_ratio":0.8,"dep_count":5,"dep_count_avg":1.0,"wd_count_b":1,"valid_bet":12930,"bet_multiple":6.465,"kill_rate":0.1177,"ggr":1522.0,"promo_amount":467,"promo_ratio":0.2335,"online":25,"wd_avg":3000.0,"time":"11-01 05:00"},{"bettors":58,"registers":4,"fd_users":2,"fd_amount":2500,"fd_avg":1250.0,"conv_rate":0.6154,"fdt_users":8,"fdt_amount":4500,"fdt_avg":562.5,"dep_users":9,"dep_amount":13700,"dep_daily_avg":null,"dep_avg":1522.22,"wd_users":1,"wd_amount":200,"wd_count":1,"net":13500,"net_rate":0.9854,"ret_users":7,"ret_amount":11200,"ret_avg":1600.0,"ret_ratio":0.7778,"dep_count":9,"dep_count_avg":1.0,"wd_count_b":1,"valid_bet":17890,"bet_multiple":1.3058,"kill_rate":0.0037,"ggr":67.0,"promo_amount":245,"promo_ratio":0.0179,"online":31,"wd_avg":200.0,"time":"11-01 06:00"},{"bettors":82,"registers":0,"fd_users":1,"fd_amount":200,"fd_avg":200.0,"conv_rate":0.6923,"fdt_users":9,"fdt_amount":4700,"fdt_avg":522.22,"dep_users":6,"dep_amount":11600,"dep_daily_avg":null,"dep_avg":1933.33,"wd_users":1,"wd_amount":800,"wd_count":1,"net":10800,"net_rate":0.931,"ret_users":5,"ret_amount":11400,"ret_avg":2280.0,"ret_ratio":0.8333,"dep_count":6,"dep_count_avg":1.0,"wd_count_b":1,"valid_bet":26670,"bet_multiple":2.2991,"kill_rate":0.2535,"ggr":6762.0,"promo_amount":439,"promo_ratio":0.0378,"online":24,"wd_avg":800.0,"time":"11-01 07:00"},{"bettors":117,"registers":2,"fd_users":6,"fd_amount":9000,"fd_avg":1500.0,"conv_rate":1.0,"fdt_users":15,"fdt_amount":13700,"fdt_avg":913.33,"dep_users":14,"dep_amount":18400,"dep_daily_avg":null,"dep_avg":1314.29,"wd_users":1,"wd_amount":500,"wd_count":1,"net":17900,"net_rate":0.9728,"ret_users":8,"ret_amount":9400,"ret_avg":1175.0,"ret_ratio":0.5714,"dep_count":14,"dep_count_avg":1.0,"wd_count_b":1,"valid_bet":40510,"bet_multiple":2.2016,"kill_rate":0.091,"ggr":3686.0,"promo_amount":184,"promo_ratio":0.01,"online":43,"wd_avg":500.0,"time":"11-01 08:00"},{"bettors":114,"registers":6,"fd_users":0,"fd_amount":0,"fd_avg":null,"conv_rate":0.7143,"fdt_users":15,"fdt_amount":18800,"fdt_avg":1253.33,"dep_users":9,"dep_amount":9500,"dep_daily_avg":null,"dep_avg":1055.56,"wd_users":2,"wd_amount":1300,"wd_count":2,"net":8200,"net_rate":0.8632,"ret_users":9,"ret_amount":4400,"ret_avg":488.89,"ret_ratio":1.0,"dep_count":9,"dep_count_avg":1.0,"wd_count_b":2,"valid_bet":34490,"bet_multiple":3.6305,"kill_rate":-0.2462,"ggr":-8491.0,"promo_amount":306,"promo_ratio":0.0322,"online":41,"wd_avg":650.0,"time":"11-01 09:00"},{"bettors":115,"registers":0,"fd_users":0,"fd_amount":0,"fd_avg":null,"conv_rate":0.7143,"fdt_users":15,"fdt_amount":18800,"fdt_avg":1253.33,"dep_users":13,"dep_amount":21900,"dep_daily_avg":null,"dep_avg":1684.62,"wd_users":6,"wd_amount":6200,"wd_count":6,"net":15700,"net_rate":0.7169,"ret_users":13,"ret_amount":21900,"ret_avg":1684.62,"ret_ratio":1.0,"dep_count":13,"dep_count_avg":1.0,"wd_count_b":6,"valid_bet":36100,"bet_multiple":1.6484,"kill_rate":0.1394,"ggr":5031.0,"promo_amount":35,"promo_ratio":0.0016,"online":48,"wd_avg":1033.33,"time":"11-01 10:00"},{"bettors":148,"registers":9,"fd_users":2,"fd_amount":2100,"fd_avg":1050.0,"conv_rate":0.5667,"fdt_users":17,"fdt_amount":20900,"fdt_avg":1229.41,"dep_users":10,"dep_amount":12700,"dep_daily_avg":null,"dep_avg":1270.0,"wd_users":1,"wd_amount":800,"wd_count":1,"net":11900,"net_rate":0.937,"ret_users":8,"ret_amount":10600,"ret_avg":1325.0,"ret_ratio":0.8,"dep_count":10,"dep_count_avg":1.0,"wd_count_b":1,"valid_bet":52600,"bet_multiple":4.1417,"kill_rate":-0.0926,"ggr":-4869.0,"promo_amount":202,"promo_ratio":0.0159,"online":48,"wd_avg":800.0,"time":"11-01 11:00"},{"bettors":127,"registers":5,"fd_users":7,"fd_amount":11000,"fd_avg":1571.43,"conv_rate":0.6857,"fdt_users":24,"fdt_amount":31900,"fdt_avg":1329.17,"dep_users":16,"dep_amount":24700,"dep_daily_avg":null,"dep_avg":1543.75,"wd_users":3,"wd_amount":9000,"wd_count":3,"net":15700,"net_rate":0.6356,"ret_users":9,"ret_amount":13700,"ret_avg":1522.22,"ret_ratio":0.5625,"dep_count":16,"dep_count_avg":1.0,"wd_count_b":3,"valid_bet":40880,"bet_multiple":1.6551,"kill_rate":0.2611,"ggr":10674.0,"promo_amount":209,"promo_ratio":0.0085,"online":47,"wd_avg":3000.0,"time":"11-01 12:00"},{"bettors":162,"registers":8,"fd_users":7,"fd_amount":3500,"fd_avg":500.0,"conv_rate":0.7209,"fdt_users":31,"fdt_amount":37400,"fdt_avg":1206.45,"dep_users":14,"dep_amount":8900,"dep_daily_avg":null,"dep_avg":635.71,"wd_users":4,"wd_amount":5200,"wd_count":4,"net":3700,"net_rate":0.4157,"ret_users":7,"ret_amount":3400,"ret_avg":485.71,"ret_ratio":0.5,"dep_count":14,"dep_count_avg":1.0,"wd_count_b":4,"valid_bet":57840,"bet_multiple":6.4989,"kill_rate":0.1141,"ggr":6599.0,"promo_amount":529,"promo_ratio":0.0594,"online":56,"wd_avg":1300.0,"time":"11-01 13:00"},{"bettors":103,"registers":6,"fd_users":5,"fd_amount":9000,"fd_avg":1800.0,"conv_rate":0.7347,"fdt_users":36,"fdt_amount":51400,"fdt_avg":1427.78,"dep_users":15,"dep_amount":26400,"dep_daily_avg":null,"dep_avg":1760.0,"wd_users":7,"wd_amount":4500,"wd_count":7,"net":21900,"net_rate":0.8295,"ret_users":10,"ret_amount":12400,"ret_avg":1240.0,"ret_ratio":0.6667,"dep_count":15,"dep_count_avg":1.0,"wd_count_b":7,"valid_bet":37690,"bet_multiple":1.4277,"kill_rate":0.2709,"ggr":10212.0,"promo_amount":896,"promo_ratio":0.0339,"online":50,"wd_avg":642.86,"time":"11-01 14:00"},{"bettors":134,"registers":6,"fd_users":3,"fd_amount":6500,"fd_avg":2166.67,"conv_rate":0.7091,"fdt_users":39,"fdt_amount":58900,"fdt_avg":1510.26,"dep_users":11,"dep_amount":14300,"dep_daily_avg":null,"dep_avg":1300.0,"wd_users":5,"wd_amount":6500,"wd_count":5,"net":7800,"net_rate":0.5455,"ret_users":8,"ret_amount":6800,"ret_avg":850.0,"ret_ratio":0.7273,"dep_count":11,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":44900,"bet_multiple":3.1399,"kill_rate":0.2174,"ggr":9762.0,"promo_amount":140,"promo_ratio":0.0098,"online":55,"wd_avg":1300.0,"time":"11-01 15:00"},{"bettors":150,"registers":4,"fd_users":4,"fd_amount":9000,"fd_avg":2250.0,"conv_rate":0.7288,"fdt_users":43,"fdt_amount":67900,"fdt_avg":1579.07,"dep_users":13,"dep_amount":25800,"dep_daily_avg":null,"dep_avg":1984.62,"wd_users":6,"wd_amount":13700,"wd_count":6,"net":12100,"net_rate":0.469,"ret_users":9,"ret_amount":16800,"ret_avg":1866.67,"ret_ratio":0.6923,"dep_count":14,"dep_count_avg":1.0769,"wd_count_b":6,"valid_bet":53590,"bet_multiple":2.0771,"kill_rate":0.0133,"ggr":711.0,"promo_amount":262,"promo_ratio":0.0102,"online":49,"wd_avg":2283.33,"time":"11-01 16:00"},{"bettors":173,"registers":6,"fd_users":4,"fd_amount":1600,"fd_avg":400.0,"conv_rate":0.7231,"fdt_users":47,"fdt_amount":70500,"fdt_avg":1500.0,"dep_users":20,"dep_amount":20900,"dep_daily_avg":null,"dep_avg":1045.0,"wd_users":6,"wd_amount":12800,"wd_count":6,"net":8100,"net_rate":0.3876,"ret_users":16,"ret_amount":18300,"ret_avg":1143.75,"ret_ratio":0.8,"dep_count":21,"dep_count_avg":1.05,"wd_count_b":6,"valid_bet":62210,"bet_multiple":2.9766,"kill_rate":0.1967,"ggr":12237.0,"promo_amount":663,"promo_ratio":0.0317,"online":54,"wd_avg":2133.33,"time":"11-01 17:00"},{"bettors":172,"registers":6,"fd_users":3,"fd_amount":7000,"fd_avg":2333.33,"conv_rate":0.7042,"fdt_users":50,"fdt_amount":80200,"fdt_avg":1604.0,"dep_users":14,"dep_amount":10900,"dep_daily_avg":null,"dep_avg":778.57,"wd_users":8,"wd_amount":14700,"wd_count":8,"net":-3800,"net_rate":-0.3486,"ret_users":11,"ret_amount":1200,"ret_avg":109.09,"ret_ratio":0.7857,"dep_count":14,"dep_count_avg":1.0,"wd_count_b":8,"valid_bet":57590,"bet_multiple":5.2835,"kill_rate":0.1149,"ggr":6618.0,"promo_amount":586,"promo_ratio":0.0538,"online":60,"wd_avg":1837.5,"time":"11-01 18:00"},{"bettors":204,"registers":10,"fd_users":6,"fd_amount":3500,"fd_avg":583.33,"conv_rate":0.6914,"fdt_users":56,"fdt_amount":91700,"fdt_avg":1637.5,"dep_users":23,"dep_amount":25200,"dep_daily_avg":null,"dep_avg":1095.65,"wd_users":0,"wd_amount":0,"wd_count":0,"net":25200,"net_rate":1.0,"ret_users":17,"ret_amount":13700,"ret_avg":805.88,"ret_ratio":0.7391,"dep_count":24,"dep_count_avg":1.0435,"wd_count_b":0,"valid_bet":74540,"bet_multiple":2.9579,"kill_rate":-0.0012,"ggr":-92.0,"promo_amount":796,"promo_ratio":0.0316,"online":66,"wd_avg":null,"time":"11-01 19:00"},{"bettors":231,"registers":9,"fd_users":9,"fd_amount":9600,"fd_avg":1066.67,"conv_rate":0.7222,"fdt_users":65,"fdt_amount":102600,"fdt_avg":1578.46,"dep_users":23,"dep_amount":26700,"dep_daily_avg":null,"dep_avg":1160.87,"wd_users":5,"wd_amount":5100,"wd_count":5,"net":21600,"net_rate":0.809,"ret_users":14,"ret_amount":15800,"ret_avg":1128.57,"ret_ratio":0.6087,"dep_count":23,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":88820,"bet_multiple":3.3266,"kill_rate":0.1661,"ggr":14757.0,"promo_amount":1577,"promo_ratio":0.0591,"online":73,"wd_avg":1020.0,"time":"11-01 20:00"},{"bettors":207,"registers":10,"fd_users":9,"fd_amount":3900,"fd_avg":433.33,"conv_rate":0.74,"fdt_users":74,"fdt_amount":107300,"fdt_avg":1450.0,"dep_users":20,"dep_amount":19700,"dep_daily_avg":null,"dep_avg":985.0,"wd_users":5,"wd_amount":6400,"wd_count":5,"net":13300,"net_rate":0.6751,"ret_users":11,"ret_amount":15000,"ret_avg":1363.64,"ret_ratio":0.55,"dep_count":20,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":68310,"bet_multiple":3.4675,"kill_rate":0.0635,"ggr":4336.0,"promo_amount":500,"promo_ratio":0.0254,"online":70,"wd_avg":1280.0,"time":"11-01 21:00"},{"bettors":170,"registers":9,"fd_users":8,"fd_amount":16600,"fd_avg":2075.0,"conv_rate":0.7523,"fdt_users":82,"fdt_amount":125900,"fdt_avg":1535.37,"dep_users":15,"dep_amount":25300,"dep_daily_avg":null,"dep_avg":1686.67,"wd_users":5,"wd_amount":8500,"wd_count":5,"net":16800,"net_rate":0.664,"ret_users":7,"ret_amount":6700,"ret_avg":957.14,"ret_ratio":0.4667,"dep_count":15,"dep_count_avg":1.0,"wd_count_b":5,"valid_bet":51730,"bet_multiple":2.0447,"kill_rate":0.0239,"ggr":1237.0,"promo_amount":620,"promo_ratio":0.0245,"online":62,"wd_avg":1700.0,"time":"11-01 22:00"},{"bettors":134,"registers":3,"fd_users":2,"fd_amount":700,"fd_avg":350.0,"conv_rate":0.75,"fdt_users":84,"fdt_amount":131700,"fdt_avg":1567.86,"dep_users":15,"dep_amount":15200,"dep_daily_avg":null,"dep_avg":1013.33,"wd_users":5,"wd_amount":5600,"wd_count":5,"net":9600,"net_rate":0.6316,"ret_users":13,"ret_amount":9400,"ret_avg":723.08,"ret_ratio":0.8667,"dep_count":16,"dep_count_avg":1.0667,"wd_count_b":5,"valid_bet":45010,"bet_multiple":2.9612,"kill_rate":0.1002,"ggr":4508.0,"promo_amount":262,"promo_ratio":0.0172,"online":36,"wd_avg":1120.0,"time":"11-01 23:00"}],"h_bon":[{"a101_users":27,"a101_amount":6147,"a101_ratio":0.8658,"a102_users":1,"a102_amount":100,"a102_ratio":0.0141,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":1,"a106_amount":200,"a106_ratio":0.0282,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":29,"total_amount":6447,"b_dep":7100,"time":"10-31 00:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":5,"a109_ratio":0.0005,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":17,"a108_amount":4673,"a108_ratio":0.421,"total_times":18,"total_amount":4678,"b_dep":11100,"time":"10-31 01:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":null,"a102_users":0,"a102_amount":0,"a102_ratio":null,"a109_users":0,"a109_amount":0,"a109_ratio":null,"a104_users":1,"a104_amount":88,"a104_ratio":null,"a105_users":1,"a105_amount":88,"a105_ratio":null,"a106_users":0,"a106_amount":0,"a106_ratio":null,"a107_users":0,"a107_amount":0,"a107_ratio":null,"a108_users":0,"a108_amount":0,"a108_ratio":null,"total_times":2,"total_amount":176,"b_dep":0,"time":"10-31 02:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":20,"a109_ratio":0.0033,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":1,"total_amount":20,"b_dep":6100,"time":"10-31 03:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":88,"a105_ratio":0.0144,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":195,"a107_ratio":0.032,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":2,"total_amount":283,"b_dep":6100,"time":"10-31 04:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.2,"a109_users":2,"a109_amount":15,"a109_ratio":0.03,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":3,"total_amount":115,"b_dep":500,"time":"10-31 05:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0118,"a109_users":1,"a109_amount":20,"a109_ratio":0.0024,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":168,"a107_ratio":0.0198,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":3,"total_amount":288,"b_dep":8500,"time":"10-31 06:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0085,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":31,"a107_ratio":0.0026,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":2,"total_amount":131,"b_dep":11800,"time":"10-31 07:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":15,"a109_ratio":0.001,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":309,"a107_ratio":0.0202,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":324,"b_dep":15300,"time":"10-31 08:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":18,"a105_ratio":0.001,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":1,"total_amount":18,"b_dep":17900,"time":"10-31 09:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0065,"a109_users":2,"a109_amount":70,"a109_ratio":0.0045,"a104_users":1,"a104_amount":28,"a104_ratio":0.0018,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":3,"a107_amount":355,"a107_ratio":0.0229,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":7,"total_amount":553,"b_dep":15500,"time":"10-31 10:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":3,"a109_amount":25,"a109_ratio":0.0015,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":147,"a107_ratio":0.0091,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":172,"b_dep":16200,"time":"10-31 11:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0044,"a109_users":2,"a109_amount":25,"a109_ratio":0.0011,"a104_users":1,"a104_amount":88,"a104_ratio":0.0039,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":213,"b_dep":22800,"time":"10-31 12:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0068,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":1,"a104_amount":88,"a104_ratio":0.006,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":2,"total_amount":188,"b_dep":14600,"time":"10-31 13:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":4,"a109_amount":75,"a109_ratio":0.0052,"a104_users":2,"a104_amount":176,"a104_ratio":0.0122,"a105_users":2,"a105_amount":126,"a105_ratio":0.0088,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":257,"a107_ratio":0.0178,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":10,"total_amount":634,"b_dep":14400,"time":"10-31 14:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":20,"a109_ratio":0.0008,"a104_users":2,"a104_amount":26,"a104_ratio":0.001,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":2,"a106_amount":200,"a106_ratio":0.0079,"a107_users":2,"a107_amount":136,"a107_ratio":0.0054,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":7,"total_amount":382,"b_dep":25200,"time":"10-31 15:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0088,"a109_users":3,"a109_amount":80,"a109_ratio":0.007,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":38,"a105_ratio":0.0033,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":175,"a107_ratio":0.0154,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":6,"total_amount":393,"b_dep":11400,"time":"10-31 16:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":2,"a102_amount":200,"a102_ratio":0.0107,"a109_users":2,"a109_amount":70,"a109_ratio":0.0037,"a104_users":2,"a104_amount":26,"a104_ratio":0.0014,"a105_users":1,"a105_amount":18,"a105_ratio":0.001,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":332,"a107_ratio":0.0178,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":9,"total_amount":646,"b_dep":18700,"time":"10-31 17:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":3,"a109_amount":65,"a109_ratio":0.0038,"a104_users":1,"a104_amount":18,"a104_ratio":0.0011,"a105_users":1,"a105_amount":38,"a105_ratio":0.0022,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":53,"a107_ratio":0.0031,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":7,"total_amount":174,"b_dep":16900,"time":"10-31 18:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0038,"a109_users":3,"a109_amount":75,"a109_ratio":0.0028,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":3,"a105_amount":124,"a105_ratio":0.0047,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":151,"a107_ratio":0.0057,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":9,"total_amount":450,"b_dep":26400,"time":"10-31 19:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0064,"a109_users":5,"a109_amount":125,"a109_ratio":0.008,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":88,"a105_ratio":0.0056,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":4,"a107_amount":240,"a107_ratio":0.0153,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":11,"total_amount":553,"b_dep":15700,"time":"10-31 20:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":2,"a102_amount":200,"a102_ratio":0.027,"a109_users":4,"a109_amount":35,"a109_ratio":0.0047,"a104_users":2,"a104_amount":106,"a104_ratio":0.0143,"a105_users":1,"a105_amount":88,"a105_ratio":0.0119,"a106_users":1,"a106_amount":100,"a106_ratio":0.0135,"a107_users":3,"a107_amount":224,"a107_ratio":0.0303,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":13,"total_amount":753,"b_dep":7400,"time":"10-31 21:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":2,"a102_amount":200,"a102_ratio":0.013,"a109_users":4,"a109_amount":50,"a109_ratio":0.0032,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":2,"a105_amount":56,"a105_ratio":0.0036,"a106_users":1,"a106_amount":200,"a106_ratio":0.013,"a107_users":3,"a107_amount":476,"a107_ratio":0.0309,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":12,"total_amount":982,"b_dep":15400,"time":"10-31 22:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":20,"a109_ratio":0.0011,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":1,"total_amount":20,"b_dep":18000,"time":"10-31 23:00"},{"a101_users":30,"a101_amount":5730,"a101_ratio":0.4621,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":5,"a109_ratio":0.0004,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":85,"a107_ratio":0.0069,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":32,"total_amount":5820,"b_dep":12400,"time":"11-01 00:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":16,"a108_amount":3882,"a108_ratio":1.4931,"total_times":16,"total_amount":3882,"b_dep":2600,"time":"11-01 01:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":1,"a104_amount":18,"a104_ratio":0.0031,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":1,"total_amount":18,"b_dep":5800,"time":"11-01 02:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":60,"a109_ratio":0.0071,"a104_users":1,"a104_amount":88,"a104_ratio":0.0104,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":3,"total_amount":148,"b_dep":8500,"time":"11-01 03:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":0,"a109_amount":0,"a109_ratio":0.0,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":88,"a105_ratio":0.176,"a106_users":1,"a106_amount":500,"a106_ratio":1.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":2,"total_amount":588,"b_dep":500,"time":"11-01 04:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":100,"a109_ratio":0.05,"a104_users":1,"a104_amount":8,"a104_ratio":0.004,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":1,"a106_amount":200,"a106_ratio":0.1,"a107_users":1,"a107_amount":159,"a107_ratio":0.0795,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":5,"total_amount":467,"b_dep":2000,"time":"11-01 05:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0073,"a109_users":2,"a109_amount":70,"a109_ratio":0.0051,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":75,"a107_ratio":0.0055,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":245,"b_dep":13700,"time":"11-01 06:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0086,"a109_users":1,"a109_amount":10,"a109_ratio":0.0009,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":38,"a105_ratio":0.0033,"a106_users":1,"a106_amount":100,"a106_ratio":0.0086,"a107_users":1,"a107_amount":191,"a107_ratio":0.0165,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":5,"total_amount":439,"b_dep":11600,"time":"11-01 07:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":20,"a109_ratio":0.0011,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":164,"a107_ratio":0.0089,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":2,"total_amount":184,"b_dep":18400,"time":"11-01 08:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":1,"a109_amount":20,"a109_ratio":0.0021,"a104_users":1,"a104_amount":8,"a104_ratio":0.0008,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":1,"a106_amount":100,"a106_ratio":0.0105,"a107_users":1,"a107_amount":178,"a107_ratio":0.0187,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":306,"b_dep":9500,"time":"11-01 09:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":3,"a109_amount":35,"a109_ratio":0.0016,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":0,"a107_amount":0,"a107_ratio":0.0,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":3,"total_amount":35,"b_dep":21900,"time":"11-01 10:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":100,"a109_ratio":0.0079,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":102,"a107_ratio":0.008,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":202,"b_dep":12700,"time":"11-01 11:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":15,"a109_ratio":0.0006,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":1,"a106_amount":50,"a106_ratio":0.002,"a107_users":1,"a107_amount":144,"a107_ratio":0.0058,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":209,"b_dep":24700,"time":"11-01 12:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":35,"a109_ratio":0.0039,"a104_users":1,"a104_amount":88,"a104_ratio":0.0099,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":1,"a106_amount":100,"a106_ratio":0.0112,"a107_users":4,"a107_amount":306,"a107_ratio":0.0344,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":8,"total_amount":529,"b_dep":8900,"time":"11-01 13:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":4,"a102_amount":400,"a102_ratio":0.0152,"a109_users":1,"a109_amount":10,"a109_ratio":0.0004,"a104_users":1,"a104_amount":18,"a104_ratio":0.0007,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":2,"a106_amount":150,"a106_ratio":0.0057,"a107_users":2,"a107_amount":318,"a107_ratio":0.012,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":10,"total_amount":896,"b_dep":26400,"time":"11-01 14:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":55,"a109_ratio":0.0038,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":85,"a107_ratio":0.0059,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":3,"total_amount":140,"b_dep":14300,"time":"11-01 15:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":2,"a109_amount":20,"a109_ratio":0.0008,"a104_users":2,"a104_amount":106,"a104_ratio":0.0041,"a105_users":2,"a105_amount":56,"a105_ratio":0.0022,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":80,"a107_ratio":0.0031,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":8,"total_amount":262,"b_dep":25800,"time":"11-01 16:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":0,"a102_amount":0,"a102_ratio":0.0,"a109_users":4,"a109_amount":120,"a109_ratio":0.0057,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":1,"a105_amount":88,"a105_ratio":0.0042,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":3,"a107_amount":455,"a107_ratio":0.0218,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":8,"total_amount":663,"b_dep":20900,"time":"11-01 17:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0092,"a109_users":3,"a109_amount":60,"a109_ratio":0.0055,"a104_users":3,"a104_amount":34,"a104_ratio":0.0031,"a105_users":2,"a105_amount":76,"a105_ratio":0.007,"a106_users":1,"a106_amount":50,"a106_ratio":0.0046,"a107_users":4,"a107_amount":266,"a107_ratio":0.0244,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":14,"total_amount":586,"b_dep":10900,"time":"11-01 18:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":2,"a102_amount":200,"a102_ratio":0.0079,"a109_users":4,"a109_amount":85,"a109_ratio":0.0034,"a104_users":1,"a104_amount":28,"a104_ratio":0.0011,"a105_users":4,"a105_amount":232,"a105_ratio":0.0092,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":3,"a107_amount":251,"a107_ratio":0.01,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":14,"total_amount":796,"b_dep":25200,"time":"11-01 19:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":3,"a102_amount":300,"a102_ratio":0.0112,"a109_users":5,"a109_amount":115,"a109_ratio":0.0043,"a104_users":3,"a104_amount":204,"a104_ratio":0.0076,"a105_users":2,"a105_amount":76,"a105_ratio":0.0028,"a106_users":2,"a106_amount":100,"a106_ratio":0.0037,"a107_users":3,"a107_amount":282,"a107_ratio":0.0106,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":18,"total_amount":1577,"b_dep":26700,"time":"11-01 20:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0051,"a109_users":5,"a109_amount":145,"a109_ratio":0.0074,"a104_users":2,"a104_amount":96,"a104_ratio":0.0049,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":159,"a107_ratio":0.0081,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":9,"total_amount":500,"b_dep":19700,"time":"11-01 21:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.004,"a109_users":4,"a109_amount":130,"a109_ratio":0.0051,"a104_users":1,"a104_amount":28,"a104_ratio":0.0011,"a105_users":1,"a105_amount":88,"a105_ratio":0.0035,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":2,"a107_amount":274,"a107_ratio":0.0108,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":9,"total_amount":620,"b_dep":25300,"time":"11-01 22:00"},{"a101_users":0,"a101_amount":0,"a101_ratio":0.0,"a102_users":1,"a102_amount":100,"a102_ratio":0.0066,"a109_users":2,"a109_amount":40,"a109_ratio":0.0026,"a104_users":0,"a104_amount":0,"a104_ratio":0.0,"a105_users":0,"a105_amount":0,"a105_ratio":0.0,"a106_users":0,"a106_amount":0,"a106_ratio":0.0,"a107_users":1,"a107_amount":122,"a107_ratio":0.008,"a108_users":0,"a108_amount":0,"a108_ratio":0.0,"total_times":4,"total_amount":262,"b_dep":15200,"time":"11-01 23:00"}],"d_ops":[{"bettors":508,"registers":120,"fd_users":102,"fd_amount":134400,"fd_avg":1317.65,"conv_rate":0.85,"fdt_users":102,"fdt_amount":176100,"fdt_avg":1726.47,"dep_users":230,"dep_amount":391700,"dep_daily_avg":null,"dep_avg":1703.04,"wd_users":69,"wd_amount":81500,"wd_count":73,"net":310200,"net_rate":0.7919,"ret_users":128,"ret_amount":215600,"ret_avg":1684.38,"ret_ratio":0.5565,"dep_count":314,"dep_count_avg":1.3652,"wd_count_b":73,"valid_bet":951780,"bet_multiple":2.4299,"kill_rate":0.0914,"ggr":86960.0,"promo_amount":21595,"promo_ratio":0.0551,"online":550,"wd_avg":1116.44,"fd_agent":59,"fd_official":43,"fission_users":66,"fission_rate":0.287,"comm_users":155,"comm_amount":2067.67,"comm_ratio":0.0957,"weekday":"周五","time":"10-30"},{"bettors":595,"registers":100,"fd_users":107,"fd_amount":107300,"fd_avg":1002.8,"conv_rate":1.07,"fdt_users":107,"fdt_amount":146300,"fdt_avg":1367.29,"dep_users":233,"dep_amount":323000,"dep_daily_avg":null,"dep_avg":1386.27,"wd_users":74,"wd_amount":83600,"wd_count":80,"net":239400,"net_rate":0.7412,"ret_users":126,"ret_amount":176700,"ret_avg":1402.38,"ret_ratio":0.5408,"dep_count":296,"dep_count_avg":1.2704,"wd_count_b":80,"valid_bet":856280,"bet_multiple":2.651,"kill_rate":0.0419,"ggr":35839.0,"promo_amount":18593,"promo_ratio":0.0576,"online":643,"wd_avg":1045.0,"fd_agent":68,"fd_official":39,"fission_users":73,"fission_rate":0.3133,"comm_users":178,"comm_amount":1844.42,"comm_ratio":0.0992,"weekday":"周六","time":"10-31"},{"bettors":702,"registers":112,"fd_users":84,"fd_amount":97700,"fd_avg":1163.1,"conv_rate":0.75,"fdt_users":84,"fdt_amount":131700,"fdt_avg":1567.86,"dep_users":233,"dep_amount":363600,"dep_daily_avg":null,"dep_avg":1560.52,"wd_users":76,"wd_amount":116300,"wd_count":81,"net":247300,"net_rate":0.6801,"ret_users":149,"ret_amount":231900,"ret_avg":1556.38,"ret_ratio":0.6395,"dep_count":292,"dep_count_avg":1.2532,"wd_count_b":81,"valid_bet":960950,"bet_multiple":2.6429,"kill_rate":0.0798,"ggr":76663.0,"promo_amount":19374,"promo_ratio":0.0533,"online":788,"wd_avg":1435.8,"fd_agent":56,"fd_official":28,"fission_users":73,"fission_rate":0.3133,"comm_users":215,"comm_amount":2201.43,"comm_ratio":0.1136,"weekday":"周日","time":"11-01"},{"bettors":471,"registers":30,"fd_users":26,"fd_amount":26400,"fd_avg":1015.38,"conv_rate":0.8667,"fdt_users":26,"fdt_amount":28900,"fdt_avg":1111.54,"dep_users":64,"dep_amount":105200,"dep_daily_avg":null,"dep_avg":1643.75,"wd_users":31,"wd_amount":37500,"wd_count":32,"net":67700,"net_rate":0.6435,"ret_users":38,"ret_amount":76300,"ret_avg":2007.89,"ret_ratio":0.5938,"dep_count":68,"dep_count_avg":1.0625,"wd_count_b":32,"valid_bet":229790,"bet_multiple":2.1843,"kill_rate":0.1127,"ggr":25903.0,"promo_amount":13261,"promo_ratio":0.1261,"online":560,"wd_avg":1171.88,"fd_agent":17,"fd_official":9,"fission_users":23,"fission_rate":0.3594,"comm_users":137,"comm_amount":564.68,"comm_ratio":0.0426,"weekday":"周一","time":"11-02（截至 11:00）"}],"d_bon":[{"a101_users":27,"a101_amount":5658,"a101_ratio":0.0144,"a102_users":15,"a102_amount":1500,"a102_ratio":0.0038,"a109_users":57,"a109_amount":1065,"a109_ratio":0.0027,"a104_users":20,"a104_amount":1126,"a104_ratio":0.0029,"a105_users":20,"a105_amount":828,"a105_ratio":0.0021,"a106_users":7,"a106_amount":1300,"a106_ratio":0.0033,"a107_users":42,"a107_amount":4577,"a107_ratio":0.0117,"a108_users":18,"a108_amount":5541,"a108_ratio":0.0141,"total_times":206,"total_amount":21595,"b_dep":391700,"time":"10-30"},{"a101_users":27,"a101_amount":6147,"a101_ratio":0.019,"a102_users":16,"a102_amount":1600,"a102_ratio":0.005,"a109_users":43,"a109_amount":810,"a109_ratio":0.0025,"a104_users":13,"a104_amount":644,"a104_ratio":0.002,"a105_users":15,"a105_amount":770,"a105_ratio":0.0024,"a106_users":5,"a106_amount":700,"a106_ratio":0.0022,"a107_users":29,"a107_amount":3249,"a107_ratio":0.0101,"a108_users":17,"a108_amount":4673,"a108_ratio":0.0145,"total_times":165,"total_amount":18593,"b_dep":323000,"time":"10-31"},{"a101_users":30,"a101_amount":5730,"a101_ratio":0.0158,"a102_users":15,"a102_amount":1500,"a102_ratio":0.0041,"a109_users":51,"a109_amount":1250,"a109_ratio":0.0034,"a104_users":18,"a104_amount":724,"a104_ratio":0.002,"a105_users":13,"a105_amount":742,"a105_ratio":0.002,"a106_users":11,"a106_amount":1350,"a106_ratio":0.0037,"a107_users":35,"a107_amount":3696,"a107_ratio":0.0102,"a108_users":16,"a108_amount":3882,"a108_ratio":0.0107,"total_times":189,"total_amount":19374,"b_dep":363600,"time":"11-01"},{"a101_users":30,"a101_amount":5974,"a101_ratio":0.0568,"a102_users":5,"a102_amount":500,"a102_ratio":0.0048,"a109_users":9,"a109_amount":225,"a109_ratio":0.0021,"a104_users":7,"a104_amount":294,"a104_ratio":0.0028,"a105_users":2,"a105_amount":56,"a105_ratio":0.0005,"a106_users":4,"a106_amount":950,"a106_ratio":0.009,"a107_users":9,"a107_amount":788,"a107_ratio":0.0075,"a108_users":16,"a108_amount":4474,"a108_ratio":0.0425,"total_times":82,"total_amount":13261,"b_dep":105200,"time":"11-02（截至 11:00）"}],"top50":{"10-31":{"dep":[{"acct":"ph11520448","attr":1,"dep":10000,"wd":0,"mult":0.18,"vb":1800,"net":10000,"bal":1329.54,"plat":"ios","games":"Money Coming、Boxing King、Baccarat","rank":1},{"acct":"ph11813451","attr":2,"dep":6100,"wd":0,"mult":0.0934,"vb":570,"net":6100,"bal":2430.22,"plat":"安卓、pwa","games":"Basketball、Money Coming、Golden Empire","rank":2},{"acct":"ph11148255","attr":2,"dep":5500,"wd":0,"mult":0.0364,"vb":200,"net":5500,"bal":1774.27,"plat":"h5、安卓","games":"Sabong","rank":3},{"acct":"ph11932236","attr":2,"dep":5500,"wd":0,"mult":0.2582,"vb":1420,"net":5500,"bal":1225.87,"plat":"ios","games":"Fortune Gems、Jackpot Fishing、Roulette","rank":4},{"acct":"ph12573675","attr":3,"dep":5500,"wd":0,"mult":0.3891,"vb":2140,"net":5500,"bal":1490.59,"plat":"ios","games":"Jackpot Fishing、Roulette、3D Racing","rank":5},{"acct":"ph13523955","attr":2,"dep":5300,"wd":0,"mult":0.6264,"vb":3320,"net":5300,"bal":2247.22,"plat":"pwa、ios","games":"Jackpot Fishing、Fortune Gems、Boxing King","rank":6},{"acct":"ph10015838","attr":3,"dep":5000,"wd":0,"mult":0.12,"vb":600,"net":5000,"bal":814.75,"plat":"安卓、ios","games":"Boxing King、Super Ace、Fortune Gems","rank":7},{"acct":"ph10118785","attr":3,"dep":5000,"wd":0,"mult":0.29,"vb":1450,"net":5000,"bal":1057.14,"plat":"安卓","games":"Jackpot Fishing、Super Ace、Golden Empire","rank":8},{"acct":"ph10197975","attr":4,"dep":5000,"wd":0,"mult":0.154,"vb":770,"net":5000,"bal":2208.36,"plat":"安卓","games":"Basketball、Jackpot Fishing、Fortune Gems","rank":9},{"acct":"ph10237570","attr":2,"dep":5000,"wd":0,"mult":0.034,"vb":170,"net":5000,"bal":975.17,"plat":"pwa","games":"Jackpot Fishing、Basketball、Money Coming","rank":10},{"acct":"ph10308841","attr":2,"dep":5000,"wd":0,"mult":0.414,"vb":2070,"net":5000,"bal":970.63,"plat":"pwa","games":"Football、Fortune Gems、Lotto","rank":11},{"acct":"ph10673115","attr":2,"dep":5000,"wd":0,"mult":0.254,"vb":1270,"net":5000,"bal":2616.16,"plat":"h5","games":"Basketball、Roulette、Money Coming","rank":12},{"acct":"ph10776062","attr":3,"dep":5000,"wd":0,"mult":0.558,"vb":2790,"net":5000,"bal":2372.99,"plat":"h5","games":"Baccarat、Football、Sabong","rank":13},{"acct":"ph11076984","attr":3,"dep":5000,"wd":0,"mult":0.078,"vb":390,"net":5000,"bal":1231.25,"plat":"ios","games":"Jackpot Fishing、Basketball、Boxing King","rank":14},{"acct":"ph11132417","attr":3,"dep":5000,"wd":0,"mult":0.248,"vb":1240,"net":5000,"bal":2202.74,"plat":"ios","games":"Golden Empire、Tongits、Jackpot Fishing","rank":15},{"acct":"ph11465015","attr":2,"dep":5000,"wd":0,"mult":0.354,"vb":1770,"net":5000,"bal":2335.7,"plat":"h5","games":"Dota2、Money Coming、Tongits","rank":16},{"acct":"ph11773856","attr":3,"dep":5000,"wd":0,"mult":0.254,"vb":1270,"net":5000,"bal":1684.4,"plat":"pwa","games":"Boxing King、Money Coming、Golden Empire","rank":17},{"acct":"ph11900560","attr":3,"dep":5000,"wd":0,"mult":0.01,"vb":50,"net":5000,"bal":1463.7,"plat":"安卓、h5","games":"Super Ace","rank":18},{"acct":"ph12011426","attr":3,"dep":5000,"wd":0,"mult":0.5,"vb":2500,"net":5000,"bal":1021.8,"plat":"ios","games":"Golden Empire、Baccarat、Jackpot Fishing","rank":19},{"acct":"ph12082697","attr":2,"dep":5000,"wd":0,"mult":0.414,"vb":2070,"net":5000,"bal":2107.15,"plat":"pwa","games":"Sabong、Money Coming、Dota2","rank":20},{"acct":"ph12470728","attr":2,"dep":5000,"wd":0,"mult":0.334,"vb":1670,"net":5000,"bal":99.7,"plat":"pwa","games":"Money Coming、Baccarat、Golden Empire","rank":21},{"acct":"ph13381413","attr":4,"dep":5000,"wd":0,"mult":0.48,"vb":2400,"net":5000,"bal":1643.92,"plat":"pwa","games":"Money Coming、Fortune Gems、Tongits","rank":22},{"acct":"ph13397251","attr":2,"dep":5000,"wd":0,"mult":0.264,"vb":1320,"net":5000,"bal":1875.1,"plat":"pwa","games":"Fortune Gems、Roulette、Jackpot Fishing","rank":23},{"acct":"ph13484360","attr":2,"dep":5000,"wd":0,"mult":0.41,"vb":2050,"net":5000,"bal":604.09,"plat":"h5","games":"Jackpot Fishing、Golden Empire、Fortune Gems","rank":24},{"acct":"ph13927824","attr":3,"dep":5000,"wd":0,"mult":0.476,"vb":2380,"net":5000,"bal":265.87,"plat":"h5","games":"Lotto、Tongits、Golden Empire","rank":25},{"acct":"ph14482154","attr":2,"dep":5000,"wd":0,"mult":0.248,"vb":1240,"net":5000,"bal":222.83,"plat":"pwa、安卓","games":"Fortune Gems、Crash、Money Coming","rank":26},{"acct":"ph10190056","attr":1,"dep":4200,"wd":0,"mult":0.7786,"vb":3270,"net":4200,"bal":1700.17,"plat":"ios","games":"Money Coming、Baccarat、Super Ace","rank":27},{"acct":"ph11282878","attr":2,"dep":4000,"wd":0,"mult":0.6625,"vb":2650,"net":4000,"bal":2922.45,"plat":"安卓、ios","games":"Boxing King、Dota2、Money Coming","rank":28},{"acct":"ph13072572","attr":2,"dep":4000,"wd":0,"mult":0.055,"vb":220,"net":4000,"bal":2339.16,"plat":"ios","games":"Football、Roulette、Dota2","rank":29},{"acct":"ph10902766","attr":3,"dep":3500,"wd":0,"mult":0.6343,"vb":2220,"net":3500,"bal":1381.87,"plat":"安卓","games":"Super Ace、Money Coming、Boxing King","rank":30},{"acct":"ph12898354","attr":3,"dep":3500,"wd":0,"mult":0.3543,"vb":1240,"net":3500,"bal":2046.23,"plat":"安卓、h5","games":"Golden Empire、Money Coming、Baccarat","rank":31},{"acct":"ph13650659","attr":2,"dep":3500,"wd":0,"mult":0.1429,"vb":500,"net":3500,"bal":2047.93,"plat":"h5","games":"Super Ace、Dota2、Jackpot Fishing","rank":32},{"acct":"ph13698173","attr":2,"dep":3300,"wd":0,"mult":0.3818,"vb":1260,"net":3300,"bal":844.44,"plat":"h5","games":"Boxing King、Money Coming、Basketball","rank":33},{"acct":"ph12193563","attr":1,"dep":2800,"wd":0,"mult":0.4286,"vb":1200,"net":2800,"bal":2041.67,"plat":"安卓、ios","games":"Baccarat、Super Ace","rank":34},{"acct":"ph10443464","attr":2,"dep":2500,"wd":0,"mult":0.98,"vb":2450,"net":2500,"bal":1184.8,"plat":"安卓","games":"Fortune Gems、Football、Baccarat","rank":35},{"acct":"ph10791900","attr":3,"dep":2500,"wd":0,"mult":0.32,"vb":800,"net":2500,"bal":2859.25,"plat":"安卓、pwa","games":"Super Ace、Jackpot Fishing、Golden Empire","rank":36},{"acct":"ph12557837","attr":3,"dep":2500,"wd":0,"mult":0.26,"vb":650,"net":2500,"bal":834.13,"plat":"安卓","games":"Fortune Gems、Basketball、Jackpot Fishing","rank":37},{"acct":"ph14062447","attr":3,"dep":2300,"wd":0,"mult":0.9087,"vb":2090,"net":2300,"bal":2953.16,"plat":"ios","games":"Fortune Gems、Jackpot Fishing、Dota2","rank":38},{"acct":"ph14149556","attr":3,"dep":2300,"wd":0,"mult":0.8696,"vb":2000,"net":2300,"bal":1267.24,"plat":"pwa","games":"Roulette、Jackpot Fishing、Basketball","rank":39},{"acct":"ph10395950","attr":3,"dep":2200,"wd":800,"mult":0.2273,"vb":500,"net":1400,"bal":946.99,"plat":"安卓","games":"Golden Empire","rank":40},{"acct":"ph12811245","attr":4,"dep":2100,"wd":0,"mult":0.5905,"vb":1240,"net":2100,"bal":2370.57,"plat":"安卓","games":"Super Ace、Golden Empire、Money Coming","rank":41},{"acct":"ph13563550","attr":3,"dep":2100,"wd":0,"mult":1.8333,"vb":3850,"net":2100,"bal":2517.19,"plat":"ios","games":"Crash、3D Racing、Jackpot Fishing","rank":42},{"acct":"ph14276260","attr":2,"dep":2100,"wd":0,"mult":1.6762,"vb":3520,"net":2100,"bal":1459.33,"plat":"pwa、h5","games":"Football、Jackpot Fishing、Roulette","rank":43},{"acct":"ph10095028","attr":3,"dep":2000,"wd":0,"mult":0.435,"vb":870,"net":2000,"bal":1289.25,"plat":"h5","games":"Jackpot Fishing、Golden Empire、Money Coming","rank":44},{"acct":"ph10459302","attr":2,"dep":2000,"wd":0,"mult":0.645,"vb":1290,"net":2000,"bal":354.33,"plat":"安卓、ios","games":"Jackpot Fishing、Baccarat、Football","rank":45},{"acct":"ph10578087","attr":2,"dep":2000,"wd":0,"mult":0.6,"vb":1200,"net":2000,"bal":1232.61,"plat":"ios、pwa","games":"Boxing King、Sabong、Fortune Gems","rank":46},{"acct":"ph10601844","attr":3,"dep":2000,"wd":0,"mult":1.625,"vb":3250,"net":2000,"bal":1204.47,"plat":"pwa、安卓","games":"Baccarat、Lotto、Football","rank":47},{"acct":"ph10910685","attr":1,"dep":2000,"wd":200,"mult":1.26,"vb":2520,"net":1800,"bal":825.46,"plat":"ios、pwa","games":"Sabong、Boxing King、Tongits","rank":48},{"acct":"ph11512529","attr":3,"dep":2000,"wd":0,"mult":0.555,"vb":1110,"net":2000,"bal":118.63,"plat":"pwa","games":"3D Racing、Golden Empire、Boxing King","rank":49},{"acct":"ph12027264","attr":4,"dep":2000,"wd":0,"mult":0.3,"vb":600,"net":2000,"bal":290.56,"plat":"ios、h5","games":"Fortune Gems、Boxing King、Golden Empire","rank":50}],"wd":[{"acct":"ph11274959","attr":2,"dep":0,"wd":3800,"mult":null,"vb":1300,"net":-3800,"bal":1407.99,"plat":"pwa","games":"Super Ace、Basketball、Football","rank":1},{"acct":"ph10063352","attr":2,"dep":0,"wd":3000,"mult":null,"vb":2300,"net":-3000,"bal":2820.31,"plat":"ios、pwa","games":"Jackpot Fishing、Roulette、Super Ace","rank":2},{"acct":"ph10475140","attr":3,"dep":0,"wd":3000,"mult":null,"vb":2120,"net":-3000,"bal":676.24,"plat":"安卓","games":"Roulette、Jackpot Fishing、Super Ace","rank":3},{"acct":"ph10649358","attr":3,"dep":500,"wd":3000,"mult":3.2,"vb":1600,"net":-2500,"bal":620.49,"plat":"h5","games":"Roulette、Boxing King、Golden Empire","rank":4},{"acct":"ph11290797","attr":3,"dep":0,"wd":3000,"mult":null,"vb":220,"net":-3000,"bal":556.39,"plat":"ios","games":"Basketball、Roulette","rank":5},{"acct":"ph11306635","attr":3,"dep":0,"wd":3000,"mult":null,"vb":520,"net":-3000,"bal":2744.58,"plat":"h5","games":"Lotto、Golden Empire","rank":6},{"acct":"ph12494485","attr":3,"dep":200,"wd":3000,"mult":4.0,"vb":800,"net":-2800,"bal":1334.21,"plat":"安卓","games":"Jackpot Fishing、Golden Empire、Boxing King","rank":7},{"acct":"ph12835002","attr":3,"dep":0,"wd":3000,"mult":null,"vb":50,"net":-3000,"bal":1312.02,"plat":"h5、ios","games":"Roulette","rank":8},{"acct":"ph13246790","attr":3,"dep":0,"wd":3000,"mult":null,"vb":2120,"net":-3000,"bal":1628.12,"plat":"pwa、ios","games":"Money Coming、Baccarat、Boxing King","rank":9},{"acct":"ph13595226","attr":2,"dep":300,"wd":3000,"mult":7.1667,"vb":2150,"net":-2700,"bal":2109.56,"plat":"ios","games":"Boxing King、Super Ace、Baccarat","rank":10},{"acct":"ph13801120","attr":3,"dep":0,"wd":3000,"mult":null,"vb":700,"net":-3000,"bal":206.46,"plat":"pwa","games":"Roulette、Jackpot Fishing、Super Ace","rank":11},{"acct":"ph13935743","attr":1,"dep":1000,"wd":3000,"mult":2.12,"vb":2120,"net":-2000,"bal":874.93,"plat":"h5、ios","games":"Golden Empire、Lotto、Dota2","rank":12},{"acct":"ph10071271","attr":3,"dep":0,"wd":1500,"mult":null,"vb":1000,"net":-1500,"bal":818.63,"plat":"安卓","games":"Super Ace","rank":13},{"acct":"ph10419707","attr":3,"dep":300,"wd":1500,"mult":3.7333,"vb":1120,"net":-1200,"bal":256.84,"plat":"ios、安卓","games":"Money Coming、Football","rank":14},{"acct":"ph10799819","attr":2,"dep":0,"wd":1500,"mult":null,"vb":2320,"net":-1500,"bal":761.93,"plat":"h5","games":"Super Ace、Lotto、Sabong","rank":15},{"acct":"ph11567962","attr":1,"dep":1100,"wd":1500,"mult":0.2727,"vb":300,"net":-400,"bal":1566.6,"plat":"安卓","games":"Super Ace、Fortune Gems、Sabong","rank":16},{"acct":"ph11655071","attr":3,"dep":300,"wd":1500,"mult":4.7333,"vb":1420,"net":-1200,"bal":725.79,"plat":"ios、安卓","games":"Sabong、Super Ace、Lotto","rank":17},{"acct":"ph11758018","attr":2,"dep":0,"wd":1500,"mult":null,"vb":710,"net":-1500,"bal":1907.21,"plat":"pwa、ios","games":"Jackpot Fishing、Fortune Gems、Money Coming","rank":18},{"acct":"ph11908479","attr":3,"dep":0,"wd":1500,"mult":null,"vb":1320,"net":-1500,"bal":1522.32,"plat":"h5","games":"Roulette、Football、Boxing King","rank":19},{"acct":"ph12185644","attr":3,"dep":0,"wd":1500,"mult":null,"vb":1100,"net":-1500,"bal":1295.54,"plat":"ios","games":"3D Racing、Lotto、Golden Empire","rank":20},{"acct":"ph12391538","attr":3,"dep":0,"wd":1500,"mult":null,"vb":100,"net":-1500,"bal":1675.66,"plat":"h5","games":"Roulette","rank":21},{"acct":"ph13167600","attr":2,"dep":500,"wd":1500,"mult":4.2,"vb":2100,"net":-1000,"bal":84.62,"plat":"安卓","games":"3D Racing、Fortune Gems、Jackpot Fishing","rank":22},{"acct":"ph13318061","attr":3,"dep":0,"wd":1500,"mult":null,"vb":1260,"net":-1500,"bal":963.88,"plat":"安卓","games":"Money Coming、Roulette、Fortune Gems","rank":23},{"acct":"ph13516036","attr":3,"dep":0,"wd":1500,"mult":null,"vb":2250,"net":-1500,"bal":1968.09,"plat":"ios","games":"Dota2、Roulette、Tongits","rank":24},{"acct":"ph13682335","attr":2,"dep":0,"wd":1500,"mult":null,"vb":3020,"net":-1500,"bal":1573.45,"plat":"pwa","games":"Super Ace、Baccarat、Boxing King","rank":25},{"acct":"ph13706092","attr":3,"dep":0,"wd":1500,"mult":null,"vb":2790,"net":-1500,"bal":2068.34,"plat":"安卓、h5","games":"Baccarat、Fortune Gems、Golden Empire","rank":26},{"acct":"ph14608858","attr":2,"dep":0,"wd":1500,"mult":null,"vb":1070,"net":-1500,"bal":815.5,"plat":"ios、安卓","games":"Golden Empire、Money Coming、Boxing King","rank":27},{"acct":"ph12660784","attr":3,"dep":1000,"wd":1000,"mult":1.22,"vb":1220,"net":0,"bal":76.36,"plat":"ios、安卓","games":"Jackpot Fishing、Football、Money Coming","rank":28},{"acct":"ph12866678","attr":2,"dep":0,"wd":1000,"mult":null,"vb":1830,"net":-1000,"bal":836.27,"plat":"h5","games":"Roulette、Fortune Gems、Super Ace","rank":29},{"acct":"ph10047514","attr":1,"dep":0,"wd":800,"mult":null,"vb":1600,"net":-800,"bal":2522.72,"plat":"ios、h5","games":"Roulette、Jackpot Fishing、Sabong","rank":30},{"acct":"ph10395950","attr":3,"dep":2200,"wd":800,"mult":0.2273,"vb":500,"net":1400,"bal":355.9,"plat":"安卓","games":"Golden Empire","rank":31},{"acct":"ph10831495","attr":4,"dep":0,"wd":800,"mult":null,"vb":2720,"net":-800,"bal":262.07,"plat":"安卓、ios","games":"Super Ace、Football、Roulette","rank":32},{"acct":"ph10879009","attr":2,"dep":0,"wd":800,"mult":null,"vb":320,"net":-800,"bal":494.94,"plat":"pwa、ios","games":"Roulette、Boxing King、Football","rank":33},{"acct":"ph10989875","attr":3,"dep":0,"wd":800,"mult":null,"vb":1040,"net":-800,"bal":2313.91,"plat":"pwa","games":"Super Ace、Roulette、Fortune Gems","rank":34},{"acct":"ph11045308","attr":3,"dep":0,"wd":800,"mult":null,"vb":1600,"net":-800,"bal":771.78,"plat":"pwa、ios","games":"Baccarat、Golden Empire、Money Coming","rank":35},{"acct":"ph12217320","attr":3,"dep":1000,"wd":800,"mult":1.37,"vb":1370,"net":200,"bal":356.28,"plat":"h5、安卓","games":"Dota2、Roulette、Football","rank":36},{"acct":"ph12272753","attr":3,"dep":0,"wd":800,"mult":null,"vb":1740,"net":-800,"bal":2736.87,"plat":"ios","games":"Tongits、Football、Baccarat","rank":37},{"acct":"ph12439052","attr":2,"dep":0,"wd":800,"mult":null,"vb":1200,"net":-800,"bal":1594.42,"plat":"安卓","games":"Super Ace、Golden Empire","rank":38},{"acct":"ph12478647","attr":2,"dep":0,"wd":800,"mult":null,"vb":300,"net":-800,"bal":2696.29,"plat":"pwa","games":"Lotto、Roulette、Super Ace","rank":39},{"acct":"ph13729849","attr":1,"dep":0,"wd":800,"mult":null,"vb":3700,"net":-800,"bal":814.03,"plat":"ios","games":"Fortune Gems、Basketball、Baccarat","rank":40},{"acct":"ph13737768","attr":1,"dep":1000,"wd":800,"mult":2.1,"vb":2100,"net":200,"bal":1451.45,"plat":"安卓","games":"Roulette、Baccarat、Golden Empire","rank":41},{"acct":"ph13840715","attr":3,"dep":0,"wd":800,"mult":null,"vb":1300,"net":-800,"bal":1663.36,"plat":"h5","games":"Money Coming、Football","rank":42},{"acct":"ph13864472","attr":3,"dep":0,"wd":800,"mult":null,"vb":2300,"net":-800,"bal":1403.62,"plat":"pwa","games":"Golden Empire、Money Coming、Boxing King","rank":43},{"acct":"ph13991176","attr":1,"dep":500,"wd":800,"mult":2.94,"vb":1470,"net":-300,"bal":1228.32,"plat":"pwa","games":"Money Coming、Tongits、Boxing King","rank":44},{"acct":"ph14426721","attr":2,"dep":0,"wd":800,"mult":null,"vb":1570,"net":-800,"bal":1721.22,"plat":"h5","games":"Baccarat、Jackpot Fishing、Roulette","rank":45},{"acct":"ph10348436","attr":3,"dep":100,"wd":700,"mult":14.7,"vb":1470,"net":-600,"bal":1282.75,"plat":"安卓","games":"Boxing King、Fortune Gems、Jackpot Fishing","rank":46},{"acct":"ph11124498","attr":3,"dep":200,"wd":700,"mult":1.1,"vb":220,"net":-500,"bal":2224.83,"plat":"安卓","games":"Jackpot Fishing、Golden Empire、Super Ace","rank":47},{"acct":"ph10427626","attr":3,"dep":0,"wd":500,"mult":null,"vb":470,"net":-500,"bal":1661.91,"plat":"安卓","games":"Jackpot Fishing、Baccarat、Super Ace","rank":48},{"acct":"ph11203688","attr":3,"dep":1000,"wd":500,"mult":0.87,"vb":870,"net":500,"bal":153.25,"plat":"安卓、h5","games":"Golden Empire、Boxing King、Jackpot Fishing","rank":49},{"acct":"ph11298716","attr":1,"dep":0,"wd":500,"mult":null,"vb":1350,"net":-500,"bal":2588.67,"plat":"h5、安卓","games":"Money Coming、Super Ace、Golden Empire","rank":50}]},"11-01":{"dep":[{"acct":"ph11179931","attr":2,"dep":7000,"wd":0,"mult":0.1214,"vb":850,"net":7000,"bal":2577.63,"plat":"安卓、h5","games":"Fortune Gems、Super Ace、Boxing King","rank":1},{"acct":"ph11623395","attr":3,"dep":7000,"wd":0,"mult":0.3671,"vb":2570,"net":7000,"bal":1225.49,"plat":"ios、h5","games":"Lotto、Dota2、Baccarat","rank":2},{"acct":"ph12605351","attr":3,"dep":6000,"wd":0,"mult":0.4417,"vb":2650,"net":6000,"bal":909.2,"plat":"h5","games":"Sabong、Roulette、Football","rank":3},{"acct":"ph11005713","attr":3,"dep":5500,"wd":0,"mult":0.4891,"vb":2690,"net":5500,"bal":245.65,"plat":"h5","games":"Money Coming、Baccarat、Tongits","rank":4},{"acct":"ph12415295","attr":3,"dep":5500,"wd":0,"mult":0.3036,"vb":1670,"net":5500,"bal":67.19,"plat":"pwa","games":"Baccarat、Super Ace、Money Coming","rank":5},{"acct":"ph12732055","attr":3,"dep":5500,"wd":800,"mult":0.4036,"vb":2220,"net":4700,"bal":2983.16,"plat":"h5、安卓","games":"Tongits、Golden Empire、Baccarat","rank":6},{"acct":"ph14252503","attr":2,"dep":5500,"wd":0,"mult":0.28,"vb":1540,"net":5500,"bal":2603.2,"plat":"安卓、h5","games":"3D Racing、Super Ace、Money Coming","rank":7},{"acct":"ph14331693","attr":2,"dep":5500,"wd":0,"mult":0.1455,"vb":800,"net":5500,"bal":2839.81,"plat":"安卓","games":"Jackpot Fishing、Fortune Gems、Sabong","rank":8},{"acct":"ph10031676","attr":3,"dep":5300,"wd":0,"mult":0.3717,"vb":1970,"net":5300,"bal":213.28,"plat":"pwa","games":"Golden Empire、Money Coming、Jackpot Fishing","rank":9},{"acct":"ph14561344","attr":2,"dep":5300,"wd":0,"mult":0.0377,"vb":200,"net":5300,"bal":651.76,"plat":"h5","games":"Super Ace、Fortune Gems","rank":10},{"acct":"ph11274959","attr":2,"dep":5200,"wd":0,"mult":0.0288,"vb":150,"net":5200,"bal":1528.11,"plat":"pwa","games":"Fortune Gems、Golden Empire","rank":11},{"acct":"ph15076079","attr":3,"dep":5200,"wd":0,"mult":0.1538,"vb":800,"net":5200,"bal":464.24,"plat":"pwa、h5","games":"Sabong、Football、Boxing King","rank":12},{"acct":"ph11227445","attr":2,"dep":5100,"wd":0,"mult":0.2196,"vb":1120,"net":5100,"bal":1808.31,"plat":"h5、ios","games":"Baccarat、Roulette、Super Ace","rank":13},{"acct":"ph12985463","attr":3,"dep":5100,"wd":0,"mult":0.402,"vb":2050,"net":5100,"bal":2346.4,"plat":"h5","games":"Tongits、Sabong、Baccarat","rank":14},{"acct":"ph10126704","attr":2,"dep":5000,"wd":0,"mult":0.34,"vb":1700,"net":5000,"bal":44.93,"plat":"ios","games":"Jackpot Fishing、Dota2、Money Coming","rank":15},{"acct":"ph10142542","attr":1,"dep":5000,"wd":0,"mult":0.11,"vb":550,"net":5000,"bal":470.65,"plat":"pwa","games":"Money Coming、Tongits","rank":16},{"acct":"ph10443464","attr":2,"dep":5000,"wd":0,"mult":0.22,"vb":1100,"net":5000,"bal":2638.87,"plat":"安卓","games":"Super Ace、Dota2、Jackpot Fishing","rank":17},{"acct":"ph10855252","attr":2,"dep":5000,"wd":0,"mult":0.424,"vb":2120,"net":5000,"bal":904.36,"plat":"安卓","games":"Boxing King、Football、Jackpot Fishing","rank":18},{"acct":"ph11377906","attr":4,"dep":5000,"wd":200,"mult":0.5,"vb":2500,"net":4800,"bal":2671.76,"plat":"ios","games":"Football、Boxing King、Fortune Gems","rank":19},{"acct":"ph11560043","attr":3,"dep":5000,"wd":0,"mult":0.36,"vb":1800,"net":5000,"bal":1570.92,"plat":"ios","games":"Tongits、Baccarat、Roulette","rank":20},{"acct":"ph12122292","attr":3,"dep":5000,"wd":0,"mult":0.45,"vb":2250,"net":5000,"bal":803.52,"plat":"安卓、h5","games":"Football、Fortune Gems、Money Coming","rank":21},{"acct":"ph12486566","attr":1,"dep":5000,"wd":0,"mult":0.504,"vb":2520,"net":5000,"bal":2481.51,"plat":"安卓","games":"Jackpot Fishing、Dota2、Roulette","rank":22},{"acct":"ph12779569","attr":3,"dep":5000,"wd":0,"mult":0.444,"vb":2220,"net":5000,"bal":2663.76,"plat":"ios","games":"Golden Empire、Jackpot Fishing、Tongits","rank":23},{"acct":"ph12827083","attr":2,"dep":5000,"wd":3000,"mult":0.43,"vb":2150,"net":2000,"bal":997.17,"plat":"ios","games":"Fortune Gems、Jackpot Fishing、3D Racing","rank":24},{"acct":"ph12961706","attr":3,"dep":5000,"wd":0,"mult":0.06,"vb":300,"net":5000,"bal":2289.89,"plat":"安卓","games":"Money Coming","rank":25},{"acct":"ph12969625","attr":3,"dep":5000,"wd":3000,"mult":0.22,"vb":1100,"net":2000,"bal":1641.68,"plat":"h5、pwa","games":"Baccarat、Boxing King","rank":26},{"acct":"ph13032977","attr":2,"dep":5000,"wd":0,"mult":0.008,"vb":40,"net":5000,"bal":2400.36,"plat":"安卓","games":"Basketball、Fortune Gems","rank":27},{"acct":"ph13112167","attr":3,"dep":5000,"wd":0,"mult":0.518,"vb":2590,"net":5000,"bal":2922.99,"plat":"pwa、安卓","games":"Boxing King、Basketball、Money Coming","rank":28},{"acct":"ph13207195","attr":3,"dep":5000,"wd":1500,"mult":0.25,"vb":1250,"net":3500,"bal":1035.0,"plat":"h5、pwa","games":"Money Coming、Fortune Gems、Roulette","rank":29},{"acct":"ph13706092","attr":3,"dep":5000,"wd":0,"mult":0.24,"vb":1200,"net":5000,"bal":1940.92,"plat":"安卓、h5","games":"Baccarat、Roulette、Tongits","rank":30},{"acct":"ph14173313","attr":3,"dep":5000,"wd":0,"mult":0.23,"vb":1150,"net":5000,"bal":989.04,"plat":"h5","games":"Boxing King、Super Ace、Jackpot Fishing","rank":31},{"acct":"ph14418802","attr":2,"dep":5000,"wd":0,"mult":0.14,"vb":700,"net":5000,"bal":1087.9,"plat":"pwa、ios","games":"Basketball、Money Coming、Golden Empire","rank":32},{"acct":"ph14949375","attr":3,"dep":5000,"wd":0,"mult":0.434,"vb":2170,"net":5000,"bal":166.0,"plat":"h5、pwa","games":"Tongits、Golden Empire、Fortune Gems","rank":33},{"acct":"ph15028565","attr":3,"dep":5000,"wd":0,"mult":0.554,"vb":2770,"net":5000,"bal":1066.38,"plat":"安卓","games":"Golden Empire、Dota2、Money Coming","rank":34},{"acct":"ph15131512","attr":3,"dep":5000,"wd":0,"mult":0.35,"vb":1750,"net":5000,"bal":1976.58,"plat":"h5","games":"Jackpot Fishing、Super Ace、Money Coming","rank":35},{"acct":"ph15662085","attr":3,"dep":5000,"wd":0,"mult":0.0,"vb":0,"net":5000,"bal":354.41,"plat":"安卓","games":"","rank":36},{"acct":"ph13302223","attr":1,"dep":4500,"wd":0,"mult":0.9111,"vb":4100,"net":4500,"bal":610.79,"plat":"pwa","games":"Money Coming、Baccarat、Golden Empire","rank":37},{"acct":"ph10348436","attr":3,"dep":3500,"wd":0,"mult":0.3857,"vb":1350,"net":3500,"bal":1025.37,"plat":"安卓","games":"Baccarat、Roulette、Boxing King","rank":38},{"acct":"ph14046609","attr":2,"dep":3000,"wd":0,"mult":0.3667,"vb":1100,"net":3000,"bal":1623.24,"plat":"h5","games":"Crash、Football","rank":39},{"acct":"ph14870185","attr":2,"dep":3000,"wd":0,"mult":0.2367,"vb":710,"net":3000,"bal":1998.33,"plat":"ios、安卓","games":"Basketball、Boxing King、Fortune Gems","rank":40},{"acct":"ph11813451","attr":2,"dep":2500,"wd":0,"mult":0.516,"vb":1290,"net":2500,"bal":1590.8,"plat":"安卓、pwa","games":"Super Ace、Jackpot Fishing、Baccarat","rank":41},{"acct":"ph13975338","attr":2,"dep":2500,"wd":0,"mult":0.036,"vb":90,"net":2500,"bal":1851.08,"plat":"安卓、pwa","games":"Super Ace、Boxing King、Baccarat","rank":42},{"acct":"ph14315855","attr":2,"dep":2500,"wd":0,"mult":0.04,"vb":100,"net":2500,"bal":2984.49,"plat":"pwa","games":"Baccarat、Golden Empire","rank":43},{"acct":"ph12351943","attr":3,"dep":2300,"wd":0,"mult":0.1957,"vb":450,"net":2300,"bal":649.84,"plat":"pwa","games":"Golden Empire、Sabong、Lotto","rank":44},{"acct":"ph13444765","attr":2,"dep":2100,"wd":0,"mult":0.3571,"vb":750,"net":2100,"bal":1850.32,"plat":"h5","games":"Money Coming、Basketball、Baccarat","rank":45},{"acct":"ph14727643","attr":3,"dep":2100,"wd":0,"mult":1.5714,"vb":3300,"net":2100,"bal":162.65,"plat":"ios","games":"Baccarat、3D Racing、Fortune Gems","rank":46},{"acct":"ph10055433","attr":4,"dep":2000,"wd":0,"mult":0.11,"vb":220,"net":2000,"bal":324.16,"plat":"安卓","games":"Baccarat、Boxing King","rank":47},{"acct":"ph10134623","attr":3,"dep":2000,"wd":0,"mult":1.025,"vb":2050,"net":2000,"bal":2744.62,"plat":"ios、安卓","games":"Boxing King、Basketball","rank":48},{"acct":"ph10293003","attr":2,"dep":2000,"wd":0,"mult":2.1,"vb":4200,"net":2000,"bal":451.7,"plat":"ios","games":"Tongits、Fortune Gems、Roulette","rank":49},{"acct":"ph10308841","attr":2,"dep":2000,"wd":0,"mult":1.05,"vb":2100,"net":2000,"bal":983.89,"plat":"pwa","games":"Fortune Gems、Basketball、Tongits","rank":50}],"wd":[{"acct":"ph11053227","attr":2,"dep":0,"wd":4500,"mult":null,"vb":1150,"net":-4500,"bal":2827.07,"plat":"ios","games":"Boxing King、Roulette","rank":1},{"acct":"ph11401663","attr":2,"dep":0,"wd":4500,"mult":null,"vb":1650,"net":-4500,"bal":2236.13,"plat":"ios","games":"Super Ace、Jackpot Fishing、Roulette","rank":2},{"acct":"ph10269246","attr":2,"dep":0,"wd":3000,"mult":null,"vb":3270,"net":-3000,"bal":896.87,"plat":"ios、pwa","games":"Money Coming、Football、Golden Empire","rank":3},{"acct":"ph10277165","attr":4,"dep":0,"wd":3000,"mult":null,"vb":20,"net":-3000,"bal":1339.07,"plat":"pwa","games":"Sabong","rank":4},{"acct":"ph10522654","attr":1,"dep":0,"wd":3000,"mult":null,"vb":320,"net":-3000,"bal":35.83,"plat":"ios","games":"Jackpot Fishing、Dota2、Golden Empire","rank":5},{"acct":"ph10554330","attr":2,"dep":0,"wd":3000,"mult":null,"vb":1570,"net":-3000,"bal":123.87,"plat":"pwa","games":"Boxing King、Roulette、Money Coming","rank":6},{"acct":"ph10570168","attr":2,"dep":500,"wd":3000,"mult":1.8,"vb":900,"net":-2500,"bal":2384.18,"plat":"pwa、安卓","games":"Fortune Gems、Jackpot Fishing、Tongits","rank":7},{"acct":"ph11211607","attr":2,"dep":0,"wd":3000,"mult":null,"vb":700,"net":-3000,"bal":2325.67,"plat":"安卓、h5","games":"Baccarat、Football","rank":8},{"acct":"ph11219526","attr":3,"dep":2000,"wd":3000,"mult":0.16,"vb":320,"net":-1000,"bal":1669.42,"plat":"安卓","games":"Super Ace、Money Coming、Boxing King","rank":9},{"acct":"ph11322473","attr":3,"dep":0,"wd":3000,"mult":null,"vb":4100,"net":-3000,"bal":1079.12,"plat":"ios","games":"Roulette、Baccarat、Super Ace","rank":10},{"acct":"ph11924317","attr":2,"dep":0,"wd":3000,"mult":null,"vb":2800,"net":-3000,"bal":543.93,"plat":"h5","games":"Boxing King、Fortune Gems、Crash","rank":11},{"acct":"ph12201482","attr":3,"dep":300,"wd":3000,"mult":3.6667,"vb":1100,"net":-2700,"bal":1942.95,"plat":"pwa、ios","games":"Roulette、Football、Fortune Gems","rank":12},{"acct":"ph12304429","attr":4,"dep":500,"wd":3000,"mult":3.14,"vb":1570,"net":-2500,"bal":1417.44,"plat":"安卓","games":"Boxing King、Roulette、Super Ace","rank":13},{"acct":"ph12676622","attr":3,"dep":0,"wd":3000,"mult":null,"vb":890,"net":-3000,"bal":1935.19,"plat":"安卓、pwa","games":"Fortune Gems、Money Coming、Dota2","rank":14},{"acct":"ph12811245","attr":4,"dep":0,"wd":3000,"mult":null,"vb":700,"net":-3000,"bal":539.89,"plat":"安卓","games":"Super Ace","rank":15},{"acct":"ph12827083","attr":2,"dep":5000,"wd":3000,"mult":0.43,"vb":2150,"net":2000,"bal":718.24,"plat":"ios","games":"Fortune Gems、Jackpot Fishing、3D Racing","rank":16},{"acct":"ph12969625","attr":3,"dep":5000,"wd":3000,"mult":0.22,"vb":1100,"net":2000,"bal":181.76,"plat":"h5、pwa","games":"Baccarat、Boxing King","rank":17},{"acct":"ph13729849","attr":1,"dep":1000,"wd":3000,"mult":1.25,"vb":1250,"net":-2000,"bal":1689.6,"plat":"ios","games":"Super Ace、Boxing King、Money Coming","rank":18},{"acct":"ph13769444","attr":3,"dep":1000,"wd":3000,"mult":1.8,"vb":1800,"net":-2000,"bal":2983.42,"plat":"ios","games":"Boxing King、Money Coming、Tongits","rank":19},{"acct":"ph14102042","attr":3,"dep":2000,"wd":3000,"mult":0.075,"vb":150,"net":-1000,"bal":108.96,"plat":"ios","games":"Super Ace、Boxing King、Dota2","rank":20},{"acct":"ph14292098","attr":3,"dep":300,"wd":3000,"mult":1.8333,"vb":550,"net":-2700,"bal":1032.34,"plat":"pwa","games":"Roulette","rank":21},{"acct":"ph14300017","attr":3,"dep":500,"wd":3000,"mult":2.84,"vb":1420,"net":-2500,"bal":32.75,"plat":"ios","games":"Boxing King、Super Ace、Golden Empire","rank":22},{"acct":"ph14640534","attr":3,"dep":0,"wd":3000,"mult":null,"vb":150,"net":-3000,"bal":2195.86,"plat":"h5、ios","games":"Golden Empire、Football","rank":23},{"acct":"ph14775157","attr":1,"dep":0,"wd":3000,"mult":null,"vb":1100,"net":-3000,"bal":1198.38,"plat":"h5、安卓","games":"Baccarat、Tongits、Boxing King","rank":24},{"acct":"ph10253408","attr":2,"dep":1500,"wd":1500,"mult":0.6667,"vb":1000,"net":0,"bal":2538.25,"plat":"h5、ios","games":"Super Ace","rank":25},{"acct":"ph10506816","attr":2,"dep":300,"wd":1500,"mult":3.9,"vb":1170,"net":-1200,"bal":2149.6,"plat":"pwa","games":"Baccarat、Super Ace、Jackpot Fishing","rank":26},{"acct":"ph10807738","attr":2,"dep":0,"wd":1500,"mult":null,"vb":40,"net":-1500,"bal":1700.4,"plat":"ios","games":"Jackpot Fishing、Dota2","rank":27},{"acct":"ph11037389","attr":3,"dep":500,"wd":1500,"mult":4.8,"vb":2400,"net":-1000,"bal":2835.94,"plat":"h5","games":"Golden Empire、Baccarat、Fortune Gems","rank":28},{"acct":"ph11647152","attr":3,"dep":0,"wd":1500,"mult":null,"vb":320,"net":-1500,"bal":2076.48,"plat":"安卓","games":"Money Coming、Roulette、Dota2","rank":29},{"acct":"ph11686747","attr":3,"dep":0,"wd":1500,"mult":null,"vb":500,"net":-1500,"bal":1438.13,"plat":"h5、pwa","games":"Basketball","rank":30},{"acct":"ph12106454","attr":2,"dep":0,"wd":1500,"mult":null,"vb":90,"net":-1500,"bal":2607.61,"plat":"pwa","games":"Money Coming、Basketball","rank":31},{"acct":"ph12399457","attr":3,"dep":0,"wd":1500,"mult":null,"vb":1050,"net":-1500,"bal":2668.74,"plat":"安卓","games":"Golden Empire、Basketball","rank":32},{"acct":"ph12739974","attr":3,"dep":1000,"wd":1500,"mult":0.22,"vb":220,"net":-500,"bal":1577.71,"plat":"ios","games":"Golden Empire、Football、Baccarat","rank":33},{"acct":"ph12850840","attr":3,"dep":0,"wd":1500,"mult":null,"vb":2150,"net":-1500,"bal":2233.35,"plat":"安卓","games":"Basketball、Jackpot Fishing、Boxing King","rank":34},{"acct":"ph13207195","attr":3,"dep":5000,"wd":1500,"mult":0.25,"vb":1250,"net":3500,"bal":2450.19,"plat":"h5、pwa","games":"Money Coming、Fortune Gems、Roulette","rank":35},{"acct":"ph13642740","attr":1,"dep":1000,"wd":1500,"mult":0.72,"vb":720,"net":-500,"bal":2067.05,"plat":"安卓","games":"Golden Empire、Basketball、Lotto","rank":36},{"acct":"ph14149556","attr":3,"dep":0,"wd":1500,"mult":null,"vb":400,"net":-1500,"bal":304.06,"plat":"pwa","games":"Football、3D Racing、Tongits","rank":37},{"acct":"ph14680129","attr":3,"dep":0,"wd":1500,"mult":null,"vb":900,"net":-1500,"bal":206.78,"plat":"ios","games":"Golden Empire、Fortune Gems","rank":38},{"acct":"ph13048815","attr":1,"dep":0,"wd":1000,"mult":null,"vb":2700,"net":-1000,"bal":899.98,"plat":"ios","games":"Basketball、Fortune Gems、Boxing King","rank":39},{"acct":"ph10190056","attr":1,"dep":0,"wd":800,"mult":null,"vb":1150,"net":-800,"bal":531.78,"plat":"ios","games":"Super Ace、Fortune Gems、Basketball","rank":40},{"acct":"ph10918604","attr":2,"dep":0,"wd":800,"mult":null,"vb":1850,"net":-800,"bal":386.42,"plat":"ios","games":"Football、Roulette、Money Coming","rank":41},{"acct":"ph11615476","attr":2,"dep":200,"wd":800,"mult":18.95,"vb":3790,"net":-600,"bal":2347.86,"plat":"pwa","games":"Golden Empire、Basketball、Lotto","rank":42},{"acct":"ph11805532","attr":2,"dep":0,"wd":800,"mult":null,"vb":1020,"net":-800,"bal":2149.6,"plat":"pwa","games":"Boxing King、Football、Money Coming","rank":43},{"acct":"ph11876803","attr":3,"dep":0,"wd":800,"mult":null,"vb":2220,"net":-800,"bal":1726.43,"plat":"ios","games":"Baccarat、Money Coming、Basketball","rank":44},{"acct":"ph12692460","attr":3,"dep":0,"wd":800,"mult":null,"vb":520,"net":-800,"bal":613.57,"plat":"pwa","games":"Jackpot Fishing、3D Racing","rank":45},{"acct":"ph12732055","attr":3,"dep":5500,"wd":800,"mult":0.4036,"vb":2220,"net":4700,"bal":854.52,"plat":"h5、安卓","games":"Tongits、Golden Empire、Baccarat","rank":46},{"acct":"ph13175519","attr":2,"dep":0,"wd":800,"mult":null,"vb":1850,"net":-800,"bal":1019.39,"plat":"ios","games":"Roulette、Boxing King、Super Ace","rank":47},{"acct":"ph13626902","attr":3,"dep":0,"wd":800,"mult":null,"vb":20,"net":-800,"bal":2004.4,"plat":"pwa","games":"Dota2","rank":48},{"acct":"ph13745687","attr":1,"dep":0,"wd":800,"mult":null,"vb":1270,"net":-800,"bal":2308.38,"plat":"h5、安卓","games":"Basketball、Dota2、Fortune Gems","rank":49},{"acct":"ph13983257","attr":1,"dep":0,"wd":800,"mult":null,"vb":1220,"net":-800,"bal":2042.01,"plat":"安卓","games":"Dota2、Football、Baccarat","rank":50}]}}};
-// 字段：[表头名, 口径, 公式]
-const F = {
- time:["时间","北京时间。小时表为小时起点（13:00 = 13:00–14:00 前）；日表为完整自然日。",""],
- weekday:["星期","日期对应的星期。",""],
- online:["在线","小时表：整点那一刻的在线人数快照，不是该小时最高或平均。日表：口径表已删除日报在线人数，需求表仍保留（待确认 Q1）。",""],
- bettors:["投注","小时表：这小时新增的人——当天第一次下注落在这一小时才算，之前小时已算过的不再计，所以 24 小时相加 = 日表人数。日表：全天去重。有下注就算，不要求有效投注。",""],
- registers:["注册","新注册人数：小时表为这小时内注册的人，日表为全天注册的人。",""],
- fd_users:["首充 · 人数","本时段完成首次成功充值的人数；首充按用户全生命周期识别。小时表为单小时首充人数。",""],
- fd_amount:["首充 · 金额","本时段首次充值金额，只算首笔。",""],
- fd_avg:["首充 · 人均","","首次充值金额 ÷ 同期首充人数"],
- fd_agent:["首充 · 代理","首充人数中的非自然流量（需求表批注）。归因口径待确认 Q4。",""],
- fd_official:["首充 · 官网","首充人数中的自然流量。","首充人数 − 代理"],
- conv_rate:["转换率","按口径表「当日首充转化率」：当日首充总人数（含历史注册）÷ 当日注册人数，可能超过 100%。小时表分子分母均取当日累计。","当日首充总人数 ÷ 当日注册人数"],
- fdt_users:["当日首充总额 · 人数","当日首充总人数；小时表从 00:00 累计到该小时末。",""],
- fdt_amount:["当日首充总额 · 金额","当日首充用户当天的全部充值（首笔 + 后续）；小时表从 00:00 累计。",""],
- fdt_avg:["当日首充总额 · 人均","金额和人数是同一批人。","当日首充总额 ÷ 当日首充总人数"],
- dep_users:["充值 · 人数","按成功到账时间。小时表：这小时新增的人——当天第一次充值成功落在这一小时才算，之前小时已算过的不再计，所以 24 小时相加 = 日表人数。日表：全天去重。",""],
- dep_amount:["充值 · 金额","按成功到账时间统计的充值订单金额合计。",""],
- dep_daily_avg:["充值 · 平均日存","口径表未定义。上一版为「所选区间平均每天的充值金额」，只在合计行有意义（待确认 Q2）。","区间充值金额 ÷ 天数"],
- dep_avg:["充值 · 人均","","充值金额 ÷ 充值人数"],
- wd_users:["取款 · 人数","按成功出款时间。小时表：这小时新增的人——当天第一次提款成功落在这一小时才算，之前小时已算过的不再计。日表不显示取款人数，用笔数。",""],
- wd_count:["取款 · 笔数","日表需求表此列为笔数。按成功出款时间统计的提款订单数；同一人多笔算多笔。",""],
- wd_amount:["取款 · 金额","按成功出款时间统计的提款金额合计。",""],
- wd_avg:["取款 · 人均 / 平均","小时表：提款金额 ÷ 提款人数。日表需求表公式为金额 ÷ 笔数。","提款金额 ÷ 人数（日表 ÷ 笔数）"],
- net:["盈亏金额 / 存提差","口径表「充提差额」：不等于游戏收入或利润。","充值金额 − 提款金额"],
- net_rate:["杀率 / 存提差÷充值","口径表「充提差额率」，不是游戏杀率；日表需求表沿用旧名「杀率」，建议改名（Q5）。","充提差额 ÷ 充值金额"],
- fission_users:["裂变 · 人数","通过代理及邀请好友系统来的充值人数（需求表批注）。口径表未定义。",""],
- fission_rate:["裂变 · 比率","分母为当天总充值人数（需求表批注）。","裂变人数 ÷ 充值人数"],
- comm_users:["裂变佣金明细 · 人数","口径表未定义，建议为当天产生佣金的代理人数（Q6）。",""],
- comm_amount:["裂变佣金明细 · 金额","人头费用 + 投注返还（需求表批注）；口径表「代理佣金总额」= 代理后台当期应发佣金。",""],
- comm_ratio:["裂变佣金明细 · 占比","需求表公式：佣金 ÷ 优惠金额。","佣金金额 ÷ 优惠金额"],
- ret_users:["留存明细 · 人数","当日总充值人数 − 当日首存充值人数（需求表批注）。","充值人数 − 首充人数"],
- ret_amount:["留存明细 · 金额","老用户（非当日首充）的充值。需求表公式为 充值 − 首充金额 − 当日首充总额，会把首笔扣两次（Q7）。","充值金额 − 当日首充总额"],
- ret_avg:["留存明细 · 人均","","留存金额 ÷ 留存人数"],
- ret_ratio:["留存人数占比","需求表批注：(充值人数 − 首充人数) ÷ 充值人数。","留存人数 ÷ 充值人数"],
- dep_count:["充提笔数 · 充值","按成功到账时间统计的充值订单数。",""],
- dep_count_avg:["充提笔数 · 人均笔数","","充值笔数 ÷ 充值人数"],
- wd_count_b:["充提笔数 · 提款","按成功出款时间统计的提款订单数。",""],
- valid_bet:["平台报表 · 总投注 / 总打码","有效投注金额合计。",""],
- bet_multiple:["平台报表 · 倍数","打码倍数，分子分母同一时段（需求表批注：总打码 ÷ 总存款）。","有效投注 ÷ 充值金额"],
- kill_rate:["平台报表 · 杀率（1 − RTP）","口径表「杀率」，日表需求表叫「盈利率（杀率）」。","GGR ÷ 有效投注"],
- ggr:["平台报表 · GGR","派彩含返还本金；未扣活动、佣金等成本。","有效投注 − 派彩"],
- promo_amount:["活动奖金 / 优惠 · 金额","后台「活动费用报表」本时段全部活动费用，与代理佣金分开。",""],
- promo_ratio:["活动奖金 / 优惠 · 比例","","活动奖金金额 ÷ 充值金额"],
- act_users:["人数","小时表：这小时新增参与该活动的人——当天之前小时已领过的不再计，24 小时相加 = 日表。日表：该活动全天去重参与人数。",""],
- act_amount:["金额","活动费用报表中该活动本时段的活动费用。",""],
- act_ratio:["占充值","日表需求表保留每个活动的占充值（口径表没有，Q8）。","活动金额 ÷ 充值金额"],
- total_times:["总计 · 人数","各活动人数相加，跨活动不去重（参与人次）。",""],
- total_amount:["总计 · 金额","口径表：全部活动费用合计（含 8 列以外的活动）。需求表公式只加了 8 列（Q9）。",""],
- b_dep:["充值金额","同时段成功到账充值金额，和主表一致。",""]
+const V2=false;
+/* ---------- 现网配置（admin-1-qa 2026-11-16 读取：data-report-center 组件的 report / allGroups / info） ---------- */
+const INFO={
+time:["时间","北京时间。小时表为小时起点（13:00 = 13:00–14:00 前）；日表为完整自然日。",""],
+weekday:["星期","日期对应的星期。",""],
+online:["在线","小时表：整点时的在线人数快照，不是该小时最高或平均。日表：口径表已删除日报在线人数，需求表仍保留（待确认 Q1）。",""],
+bettors:["投注","有下注行为的去重人数，不要求有效投注。",""],
+registers:["注册","新增注册的去重人数（小时表为单小时新增）。",""],
+fdUsers:["首充 · 人数","本时段完成首次成功充值的人数；首充按用户全生命周期识别。小时表为单小时首充人数。",""],
+fdAmount:["首充 · 金额","本时段首次充值金额，只算首笔。",""],
+fdAvg:["首充 · 人均","","首次充值金额 ÷ 同期首充人数"],
+fdAgent:["首充 · 代理","首充人数中的非自然流量（需求表批注）。归因口径待确认 Q4。",""],
+fdOfficial:["首充 · 官网","首充人数中的自然流量。","首充人数 − 代理"],
+convRate:["转换率","按口径表「当日首充转化率」：当日首充总人数（含历史注册）÷ 当日注册人数，可能超过 100%。小时表分子分母均取当日累计。","当日首充总人数 ÷ 当日注册人数"],
+fdtUsers:["当日首充总额 · 人数","当日首充总人数；小时表从 00:00 累计到该小时末。",""],
+fdtAmount:["当日首充总额 · 金额","当日首充用户当天的全部充值（首笔 + 后续）；小时表从 00:00 累计。",""],
+fdtAvg:["当日首充总额 · 人均","金额和人数是同一批人。","当日首充总额 ÷ 当日首充总人数"],
+depUsers:["充值 · 人数","按成功到账时间，充值成功的去重人数。",""],
+depAmount:["充值 · 金额","按成功到账时间统计的充值订单金额合计。",""],
+depDailyAvg:["充值 · 平均日存","口径表未定义。上一版为「所选区间平均每天的充值金额」，只在合计行有意义（待确认 Q2）。","区间充值金额 ÷ 天数"],
+depAvg:["充值 · 人均","","充值金额 ÷ 充值人数"],
+wdUsers:["取款 · 人数","按成功出款时间，提款成功的去重人数。",""],
+wdCount:["取款 · 笔数","日表需求表此列为笔数（小时表为人数，待确认 Q3）。按成功出款时间统计的提款订单数。",""],
+wdAmount:["取款 · 金额","按成功出款时间统计的提款金额合计。",""],
+wdAvg:["取款 · 人均 / 平均","小时表：提款金额 ÷ 提款人数。日表需求表公式为金额 ÷ 笔数。","提款金额 ÷ 人数（日表 ÷ 笔数）"],
+net:["盈亏金额 / 存提差","口径表「充提差额」：不等于游戏收入或利润。","充值金额 − 提款金额"],
+netRate:["杀率 / 存提差÷充值","口径表「充提差额率」，不是游戏杀率；日表需求表沿用旧名「杀率」，建议改名（Q5）。","充提差额 ÷ 充值金额"],
+fissionUsers:["裂变 · 人数","通过代理及邀请好友系统来的充值人数（需求表批注）。口径表未定义。",""],
+fissionRate:["裂变 · 比率","分母为当天总充值人数（需求表批注）。","裂变人数 ÷ 充值人数"],
+commUsers:["裂变佣金明细 · 人数","口径表未定义，建议为当天产生佣金的代理人数（Q6）。",""],
+commAmount:["裂变佣金明细 · 金额","人头费用 + 投注返还（需求表批注）；口径表「代理佣金总额」= 代理后台当期应发佣金。",""],
+commRatio:["裂变佣金明细 · 占比","需求表公式：佣金 ÷ 优惠金额。","佣金金额 ÷ 优惠金额"],
+retUsers:["留存明细 · 人数","当日总充值人数 − 当日首存充值人数（需求表批注）。","充值人数 − 首充人数"],
+retAmount:["留存明细 · 金额","老用户（非当日首充）的充值。需求表公式为 充值 − 首充金额 − 当日首充总额，会把首笔扣两次（Q7）。","充值金额 − 当日首充总额"],
+retAvg:["留存明细 · 人均","","留存金额 ÷ 留存人数"],
+retRatio:["留存人数占比","需求表批注：(充值人数 − 首充人数) ÷ 充值人数。","留存人数 ÷ 充值人数"],
+depCount:["充提笔数 · 充值","按成功到账时间统计的充值订单数。",""],
+depCountAvg:["充提笔数 · 人均笔数","","充值笔数 ÷ 充值人数"],
+wdCountB:["充提笔数 · 提款","按成功出款时间统计的提款订单数。",""],
+validBet:["平台报表 · 总投注 / 总打码","有效投注金额合计。",""],
+betMultiple:["平台报表 · 倍数","打码倍数，分子分母同一时段（需求表批注：总打码 ÷ 总存款）。","有效投注 ÷ 充值金额"],
+killRate:["平台报表 · 杀率（1 − RTP）","口径表「杀率」，日表需求表叫「盈利率（杀率）」。","GGR ÷ 有效投注"],
+ggr:["平台报表 · GGR","派彩含返还本金；未扣活动、佣金等成本。","有效投注 − 派彩"],
+promoAmount:["活动奖金 / 优惠 · 金额","后台「活动费用报表」本时段全部活动费用，与代理佣金分开。",""],
+promoRatio:["活动奖金 / 优惠 · 比例","","活动奖金金额 ÷ 充值金额"],
+actUsers:["人数","活动费用报表中该活动本时段的去重参与人数。",""],
+actAmount:["金额","活动费用报表中该活动本时段的活动费用。",""],
+actRatio:["占充值","日表需求表保留每个活动的占充值（口径表没有，Q8）。","活动金额 ÷ 充值金额"],
+totalTimes:["总计 · 人数","各活动人数相加，跨活动不去重（参与人次）。",""],
+totalAmount:["总计 · 金额","口径表：全部活动费用合计（含 8 列以外的活动）。需求表公式只加了 8 列（Q9）。",""],
+bDep:["充值金额","同时段成功到账充值金额，和主表一致。",""]
 };
-const LB = { // 表头显示名（与需求表一致）
- h:{online:"在线",bettors:"投注",registers:"注册",fd_users:"人数",fd_amount:"金额",fd_avg:"人均",conv_rate:"转换率",fdt_users:"人数",fdt_amount:"金额",fdt_avg:"人均",dep_users:"人数",dep_amount:"金额",dep_daily_avg:"平均日存",dep_avg:"人均",wd_users:"人数",wd_amount:"金额",wd_avg:"人均",net:"存提差",net_rate:"存提差/充值",ret_users:"人数",ret_amount:"金额",ret_avg:"人均",ret_ratio:"留存人数占比",dep_count:"充值",dep_count_avg:"人均笔数",wd_count_b:"提款",valid_bet:"总投注",bet_multiple:"倍数（投注/充值）",kill_rate:"杀率（1-rtp）",ggr:"ggr",promo_amount:"金额",promo_ratio:"比例（奖金/充值）"},
- d:{time:"日期",weekday:"星期",online:"在线",bettors:"投注",registers:"注册",fd_users:"人数",fd_amount:"金额",fd_avg:"人均",fd_agent:"代理",fd_official:"官网",conv_rate:"转换率",fdt_users:"人数",fdt_amount:"金额",fdt_avg:"人均",dep_users:"人数",dep_amount:"金额",dep_daily_avg:"平均日存",dep_avg:"人均",wd_count:"笔数",wd_amount:"金额",wd_avg:"平均",net:"盈亏金额",net_rate:"杀率",fission_users:"人数",fission_rate:"比率",comm_users:"人数",comm_amount:"金额",comm_ratio:"占比",ret_users:"人数",ret_amount:"金额",ret_avg:"人均",ret_ratio:"留存人数占比",dep_count:"充值",dep_count_avg:"人均笔数",wd_count_b:"提款",valid_bet:"总打码",bet_multiple:"倍数",kill_rate:"盈利率（杀率）",ggr:"金额（ggr）",promo_amount:"金额",promo_ratio:"比例"}
+/* v2.0 累计表的 ⓘ：只覆盖口径和小时表不同的字段，其余沿用 INFO */
+const CINFO={
+time:["时间","0-1 = 当天 00:00–01:00，0-2 = 00:00–02:00 … 0-24 = 全天。每行是 00:00 到该小时末的累计；0-24 和日表一致。",""],
+online:["在线","累计表：00:00 到该小时末登录过的去重人数；0-24 = 日表「在线」（= 平台报表活跃用户）。不是整点快照（待确认 1）。",""],
+bettors:["投注","00:00 到该小时末有下注的去重人数；0-24 = 日表投注人数。",""],
+registers:["注册","00:00 到该小时末的新注册人数；0-24 = 日表注册。",""],
+fdUsers:["首充 · 人数","00:00 到该小时末完成首次成功充值的人数（首充按全生命周期识别）；0-24 = 日表首充人数。",""],
+fdAmount:["首充 · 金额","00:00 到该小时末的首笔充值金额合计。",""],
+fdAvg:["首充 · 人均","用累计后的金额和人数重算。","累计首充金额 ÷ 累计首充人数"],
+depUsers:["充值 · 人数","00:00 到该小时末充值成功的去重人数；同一人多个小时充值只算 1 人。0-24 = 日表充值人数。",""],
+depAmount:["充值 · 金额","00:00 到该小时末成功到账的充值金额合计。",""],
+depDailyAvg:["充值 · 平均日存","累计表不出（日表合计行才有意义）。",""],
+depAvg:["充值 · 人均","用累计后的金额和人数重算。","累计充值金额 ÷ 累计充值人数"],
+wdUsers:["取款 · 人数","00:00 到该小时末提款成功的去重人数。日表取款用笔数，对照 0-24 行的「充提笔数 · 提款」。",""],
+wdAmount:["取款 · 金额","00:00 到该小时末成功出款金额合计；0-24 = 日表取款金额。",""],
+wdAvg:["取款 · 人均","用累计后的金额和人数重算。","累计取款金额 ÷ 累计取款人数"],
+net:["存提差","累计充值金额 − 累计取款金额；0-24 = 日表盈亏金额。","累计充值 − 累计取款"],
+netRate:["存提差/充值","用累计值重算；0-24 = 日表「杀率」（存提差率）。","累计存提差 ÷ 累计充值"],
+retUsers:["留存明细 · 人数","累计充值人数 − 累计首充人数；0-24 = 日表留存人数。","累计充值人数 − 累计首充人数"],
+retAmount:["留存明细 · 金额","累计充值金额 − 当日首充总额（截至该小时末）。","累计充值 − 当日首充总额"],
+retAvg:["留存明细 · 人均","","留存金额 ÷ 留存人数"],
+retRatio:["留存人数占比","用累计值重算。","留存人数 ÷ 累计充值人数"],
+depCount:["充提笔数 · 充值","00:00 到该小时末成功充值订单数。",""],
+depCountAvg:["充提笔数 · 人均笔数","","累计充值笔数 ÷ 累计充值人数"],
+wdCountB:["充提笔数 · 提款","00:00 到该小时末成功出款订单数；0-24 = 日表取款笔数。",""],
+validBet:["平台报表 · 总投注","00:00 到该小时末有效投注合计。",""],
+betMultiple:["平台报表 · 倍数","用累计值重算。","累计有效投注 ÷ 累计充值"],
+killRate:["平台报表 · 杀率（1 − RTP）","用累计值重算。","累计 GGR ÷ 累计有效投注"],
+ggr:["平台报表 · GGR","00:00 到该小时末 GGR 合计。","有效投注 − 派彩"],
+promoAmount:["活动奖金 · 金额","00:00 到该小时末全部活动费用；0-24 = 日表优惠金额。",""],
+promoRatio:["活动奖金 · 比例","用累计值重算。","累计活动奖金 ÷ 累计充值"],
+actUsers:["人数","00:00 到该小时末参与该活动的去重人数；0-24 = 日彩金该活动人数。",""],
+actAmount:["金额","00:00 到该小时末该活动费用合计；0-24 = 日彩金该活动金额。",""],
+totalTimes:["总计 · 人数","各活动累计人数相加（人次，跨活动不去重）。",""],
+totalAmount:["总计 · 金额","00:00 到该小时末全部活动费用合计。",""],
+bDep:["充值金额","00:00 到该小时末成功到账充值金额，和「每小时数据（累计）」一致。",""]
 };
-const G_H=[["时间",["time"]],["当时人数",["online","bettors","registers"]],["首笔",["fd_users","fd_amount","fd_avg"]],["转换率",["conv_rate"]],["当日充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_daily_avg","dep_avg"]],["取款",["wd_users","wd_amount","wd_avg"]],["存提差",["net"]],["存提差/充值",["net_rate"]],["留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg","wd_count_b"]],["平台报表",["valid_bet","bet_multiple","kill_rate","ggr"]],["活动奖金",["promo_amount","promo_ratio"]]];
-const G_D=[["日期",["time"]],["星期",["weekday"]],["当时人数",["online","bettors","registers"]],["首充",["fd_users","fd_amount","fd_avg","fd_agent","fd_official"]],["转换率",["conv_rate"]],["当日首充总额",["fdt_users","fdt_amount","fdt_avg"]],["充值",["dep_users","dep_amount","dep_daily_avg","dep_avg"]],["取款",["wd_count","wd_amount","wd_avg"]],["盈亏金额",["net"]],["杀率",["net_rate"]],["裂变",["fission_users","fission_rate"]],["裂变佣金明细",["comm_users","comm_amount","comm_ratio"]],["充值留存明细",["ret_users","ret_amount","ret_avg"]],["留存人数占比",["ret_ratio"]],["充提笔数",["dep_count","dep_count_avg","wd_count_b"]],["平台报表",["valid_bet","bet_multiple","kill_rate","ggr"]],["优惠",["promo_amount","promo_ratio"]]];
-const ACT_DESC={101:"次日按前一天有效投注的 1.5% 发放",102:"被邀请人达成条件后给邀请人的奖励",109:"新用户完成金蛋任务的奖金",104:"新用户首充后的转盘奖励",105:"老用户充值后的转盘奖励",106:"VIP 等级提升时发放",107:"每日存款加送 10%",108:"次日按前一天净亏损发放"};
-const SINGLE=new Set(["转换率","存提差","存提差/充值","留存人数占比","盈亏金额","杀率","日期","星期","时间","充值金额"]);
-const FMT = k => /rate|ratio/.test(k)?"pct":/multiple|count_avg|^mult$/.test(k)?"x":/amount|avg|^net$|valid_bet|ggr|^dep$|^wd$|^vb$|^net$|bal|^pl$|^cash$|b_dep/.test(k)?"money":"int";
-const R = {
- r1:{t:"每小时数据",d:"每小时一行，33 列（A–AG）。HH:05 统计上一完整小时；人数为这小时新增的人；「当日首充总额」和转换率从 00:00 累计。",kind:"tbl",daily:false},
- r2:{t:"每日数据",d:"每天一行，41 列（需求表 A–AR，隐藏的三充 3 列不做）；取款用笔数。完整自然日，人数全天去重。",kind:"tbl",daily:true},
- r3:{t:"每小时彩金",d:"每小时一行，20 列（A–T）：8 个活动 × 人数 / 金额 + 总计 + 充值金额。",kind:"tbl",daily:false,bonus:true},
- r4:{t:"每日彩金",d:"每天一行，26 列：8 个活动 × 人数 / 金额 / 占充值 + 充值金额（活动顺序与名称按需求表）。",kind:"tbl",daily:true,bonus:true},
- r5:{t:"前50名",d:"每天两张榜：存款前 50、取款前 50。同额按会员账号排序，不足 50 有几个出几个。",kind:"top"}
-};
-const $ = s => document.querySelector(s);
-let cur="r1", hidden=new Set();
-function fmt(v,k){
-  if(v===null||v===undefined) return ["",true];
-  if(typeof v==="string") return [v,false];
-  const f=FMT(k);
-  if(f==="pct") return [(v*100).toFixed(2)+"%",false];
-  if(f==="x") return [v.toFixed(2),false];
-  if(f==="money") return [v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}),false];
-  return [v.toLocaleString("en-US"),false];
-}
-function groupsFor(r,all){
-  let g;
-  if(r==="r1") g=G_H; else if(r==="r2") g=G_D;
-  else if(r==="r3"){g=[["时间",["time"]]];DATA.acts_h.forEach(a=>g.push([a.name,[`a${a.id}_users`,`a${a.id}_amount`]]));g.push(["总计",["total_times","total_amount"]]);g.push(["充值金额",["b_dep"]]);}
-  else {g=[["时间",["time"]]];DATA.acts_d.forEach(a=>g.push([a.name,[`a${a.id}_users`,`a${a.id}_amount`,`a${a.id}_ratio`]]));g.push(["充值金额",["b_dep"]]);}
-  return all?g:g.filter(x=>!hidden.has(x[0]));
-}
-function info(k,r){
-  let m=k.match(/^a(\d+)_(users|amount|ratio)$/);
-  if(m){const list=R[r].daily?DATA.acts_d:DATA.acts_h;const a=list.find(x=>x.id==m[1]);const b=F["act_"+m[2]];return [a.name+" · "+b[0],b[1]+(m[2]==="users"?"（"+ACT_DESC[a.id]+"）":""),b[2]];}
-  return F[k];
-}
-function sub(k,n){
-  if(R[cur].bonus){let m=k.match(/^a\d+_(users|amount|ratio)$/); if(m) return {users:"人数",amount:"金额",ratio:"占充值"}[m[1]]; if(k==="total_times")return"人数"; if(k==="total_amount")return"金额"; if(k==="b_dep") return "";}
-  if(k==="time") return "";
-  if(SINGLE.has(n)) return "";
-  return (LB[R[cur].daily?"d":"h"][k])||(F[k]||[""])[0];
-}
-const TODAY="2026-11-02"; // 原型的「今天」
-const iso=x=>"2026-"+x.time.slice(0,5);
-function rows(){
-  const r=R[cur], a=$("#d1").value, b=$("#d2").value;
-  const list=r.daily?(r.bonus?DATA.d_bon:DATA.d_ops):(r.bonus?DATA.h_bon:DATA.h_ops);
-  return list.filter(x=>iso(x)>=a&&iso(x)<=b);
-}
-const fmtD=t=>t.toISOString().slice(0,10);
-function quick(q){
-  const t=new Date(TODAY+"T00:00:00Z"), wd=(t.getUTCDay()+6)%7, D=n=>new Date(t.getTime()+n*864e5);
-  if(q==="tw") return [fmtD(D(-wd)),TODAY];
-  if(q==="lw") return [fmtD(D(-wd-7)),fmtD(D(-wd-1))];
-  if(q==="tm") return [TODAY.slice(0,8)+"01",TODAY];
-  const f=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth()-1,1)), l=new Date(Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),0));
-  return [fmtD(f),fmtD(l)];
-}
-function setRange(a,b,q){$("#d1").value=a;$("#d2").value=b;document.querySelectorAll(".quick .q").forEach(x=>x.setAttribute("aria-pressed",x.dataset.q===q?"true":"false"));}
-function defaults(){
-  const r=R[cur];
-  if(r.kind==="top"||!r.daily) setRange("2026-11-01","2026-11-01",""); // 示例小时数据和前50名只做了 10-31、11-01
-  else {const [a,b]=quick("tm");setRange(a,b,"tm");}
-}
-function checkRange(){
-  const r=R[cur]; let a=$("#d1").value,b=$("#d2").value;
-  if(a>b){[a,b]=[b,a];setRange(a,b,"");}
-  const days=(new Date(b)-new Date(a))/864e5+1, max=r.kind==="top"?Infinity:(r.daily?92:7);
-  if(days>max){const na=fmtD(new Date(new Date(b).getTime()-(max-1)*864e5));setRange(na,b,"");toast((r.daily?"日表":"小时表")+"一次最多 "+max+" 天，已按结束日期往前取");}
-}
-const L=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26);}return s;};
-const EXTRA={};
-const CLK=(k,keys)=>{const ex=EXTRA[cur]||new Set();if(ex.has(k))return "+";const i=keys.filter(x=>!ex.has(x)).indexOf(k);return cur==="r2"&&i>=14?L(i+3):cur==="r4"&&i===25?"CQ":L(i);};
-function renderTbl(){
-  const g=groupsFor(cur), allKeys=groupsFor(cur,true).flatMap(x=>x[1]);
-  let h0="<tr>",h1="<tr>",h2="<tr>";
-  g.forEach(([n,ks],gi)=>{
-    const stick=gi===0?" stick":"";
-    const lbs=ks.map(k=>sub(k,n));
-    if(ks.length===1&&!lbs[0]){h1+=`<th rowspan="2" class="g${stick}">${n}<button class="i" type="button" data-k="${ks[0]}" aria-label="${n}说明">ⓘ</button></th>`;}
-    else{h1+=`<th colspan="${ks.length}" class="g${stick}">${n}</th>`;ks.forEach((k,i)=>{h2+=`<th>${lbs[i]}<button class="i" type="button" data-k="${k}" aria-label="${n}${lbs[i]}说明">ⓘ</button></th>`});}
-    ks.forEach(k=>h0+=`<th class="col${stick}">${CLK(k,allKeys)}</th>`);
-  });
-  let body="";
-  rows().forEach(x=>{body+="<tr>"+g.flatMap(([,ks])=>ks).map((k,i)=>{const[v,d]=fmt(x[k],k);return `<td${i===0?' class="stick"':(d?' class="dash"':"")}>${v}</td>`}).join("")+"</tr>"});
-  $("#tbl").innerHTML=`<thead>${h0}</tr>${h1}</tr>${h2}</tr></thead><tbody>${body}</tbody>`;
-  $("#tbl").className="";
-}
-const ATTR={1:"短信",2:"自然流量",3:"邀请好友",4:"广告来源"};
+const G_H=[["时间",[["time",""]]],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首笔",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"]]],["转换率",[["convRate",""]]],["当日充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdUsers","人数"],["wdAmount","金额"],["wdAvg","人均"]]],["存提差",[["net",""]]],["存提差/充值",[["netRate",""]]],["留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总投注"],["betMultiple","倍数（投注/充值）"],["killRate","杀率（1-rtp）"],["ggr","ggr"]]],["活动奖金",[["promoAmount","金额"],["promoRatio","比例（奖金/充值）"]]]];
+const G_D=[["日期",[["time",""]]],["星期",[["weekday",""]]],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首充",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"],["fdAgent","代理"],["fdOfficial","官网"]]],["转换率",[["convRate",""]]],["当日首充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdCount","笔数"],["wdAmount","金额"],["wdAvg","平均"]]],["盈亏金额",[["net",""]]],["杀率",[["netRate",""]]],["裂变",[["fissionUsers","人数"],["fissionRate","比率"]]],["裂变佣金明细",[["commUsers","人数"],["commAmount","金额"],["commRatio","占比"]]],["充值留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总打码"],["betMultiple","倍数"],["killRate","盈利率（杀率）"],["ggr","金额（ggr）"]]],["优惠",[["promoAmount","金额"],["promoRatio","比例"]]]];
 const TOPCOLS=[["acct","会员账号","会员账号。"],["attr","用户归因","注册来源：1 短信 / 2 自然流量 / 3 邀请好友 / 4 广告来源（需求表批注）。"],["dep","会员存款","当日成功存款合计。"],["wd","会员取款","当日成功取款合计。"],["mult","打码倍数","打码量 ÷ 会员存款；存款为 0 时空白。"],["vb","打码量","当日有效投注合计。"],["net","充提差额","会员存款 − 会员取款。"],["bal","会员余额","日终（23:59:59）账户余额。"],["plat","当日用户游戏系统","当日用过的端：ios、安卓、h5、pwa（浏览器），可多个（需求表批注）。"],["games","投注前 3 游戏","会员当日累计投注额排名前 3 的游戏（需求表批注）。"]];
+const REPORTS=[
+ {key:"hourly",title:"每小时数据",kind:"tbl",daily:false,maxDays:7,desc:"每小时一行。HH:06 统计上一完整小时；「当日首充总额」和转换率从 00:00 累计。",sync:"每小时 :06 出上一小时的数据；当前小时和未到 :06 的上一小时为空行。"},
+ {key:"hourlyCum",v2:true,title:"每小时数据（累计）",kind:"tbl",daily:false,cum:true,maxDays:7,desc:"每天 24 行：0-1、0-2 … 0-24，每行是当天 00:00 到该小时末的累计。人数在这段时间内去重，金额和笔数相加，比率和人均用累计值重算；0-24 和「每日数据」一致。",sync:"和每小时数据同一次 :06 出数；每天 06:40 日任务跑完后，用日表同一批数据重算昨天的 0-24 行。"},
+ {key:"daily",title:"每日数据",kind:"tbl",daily:true,maxDays:92,desc:"每天一行。完整自然日，人数全天去重。",sync:"投注人数、取款人数、首充代理/官网、当日首充总额金额、裂变、裂变佣金由每日 06:40 计算昨天的数据，未计算的日期这几列显示空白；最后一行为合计。"},
+ {key:"hourlyBonus",title:"每小时彩金",kind:"tbl",daily:false,bonus:true,maxDays:7,desc:"每小时一行：各活动 × 人数 / 金额 + 总计 + 充值金额。",sync:"与每小时数据同一次 :06 出数；活动列按返回的活动生成。"},
+ {key:"hourlyBonusCum",v2:true,title:"每小时彩金（累计）",kind:"tbl",daily:false,bonus:true,cum:true,maxDays:7,desc:"每天 24 行：0-1 … 0-24，各活动 × 人数 / 金额 + 总计 + 充值金额，每行是 00:00 到该小时末的累计。活动人数在这段时间内去重；0-24 和「每日彩金」一致。",sync:"和每小时彩金同一次 :06 出数；活动列按返回的活动生成；每天 06:40 重算昨天的 0-24 行。"},
+ {key:"dailyBonus",title:"每日彩金",kind:"tbl",daily:true,bonus:true,maxDays:92,desc:"每天一行：各活动 × 人数 / 金额 / 占充值 + 充值金额。",sync:"活动列按返回的活动生成。"},
+ {key:"top50",title:"前50名",kind:"top",desc:"每天两张榜：存款前 50、取款前 50。同额按会员账号排序，不足 50 有几个出几个。",sync:"每日 06:40 生成昨天的榜单。"}
+].filter(r=>V2||!r.v2);
+/* ---------- 示例数据：逐笔模拟，再按 小时 / 累计 / 日 三种口径统计，所以 0-24 必然等于日表 ---------- */
+const TODAY="2026-11-16", NOWH=14; // 现在 14:20：已出到 13:00–14:00
+const D0=Date.UTC(2026,10,1);
+const pad=n=>String(n).padStart(2,"0");
+const dstr=i=>{const d=new Date(D0+i*864e5);return d.getUTCFullYear()+"-"+pad(d.getUTCMonth()+1)+"-"+pad(d.getUTCDate())};
+const didx=s=>Math.round((Date.UTC(+s.slice(0,4),+s.slice(5,7)-1,+s.slice(8,10))-D0)/864e5);
+const NDAYS=didx(TODAY)+1;
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const R=rng(789);
+const HF=[.5,.35,.25,.2,.2,.25,.35,.5,.7,.85,.9,.95,1,1,1,1.05,1.1,1.2,1.35,1.5,1.6,1.5,1.2,.8];
+const ACTS=["VIP会员奖励","每日首充活动","签到活动","邀请好友","新用户转盘","老用户转盘活动","充值活动","登录送"];
+const POOL=400; let nextUid=POOL; const firstDep={}; // uid -> 首充时间
+const EV=[]; // 每天每小时的事件
+for(let d=0;d<NDAYS;d++){EV[d]=[];const lastH=d===NDAYS-1?NOWH-1:23;
+ for(let h=0;h<24;h++){
+  const e={reg:[],login:new Set(),bet:{},dep:[],wd:[],act:[],online:0,payout:0,fdAgentU:new Set()};
+  if(h<=lastH){
+   const f=HF[h]*(0.75+0.5*R());
+   const nReg=Math.round(4*f*R()+f);
+   for(let i=0;i<nReg;i++){const u=nextUid++;e.reg.push(u);e.login.add(u)}
+   const pick=()=>Math.floor(R()*POOL);
+   const nLog=Math.round(30*f);for(let i=0;i<nLog;i++)e.login.add(pick());
+   const nBet=Math.round(22*f);for(let i=0;i<nBet;i++){const u=pick();e.login.add(u);e.bet[u]=(e.bet[u]||0)+Math.round(200+R()*1800)}
+   const nDep=Math.round(9*f+R()*3);
+   for(let i=0;i<nDep;i++){const u=R()<.35&&e.reg.length?e.reg[Math.floor(R()*e.reg.length)]:(R()<.3&&nextUid>POOL?POOL+Math.floor(R()*(nextUid-POOL)):pick());
+     e.login.add(u);e.dep.push({u,amt:[100,200,300,500,1000,2000,5000][Math.floor(R()*7)]});}
+   const nWd=Math.round(4*f*R());for(let i=0;i<nWd;i++){const u=pick();e.wd.push({u,amt:[200,500,800,1000,1500,3000][Math.floor(R()*6)]})}
+   const nAct=Math.round(10*f);for(let i=0;i<nAct;i++){const a=Math.floor(R()*ACTS.length);const u=pick();e.act.push({a,u,amt:Math.round((5+R()*120)*100)/100})}
+   e.online=Math.round(8+40*f*R());
+  }
+  EV[d][h]=e;}}
+// 首充识别：全生命周期第一笔
+for(let u=0;u<POOL;u++)if(u%9)firstDep[u]=[-1]; // 老用户：11 月前已首充
+for(let d=0;d<NDAYS;d++)for(let h=0;h<24;h++)EV[d][h].dep.forEach((x,i)=>{if(!(x.u in firstDep)){firstDep[x.u]=[d,h,i];x.first=true}});
+function agg(d,h1,h2){ // 汇总 d 天 [h1,h2] 小时，人数在区间内去重
+ const S={log:new Set(),bet:new Set(),dep:new Set(),wd:new Set(),fd:new Set()},o={registers:0,fdAmount:0,depAmount:0,depCount:0,wdAmount:0,wdCountB:0,validBet:0,ggr:0,promoAmount:0,acts:{},online:0};
+ const au={};
+ for(let h=h1;h<=h2;h++){const e=EV[d][h];o.registers+=e.reg.length;e.login.forEach(u=>S.log.add(u));Object.keys(e.bet).forEach(u=>{S.bet.add(u);o.validBet+=e.bet[u]});
+  e.dep.forEach(x=>{S.dep.add(x.u);o.depAmount+=x.amt;o.depCount++;if(x.first){S.fd.add(x.u);o.fdAmount+=x.amt}});
+  e.wd.forEach(x=>{S.wd.add(x.u);o.wdAmount+=x.amt;o.wdCountB++});
+  e.act.forEach(x=>{(au[x.a]=au[x.a]||new Set()).add(x.u);o.acts[x.a]=o.acts[x.a]||{users:0,amount:0};o.acts[x.a].amount+=x.amt;o.promoAmount+=x.amt});
+  o.online=e.online;}
+ for(const a in au)o.acts[a].users=au[a].size;
+ o.ggr=Math.round(o.validBet*(0.02+0.06*((d*7+h1)%5)/5));
+ o.bettors=S.bet.size;o.depUsers=S.dep.size;o.wdUsers=S.wd.size;o.fdUsers=S.fd.size;o.loginUsers=S.log.size;o._fdSet=S.fd;o._depSet=S.dep;
+ return o;}
+function dayFdt(d,hEnd){ // 当日首充总额：0 点到 hEnd 首充的人，当天到 hEnd 的全部充值
+ const fd=new Set();let amt=0;for(let h=0;h<=hEnd;h++)EV[d][h].dep.forEach(x=>{if(x.first)fd.add(x.u)});
+ for(let h=0;h<=hEnd;h++)EV[d][h].dep.forEach(x=>{if(fd.has(x.u))amt+=x.amt});return{u:fd.size,a:amt};}
+// ggr 要可加：按小时生成后相加
+const GGRH=[];for(let d=0;d<NDAYS;d++){GGRH[d]=[];for(let h=0;h<24;h++){const b=Object.values(EV[d][h].bet).reduce((s,x)=>s+x,0);GGRH[d][h]=Math.round(b*(-0.04+0.14*R()))}}
+const div=(a,b)=>b?a/b:null;
+function rowFrom(o,d,hEnd,regCum){
+ const r={};["online","bettors","registers","fdUsers","fdAmount","depAmount","depCount","depUsers","wdUsers","wdAmount","wdCountB","validBet","promoAmount"].forEach(k=>r[k]=o[k]);
+ r.ggr=o.ggr;
+ const fdt=dayFdt(d,hEnd);r.fdtUsers=fdt.u;r.fdtAmount=fdt.a;r.fdtAvg=div(fdt.a,fdt.u);
+ r.convRate=div(fdt.u,regCum);
+ r.fdAvg=div(r.fdAmount,r.fdUsers);r.depAvg=div(r.depAmount,r.depUsers);r.depDailyAvg=null;r.wdAvg=div(r.wdAmount,r.wdUsers);
+ r.net=r.depAmount-r.wdAmount;r.netRate=div(r.net,r.depAmount);
+ r.retUsers=r.depUsers-r.fdUsers;r.retAmount=r.depAmount-r.fdAmount;r.retAvg=div(r.retAmount,r.retUsers);r.retRatio=div(r.retUsers,r.depUsers);
+ r.depCountAvg=div(r.depCount,r.depUsers);r.betMultiple=div(r.validBet,r.depAmount);r.killRate=div(r.ggr,r.validBet);r.promoRatio=div(r.promoAmount,r.depAmount);
+ return r;}
+function lastDone(d){return d===NDAYS-1?NOWH-1:23}
+function hourRow(d,h,cum){
+ if(h>lastDone(d))return {time:cum?(dstr(d).slice(5)+" 0-"+(h+1)):(dstr(d).slice(5)+" "+pad(h)+":00"),_empty:true,_h:h,_d:d};
+ const o=agg(d,cum?0:h,h);o.ggr=GGRH[d].slice(cum?0:h,h+1).reduce((s,x)=>s+x,0);
+ if(cum)o.online=o.loginUsers;
+ let regCum=0;for(let k=0;k<=h;k++)regCum+=EV[d][k].reg.length;
+ const r=rowFrom(o,d,h,regCum);r.time=cum?(dstr(d).slice(5)+" 0-"+(h+1)):(dstr(d).slice(5)+" "+pad(h)+":00");r._acts=o.acts;r._h=h;r._d=d;return r;}
+function dayRow(d){
+ const o=agg(d,0,23);o.ggr=GGRH[d].reduce((s,x)=>s+x,0);o.online=o.loginUsers;
+ const r=rowFrom(o,d,23,o.registers);r.time=dstr(d);r.weekday="周"+"日一二三四五六"[new Date(D0+d*864e5).getUTCDay()];
+ r.wdCount=r.wdCountB;r.wdAvg=div(r.wdAmount,r.wdCount);
+ r.fdAgent=Math.round(r.fdUsers*0.6);r.fdOfficial=r.fdUsers-r.fdAgent;
+ r.fissionUsers=Math.round(r.depUsers*0.3);r.fissionRate=div(r.fissionUsers,r.depUsers);
+ r.commUsers=Math.round(3+R()*5);r.commAmount=Math.round(r.promoAmount*0.15*100)/100;r.commRatio=div(r.commAmount,r.promoAmount);
+ r._acts=o.acts;return r;}
+/* ---------- 页面状态 ---------- */
+const $=s=>document.querySelector(s);
+let cur=REPORTS[0], range=[TODAY,TODAY], quick="", hidden=new Set(), topDate=dstr(NDAYS-2), board="deposit", opened=[REPORTS[0].key];
+const updInfo=r=>r.kind==="top"?["2026-11-16 06:40:00","2026-11-15"]:r.daily?["2026-11-16 06:40:00","2026-11-15"]:["2026-11-16 14:06:00","2026-11-16 13:00-14:00"];
+function weekStart(i){return i-((new Date(D0+i*864e5).getUTCDay()+6)%7)}
+function quickRange(q){const t=NDAYS-1,w=weekStart(t);
+ if(q==="tw")return[dstr(w),dstr(t)];if(q==="lw")return[dstr(w-7),dstr(w-1)];if(q==="tm")return[dstr(0),dstr(t)];return["2026-10-01","2026-10-31"]}
+function fmt(v,k){if(v==null)return"";if(typeof v==="string")return v;
+ if(/Rate|Ratio|ratio/.test(k))return(v*100).toFixed(2)+"%";
+ if(/Multiple|CountAvg/.test(k))return v.toFixed(2);
+ if(/Amount|Avg|^net$|validBet|ggr|bDep|amount/.test(k))return v.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+ return String(v);}
+function rows(){
+ const a=Math.max(0,didx(range[0])),b=Math.min(NDAYS-1,didx(range[1]));const out=[];if(a>b)return out;
+ if(cur.daily){for(let d=a;d<=Math.min(b,NDAYS-1);d++)out.push(dayRow(d));} // 日表含今天（现网：今天行为半天数据）
+ else for(let d=a;d<=b;d++)for(let h=0;h<24;h++)out.push(hourRow(d,h,!!cur.cum));
+ return out;}
+function groups(list){
+ if(!cur.bonus)return cur.daily?G_D:(cur.cum?G_H.map(g=>g[0]==="当时人数"?["累计人数",g[1]]:g):G_H);
+ const seen=new Set();list.forEach(r=>r._acts&&Object.keys(r._acts).forEach(a=>seen.add(+a)));
+ const acts=[...seen].sort((x,y)=>x-y);
+ const g=[["时间",[["time",""]]]];acts.forEach(a=>g.push([ACTS[a],cur.daily?[["a"+a+"Users","人数"],["a"+a+"Amount","金额"],["a"+a+"Ratio","占充值"]]:[["a"+a+"Users","人数"],["a"+a+"Amount","金额"]]]));
+ if(!cur.daily)g.push(["总计",[["totalTimes","人数"],["totalAmount","金额"]]]);
+ g.push(["充值金额",[["bDep",""]]]);return g;}
+function infoOf(k){
+ const base=cur.cum?Object.assign({},INFO,CINFO):INFO;
+ const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);
+ if(m){const t=base["act"+m[2]];return[ACTS[+m[1]]+" · "+t[0],t[1],t[2]]}
+ return base[k]||[k,"",""];}
+function cell(r,k){
+ const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);
+ if(m){const x=r._acts&&r._acts[m[1]];if(!x)return r._empty?"":"";if(m[2]==="Users")return String(x.users);if(m[2]==="Amount")return fmt(x.amount,"amount");return fmt(div(x.amount,r.depAmount),"Ratio")}
+ if(k==="totalTimes"){if(r._empty)return"";return String(Object.values(r._acts||{}).reduce((s,x)=>s+x.users,0))}
+ if(k==="totalAmount"){if(r._empty)return"";return fmt(Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0),"amount")}
+ if(k==="bDep")return r._empty?"":fmt(r.depAmount,"bDep");
+ if(r._empty&&k!=="time")return"";
+ return fmt(r[k],k);}
+function totalRow(list){ // 日表合计（现网：金额相加，人数也逐天相加，比率按合计重算）
+ const t={time:"合计",weekday:""};const sum=k=>list.reduce((s,r)=>s+(r[k]||0),0);
+ ["online","bettors","registers","fdUsers","fdAmount","fdAgent","fdOfficial","fdtUsers","fdtAmount","depUsers","depAmount","wdCount","wdAmount","net","fissionUsers","commUsers","commAmount","retUsers","retAmount","depCount","wdCountB","validBet","ggr","promoAmount"].forEach(k=>t[k]=sum(k));
+ t.fdAvg=div(t.fdAmount,t.fdUsers);t.convRate=div(t.fdtUsers,t.registers);t.fdtAvg=div(t.fdtAmount,t.fdtUsers);t.depDailyAvg=div(t.depAmount,list.length);t.depAvg=div(t.depAmount,t.depUsers);
+ t.wdAvg=div(t.wdAmount,t.wdCount);t.netRate=div(t.net,t.depAmount);t.fissionRate=div(t.fissionUsers,t.depUsers);t.commRatio=div(t.commAmount,t.promoAmount);t.retAvg=div(t.retAmount,t.retUsers);t.retRatio=div(t.retUsers,t.depUsers);
+ t.depCountAvg=div(t.depCount,t.depUsers);t.betMultiple=div(t.validBet,t.depAmount);t.killRate=div(t.ggr,t.validBet);t.promoRatio=div(t.promoAmount,t.depAmount);
+ t._acts={};list.forEach(r=>{for(const a in r._acts){t._acts[a]=t._acts[a]||{users:0,amount:0};t._acts[a].users+=r._acts[a].users;t._acts[a].amount+=r._acts[a].amount}});
+ return t;}
+/* ---------- 渲染 ---------- */
+function renderSide(){
+ const items=REPORTS.map(r=>`<a href="#${r.key}" class="${r.key===cur.key?"act":""}" data-k="${r.key}">${r.v2?"<b>"+r.title+"</b>":r.title}</a>`).join("");
+ $("#side").innerHTML=`<div class="g1">用户管理<span>▸</span></div><div class="g1">财务管理<span>▸</span></div><div class="g1">提现管理<span>▸</span></div><div class="g1">数据报表<span>▸</span></div><div class="g1 on">数据报表中心<span>▾</span></div>${items}<div class="g1">活动配置<span>▸</span></div>`;}
+function renderTabs(){$("#tabs").innerHTML=opened.map(k=>{const r=REPORTS.find(x=>x.key===k);return`<span class="${k===cur.key?"on":""}" data-k="${k}">✥ ${r.title} ×</span>`}).join("")}
+function renderBar(){
+ if(cur.kind==="top"){$("#bar").innerHTML=`<label class="fld">查询日期<span class="dr">📅<input type="date" id="td" value="${topDate}" max="${dstr(NDAYS-2)}"></span></label>
+  <label class="fld">榜单<select class="s" id="board"><option value="deposit" ${board==="deposit"?"selected":""}>存款前 50</option><option value="withdraw" ${board==="withdraw"?"selected":""}>取款前 50</option></select></label>
+  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>`;return}
+ const qs=cur.daily?[["tw","本周报表"],["lw","上周"],["tm","本月报表"],["lm","上月报表"]]:[["tw","本周报表"],["lw","上周"]];
+ $("#bar").innerHTML=`<label class="fld">查询日期<span class="dr">📅<input type="date" id="d1" value="${range[0]}" max="${TODAY}"> ~ <input type="date" id="d2" value="${range[1]}" max="${TODAY}"></span></label>
+  <span class="grp">${qs.map(([k,l])=>`<button class="btn ${quick===k?"on":""}" data-q="${k}">${l}</button>`).join("")}</span>
+  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>`;}
+function renderUpd(){const [u,t]=updInfo(cur);$("#upd").innerHTML=`<span>数据更新时间：${u}</span><span>已更新到：${t}</span><span>${cur.sync}</span><span class="m">点「刷新」重新查询最新数据</span>`}
+function th(k,label,g,stk,rs){const tip=`<button class="i" type="button" data-k="${k}" aria-label="${g}${label}说明">ⓘ</button>`;return`<th class="${stk?"stk":""}"${rs?' rowspan="2"':""}>${label||g}${tip}</th>`}
+function renderTable(){
+ if(cur.kind==="top")return renderTop();
+ const list=rows(),G=groups(list).filter(([g])=>!hidden.has(g)||g==="时间"||g==="日期");
+ $("#chips").innerHTML="显示列："+groups(list).slice(1).filter(([g])=>g!=="星期"||true).map(([g])=>`<button class="chip ${hidden.has(g)?"off":""}" data-g="${g}">${g}</button>`).join("");
+ let h1="<tr>",h2="<tr>";
+ G.forEach(([g,ks],gi)=>{if(ks.length===1&&!ks[0][1])h1+=th(ks[0][0],"",g,gi===0,true);else{h1+=`<th colspan="${ks.length}">${g}</th>`;ks.forEach(([k,l])=>h2+=th(k,l,g,false,false))}});
+ const keys=G.flatMap(x=>x[1].map(y=>y[0]));
+ let body="";
+ if(!list.length)body=`<tr><td class="empty" colspan="${keys.length}">No Data</td></tr>`;
+ list.forEach((r,i)=>{const cls=[];if(cur.cum&&r._h===0&&i>0)cls.push("day0");if(cur.cum&&r._h===23&&!r._empty)cls.push("last");
+  body+=`<tr class="${cls.join(" ")}">`+keys.map(k=>`<td class="${k==="time"||k==="weekday"?"l":""}">${cell(r,k)}</td>`).join("")+"</tr>"});
+ if(cur.daily&&list.length){const t=totalRow(list);body+=`<tr class="tot">`+keys.map(k=>`<td class="${k==="time"?"l":""}">${k==="time"?"合计":cell(t,k)}</td>`).join("")+"</tr>"}
+ $("#tbl").innerHTML=`<thead>${h1}</tr>${h2}</tr></thead><tbody>${body}</tbody>`;}
 function renderTop(){
-  const d=$("#d2").value.slice(5), which=$("#board").value, list=(DATA.top50[d]||{})[which]||[];
-  let h0="<tr><th class='col stick'></th>",h1="<tr><th class='g stick'>排名</th>";
-  TOPCOLS.forEach(([k,n],i)=>{h0+=`<th class="col">${L(i)}</th>`;h1+=`<th class="g">${n}<button class="i" type="button" data-t="${i}" aria-label="${n}说明">ⓘ</button></th>`});
-  if(!list.length){$("#tbl").innerHTML='<tbody><tr><td style="text-align:left">示例数据只做了 10-31、11-01 两天。</td></tr></tbody>';$("#tbl").className='two';return;}
-  let body=list.map(r=>"<tr><td class='stick'>"+r.rank+"</td>"+TOPCOLS.map(([k])=>{let v=r[k];if(k==="attr")v=v+" "+ATTR[v];const[s,dd]=fmt(v,k);return `<td${dd?' class="dash"':""} style="${/acct|plat|games|attr/.test(k)?'text-align:left':''}">${s}</td>`}).join("")+"</tr>").join("");
-  $("#tbl").innerHTML=`<thead>${h0}</tr>${h1}</tr></thead><tbody>${body}</tbody>`;
-  $("#tbl").className="two";
-}
+ $("#chips").innerHTML="";
+ const d=didx(topDate),agg2={};
+ if(d>=0&&d<NDAYS-1)for(let h=0;h<24;h++){const e=EV[d][h];e.dep.forEach(x=>{const a=agg2[x.u]=agg2[x.u]||{dep:0,wd:0,vb:0};a.dep+=x.amt});e.wd.forEach(x=>{const a=agg2[x.u]=agg2[x.u]||{dep:0,wd:0,vb:0};a.wd+=x.amt});Object.keys(e.bet).forEach(u=>{const a=agg2[u]=agg2[u]||{dep:0,wd:0,vb:0};a.vb+=e.bet[u]})}
+ const acct=u=>"u"+(Number(u)*7919%100000).toString(36).padStart(5,"0");
+ const list=Object.entries(agg2).filter(([u,a])=>board==="deposit"?a.dep>0:a.wd>0).map(([u,a])=>({acct:acct(u),attr:1+Number(u)%4,dep:a.dep,wd:a.wd,vb:a.vb,mult:div(a.vb,a.dep),net:a.dep-a.wd,bal:Math.round((Number(u)*37%5000)*100)/100,plat:["h5","ios","安卓","h5,pwa"][Number(u)%4],games:"Super Ace, Fortune Gems, Lucky Coming"}))
+  .sort((x,y)=>(board==="deposit"?y.dep-x.dep:y.wd-x.wd)||x.acct.localeCompare(y.acct)).slice(0,50);
+ const ATTR={1:"短信",2:"自然流量",3:"邀请好友",4:"广告来源"};
+ const head="<tr><th class='stk'>排名</th>"+TOPCOLS.map(([k,l])=>`<th>${l}<button class="i" type="button" data-top="${k}">ⓘ</button></th>`).join("")+"</tr>";
+ const f=(v,k)=>k==="attr"?v+" "+ATTR[v]:(["dep","wd","vb","net","bal"].includes(k)?fmt(v,"amount"):k==="mult"?fmt(v,"Multiple"):v);
+ const body=list.length?list.map((r,i)=>"<tr><td>"+(i+1)+"</td>"+TOPCOLS.map(([k])=>`<td class="${["acct","plat","games","attr"].includes(k)?"l":""}">${r[k]==null?"":f(r[k],k)}</td>`).join("")+"</tr>").join(""):`<tr><td class="empty" colspan="11">No Data</td></tr>`;
+ $("#tbl").innerHTML=`<thead>${head}</thead><tbody>${body}</tbody>`;}
+function renderV2Note(){
+ $("#v2note").innerHTML=false?`<b>v2.0 新增</b>　0-24 行和「${cur.bonus?"每日彩金":"每日数据"}」同名字段一致；当天只显示已完成的小时，未出数的小时为空行。人数在 00:00 到该小时末去重（同一人多个小时只算 1 次），金额 / 笔数相加，比率和人均用累计值重算。`:"";}
 function render(){
-  const r=R[cur];
-  $("#ttl").textContent=r.t; $("#desc").textContent=r.d; $("#crumb").textContent=r.t;
-  const daily=r.kind==="tbl"&&r.daily;
-  $("#f-board").hidden=r.kind!=="top";
-  $("#chips").hidden=r.kind!=="tbl";
-  document.querySelectorAll("nav.side a").forEach(a=>a.setAttribute("aria-current",a.dataset.r===cur?"page":"false"));
-  if(r.kind==="tbl") renderTbl(); else renderTop();
-  renderChips(); renderGloss();
-}
-function renderChips(){
-  if(R[cur].kind!=="tbl") return;
-  const base=groupsFor(cur,true).slice(1).map(x=>x[0]);
-  $("#chips").innerHTML='<span class="lbl">显示列：</span>'+base.map(n=>`<button type="button" class="chip" aria-pressed="${!hidden.has(n)}" data-g="${n}">${n}</button>`).join("");
-}
-function renderGloss(){
-  let html="<table><thead><tr><th>字段</th><th>口径</th><th>公式</th></tr></thead><tbody>";
-  const row=([a,b,c])=>`<tr><td>${a}</td><td>${b}</td><td class="f">${c||""}</td></tr>`;
-  const r=R[cur];
-  if(r.kind==="top") TOPCOLS.forEach(([,n,d])=>html+=row([n,d,""]));
-  else if(r.bonus){
-    ["act_users","act_amount"].concat(r.daily?["act_ratio","b_dep"]:["total_times","total_amount","b_dep"]).forEach(k=>html+=row([k.startsWith("act_")?"活动 · "+F[k][0]:F[k][0],F[k][1],F[k][2]]));
-    (r.daily?DATA.acts_d:DATA.acts_h).forEach(a=>html+=row([a.name,"活动编号 "+a.id+"（示例）："+ACT_DESC[a.id],""]));
-  } else groupsFor(cur,true).flatMap(x=>x[1]).forEach(k=>html+=row(F[k]));
-  $("#gloss").innerHTML=html+"</tbody></table>";
-}
-const pop=$("#pop");
-function showPop(btn){
-  let n,d,f;
-  if(btn.dataset.k){[n,d,f]=info(btn.dataset.k,cur);}
-  else if(btn.dataset.t){const c=TOPCOLS[+btn.dataset.t];n=c[1];d=c[2];f="";}
-  else {n=btn.dataset.s;d=(window.__stip||{})[n];f="";}
-  pop.innerHTML=`<b>${n}</b>${d||""}${f?`<code>${f}</code>`:""}`;
-  pop.hidden=false;
-  const b=btn.getBoundingClientRect(), w=Math.min(300,innerWidth-24);
-  pop.style.left=Math.max(12,Math.min(b.left-20,innerWidth-w-12))+"px";
-  pop.style.top=(b.bottom+8)+"px";
-}
-document.addEventListener("mouseover",e=>{const b=e.target.closest(".i");if(b)showPop(b);});
-document.addEventListener("mouseout",e=>{if(e.target.closest(".i"))pop.hidden=true;});
+ $("#ttl").textContent=cur.title;$("#crumb").textContent=cur.title;$("#desc").textContent=cur.desc;
+ renderSide();renderTabs();renderBar();renderUpd();renderV2Note();renderTable();}
+function open(k){cur=REPORTS.find(r=>r.key===k)||REPORTS[0];if(!opened.includes(cur.key))opened.push(cur.key);
+ if(cur.kind!=="top"){if(cur.daily){range=quickRange("tm");quick="tm"}else{range=[TODAY,TODAY];quick=""}}
+ hidden=new Set();render();}
+let tt;function toast(s){const e=$("#toast");e.textContent=s;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2400)}
+function checkRange(){let[a,b]=range;if(a>b){[a,b]=[b,a]}const n=didx(b)-didx(a)+1;
+ if(n>cur.maxDays){a=dstr(didx(b)-cur.maxDays+1);quick="";toast((cur.daily?"日表":"小时表")+"一次最多 "+cur.maxDays+" 天，已按结束日期往前取")}range=[a,b];}
 document.addEventListener("click",e=>{
-  const b=e.target.closest(".i"); if(b){showPop(b);e.stopPropagation();return;}
-  pop.hidden=true;
-  const c=e.target.closest(".chip"); if(c){const g=c.dataset.g;hidden.has(g)?hidden.delete(g):hidden.add(g);render();}
+ const s=e.target.closest("#side a,#tabs span");if(s){e.preventDefault();location.hash=s.dataset.k;return}
+ const q=e.target.closest("[data-q]");if(q){quick=q.dataset.q;range=quickRange(quick);checkRange();render();return}
+ const c=e.target.closest("[data-g]");if(c){const g=c.dataset.g;hidden.has(g)?hidden.delete(g):hidden.add(g);renderTable();return}
+ if(e.target.closest("#b-search")){if(cur.kind==="top"){topDate=$("#td").value;board=$("#board").value}else{range=[$("#d1").value,$("#d2").value];quick="";checkRange()}render();return}
+ if(e.target.closest("#b-refresh")){render();toast("已刷新");return}
+ if(e.target.closest("#b-export")){toast("已导出 "+cur.title+"（原型不下载文件）");return}
 });
-$(".tablewrap").addEventListener("scroll",()=>pop.hidden=true);
-function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2200);}
-$("#b-export").onclick=()=>toast("已生成导出文件（原型演示）");
-$("#b-recalc").onclick=()=>toast("已提交重算任务（原型演示）");
-$("#b-search").onclick=()=>{checkRange();render();};
-$("#b-refresh").onclick=()=>{$("#upd").textContent="2026-11-02 11:06";render();toast("已刷新，数据为最新（原型演示）");};
-document.querySelectorAll(".quick .q").forEach(b=>b.onclick=()=>{const [a,c]=quick(b.dataset.q);setRange(a,c,b.dataset.q);checkRange();render();});
-["#d1","#d2"].forEach(x=>$(x).onchange=()=>setRange($("#d1").value,$("#d2").value,""));
-$("#board").onchange=render;
-function route(){const h=location.hash.slice(1);cur=R[h]?h:"r1";hidden.clear();defaults();render();$(".tablewrap").scrollLeft=0;}
-addEventListener("hashchange",route); route();
+const pop=$("#pop");
+document.addEventListener("mouseover",e=>{const b=e.target.closest(".i");if(!b){pop.hidden=true;return}
+ let t;if(b.dataset.top){const x=TOPCOLS.find(c=>c[0]===b.dataset.top);t=[x[1],x[2],""]}else t=infoOf(b.dataset.k);
+ pop.innerHTML="<b>"+t[0]+"</b>"+(t[1]?"<p>"+t[1]+"</p>":"")+(t[2]?"<code>"+t[2]+"</code>":"");
+ pop.hidden=false;const r=b.getBoundingClientRect();pop.style.left=Math.min(r.left,innerWidth-310)+"px";pop.style.top=(r.bottom+6)+"px";});
+window.addEventListener("hashchange",()=>open(location.hash.slice(1)));
+open(location.hash.slice(1)||REPORTS[0].key);
 </script>
-
-
-</body>
-</html>
+</body></html>

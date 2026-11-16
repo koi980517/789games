@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>投流代理原型 v1.4</title>
+<title>投流代理原型 v1.5</title>
 <style>
 html,body{margin:0}
 body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#e9edf2;color:#1f2937}
@@ -24,11 +24,11 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 </head>
 <body>
 <header class="top">
-<b>投流代理原型</b><span class="ver">v1.4</span>
+<b>投流代理原型</b><span class="ver">v1.5</span>
 <span style="font-size:12px;color:#d1d5db">2026-11-16 · 示例数据，非线上配置 · 时间 GMT+8</span>
 <a class="ext" href="https://claude.ai/artifact/9nuYQbyTi4Pp3Kjnh4wHh4" target="_blank" rel="noopener">PRD</a>
 <a class="ext" href="https://claude.ai/artifact/7bP75wEhSpFss2hQEM1FPH" target="_blank" rel="noopener">Claude 原型画布</a>
-<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a></div></nav>
+<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a><a href="#/b-10-member-report" data-nav="b-10-member-report">10 报表：投流会员报告（可操作）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a><a href="#/b-11-agent-member-report" data-nav="b-11-agent-member-report">11 投流代理端：会员报告（可操作）</a></div></nav>
 </header>
 <section class="board" id="b-Main" data-fixed="1" style="--bw:1280px"><template><div style="position: relative; width: 1280px; height: 900px; background: #f5f6f8; font-size: 15px; line-height: 22px">
 <svg role="img" aria-label="从投流一级代理链接注册到上级代理等于该投流一级代理" width="8" height="87" viewBox="0 0 8 87" preserveAspectRatio="none" style="position: absolute; left: 204px; top: 232px; width: 8px; height: 87px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-1" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 83" marker-end="url(#dc-arrow-head-filled-1)"></path></svg>
@@ -117,6 +117,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流总代理列表</div>
@@ -204,6 +205,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流总代理列表 / 新增</div>
@@ -284,6 +286,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流核验告警</div>
@@ -411,6 +414,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流一级代理列表</div>
@@ -578,6 +582,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 绑定会员</div>
@@ -746,6 +751,7 @@ return Component;};</script>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mon" href="#/b-06-line-report">投流代理线汇总<span class="new" style="color: #fde68a">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">数据报表 / 投流代理线汇总</div>
@@ -853,6 +859,7 @@ return Component;};</script>
 <a class="mon" href="#/b-09-member-detail">会员详情（投流字段）<span class="new" style="color: #fde68a">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">会员管理 / 会员列表 / 会员详情</div>
@@ -948,6 +955,176 @@ class Component extends DCLogic {
   renderVals() { return {}; }
 }
 return Component;};</script>
+<section class="board" id="b-10-member-report" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 1000px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-16 15:10:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mon" href="#/b-10-member-report">投流会员报告<span class="new" style="color: #fde68a">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">数据报表 / 投流会员报告</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">投流会员报告</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 720px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px"><span class="bd" style="margin: 0">2</span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">投流总代理<select id="fm" class="inp" value="{{ f.master }}" onChange="{{ onMaster }}"><option value="">全部</option><option value="fb_media">fb_media（投流方 A）</option><option value="tw_ads">tw_ads（投流方 B）</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">投流一级代理<select id="fa" class="inp" value="{{ f.agent }}" onChange="{{ onAgent }}"><option value="">全部</option><option value="tt001">tt001</option><option value="tt002">tt002</option><option value="tt003">tt003</option><option value="tw001">tw001（tw_ads）</option><option value="tw002">tw002（tw_ads）</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">会员 ID<input id="fid" class="inp" style="width: 120px" value="{{ f.mid }}" onInput="{{ onMid }}"></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">会员名<input id="fn" class="inp" style="width: 120px" value="{{ f.name }}" onInput="{{ onName }}"></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">层级<select id="fl" class="inp" value="{{ f.lv }}" onChange="{{ onLv }}"><option value="">全部</option><option value="直接">直接（0）</option><option value="L1">L1</option><option value="L2">L2</option><option value="L3+">L3 及以上</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">来源<select id="fs" class="inp" value="{{ f.src }}" onChange="{{ onSrc }}"><option value="">全部</option><option value="链接">链接</option><option value="绑定">绑定</option><option value="裂变">裂变</option></select></label>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px">
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">日期<input id="fd1" class="inp" type="date" value="{{ f.start }}" onChange="{{ onStart }}"> ~ <input id="fd2" class="inp" type="date" value="{{ f.end }}" onChange="{{ onEnd }}"></label>
+<sc-for list="{{ qb }}" as="b"><button class="{{ b.cls }}" type="button" style="height: 30px; padding: 0 10px" onClick="{{ b.go }}">{{ b.k }}</button></sc-for>
+<span style="flex: 1 1 auto"></span>
+<button class="btn" type="button" onClick="{{ query }}">查询</button>
+<button class="btn2" type="button" onClick="{{ reset }}">重置</button>
+<button class="btn2" type="button">导出</button><span class="bd">5</span>
+</div>
+<div style="font-size: 13px; color: #4b5563; margin-bottom: 10px">来源：现网代理后台「会员报告」<span class="bd">1</span>　新增列取 tldl 字段<span class="bd">3</span>　GGR / NGR 口径<span class="bd">4</span></div>
+<sc-if value="{{ showWarn }}"><div role="alert" style="margin-bottom: 12px; padding: 8px 12px; border-radius: 6px; background: #fef3c7; border: 1px solid #f59e0b; font-size: 14px">{{ warn }}</div></sc-if>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 1500px">
+<thead><tr><th class="th">代理 ID</th><th class="th">代理账号（投流一级代理）</th><th class="th">投流总代理</th><th class="th">会员 ID</th><th class="th">会员名</th><th class="th">层级</th><th class="th">来源</th><th class="th">邀请人</th><th class="th">注册日期</th><th class="th">投注金额</th><th class="th">派彩金额</th><th class="th" title="GGR = 玩家总投注额 − 玩家总派彩金额">GGR ⓘ</th><th class="th" title="NGR = GGR − 奖金 − 红利 − 营销费用 − 平台服务费 / 税费">NGR ⓘ</th><th class="th">存款金额</th><th class="th">提款金额</th><th class="th">账户余额</th></tr></thead>
+<tbody>
+<tr data-for="rows" data-as="r"><td class="td">{{ r.aid }}</td><td class="td code">{{ r.acc }}</td><td class="td">{{ r.master }}</td><td class="td">{{ r.mid }}</td><td class="td">{{ r.name }}</td><td class="td"><span class="{{ r.lvC }}">{{ r.lv }}</span></td><td class="td">{{ r.src }}</td><td class="td">{{ r.inviter }}</td><td class="td">{{ r.reg }}</td><td class="td">{{ r.betT }}</td><td class="td">{{ r.payT }}</td><td class="td"><span class="{{ r.ggrC }}">{{ r.ggrT }}</span></td><td class="td"><span class="{{ r.ngrC }}">{{ r.ngrT }}</span></td><td class="td">{{ r.depT }}</td><td class="td">{{ r.wdT }}</td><td class="td">{{ r.balT }}</td></tr>
+<tr data-if="has" style="background: #f8fafc; font-weight: 600"><td class="td">合计（{{ total }} 人）</td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td">{{ sBet }}</td><td class="td">{{ sPay }}</td><td class="td">{{ sGgr }}</td><td class="td">{{ sNgr }}</td><td class="td">{{ sDep }}</td><td class="td">{{ sWd }}</td><td class="td">{{ sBal }}</td></tr>
+</tbody>
+</table>
+</div>
+<sc-if value="{{ notYet }}"><div style="padding: 24px; text-align: center; color: #4b5563; font-size: 14px">选好筛选条件后点「查询」</div></sc-if>
+<sc-if value="{{ empty }}"><div style="padding: 24px; text-align: center; color: #4b5563; font-size: 14px">No Data</div></sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 12px; font-size: 13px">
+<span>Total {{ total }}</span><span>10/page</span>
+<button class="btn2" type="button" style="height: 28px" onClick="{{ prev }}" disabled="{{ noPrev }}">‹</button><span>{{ page }} / {{ pages }}</span><button class="btn2" type="button" style="height: 28px" onClick="{{ next }}" disabled="{{ noNext }}">›</button>
+</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 投流会员报告</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>来源：照搬现网代理后台「数据报表 › 会员报告」（qa-agent-admin /#/agentMemberReport）。原有 12 列、口径、日期快捷键（本周 / 上周 / 本月 / 上月）、10 条一页都不变。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>新增筛选：投流总代理、投流一级代理、层级、来源。现网要求「会员 ID 或会员名」必填；这里选了投流总代理或投流一级代理也可以查。都没填时提示，不发请求。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>新增列：投流总代理、层级（直接 / L1…Ln）、来源（链接 / 绑定 / 裂变）、邀请人，都取会员身上的 tldl 字段。代理 ID / 代理账号 = super_id，两边都写，所以就是投流一级代理。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>口径：GGR = 投注 − 派彩；NGR = GGR − 奖金 − 红利 − 营销费用 − 平台服务费 / 税费（与现网 tooltip 一致）。金额按所选日期内发生的交易汇总，账户余额取查询时的实时值。日期按 GMT+8。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">5</span>新增「合计」行（按全部结果，不只本页）和导出。导出与页面同口径、同筛选；单次最多 31 天、10 万行，超出改为异步导出。</p>
+<p class="np" style="margin: 0">示例数据，非线上配置；NGR 示例里平台费按投注 2% 估算。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-10-member-report{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-10-member-report a{color:#1e4fa3}
+#b-10-member-report a:hover{color:#163b7a}
+#b-10-member-report .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-10-member-report .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-10-member-report .mi:hover{background:#eef2f7;color:#111827}
+#b-10-member-report .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-10-member-report .mon:hover{color:#ffffff}
+#b-10-member-report .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-10-member-report .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-10-member-report .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-10-member-report .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-10-member-report .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-10-member-report .btn:hover{color:#ffffff;background:#163b7a}
+#b-10-member-report .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-10-member-report .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-10-member-report .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-10-member-report .ok{color:#15803d;font-weight:600}
+#b-10-member-report .no{color:#b91c1c}
+#b-10-member-report .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-10-member-report .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-10-member-report .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-10-member-report .np{margin:0 0 10px}
+#b-10-member-report .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-10-member-report .hi{color:#b91c1c;font-weight:600}
+#b-10-member-report .mid{color:#b45309;font-weight:600}
+#b-10-member-report .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-10-member-report"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const raw = [
+      ['992300001','tt001','fb_media','992107951','Player7k2m1','直接','链接','—','2026-11-02',18500,16200,850,4000,1000,1260],
+      ['992300001','tt001','fb_media','992107958','Playerq88z3','L1','裂变','992107951','2026-11-04',9200,8800,300,2000,0,640],
+      ['992300001','tt001','fb_media','992107966','Playerbn41x','L2','裂变','992107958','2026-11-06',3100,3600,0,500,800,0],
+      ['992300001','tt001','fb_media','992099871','Playerseed01','直接','绑定','—','2026-10-21',42000,39500,1200,10000,6000,3880],
+      ['992300001','tt001','fb_media','992107990','Playerx0p2c','L3','裂变','992107966','2026-11-11',1500,900,100,300,0,410],
+      ['992300002','tt002','fb_media','992107971','Playerm3r9t','直接','链接','—','2026-11-08',6600,7100,200,1500,1800,120],
+      ['992300002','tt002','fb_media','992107979','Playerk5d2w','L1','裂变','992107971','2026-11-09',2400,1900,0,800,0,920],
+      ['992300003','tt003','fb_media','992108003','Playerh8u6e','直接','链接','—','2026-11-14',800,450,50,500,0,330],
+      ['992300003','tt003','fb_media','992099530','Playerseed02','直接','绑定','—','2026-10-25',15000,14100,400,3000,2500,560],
+      ['992300003','tt003','fb_media','992108010','Playerv2n7s','L1','裂变','992099530','2026-11-15',1200,1500,0,300,0,0],
+      ['992300003','tt003','fb_media','992108015','Playerc9j4a','L2','裂变','992108010','2026-11-15',600,200,20,200,0,380],
+      ['992300101','tw001','tw_ads','992108021','Playerf1y3q','直接','链接','—','2026-11-10',5300,4700,150,1200,500,910],
+      ['992300101','tw001','tw_ads','992108026','Playerl6b8r','L1','裂变','992108021','2026-11-12',2100,2600,0,600,0,40],
+      ['992300102','tw002','tw_ads','992108030','Playerz4e5k','直接','链接','—','2026-11-13',3900,3300,90,1000,0,740]
+    ];
+    this.rows = raw.map(r => ({ aid: r[0], acc: r[1], master: r[2], mid: r[3], name: r[4], lv: r[5], src: r[6], inviter: r[7], reg: r[8],
+      bet: r[9], pay: r[10], bonus: r[11], dep: r[12], wd: r[13], bal: r[14] }));
+    this.PORTAL = false;
+    this.ranges = { '本周': ['2026-11-16', '2026-11-16'], '上周': ['2026-11-09', '2026-11-15'], '本月': ['2026-11-01', '2026-11-16'], '上月': ['2026-10-01', '2026-10-31'] };
+    const f = { master: this.PORTAL ? 'fb_media' : '', agent: '', lv: '', src: '', mid: '', name: '', start: '2026-11-01', end: '2026-11-16', quick: '本月' };
+    this.state = { f, q: this.PORTAL ? Object.assign({}, f) : null, warn: '', page: 1 };
+  }
+  fmt(n) { return (n < 0 ? '-' : '') + Math.abs(n).toLocaleString('en-US'); }
+  calc(r) { const ggr = r.bet - r.pay; return Object.assign({}, r, { ggr, ngr: ggr - r.bonus - Math.round(r.bet * 0.02) }); }
+  list() {
+    const q = this.state.q; if (!q) return [];
+    return this.rows.filter(r => (!q.master || r.master === q.master) && (!q.agent || r.acc === q.agent)
+      && (!q.lv || (q.lv === 'L3+' ? /^L([3-9]|\d\d)/.test(r.lv) : r.lv === q.lv)) && (!q.src || r.src === q.src)
+      && (!q.mid || r.mid === q.mid.trim()) && (!q.name || r.name.toLowerCase().indexOf(q.name.trim().toLowerCase()) >= 0)
+      && r.reg <= q.end).map(r => this.calc(r));
+  }
+  set(k, v) { const f = Object.assign({}, this.state.f, { [k]: v }); if (k === 'master') f.agent = ''; if (k === 'start' || k === 'end') f.quick = ''; this.setState({ f }); }
+  renderVals() {
+    const s = this.state, f = s.f, all = this.list(), size = 10;
+    const pages = Math.max(1, Math.ceil(all.length / size)), page = Math.min(s.page, pages);
+    const sum = k => all.reduce((a, r) => a + r[k], 0);
+    const view = all.slice((page - 1) * size, page * size).map(r => Object.assign({}, r, {
+      betT: this.fmt(r.bet), payT: this.fmt(r.pay), ggrT: this.fmt(r.ggr), ngrT: this.fmt(r.ngr), depT: this.fmt(r.dep), wdT: this.fmt(r.wd), balT: this.fmt(r.bal),
+      ggrC: r.ggr < 0 ? 'no' : '', ngrC: r.ngr < 0 ? 'no' : '', lvC: r.lv === '直接' ? '' : 'mid' }));
+    const agents = this.rows.filter(r => !f.master || r.master === f.master).map(r => r.acc).filter((v, i, a) => a.indexOf(v) === i)
+      .map(v => ({ v, t: v, sel: v === f.agent }));
+    const qb = ['本周', '上周', '本月', '上月'].map(k => ({ k, cls: f.quick === k ? 'btn' : 'btn2', go: () => { const r = this.ranges[k]; this.setState({ f: Object.assign({}, f, { start: r[0], end: r[1], quick: k }) }); } }));
+    return {
+      f, agents, qb, rows: view, has: all.length > 0, empty: !!s.q && all.length === 0, notYet: !s.q,
+      total: all.length, page, pages, warn: s.warn, showWarn: !!s.warn,
+      sBet: this.fmt(sum('bet')), sPay: this.fmt(sum('pay')), sGgr: this.fmt(sum('ggr')), sNgr: this.fmt(sum('ngr')), sDep: this.fmt(sum('dep')), sWd: this.fmt(sum('wd')), sBal: this.fmt(sum('bal')),
+      onMaster: e => this.set('master', e.target.value), onAgent: e => this.set('agent', e.target.value),
+      onLv: e => this.set('lv', e.target.value), onSrc: e => this.set('src', e.target.value),
+      onMid: e => this.set('mid', e.target.value), onName: e => this.set('name', e.target.value),
+      onStart: e => this.set('start', e.target.value), onEnd: e => this.set('end', e.target.value),
+      query: () => {
+        if (!this.PORTAL && !f.master && !f.agent && !f.mid.trim() && !f.name.trim()) { this.setState({ warn: '请先选择投流总代理 / 投流一级代理，或输入会员 ID / 会员名' }); return; }
+        if (f.start > f.end) { this.setState({ warn: '开始日期不能晚于结束日期' }); return; }
+        this.setState({ q: Object.assign({}, f), warn: '', page: 1 });
+      },
+      reset: () => { const nf = { master: this.PORTAL ? 'fb_media' : '', agent: '', lv: '', src: '', mid: '', name: '', start: '2026-11-01', end: '2026-11-16', quick: '本月' }; this.setState({ f: nf, q: this.PORTAL ? Object.assign({}, nf) : null, warn: '', page: 1 }); },
+      prev: () => this.setState({ page: Math.max(1, page - 1) }), next: () => this.setState({ page: Math.min(pages, page + 1) }),
+      noPrev: page <= 1, noNext: page >= pages
+    };
+  }
+}
+return Component;};</script>
 <section class="board" id="b-07-agent-portal" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 960px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #0f3d38; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">投流代理端</span>
@@ -961,6 +1138,7 @@ return Component;};</script>
 <a class="mon" href="#/b-07-agent-portal">我的投流一级代理</a>
 <span class="mi">绑定会员</span>
 <span class="mi">数据汇总</span>
+<a class="mi" href="#/b-11-agent-member-report">会员报告</a>
 <span class="mi">账号设置</span>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
@@ -1016,7 +1194,7 @@ return Component;};</script>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>只显示本投流总代理名下的投流一级代理和数据。所有接口按登录身份在服务端过滤，传入别人的投流总代理或投流一级代理 ID 返回无权限。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的表单、邀请码顺延规则同 03，所属投流总代理固定为自己。受「允许自建投流一级代理」开关和上限控制，关掉后按钮不显示。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员流程同 04：只能绑投流方自己的账号，每个投流一级代理最多 10 个；只能选自己名下的一级代理，受「允许绑定会员」开关控制。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不是官方大代理、已被绑定，都只显示「不符合绑定条件」；投流代理端不展示官方大代理名单。会员只显示 ID 和聚合数据，不展示手机号、姓名、余额（待确认 8）。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不是官方大代理、已被绑定，都只显示「不符合绑定条件」；投流代理端不展示官方大代理名单。本页只显示聚合数据；会员明细在「会员报告」（11），字段沿用现网会员报告。</p>
 <p style="margin: 0">投流代理端不能做：建 / 停投流总代理、看其他投流总代理、改绑或解绑会员。</p>
 </aside>
 </div>
@@ -1040,6 +1218,165 @@ return Component;};</script>
 <script>window.__DC=window.__DC||{};window.__DC["b-07-agent-portal"]=function(DCLogic){
 class Component extends DCLogic {
   renderVals() { return {}; }
+}
+return Component;};</script>
+<section class="board" id="b-11-agent-member-report" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 900px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #0f3d38; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">投流代理端</span>
+<span style="font-size: 13px">fb_media · 投流方 A · 新站</span>
+<span style="flex: 1 1 auto"></span>
+<span style="font-size: 13px">2026-11-16 15:12:00（GMT+8）</span>
+<span style="font-size: 13px">退出</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="投流代理端菜单" style="flex: 0 0 200px; background: #ffffff; border-right: 1px solid #e1e6ee; padding: 8px 0 24px">
+<a class="mi" href="#/b-07-agent-portal">我的投流一级代理</a>
+<span class="mi">绑定会员</span>
+<span class="mi">数据汇总</span>
+<a class="mon" href="#/b-11-agent-member-report">会员报告</a>
+<span class="mi">账号设置</span>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">数据报表 / 会员报告</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">会员报告<span class="bd">1</span></h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 720px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px">
+<span style="font-size: 14px">投流总代理：<b>fb_media</b>（固定）</span><span class="bd">2</span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">投流一级代理<select id="fa" class="inp" value="{{ f.agent }}" onChange="{{ onAgent }}"><option value="">全部</option><option value="tt001">tt001</option><option value="tt002">tt002</option><option value="tt003">tt003</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">会员 ID<input id="fid" class="inp" style="width: 120px" value="{{ f.mid }}" onInput="{{ onMid }}"></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">会员名<input id="fn" class="inp" style="width: 120px" value="{{ f.name }}" onInput="{{ onName }}"></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">层级<select id="fl" class="inp" value="{{ f.lv }}" onChange="{{ onLv }}"><option value="">全部</option><option value="直接">直接（0）</option><option value="L1">L1</option><option value="L2">L2</option><option value="L3+">L3 及以上</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">来源<select id="fs" class="inp" value="{{ f.src }}" onChange="{{ onSrc }}"><option value="">全部</option><option value="链接">链接</option><option value="绑定">绑定</option><option value="裂变">裂变</option></select></label>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px">
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">日期<input id="fd1" class="inp" type="date" value="{{ f.start }}" onChange="{{ onStart }}"> ~ <input id="fd2" class="inp" type="date" value="{{ f.end }}" onChange="{{ onEnd }}"></label>
+<sc-for list="{{ qb }}" as="b"><button class="{{ b.cls }}" type="button" style="height: 30px; padding: 0 10px" onClick="{{ b.go }}">{{ b.k }}</button></sc-for>
+<span style="flex: 1 1 auto"></span>
+<button class="btn" type="button" onClick="{{ query }}">查询</button>
+<button class="btn2" type="button" onClick="{{ reset }}">重置</button>
+<button class="btn2" type="button">导出</button><span class="bd">5</span>
+</div>
+<div style="font-size: 13px; color: #4b5563; margin-bottom: 10px">新增列：层级、来源、邀请人<span class="bd">3</span>　会员名、账户余额沿用现网<span class="bd">4</span></div>
+<sc-if value="{{ showWarn }}"><div role="alert" style="margin-bottom: 12px; padding: 8px 12px; border-radius: 6px; background: #fef3c7; border: 1px solid #f59e0b; font-size: 14px">{{ warn }}</div></sc-if>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 1500px">
+<thead><tr><th class="th">代理 ID</th><th class="th">代理账号（投流一级代理）</th><th class="th">会员 ID</th><th class="th">会员名</th><th class="th">层级</th><th class="th">来源</th><th class="th">邀请人</th><th class="th">注册日期</th><th class="th">投注金额</th><th class="th">派彩金额</th><th class="th" title="GGR = 玩家总投注额 − 玩家总派彩金额">GGR ⓘ</th><th class="th" title="NGR = GGR − 奖金 − 红利 − 营销费用 − 平台服务费 / 税费">NGR ⓘ</th><th class="th">存款金额</th><th class="th">提款金额</th><th class="th">账户余额</th></tr></thead>
+<tbody>
+<tr data-for="rows" data-as="r"><td class="td">{{ r.aid }}</td><td class="td code">{{ r.acc }}</td><td class="td">{{ r.mid }}</td><td class="td">{{ r.name }}</td><td class="td"><span class="{{ r.lvC }}">{{ r.lv }}</span></td><td class="td">{{ r.src }}</td><td class="td">{{ r.inviter }}</td><td class="td">{{ r.reg }}</td><td class="td">{{ r.betT }}</td><td class="td">{{ r.payT }}</td><td class="td"><span class="{{ r.ggrC }}">{{ r.ggrT }}</span></td><td class="td"><span class="{{ r.ngrC }}">{{ r.ngrT }}</span></td><td class="td">{{ r.depT }}</td><td class="td">{{ r.wdT }}</td><td class="td">{{ r.balT }}</td></tr>
+<tr data-if="has" style="background: #f8fafc; font-weight: 600"><td class="td">合计（{{ total }} 人）</td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td"></td><td class="td">{{ sBet }}</td><td class="td">{{ sPay }}</td><td class="td">{{ sGgr }}</td><td class="td">{{ sNgr }}</td><td class="td">{{ sDep }}</td><td class="td">{{ sWd }}</td><td class="td">{{ sBal }}</td></tr>
+</tbody>
+</table>
+</div>
+<sc-if value="{{ notYet }}"><div style="padding: 24px; text-align: center; color: #4b5563; font-size: 14px">选好筛选条件后点「查询」</div></sc-if>
+<sc-if value="{{ empty }}"><div style="padding: 24px; text-align: center; color: #4b5563; font-size: 14px">No Data</div></sc-if>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 12px; font-size: 13px">
+<span>Total {{ total }}</span><span>10/page</span>
+<button class="btn2" type="button" style="height: 28px" onClick="{{ prev }}" disabled="{{ noPrev }}">‹</button><span>{{ page }} / {{ pages }}</span><button class="btn2" type="button" style="height: 28px" onClick="{{ next }}" disabled="{{ noNext }}">›</button>
+</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 投流代理端 会员报告</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>就是现网代理后台的「数据报表 › 会员报告」，投流总代理登录后在原菜单里看，不另做新页面。列、口径、快捷日期、分页都和现网一致。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>数据范围固定为本投流总代理名下（tldl_master_id = 登录账号），服务端过滤。可按投流一级代理筛选；不用再强制输入会员 ID / 会员名，但单次日期最长 31 天。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>新增列：层级、来源、邀请人（只显示会员 ID）。不显示投流总代理列（就是自己），不显示原上一级、所属大代理和官方标记。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>会员名、账户余额沿用现网会员报告的展示（现网代理已能看到）；手机号、真实姓名不展示。是否要脱敏见 PRD 待确认 8。</p>
+<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">5</span>新增「合计」行和导出，导出只含本人名下数据。示例数据，非线上配置。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-11-agent-member-report{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-11-agent-member-report a{color:#1e4fa3}
+#b-11-agent-member-report a:hover{color:#163b7a}
+#b-11-agent-member-report .mi{display:block;padding:11px 20px;font-size:14px;color:#374151;text-decoration:none}
+#b-11-agent-member-report .mi:hover{background:#eef2f7;color:#111827}
+#b-11-agent-member-report .mon{display:block;padding:11px 20px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-11-agent-member-report .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-11-agent-member-report .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-11-agent-member-report .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-11-agent-member-report .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1a7f74;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-11-agent-member-report .btn:hover{color:#ffffff;background:#14655c}
+#b-11-agent-member-report .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-11-agent-member-report .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-11-agent-member-report .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-11-agent-member-report .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-11-agent-member-report .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-11-agent-member-report .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-11-agent-member-report .np{margin:0 0 10px}
+#b-11-agent-member-report .ok{color:#15803d;font-weight:600}
+#b-11-agent-member-report .no{color:#b91c1c}
+#b-11-agent-member-report .mid{color:#b45309;font-weight:600}
+#b-11-agent-member-report .lo{color:#4b5563}
+#b-11-agent-member-report .btn:disabled,#b-11-agent-member-report .btn2:disabled{opacity:.5;cursor:not-allowed}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-11-agent-member-report"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    const raw = [
+      ['992300001','tt001','fb_media','992107951','Player7k2m1','直接','链接','—','2026-11-02',18500,16200,850,4000,1000,1260],
+      ['992300001','tt001','fb_media','992107958','Playerq88z3','L1','裂变','992107951','2026-11-04',9200,8800,300,2000,0,640],
+      ['992300001','tt001','fb_media','992107966','Playerbn41x','L2','裂变','992107958','2026-11-06',3100,3600,0,500,800,0],
+      ['992300001','tt001','fb_media','992099871','Playerseed01','直接','绑定','—','2026-10-21',42000,39500,1200,10000,6000,3880],
+      ['992300001','tt001','fb_media','992107990','Playerx0p2c','L3','裂变','992107966','2026-11-11',1500,900,100,300,0,410],
+      ['992300002','tt002','fb_media','992107971','Playerm3r9t','直接','链接','—','2026-11-08',6600,7100,200,1500,1800,120],
+      ['992300002','tt002','fb_media','992107979','Playerk5d2w','L1','裂变','992107971','2026-11-09',2400,1900,0,800,0,920],
+      ['992300003','tt003','fb_media','992108003','Playerh8u6e','直接','链接','—','2026-11-14',800,450,50,500,0,330],
+      ['992300003','tt003','fb_media','992099530','Playerseed02','直接','绑定','—','2026-10-25',15000,14100,400,3000,2500,560],
+      ['992300003','tt003','fb_media','992108010','Playerv2n7s','L1','裂变','992099530','2026-11-15',1200,1500,0,300,0,0],
+      ['992300003','tt003','fb_media','992108015','Playerc9j4a','L2','裂变','992108010','2026-11-15',600,200,20,200,0,380],
+      ['992300101','tw001','tw_ads','992108021','Playerf1y3q','直接','链接','—','2026-11-10',5300,4700,150,1200,500,910],
+      ['992300101','tw001','tw_ads','992108026','Playerl6b8r','L1','裂变','992108021','2026-11-12',2100,2600,0,600,0,40],
+      ['992300102','tw002','tw_ads','992108030','Playerz4e5k','直接','链接','—','2026-11-13',3900,3300,90,1000,0,740]
+    ];
+    this.rows = raw.map(r => ({ aid: r[0], acc: r[1], master: r[2], mid: r[3], name: r[4], lv: r[5], src: r[6], inviter: r[7], reg: r[8],
+      bet: r[9], pay: r[10], bonus: r[11], dep: r[12], wd: r[13], bal: r[14] }));
+    this.PORTAL = true;
+    this.ranges = { '本周': ['2026-11-16', '2026-11-16'], '上周': ['2026-11-09', '2026-11-15'], '本月': ['2026-11-01', '2026-11-16'], '上月': ['2026-10-01', '2026-10-31'] };
+    const f = { master: this.PORTAL ? 'fb_media' : '', agent: '', lv: '', src: '', mid: '', name: '', start: '2026-11-01', end: '2026-11-16', quick: '本月' };
+    this.state = { f, q: this.PORTAL ? Object.assign({}, f) : null, warn: '', page: 1 };
+  }
+  fmt(n) { return (n < 0 ? '-' : '') + Math.abs(n).toLocaleString('en-US'); }
+  calc(r) { const ggr = r.bet - r.pay; return Object.assign({}, r, { ggr, ngr: ggr - r.bonus - Math.round(r.bet * 0.02) }); }
+  list() {
+    const q = this.state.q; if (!q) return [];
+    return this.rows.filter(r => (!q.master || r.master === q.master) && (!q.agent || r.acc === q.agent)
+      && (!q.lv || (q.lv === 'L3+' ? /^L([3-9]|\d\d)/.test(r.lv) : r.lv === q.lv)) && (!q.src || r.src === q.src)
+      && (!q.mid || r.mid === q.mid.trim()) && (!q.name || r.name.toLowerCase().indexOf(q.name.trim().toLowerCase()) >= 0)
+      && r.reg <= q.end).map(r => this.calc(r));
+  }
+  set(k, v) { const f = Object.assign({}, this.state.f, { [k]: v }); if (k === 'master') f.agent = ''; if (k === 'start' || k === 'end') f.quick = ''; this.setState({ f }); }
+  renderVals() {
+    const s = this.state, f = s.f, all = this.list(), size = 10;
+    const pages = Math.max(1, Math.ceil(all.length / size)), page = Math.min(s.page, pages);
+    const sum = k => all.reduce((a, r) => a + r[k], 0);
+    const view = all.slice((page - 1) * size, page * size).map(r => Object.assign({}, r, {
+      betT: this.fmt(r.bet), payT: this.fmt(r.pay), ggrT: this.fmt(r.ggr), ngrT: this.fmt(r.ngr), depT: this.fmt(r.dep), wdT: this.fmt(r.wd), balT: this.fmt(r.bal),
+      ggrC: r.ggr < 0 ? 'no' : '', ngrC: r.ngr < 0 ? 'no' : '', lvC: r.lv === '直接' ? '' : 'mid' }));
+    const agents = this.rows.filter(r => !f.master || r.master === f.master).map(r => r.acc).filter((v, i, a) => a.indexOf(v) === i)
+      .map(v => ({ v, t: v, sel: v === f.agent }));
+    const qb = ['本周', '上周', '本月', '上月'].map(k => ({ k, cls: f.quick === k ? 'btn' : 'btn2', go: () => { const r = this.ranges[k]; this.setState({ f: Object.assign({}, f, { start: r[0], end: r[1], quick: k }) }); } }));
+    return {
+      f, agents, qb, rows: view, has: all.length > 0, empty: !!s.q && all.length === 0, notYet: !s.q,
+      total: all.length, page, pages, warn: s.warn, showWarn: !!s.warn,
+      sBet: this.fmt(sum('bet')), sPay: this.fmt(sum('pay')), sGgr: this.fmt(sum('ggr')), sNgr: this.fmt(sum('ngr')), sDep: this.fmt(sum('dep')), sWd: this.fmt(sum('wd')), sBal: this.fmt(sum('bal')),
+      onMaster: e => this.set('master', e.target.value), onAgent: e => this.set('agent', e.target.value),
+      onLv: e => this.set('lv', e.target.value), onSrc: e => this.set('src', e.target.value),
+      onMid: e => this.set('mid', e.target.value), onName: e => this.set('name', e.target.value),
+      onStart: e => this.set('start', e.target.value), onEnd: e => this.set('end', e.target.value),
+      query: () => {
+        if (!this.PORTAL && !f.master && !f.agent && !f.mid.trim() && !f.name.trim()) { this.setState({ warn: '请先选择投流总代理 / 投流一级代理，或输入会员 ID / 会员名' }); return; }
+        if (f.start > f.end) { this.setState({ warn: '开始日期不能晚于结束日期' }); return; }
+        this.setState({ q: Object.assign({}, f), warn: '', page: 1 });
+      },
+      reset: () => { const nf = { master: this.PORTAL ? 'fb_media' : '', agent: '', lv: '', src: '', mid: '', name: '', start: '2026-11-01', end: '2026-11-16', quick: '本月' }; this.setState({ f: nf, q: this.PORTAL ? Object.assign({}, nf) : null, warn: '', page: 1 }); },
+      prev: () => this.setState({ page: Math.max(1, page - 1) }), next: () => this.setState({ page: Math.min(pages, page + 1) }),
+      noPrev: page <= 1, noNext: page >= pages
+    };
+  }
 }
 return Component;};</script>
 <script>

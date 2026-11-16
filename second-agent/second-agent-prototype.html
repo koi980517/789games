@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>投流代理原型 v1.2</title>
+<title>投流代理原型 v1.3</title>
 <style>
 html,body{margin:0}
 body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#e9edf2;color:#1f2937}
@@ -24,11 +24,11 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 </head>
 <body>
 <header class="top">
-<b>投流代理原型</b><span class="ver">v1.2</span>
+<b>投流代理原型</b><span class="ver">v1.3</span>
 <span style="font-size:12px;color:#d1d5db">2026-11-16 · 示例数据，非线上配置 · 时间 GMT+8</span>
 <a class="ext" href="https://claude.ai/artifact/9nuYQbyTi4Pp3Kjnh4wHh4" target="_blank" rel="noopener">PRD</a>
 <a class="ext" href="https://claude.ai/artifact/7bP75wEhSpFss2hQEM1FPH" target="_blank" rel="noopener">Claude 原型画布</a>
-<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 投流一级代理绑定会员 ID（可操作）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a></div></nav>
+<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-08-official-list" data-nav="b-08-official-list">08 官方大代理名单</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a></div></nav>
 </header>
 <section class="board" id="b-Main" data-fixed="1" style="--bw:1280px"><template><div style="position: relative; width: 1280px; height: 900px; background: #f5f6f8; font-size: 15px; line-height: 22px">
 <svg role="img" aria-label="从投流一级代理链接注册到上级代理等于该投流一级代理" width="8" height="87" viewBox="0 0 8 87" preserveAspectRatio="none" style="position: absolute; left: 204px; top: 232px; width: 8px; height: 87px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-1" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 83" marker-end="url(#dc-arrow-head-filled-1)"></path></svg>
@@ -43,14 +43,14 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 <div style="position: absolute; left: 64px; top: 48px; font-size: 26px; line-height: 36px; font-weight: 700; color: #111827">会员的三种来源，最后都算在同一个投流一级代理下</div>
 <div style="position: absolute; left: 64px; top: 92px; width: 1152px; font-size: 15px; line-height: 22px; color: #4b5563">以投流一级代理 fb001 为例（投流总代理 → 投流一级代理 fb001 → 会员 → L1～Ln）。只对带「投流代理线」标识的投流总代理生效；其他代理线仍按现网，会员邀请进 5-ji-agent。示例数据，非线上配置。</div>
 <div style="position: absolute; left: 64px; top: 160px; width: 288px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>① 投流一级代理链接 / 二维码注册</b><br>域名/?vip=fb001</span></div>
-<div style="position: absolute; left: 496px; top: 160px; width: 288px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>② 投流一级代理绑定已有会员 ID</b><br>运营或总代理提交，≤ 1000 个 / 次</span></div>
+<div style="position: absolute; left: 496px; top: 160px; width: 288px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>② 绑定投流方自己的账号</b><br>每个一级代理最多 10 个</span></div>
 <div style="position: absolute; left: 960px; top: 160px; width: 256px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>③ 本线会员邀请好友</b><br>/invite/玩家ID 链接注册</span></div>
-<div style="position: absolute; left: 64px; top: 320px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = fb001</b><br>邀请人为空<br>query_code 挂在 fb001 下</span></div>
-<div style="position: absolute; left: 464px; top: 280px; width: 352px; height: 176px; box-sizing: border-box; padding: 8px 64px; display: flex; align-items: center; justify-content: center; text-align: center; background: #fde7c7; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); font-size: 14px; line-height: 20px"><span><b>在可绑定范围内，且未被绑定过？（范围待确认）</b></span></div>
-<div style="position: absolute; left: 960px; top: 320px; width: 256px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = 邀请人的投流一级代理</b><br>邀请人 = 该会员<br>不设层级上限</span></div>
-<div style="position: absolute; left: 496px; top: 512px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理改为 fb001</b><br>绑定前的数据留原线<br>之后的数据和下线算本线</span></div>
+<div style="position: absolute; left: 64px; top: 320px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = fb001</b><br>tldl_level = 0<br>记录当时的邀请链接</span></div>
+<div style="position: absolute; left: 464px; top: 280px; width: 352px; height: 176px; box-sizing: border-box; padding: 8px 64px; display: flex; align-items: center; justify-content: center; text-align: center; background: #fde7c7; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); font-size: 14px; line-height: 20px"><span><b>上一级是代理、所属大代理在官方名单、未超 10 个？</b></span></div>
+<div style="position: absolute; left: 960px; top: 320px; width: 256px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = 同一个一级代理</b><br>tldl_level = 邀请人 + 1<br>不设层级上限</span></div>
+<div style="position: absolute; left: 496px; top: 512px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理改为 fb001</b><br>写入 tldl 字段，level = 0<br>绑定前的数据留原线</span></div>
 <div style="position: absolute; left: 848px; top: 512px; width: 192px; height: 80px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #f3f4f6; border: 1px dashed #9ca3af; border-radius: 10px"><span><b>跳过</b><br>归属不变，给出原因</span></div>
-<div style="position: absolute; left: 64px; top: 712px; width: 1152px; height: 104px; box-sizing: border-box; padding: 12px 24px; display: flex; align-items: center; justify-content: center; text-align: center; background: #e3f1ef; border: 1px solid #1a7f74; border-radius: 10px"><span><b>投流一级代理 fb001 的团队</b>　直属会员 = 上级代理是 fb001 的全部会员（①②③都算）；团队数 = query_code 下整棵树<br>数据看「06 投流代理线汇总」，会员来源分 链接 / 绑定 / 裂变</span></div>
+<div style="position: absolute; left: 64px; top: 712px; width: 1152px; height: 104px; box-sizing: border-box; padding: 12px 24px; display: flex; align-items: center; justify-content: center; text-align: center; background: #e3f1ef; border: 1px solid #1a7f74; border-radius: 10px"><span><b>两边都写：现网 super_id + tldl 字段</b>　所有写入先过核验系统（05），重复即拦截；巡检发现不一致即后台告警<br>统计按 tldl 字段汇总，见「06 投流代理线汇总」</span></div>
 <div style="position: absolute; left: 652px; top: 476px; width: 24px; text-align: center; font-size: 13px; line-height: 16px; color: #4b5563">是</div>
 <div style="position: absolute; left: 868px; top: 340px; width: 24px; text-align: center; font-size: 13px; line-height: 16px; color: #4b5563">否</div>
 </div></template><div class="mount"></div><div class="notes"><div class="note" style="background:#e8f0fe"><pre>现网读取（2026-11-11 QA 实测 + 知识库）
@@ -66,11 +66,12 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 • 命名：模块叫「投流代理」，两级分别叫「投流总代理」「投流一级代理」；投流总代理只能由运营建
 • 投流一级代理一层，运营或投流总代理（投流代理端）都能批量生成，两边共用同一套表单
 • 本线会员带来的人不再进 5-ji-agent，全部算在投流一级代理下
-• 绑定会员：先校验后绑定，只绑可绑的；不可改绑；不再要求上级为官方大代理
+• 绑定会员：只绑投流方自己的账号（上一级是代理 + 大代理在官方名单），每个一级代理 ≤ 10 个；不可改绑
+• 会员身上新增 tldl 字段，和现网 super_id 两边都写；新增核验系统 + 后台告警
 • 统计：新增一张「投流代理线汇总」
 • 示例数据均为虚构，非线上配置；时间都是 GMT+8</pre></div><div class="note" style="background:#fde8ef"><pre>待确认
 
-1. 绑定会员的可绑定范围（原「上级须为官方大代理」已取消）
+1. 「上一级是非会员」是否等于「直属上级是代理且没有会员邀请人」
 2. 绑定时会员已有下线是否一起迁？（原型暂不定）
 3. 绑定要不要运营审核？（原型按即时生效）
 4. 投流代理端用现网 PSP 代理后台？
@@ -85,7 +86,9 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 • 只对带「投流代理线」标识的投流总代理生效，其他线不变
 • 归属在注册 / 绑定那一刻决定，之后不自动变
 • 绑定前的数据留原线，绑定后的算本线，报表回刷不漂移
-• 投流总代理只看、只操作自己下面的投流一级代理，服务端校验</pre></div></div></section>
+• 投流总代理只看、只操作自己下面的投流一级代理，服务端校验
+• 投流归属记在会员的 tldl 字段（总代理、一级代理、层级、邀请链接），同时写现网 super_id
+• 写入先过核验，重复即拦截；巡检发现问题在后台告警</pre></div></div></section>
 <style>#b-Main{margin:0;background:#f5f6f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
 #b-Main a{color:#1e4fa3}
 #b-Main a:hover{color:#163b7a}</style>
@@ -99,6 +102,7 @@ return Component;};</script>
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
 <span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
 <span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
 <span style="font-size: 13px">2026-11-16 13:52:00（GMT+8）</span>
 <span style="font-size: 13px">admin</span>
 </div>
@@ -108,6 +112,10 @@ return Component;};</script>
 <a class="mon" href="#/b-01-big-agents">投流总代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
 </nav>
@@ -182,6 +190,7 @@ return Component;};</script>
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
 <span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
 <span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
 <span style="font-size: 13px">2026-11-16 13:52:00（GMT+8）</span>
 <span style="font-size: 13px">admin</span>
 </div>
@@ -191,6 +200,10 @@ return Component;};</script>
 <a class="mon" href="#/b-01-big-agents">投流总代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
 </nav>
@@ -253,11 +266,232 @@ class Component extends DCLogic {
   renderVals() { return {}; }
 }
 return Component;};</script>
+<section class="board" id="b-05-verify-alarm" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 1060px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-16 14:12:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mon" href="#/b-05-verify-alarm">投流核验告警<span class="new" style="color: #fde68a">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流核验告警</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">投流核验告警</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<div class="card"><div style="font-size: 12px; color: #4b5563">未处理告警</div><div style="font-size: 22px; font-weight: 700; color: #b91c1c">{{ openCount }}</div></div>
+<div class="card"><div style="font-size: 12px; color: #4b5563">今日写入拦截</div><div style="font-size: 22px; font-weight: 700">12</div><div style="font-size: 12px; color: #4b5563">生成 / 绑定 / 注册时</div></div>
+<div class="card"><div style="font-size: 12px; color: #4b5563">最近一次巡检</div><div style="font-size: 22px; font-weight: 700">14:10</div><div style="font-size: 12px; color: #4b5563">每 10 分钟，GMT+8</div></div>
+<div class="card"><div style="font-size: 12px; color: #4b5563">巡检覆盖</div><div style="font-size: 22px; font-weight: 700">8 条规则</div><div style="font-size: 12px; color: #4b5563">见下方规则表</div></div>
+</div>
+<div class="card">
+<div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px">
+<b style="font-size: 14px">告警记录</b><span class="bd">1</span>
+<span style="flex: 1 1 auto"></span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">规则<select class="inp"><option>全部</option><option>C1 邀请码重复</option><option>C5 归属不一致</option></select></label>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">状态<select class="inp"><option>全部</option><option>未处理</option><option>已处理</option><option>已忽略</option></select></label>
+</div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 900px">
+<thead><tr><th class="th">发现时间</th><th class="th">规则</th><th class="th">级别</th><th class="th">对象</th><th class="th">详情</th><th class="th">状态</th><th class="th">操作<span class="bd">3</span></th></tr></thead>
+<tbody>
+<tr data-for="rows" data-as="r"><td class="td">{{ r.time }}</td><td class="td">{{ r.rule }}</td><td class="td"><span class="{{ r.lv }}">{{ r.level }}</span></td><td class="td code">{{ r.obj }}</td><td class="td" style="white-space: normal; min-width: 260px">{{ r.detail }}</td><td class="td">{{ r.status }}</td><td class="td"><sc-if value="{{ r.open }}"><button class="btn2" type="button" style="height: 28px" onClick="{{ r.done }}">标记已处理</button></sc-if></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>核验规则</b><span class="bd">2</span></div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 860px">
+<thead><tr><th class="th">编号</th><th class="th">规则</th><th class="th">写入时拦截</th><th class="th">巡检告警</th><th class="th">级别</th></tr></thead>
+<tbody>
+<tr><td class="td">C1</td><td class="td">邀请码重复（不区分大小写，跨站点、含停用）</td><td class="td">✓ 顺延或拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C2</td><td class="td">投流总代理 / 投流一级代理账号重复</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C3</td><td class="td">投流一级代理链接重复（同一链接对应多个一级代理）</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C4</td><td class="td">会员有多条投流归属（tldl 归属每人只能一条）</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C5</td><td class="td">tldl 字段与现网 super_id / query_code 不一致</td><td class="td">—</td><td class="td">✓</td><td class="td"><span class="mid">中</span></td></tr>
+<tr><td class="td">C6</td><td class="td">层级断链：tldl_level ≠ 邀请人层级 + 1，或邀请人不在同一条线</td><td class="td">—</td><td class="td">✓</td><td class="td"><span class="mid">中</span></td></tr>
+<tr><td class="td">C7</td><td class="td">绑定超限：一个投流一级代理绑定 &gt; 10 个</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C8</td><td class="td">绑定不合规：绑定账号上一级是会员，或所属大代理不在官方名单</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+</tbody>
+</table>
+</div>
+<div style="margin-top: 10px; font-size: 13px; color: #4b5563">示例数据，非线上配置</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 投流核验系统</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>两道关。第一道：生成、绑定、注册写入时同步校验，违规直接拦截（库里对邀请码、账号、链接、会员投流归属建唯一索引）。第二道：每 10 分钟巡检一次，兜底发现存量重复和数据不一致，产生告警。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>8 条规则 C1～C8。拦截只挡新写入；巡检发现的问题不自动改数据，由运营处理。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>处理：标记已处理 / 忽略要填备注，写操作日志。同一对象、同一规则未处理时不重复告警，只更新「最近发现时间」。</p>
+<p class="np">告警出口：后台顶栏红色「投流核验告警 N」角标（所有页面可见）+ 本页列表；高级别是否同时推 Telegram 群待确认。</p>
+<p class="np" style="margin: 0">权限：查看、处理分别授权（cate=3）；投流代理端看不到本页。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-05-verify-alarm{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-05-verify-alarm a{color:#1e4fa3}
+#b-05-verify-alarm a:hover{color:#163b7a}
+#b-05-verify-alarm .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-05-verify-alarm .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-05-verify-alarm .mi:hover{background:#eef2f7;color:#111827}
+#b-05-verify-alarm .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-05-verify-alarm .mon:hover{color:#ffffff}
+#b-05-verify-alarm .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-05-verify-alarm .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-05-verify-alarm .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-05-verify-alarm .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-05-verify-alarm .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-05-verify-alarm .btn:hover{color:#ffffff;background:#163b7a}
+#b-05-verify-alarm .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-05-verify-alarm .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-05-verify-alarm .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-05-verify-alarm .ok{color:#15803d;font-weight:600}
+#b-05-verify-alarm .no{color:#b91c1c}
+#b-05-verify-alarm .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-05-verify-alarm .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-05-verify-alarm .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-05-verify-alarm .np{margin:0 0 10px}
+#b-05-verify-alarm .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-05-verify-alarm .hi{color:#b91c1c;font-weight:600}
+#b-05-verify-alarm .mid{color:#b45309;font-weight:600}
+#b-05-verify-alarm .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-05-verify-alarm"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { rows: [
+      { time: '2026-11-16 14:10:03', rule: 'C1 邀请码重复', level: '高', lv: 'hi', obj: 'fb004', detail: '新站 fb_media 与老站 gg_media 各有一个 fb004', status: '未处理', open: true },
+      { time: '2026-11-16 13:50:00', rule: 'C5 归属不一致', level: '中', lv: 'mid', obj: '992107950', detail: 'tldl_agent_id = tt001，super_id = 5-ji-agent', status: '未处理', open: true },
+      { time: '2026-11-16 13:40:00', rule: 'C6 层级断链', level: '中', lv: 'mid', obj: '992107951', detail: 'tldl_level = 3，邀请人 992107950 的层级 = 1', status: '未处理', open: true },
+      { time: '2026-11-16 11:42:10', rule: 'C7 绑定超限', level: '高', lv: 'hi', obj: 'tt002', detail: '并发提交后绑定数 11 / 10', status: '已处理（admin：解绑多出的 1 个）', open: false },
+      { time: '2026-11-16 11:20:05', rule: 'C1 邀请码重复', level: '—', lv: 'lo', obj: 'B20261116-002', detail: '生成时拦截 2 个已占用的码，已自动顺延', status: '写入时已拦截', open: false }
+    ] };
+  }
+  renderVals() {
+    const rows = this.state.rows.map((r, i) => Object.assign({}, r, { done: () => {
+      const next = this.state.rows.slice(); next[i] = Object.assign({}, r, { open: false, status: '已处理（admin）' }); this.setState({ rows: next });
+    } }));
+    return { rows, openCount: rows.filter(r => r.open).length };
+  }
+}
+return Component;};</script>
+<section class="board" id="b-08-official-list" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 900px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-16 14:15:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mon" href="#/b-08-official-list">官方大代理名单<span class="new" style="color: #fde68a">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 官方大代理名单</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">官方大代理名单</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" style="flex: 999 1 620px; min-width: 0">
+<div style="display: flex; gap: 0; margin-bottom: 14px"><span style="padding: 8px 16px; font-size: 14px; border: 1px solid #1e4fa3; background: #1e4fa3; color: #ffffff; font-weight: 600">新站</span><span style="padding: 8px 16px; font-size: 14px; border: 1px solid #cfd6e0; background: #ffffff; color: #374151">老站</span><span class="bd">1</span></div>
+<p style="margin: 0 0 10px; font-size: 13px; color: #4b5563">用途：投流一级代理绑定会员时，账号所属大代理必须在本名单里。</p>
+<label for="ids" style="display: block; font-size: 14px; margin-bottom: 6px">大代理 ID（逗号分隔，10 个）<span class="bd">2</span></label>
+<textarea id="ids" rows="3" style="width: 100%; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; padding: 8px 10px; font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937">992044707,992045656,9078757,[google_vi 的 ID],[ID 5],[ID 6],[ID 7],[ID 8],[ID 9],992200101</textarea>
+<div role="alert" style="margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; font-size: 13px">保存失败：992200101（fb_media）是投流总代理，不能加入名单。其余 ID 未保存。<span class="bd">3</span></div>
+<div style="font-size: 14px; font-weight: 600; margin: 16px 0 8px">名单解析（保存前确认弹窗显示同样内容）</div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 640px">
+<thead><tr><th class="th">#</th><th class="th">大代理 ID</th><th class="th">大代理账号</th><th class="th">说明</th><th class="th">校验</th></tr></thead>
+<tbody>
+<tr><td class="td">1</td><td class="td">992044707</td><td class="td">5-ji-agent</td><td class="td">会员推广专用线</td><td class="td ok">通过</td></tr>
+<tr><td class="td">2</td><td class="td">992045656</td><td class="td">5ji-wanghong</td><td class="td">网红专用线</td><td class="td ok">通过</td></tr>
+<tr><td class="td">3</td><td class="td">9078757</td><td class="td">ddltomas</td><td class="td">自然流量线（QA）</td><td class="td ok">通过</td></tr>
+<tr><td class="td">4</td><td class="td">[待填]</td><td class="td">google_vi</td><td class="td">自然流量线（QA）</td><td class="td lo">待运营填写</td></tr>
+<tr><td class="td">5–9</td><td class="td">[待填]</td><td class="td">—</td><td class="td">其余官方大代理</td><td class="td lo">待运营填写</td></tr>
+<tr><td class="td">10</td><td class="td">992200101</td><td class="td">fb_media</td><td class="td">投流总代理</td><td class="td no">不通过</td></tr>
+</tbody>
+</table>
+</div>
+<div style="display: flex; gap: 12px; margin-top: 16px"><span class="btn">保存</span><span class="btn2">取消</span><span class="bd">4</span></div>
+<div style="margin-top: 10px; font-size: 13px; color: #4b5563">前 3 个 ID 来自 11-11 QA 测试记录，其余待运营指定；示例数据</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 官方大代理名单</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>放在「代理管理 › 投流代理」下，新站、老站各配一份。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>运营指定官方自己的 10 个大代理 ID。上线时为空，为空时任何账号都不能被绑定。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>保存校验：ID 存在、是大代理（user_type = DL）、属于本站点、不是投流总代理、不重复；有一个不通过就整份不保存，并标出是哪个。</p>
+<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">4</span>保存即时生效，只影响之后的绑定，已绑定的不变。单独权限码，只开给运营负责人；投流代理端看不到。改动写日志（旧名单 → 新名单）。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-08-official-list{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-08-official-list a{color:#1e4fa3}
+#b-08-official-list a:hover{color:#163b7a}
+#b-08-official-list .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-08-official-list .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-08-official-list .mi:hover{background:#eef2f7;color:#111827}
+#b-08-official-list .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-08-official-list .mon:hover{color:#ffffff}
+#b-08-official-list .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-08-official-list .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-08-official-list .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-08-official-list .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-08-official-list .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-08-official-list .btn:hover{color:#ffffff;background:#163b7a}
+#b-08-official-list .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-08-official-list .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-08-official-list .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-08-official-list .ok{color:#15803d;font-weight:600}
+#b-08-official-list .no{color:#b91c1c}
+#b-08-official-list .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-08-official-list .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-08-official-list .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-08-official-list .np{margin:0 0 10px}
+#b-08-official-list .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-08-official-list .hi{color:#b91c1c;font-weight:600}
+#b-08-official-list .mid{color:#b45309;font-weight:600}
+#b-08-official-list .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-08-official-list"]=function(DCLogic){
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+return Component;};</script>
 <section class="board" id="b-03-agents-batch" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 960px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
 <span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
 <span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
 <span style="font-size: 13px">2026-11-16 13:58:00（GMT+8）</span>
 <span style="font-size: 13px">admin</span>
 </div>
@@ -267,6 +501,10 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mon" href="#/b-03-agents-batch">投流一级代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
 </nav>
@@ -416,11 +654,12 @@ class Component extends DCLogic {
   }
 }
 return Component;};</script>
-<section class="board" id="b-04-bind-members" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 960px; background: #f3f5f8">
+<section class="board" id="b-04-bind-members" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 980px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
 <span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
 <span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
 <span style="font-size: 13px">2026-11-16 14:05:00（GMT+8）</span>
 <span style="font-size: 13px">admin</span>
 </div>
@@ -430,66 +669,70 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mon" href="#/b-04-bind-members">绑定会员<span class="new" style="color: #fde68a">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
 </nav>
 <main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
 <div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 绑定会员</div>
-<h1 style="margin: 8px 0 16px; font-size: 20px">投流一级代理绑定会员 ID</h1>
+<h1 style="margin: 8px 0 16px; font-size: 20px">投流一级代理绑定会员（自己的账号）</h1>
 <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
 <section style="flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
-<div style="background: #ffffff; border: 1px solid #e1e6ee; border-radius: 8px; padding: 16px">
+<div class="card">
 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 12px">
 <label style="display: flex; align-items: center; gap: 6px; font-size: 14px">投流总代理<select class="inp"><option>fb_media（投流方 A）</option></select></label>
-<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">绑定到投流一级代理<select class="inp"><option>tt001</option><option>tt002</option><option>tt003</option></select></label><span class="bd">1</span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">绑定到投流一级代理<select class="inp"><option>tt001</option></select></label><span class="bd">1</span>
+<span style="font-size: 14px">已绑定 <b>{{ used }}</b> / 10，还可绑 <b>{{ left }}</b> 个</span>
 </div>
-<label for="ids" style="display: block; font-size: 14px; margin-bottom: 6px">会员 ID（逗号或换行分隔，一次 ≤ 1000 个）<span class="bd">2</span></label>
-<textarea id="ids" rows="5" style="width: 100%; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; padding: 8px 10px; font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937" onInput="{{ onIds }}">{{ idsText }}</textarea>
+<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 20px">可绑定 = 投流方<b>自己的账号</b>：上一级是代理（非会员）+ 所属大代理在官方大代理名单 + 未被绑定 + 每个投流一级代理累计 ≤ 10 个<span class="bd">2</span></div>
+<label for="ids" style="display: block; font-size: 14px; margin-bottom: 6px">会员 ID（逗号或换行分隔，一次 1～10 个）</label>
+<textarea id="ids" rows="4" style="width: 100%; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; padding: 8px 10px; font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937" onInput="{{ onIds }}">{{ idsText }}</textarea>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 10px">
-<button class="btn2" type="button">上传 CSV</button>
-<span style="font-size: 12px; color: #4b5563">首行 member_id</span>
+<span style="font-size: 12px; color: #4b5563">超过 10 个时只取前 10 个</span>
 <span style="flex: 1 1 auto"></span>
 <button class="btn2" type="button" onClick="{{ check }}">校验</button><span class="bd">3</span>
 <button class="btn" type="button" onClick="{{ bind }}" disabled="{{ cannotBind }}">确认绑定可绑的 {{ okCount }} 个</button>
 </div>
 </div>
 <sc-if value="{{ showDone }}">
-<div role="status" style="padding: 10px 12px; border-radius: 6px; background: #e3f1ef; border: 1px solid #1a7f74; font-size: 14px">{{ doneText }}　<button class="btn2" type="button" style="height: 28px">下载失败明细</button></div>
+<div role="status" style="padding: 10px 12px; border-radius: 6px; background: #e3f1ef; border: 1px solid #1a7f74; font-size: 14px; line-height: 22px">{{ doneText }}<br><span style="font-size: 13px; color: #374151">已写入：super_id = tt001，query_code 迁到 tt001 下；tldl_master_id = fb_media，tldl_agent_id = tt001，tldl_level = 0，tldl_source = 绑定</span><span class="bd">4</span></div>
 </sc-if>
 <sc-if value="{{ checked }}">
-<div style="background: #ffffff; border: 1px solid #e1e6ee; border-radius: 8px; padding: 16px">
-<div style="font-size: 14px; margin-bottom: 10px"><b>校验结果</b>　可绑定 <span class="ok">{{ okCount }}</span> 个 · 跳过 <span class="no">{{ badCount }}</span> 个<span class="bd">4</span></div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>校验结果</b>　可绑定 <span class="ok">{{ okCount }}</span> 个 · 跳过 <span class="no">{{ badCount }}</span> 个</div>
 <div style="overflow-x: auto">
-<table style="border-collapse: collapse; width: 100%; min-width: 720px">
-<thead><tr><th class="th">会员 ID</th><th class="th">当前直属上级</th><th class="th">结果</th><th class="th">一并迁入的下线<span class="bd">5</span></th></tr></thead>
+<table style="border-collapse: collapse; width: 100%; min-width: 760px">
+<thead><tr><th class="th">会员 ID</th><th class="th">当前上一级</th><th class="th">上一级身份</th><th class="th">所属大代理</th><th class="th">结果</th></tr></thead>
 <tbody>
-<tr data-for="results" data-as="r"><td class="td">{{ r.id }}</td><td class="td">{{ r.parent }}</td><td class="td"><span class="{{ r.cls }}">{{ r.msg }}</span></td><td class="td">{{ r.down }}</td></tr>
+<tr data-for="results" data-as="r"><td class="td">{{ r.id }}</td><td class="td">{{ r.parent }}</td><td class="td">{{ r.ptype }}</td><td class="td">{{ r.top }}</td><td class="td"><span class="{{ r.cls }}">{{ r.msg }}</span></td></tr>
 </tbody>
 </table>
 </div>
 </div>
 </sc-if>
-<div style="background: #ffffff; border: 1px solid #e1e6ee; border-radius: 8px; padding: 16px">
-<div style="font-size: 14px; margin-bottom: 10px"><b>绑定记录</b><span class="bd">6</span></div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>tt001 已绑定的账号</b>（{{ used }} / 10）<span class="bd">5</span></div>
 <div style="overflow-x: auto">
 <table style="border-collapse: collapse; width: 100%; min-width: 760px">
-<thead><tr><th class="th">绑定时间</th><th class="th">会员 ID</th><th class="th">原上级</th><th class="th">新投流一级代理</th><th class="th">操作人</th><th class="th">操作端</th></tr></thead>
+<thead><tr><th class="th">绑定时间</th><th class="th">会员 ID</th><th class="th">原上一级</th><th class="th">所属大代理</th><th class="th">操作人</th><th class="th">操作端</th></tr></thead>
 <tbody>
-<tr data-for="logs" data-as="g"><td class="td">{{ g.time }}</td><td class="td">{{ g.id }}</td><td class="td">{{ g.from }}</td><td class="td">{{ g.to }}</td><td class="td">{{ g.who }}</td><td class="td">{{ g.side }}</td></tr>
+<tr data-for="logs" data-as="g"><td class="td">{{ g.time }}</td><td class="td">{{ g.id }}</td><td class="td">{{ g.from }}</td><td class="td">{{ g.top }}</td><td class="td">{{ g.who }}</td><td class="td">{{ g.side }}</td></tr>
 </tbody>
 </table>
 </div>
 <div style="margin-top: 10px; font-size: 13px; color: #4b5563">示例数据，非线上配置</div>
 </div>
 </section>
-<aside aria-label="注释" style="flex: 1 1 280px; background: #fff7ed; border: 1px solid #fdba74; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 20px">
-<div style="font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #9a3412">注释 · 绑定会员</div>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">1</span>运营可绑到任意投流代理线的投流一级代理；投流总代理在投流代理端只能选自己下面的投流一级代理，且受「允许绑定会员」开关控制。停用的投流一级代理不能绑定。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>一次 ≤ 1000 个，逗号或换行分隔，重复的 ID 只算一次；也可上传 CSV（首行 member_id）。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>先点「校验」，再确认。只绑「可绑定」的，其余跳过，不整批失败。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>可绑定 = 会员存在 + 同站点 + 没被绑定过 + 不是测试 / 冻结 / 注销账号；还要满足的归属范围待确认（原「上级须为官方大代理」已取消）。投流代理端看不到原上级账号，只显示「已有归属」。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>绑定后上级代理 = 该投流一级代理，query_code 迁到投流一级代理下。该会员已有的下线是否一并迁入待确认。绑定前的数据留原线；不能改绑或解绑。</p>
-<p style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">6</span>每个会员一条记录：会员 ID、原上级、新投流一级代理、操作人、操作端（主后台 / 投流代理端）、时间 GMT+8。</p>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 绑定自己的账号</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>用途：投流方把<b>自己已有的账号</b>挂到投流一级代理下当种子账号。每个投流一级代理累计最多绑定 10 个，一次提交 1～10 个。运营可绑任意线；投流总代理只能绑自己名下的一级代理，受「允许绑定会员」开关控制。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>可绑定条件（全部满足）：会员存在、同站点；<b>上一级是非会员</b>（直属上级是代理账号，且没有会员邀请人）；<b>所属大代理在官方大代理名单</b>（08，10 个）；没被绑定过；不是测试 / 冻结 / 注销账号。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>先校验后绑定，只绑可绑的。按提交顺序累计，到第 10 个为止，之后的显示「超出上限」。代理端看不到原上一级和所属大代理，只显示「不符合绑定条件」。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定后两边都写：现网 super_id / query_code 迁到该投流一级代理下；tldl 字段写入（来源 = 绑定，层级 = 0，邀请链接为空）。绑定前数据留原线；不能改绑或解绑。该账号已有下线是否一并迁入待确认。</p>
+<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">5</span>每条绑定写记录和操作日志；核验系统巡检「绑定超限」「绑定不合规」，发现即告警（05）。</p>
 </aside>
 </div>
 </main>
@@ -510,40 +753,51 @@ return Component;};</script>
 #b-04-bind-members .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
 #b-04-bind-members .btn:hover{color:#ffffff;background:#163b7a}
 #b-04-bind-members .btn:disabled{background:#9ca3af;cursor:not-allowed}
-#b-04-bind-members .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer}
+#b-04-bind-members .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
 #b-04-bind-members .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
 #b-04-bind-members .ok{color:#15803d;font-weight:600}
-#b-04-bind-members .no{color:#b91c1c}</style>
+#b-04-bind-members .no{color:#b91c1c}
+#b-04-bind-members .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-04-bind-members .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-04-bind-members .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-04-bind-members .np{margin:0 0 10px}
+#b-04-bind-members .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-04-bind-members .hi{color:#b91c1c;font-weight:600}
+#b-04-bind-members .mid{color:#b45309;font-weight:600}
+#b-04-bind-members .lo{color:#4b5563}</style>
 <script>window.__DC=window.__DC||{};window.__DC["b-04-bind-members"]=function(DCLogic){
 class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.db = {
-      '992100001': { parent: 'google_vi', ok: true, down: 0 },
-      '992100002': { parent: 'ddltomas', ok: true, down: 2 },
-      '992100003': { parent: '5-ji-agent', ok: true, down: 0 },
-      '992100004': { parent: 'pasay001', msg: '不在可绑定范围（规则待确认）' },
-      '992100005': { parent: 'tt001', msg: '已被绑定，不支持改绑' },
-      '992100006': { parent: '—', msg: '非本站点会员' },
-      '992100008': { parent: 'google_vi', msg: '测试账号，跳过' }
+      '992100001': { parent: 'google_vi', ptype: '代理', top: 'google_vi（官方）', ok: true },
+      '992100002': { parent: 'ddl_sub01', ptype: '代理', top: 'ddltomas（官方）', ok: true },
+      '992100003': { parent: '992099120', ptype: '会员', top: '5-ji-agent（官方）', msg: '上一级是会员，不能绑定' },
+      '992100004': { parent: 'pasay001', ptype: '代理', top: 'pasay001', msg: '所属大代理不在官方名单' },
+      '992100005': { parent: 'tt002', ptype: '投流一级代理', top: 'fb_media', msg: '已被绑定，不支持改绑' },
+      '992100006': { parent: '—', ptype: '—', top: '—', msg: '非本站点会员' },
+      '992100008': { parent: 'google_vi', ptype: '代理', top: 'google_vi（官方）', msg: '测试账号，跳过' },
+      '992100009': { parent: '5-ji-agent', ptype: '代理', top: '5-ji-agent（官方）', ok: true },
+      '992100010': { parent: 'google_vi', ptype: '代理', top: 'google_vi（官方）', ok: true }
     };
+    const seed = ['992099871', '992099530', '992099402', '992099388', '992099301', '992099210', '992099105'];
     this.state = {
-      idsText: '992100001\n992100002, 992100003\n992100004\n992100005\n992100006\n992100007\n992100008',
+      idsText: '992100001\n992100002, 992100003\n992100004\n992100005\n992100006\n992100007\n992100008\n992100009\n992100010',
       checked: false, results: [], showDone: false, doneText: '', bound: {},
-      logs: [
-        { time: '2026-11-16 11:42:10', id: '992099871', from: 'google_vi', to: 'tt001', who: 'fb_media', side: '投流代理端' },
-        { time: '2026-11-16 10:58:03', id: '992099530', from: 'ddltomas', to: 'tt002', who: 'admin', side: '主后台' }
-      ]
+      logs: seed.map((id, i) => ({ time: '2026-11-1' + (5 - (i > 3 ? 1 : 0)) + ' 1' + i + ':0' + i + ':00', id, from: i % 2 ? 'ddltomas' : 'google_vi', top: (i % 2 ? 'ddltomas' : 'google_vi') + '（官方）', who: i % 3 ? 'fb_media' : 'admin', side: i % 3 ? '投流代理端' : '主后台' }))
     };
   }
   run() {
-    const ids = Array.from(new Set(String(this.state.idsText).split(/[\s,，]+/).filter(Boolean))).slice(0, 1000);
+    const ids = Array.from(new Set(String(this.state.idsText).split(/[\s,，]+/).filter(Boolean))).slice(0, 10);
+    let room = 10 - this.state.logs.length;
     return ids.map(id => {
       const m = this.db[id];
-      if (this.state.bound[id]) return { id, parent: 'tt001', ok: false, cls: 'no', msg: '已被绑定，不支持改绑', down: '—' };
-      if (!m) return { id, parent: '—', ok: false, cls: 'no', msg: '会员不存在', down: '—' };
-      if (!m.ok) return { id, parent: m.parent, ok: false, cls: 'no', msg: m.msg, down: '—' };
-      return { id, parent: m.parent, ok: true, cls: 'ok', msg: '可绑定', down: m.down ? m.down + ' 个' : '无' };
+      if (this.state.bound[id]) return { id, parent: 'tt001', ptype: '投流一级代理', top: 'fb_media', ok: false, cls: 'no', msg: '已被绑定，不支持改绑' };
+      if (!m) return { id, parent: '—', ptype: '—', top: '—', ok: false, cls: 'no', msg: '会员不存在' };
+      if (!m.ok) return { id, parent: m.parent, ptype: m.ptype, top: m.top, ok: false, cls: 'no', msg: m.msg };
+      if (room <= 0) return { id, parent: m.parent, ptype: m.ptype, top: m.top, ok: false, cls: 'no', msg: '超出上限（10 / 10）' };
+      room -= 1;
+      return { id, parent: m.parent, ptype: m.ptype, top: m.top, ok: true, cls: 'ok', msg: '可绑定' };
     });
   }
   renderVals() {
@@ -552,18 +806,18 @@ class Component extends DCLogic {
     const ok = res.filter(r => r.ok);
     return {
       idsText: s.idsText, checked: s.checked, results: res, logs: s.logs,
+      used: s.logs.length, left: Math.max(0, 10 - s.logs.length),
       okCount: ok.length, badCount: res.length - ok.length, cannotBind: !s.checked || ok.length === 0,
       showDone: s.showDone, doneText: s.doneText,
       onIds: e => this.setState({ idsText: e.target.value, checked: false, showDone: false }),
       check: () => this.setState({ checked: true, results: this.run(), showDone: false }),
       bind: () => {
-        const good = this.run().filter(r => r.ok);
+        const all = this.run(), good = all.filter(r => r.ok);
         if (!good.length) return;
         const bound = Object.assign({}, s.bound);
         good.forEach(r => { bound[r.id] = true; });
-        const downs = good.reduce((n, r) => n + (this.db[r.id].down || 0), 0);
-        const newLogs = good.map(r => ({ time: '2026-11-16 14:05:30', id: r.id, from: r.parent, to: 'tt001', who: 'admin', side: '主后台' }));
-        this.setState({ bound, logs: newLogs.concat(s.logs), checked: false, showDone: true, doneText: '绑定成功 ' + good.length + ' 个，一并迁入下线 ' + downs + ' 个；跳过 ' + (this.run().length - good.length) + ' 个' });
+        const newLogs = good.map(r => ({ time: '2026-11-16 14:05:30', id: r.id, from: r.parent, top: r.top, who: 'admin', side: '主后台' }));
+        this.setState({ bound, logs: newLogs.concat(s.logs), checked: false, showDone: true, doneText: '绑定成功 ' + good.length + ' 个，跳过 ' + (all.length - good.length) + ' 个；tt001 已绑定 ' + (s.logs.length + good.length) + ' / 10' });
       }
     };
   }
@@ -574,6 +828,7 @@ return Component;};</script>
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
 <span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
 <span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
 <span style="font-size: 13px">2026-11-16 14:15:00（GMT+8）</span>
 <span style="font-size: 13px">admin</span>
 </div>
@@ -583,6 +838,10 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
 <a class="mon" href="#/b-06-line-report">投流代理线汇总<span class="new" style="color: #fde68a">新增</span></a>
 </nav>
@@ -672,6 +931,122 @@ class Component extends DCLogic {
   }
 }
 return Component;};</script>
+<section class="board" id="b-09-member-detail" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 980px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-16 14:18:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mon" href="#/b-09-member-detail">会员详情（投流字段）<span class="new" style="color: #fde68a">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">会员管理 / 会员列表 / 会员详情</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">会员详情 · 992107950</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; font-size: 13px">
+<div><div style="color: #4b5563">会员 ID</div><b>992107950</b></div>
+<div><div style="color: #4b5563">账号</div><b>Player1hhf63091</b></div>
+<div><div style="color: #4b5563">注册时间</div><b>2026-11-16 12:03:11</b></div>
+<div><div style="color: #4b5563">站点</div><b>新站</b></div>
+</div>
+<div class="card">
+<div style="display: flex; align-items: center; margin-bottom: 12px"><b style="font-size: 15px">投流归属（tldl 字段）</b><span style="margin-left: 8px; font-size: 12px; padding: 2px 8px; border-radius: 10px; background: #e3f1ef; color: #14655c">新增</span><span class="bd">1</span><span style="flex: 1 1 auto"></span><span style="font-size: 12px; color: #4b5563">只读，不可在后台修改</span></div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 640px">
+<thead><tr><th class="th">字段</th><th class="th">名称</th><th class="th">值</th></tr></thead>
+<tbody>
+<tr><td class="td code">tldl_master_id</td><td class="td">投流总代理</td><td class="td">fb_media（992200101）</td></tr>
+<tr><td class="td code">tldl_agent_id</td><td class="td">投流一级代理</td><td class="td">tt001（992300001）</td></tr>
+<tr><td class="td code">tldl_level</td><td class="td">投流会员层级</td><td class="td"><b>L1</b>（0 = 一手，1～n = L1～Ln）</td></tr>
+<tr><td class="td code">tldl_source</td><td class="td">来源</td><td class="td">裂变（会员邀请）</td></tr>
+<tr><td class="td code">tldl_inviter_id</td><td class="td">邀请人</td><td class="td">992107949（L0）</td></tr>
+<tr><td class="td code">tldl_invite_link</td><td class="td">当时邀请链接<span class="bd">2</span></td><td class="td code">https://[站点域名]/invite/992107949</td></tr>
+<tr><td class="td code">tldl_invite_code</td><td class="td">当时邀请码</td><td class="td code">992107949</td></tr>
+<tr><td class="td code">tldl_path</td><td class="td">投流路径</td><td class="td code">/992200101/992300001/992107949/992107950/</td></tr>
+<tr><td class="td code">tldl_join_time</td><td class="td">归属时间</td><td class="td">2026-11-16 12:03:11（GMT+8）</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="card">
+<div style="font-size: 15px; font-weight: 700; margin-bottom: 12px">现网代理字段（同步写入）<span class="bd">3</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; font-size: 13px">
+<div><div style="color: #4b5563">上级代理 super_id</div><b>tt001</b></div>
+<div><div style="color: #4b5563">邀请人</div><b>992107949</b></div>
+<div><div style="color: #4b5563">query_code</div><b class="code">/1034742/992200101/992300001/992107949/992107950/</b></div>
+</div>
+</div>
+<div class="card">
+<div style="font-size: 15px; font-weight: 700; margin-bottom: 12px">该会员的投流下级<span class="bd">4</span></div>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; font-size: 13px; text-align: center">
+<div><div style="color: #4b5563">L+1</div><b style="font-size: 18px">3</b></div>
+<div><div style="color: #4b5563">L+2</div><b style="font-size: 18px">1</b></div>
+<div><div style="color: #4b5563">L+3</div><b style="font-size: 18px">0</b></div>
+<div><div style="color: #4b5563">更深</div><b style="font-size: 18px">0</b></div>
+<div><div style="color: #4b5563">合计</div><b style="font-size: 18px">4</b></div>
+</div>
+<div style="margin-top: 10px; font-size: 13px; color: #4b5563">示例数据，非线上配置</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 会员身上的投流字段</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>新增一组 tldl 字段，专门记录投流归属，不复用现网的邀请 / 代理字段，避免含义重复。注册或绑定时一次写入，之后只读；只有「绑定」会给已有会员写入。非投流线会员这组字段为空，卡片显示「非投流用户」。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>邀请链接存当时打开的完整 URL（含参数），用于追溯投放素材；一手会员是投流一级代理链接（?vip=邀请码），L1～Ln 是会员邀请好友链接，绑定的为空。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>两边都写：现网 super_id / query_code 同步迁到投流一级代理下。两边不一致由核验规则 C5 告警。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>下级按 tldl_path 统计，L+1 = 直接邀请的人。</p>
+<p class="np" style="margin: 0">会员列表新增筛选：投流总代理、投流一级代理、投流层级、来源；导出带这组字段。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-09-member-detail{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-09-member-detail a{color:#1e4fa3}
+#b-09-member-detail a:hover{color:#163b7a}
+#b-09-member-detail .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-09-member-detail .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-09-member-detail .mi:hover{background:#eef2f7;color:#111827}
+#b-09-member-detail .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-09-member-detail .mon:hover{color:#ffffff}
+#b-09-member-detail .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-09-member-detail .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-09-member-detail .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-09-member-detail .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-09-member-detail .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-09-member-detail .btn:hover{color:#ffffff;background:#163b7a}
+#b-09-member-detail .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-09-member-detail .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-09-member-detail .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-09-member-detail .ok{color:#15803d;font-weight:600}
+#b-09-member-detail .no{color:#b91c1c}
+#b-09-member-detail .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-09-member-detail .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-09-member-detail .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-09-member-detail .np{margin:0 0 10px}
+#b-09-member-detail .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-09-member-detail .hi{color:#b91c1c;font-weight:600}
+#b-09-member-detail .mid{color:#b45309;font-weight:600}
+#b-09-member-detail .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-09-member-detail"]=function(DCLogic){
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+return Component;};</script>
 <section class="board" id="b-07-agent-portal" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 960px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #0f3d38; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">投流代理端</span>
@@ -726,8 +1101,8 @@ return Component;};</script>
 <thead><tr><th class="th">会员 ID</th><th class="th">结果</th></tr></thead>
 <tbody>
 <tr><td class="td">992100001</td><td class="td" style="color: #15803d; font-weight: 600">可绑定</td></tr>
-<tr><td class="td">992100004</td><td class="td" style="color: #b91c1c">已有归属，不能绑定</td></tr>
-<tr><td class="td">992100005</td><td class="td" style="color: #b91c1c">已有归属，不能绑定</td></tr>
+<tr><td class="td">992100004</td><td class="td" style="color: #b91c1c">不符合绑定条件</td></tr>
+<tr><td class="td">992100005</td><td class="td" style="color: #b91c1c">不符合绑定条件</td></tr>
 <tr><td class="td">992100007</td><td class="td" style="color: #b91c1c">会员不存在</td></tr>
 </tbody>
 </table>
@@ -739,8 +1114,8 @@ return Component;};</script>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">1</span>投流方用投流总代理账号（02 创建）登录。投流代理端默认沿用现网 PSP 代理后台（PC + H5），新增「我的投流一级代理」「绑定会员」「数据汇总」（待确认 4）。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>只显示本投流总代理名下的投流一级代理和数据。所有接口按登录身份在服务端过滤，传入别人的投流总代理或投流一级代理 ID 返回无权限。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的表单、邀请码顺延规则同 03，所属投流总代理固定为自己。受「允许自建投流一级代理」开关和上限控制，关掉后按钮不显示。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员流程同 04，只能选自己名下的投流一级代理，受「允许绑定会员」开关控制。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上级账号：不在可绑定范围、已被绑定，都只显示「已有归属」。会员只显示 ID 和聚合数据，不展示手机号、姓名、余额（待确认 8）。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员流程同 04：只能绑投流方自己的账号，每个投流一级代理最多 10 个；只能选自己名下的一级代理，受「允许绑定会员」开关控制。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不在官方名单、已被绑定，都只显示「不符合绑定条件」。会员只显示 ID 和聚合数据，不展示手机号、姓名、余额（待确认 8）。</p>
 <p style="margin: 0">投流代理端不能做：建 / 停投流总代理、看其他投流总代理、改绑或解绑会员。</p>
 </aside>
 </div>

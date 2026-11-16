@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>投流代理原型 v1.3</title>
+<title>投流代理原型 v1.4</title>
 <style>
 html,body{margin:0}
 body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#e9edf2;color:#1f2937}
@@ -24,19 +24,19 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 </head>
 <body>
 <header class="top">
-<b>投流代理原型</b><span class="ver">v1.3</span>
+<b>投流代理原型</b><span class="ver">v1.4</span>
 <span style="font-size:12px;color:#d1d5db">2026-11-16 · 示例数据，非线上配置 · 时间 GMT+8</span>
 <a class="ext" href="https://claude.ai/artifact/9nuYQbyTi4Pp3Kjnh4wHh4" target="_blank" rel="noopener">PRD</a>
 <a class="ext" href="https://claude.ai/artifact/7bP75wEhSpFss2hQEM1FPH" target="_blank" rel="noopener">Claude 原型画布</a>
-<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-08-official-list" data-nav="b-08-official-list">08 官方大代理名单</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a></div></nav>
+<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a></div></nav>
 </header>
 <section class="board" id="b-Main" data-fixed="1" style="--bw:1280px"><template><div style="position: relative; width: 1280px; height: 900px; background: #f5f6f8; font-size: 15px; line-height: 22px">
 <svg role="img" aria-label="从投流一级代理链接注册到上级代理等于该投流一级代理" width="8" height="87" viewBox="0 0 8 87" preserveAspectRatio="none" style="position: absolute; left: 204px; top: 232px; width: 8px; height: 87px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-1" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 83" marker-end="url(#dc-arrow-head-filled-1)"></path></svg>
-<svg role="img" aria-label="从投流一级代理绑定会员 ID 到名单校验" width="8" height="47" viewBox="0 0 8 47" preserveAspectRatio="none" style="position: absolute; left: 636px; top: 232px; width: 8px; height: 47px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-2" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 43" marker-end="url(#dc-arrow-head-filled-2)"></path></svg>
+<svg role="img" aria-label="从投流一级代理绑定会员 ID 到条件校验" width="8" height="47" viewBox="0 0 8 47" preserveAspectRatio="none" style="position: absolute; left: 636px; top: 232px; width: 8px; height: 47px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-2" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 43" marker-end="url(#dc-arrow-head-filled-2)"></path></svg>
 <svg role="img" aria-label="从本线会员邀请好友到继承邀请人的投流一级代理" width="8" height="87" viewBox="0 0 8 87" preserveAspectRatio="none" style="position: absolute; left: 1084px; top: 232px; width: 8px; height: 87px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-3" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 83" marker-end="url(#dc-arrow-head-filled-3)"></path></svg>
-<svg role="img" aria-label="名单校验通过时，到上级代理改为该投流一级代理" width="8" height="55" viewBox="0 0 8 55" preserveAspectRatio="none" style="position: absolute; left: 636px; top: 456px; width: 8px; height: 55px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-4" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 51" marker-end="url(#dc-arrow-head-filled-4)"></path></svg>
+<svg role="img" aria-label="条件校验通过时，到上级代理改为该投流一级代理" width="8" height="55" viewBox="0 0 8 55" preserveAspectRatio="none" style="position: absolute; left: 636px; top: 456px; width: 8px; height: 55px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-4" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 51" marker-end="url(#dc-arrow-head-filled-4)"></path></svg>
 <svg aria-hidden="true" width="128" height="8" viewBox="0 0 128 8" preserveAspectRatio="none" style="position: absolute; left: 816px; top: 364px; width: 128px; height: 8px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><path d="M 0 4 L 128 4"></path></svg>
-<svg role="img" aria-label="名单校验不通过时，到跳过" width="8" height="143" viewBox="0 0 8 143" preserveAspectRatio="none" style="position: absolute; left: 940px; top: 368px; width: 8px; height: 143px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-5" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 139" marker-end="url(#dc-arrow-head-filled-5)"></path></svg>
+<svg role="img" aria-label="条件校验不通过时，到跳过" width="8" height="143" viewBox="0 0 8 143" preserveAspectRatio="none" style="position: absolute; left: 940px; top: 368px; width: 8px; height: 143px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-5" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 139" marker-end="url(#dc-arrow-head-filled-5)"></path></svg>
 <svg role="img" aria-label="从链接注册结果到投流一级代理团队" width="8" height="287" viewBox="0 0 8 287" preserveAspectRatio="none" style="position: absolute; left: 204px; top: 424px; width: 8px; height: 287px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-6" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 283" marker-end="url(#dc-arrow-head-filled-6)"></path></svg>
 <svg role="img" aria-label="从绑定成功到投流一级代理团队" width="8" height="95" viewBox="0 0 8 95" preserveAspectRatio="none" style="position: absolute; left: 636px; top: 616px; width: 8px; height: 95px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-7" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 91" marker-end="url(#dc-arrow-head-filled-7)"></path></svg>
 <svg role="img" aria-label="从邀请好友结果到投流一级代理团队" width="8" height="287" viewBox="0 0 8 287" preserveAspectRatio="none" style="position: absolute; left: 1084px; top: 424px; width: 8px; height: 287px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-8" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 283" marker-end="url(#dc-arrow-head-filled-8)"></path></svg>
@@ -46,7 +46,7 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 <div style="position: absolute; left: 496px; top: 160px; width: 288px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>② 绑定投流方自己的账号</b><br>每个一级代理最多 10 个</span></div>
 <div style="position: absolute; left: 960px; top: 160px; width: 256px; height: 72px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>③ 本线会员邀请好友</b><br>/invite/玩家ID 链接注册</span></div>
 <div style="position: absolute; left: 64px; top: 320px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = fb001</b><br>tldl_level = 0<br>记录当时的邀请链接</span></div>
-<div style="position: absolute; left: 464px; top: 280px; width: 352px; height: 176px; box-sizing: border-box; padding: 8px 64px; display: flex; align-items: center; justify-content: center; text-align: center; background: #fde7c7; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); font-size: 14px; line-height: 20px"><span><b>上一级是代理、所属大代理在官方名单、未超 10 个？</b></span></div>
+<div style="position: absolute; left: 464px; top: 280px; width: 352px; height: 176px; box-sizing: border-box; padding: 8px 64px; display: flex; align-items: center; justify-content: center; text-align: center; background: #fde7c7; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); font-size: 14px; line-height: 20px"><span><b>上一级是代理、所属大代理是官方大代理、未超 10 个？</b></span></div>
 <div style="position: absolute; left: 960px; top: 320px; width: 256px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理 = 同一个一级代理</b><br>tldl_level = 邀请人 + 1<br>不设层级上限</span></div>
 <div style="position: absolute; left: 496px; top: 512px; width: 288px; height: 104px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #ffffff; border: 1px solid #cfd6e0; border-radius: 10px"><span><b>上级代理改为 fb001</b><br>写入 tldl 字段，level = 0<br>绑定前的数据留原线</span></div>
 <div style="position: absolute; left: 848px; top: 512px; width: 192px; height: 80px; box-sizing: border-box; padding: 8px 12px; display: flex; align-items: center; justify-content: center; text-align: center; background: #f3f4f6; border: 1px dashed #9ca3af; border-radius: 10px"><span><b>跳过</b><br>归属不变，给出原因</span></div>
@@ -66,7 +66,7 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 • 命名：模块叫「投流代理」，两级分别叫「投流总代理」「投流一级代理」；投流总代理只能由运营建
 • 投流一级代理一层，运营或投流总代理（投流代理端）都能批量生成，两边共用同一套表单
 • 本线会员带来的人不再进 5-ji-agent，全部算在投流一级代理下
-• 绑定会员：只绑投流方自己的账号（上一级是代理 + 大代理在官方名单），每个一级代理 ≤ 10 个；不可改绑
+• 绑定会员：只绑投流方自己的账号（上一级是代理 + 所属大代理是官方大代理；官方大代理在现有大代理系统里标记，投流方看不到），每个一级代理 ≤ 10 个；不可改绑
 • 会员身上新增 tldl 字段，和现网 super_id 两边都写；新增核验系统 + 后台告警
 • 统计：新增一张「投流代理线汇总」
 • 示例数据均为虚构，非线上配置；时间都是 GMT+8</pre></div><div class="note" style="background:#fde8ef"><pre>待确认
@@ -112,7 +112,6 @@ return Component;};</script>
 <a class="mon" href="#/b-01-big-agents">投流总代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -200,7 +199,6 @@ return Component;};</script>
 <a class="mon" href="#/b-01-big-agents">投流总代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -281,7 +279,6 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mon" href="#/b-05-verify-alarm">投流核验告警<span class="new" style="color: #fde68a">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -328,7 +325,7 @@ return Component;};</script>
 <tr><td class="td">C5</td><td class="td">tldl 字段与现网 super_id / query_code 不一致</td><td class="td">—</td><td class="td">✓</td><td class="td"><span class="mid">中</span></td></tr>
 <tr><td class="td">C6</td><td class="td">层级断链：tldl_level ≠ 邀请人层级 + 1，或邀请人不在同一条线</td><td class="td">—</td><td class="td">✓</td><td class="td"><span class="mid">中</span></td></tr>
 <tr><td class="td">C7</td><td class="td">绑定超限：一个投流一级代理绑定 &gt; 10 个</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
-<tr><td class="td">C8</td><td class="td">绑定不合规：绑定账号上一级是会员，或所属大代理不在官方名单</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C8</td><td class="td">绑定不合规：绑定账号上一级是会员，或所属大代理不是官方大代理</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
 </tbody>
 </table>
 </div>
@@ -394,98 +391,6 @@ class Component extends DCLogic {
   }
 }
 return Component;};</script>
-<section class="board" id="b-08-official-list" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 900px; background: #f3f5f8">
-<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
-<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
-<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
-<span style="flex: 1 1 auto"></span>
-<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
-<span style="font-size: 13px">2026-11-16 14:15:00（GMT+8）</span>
-<span style="font-size: 13px">admin</span>
-</div>
-<div style="display: flex; flex-wrap: wrap">
-<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
-<div class="mgrp">代理管理 › 投流代理</div>
-<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
-<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
-<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mon" href="#/b-08-official-list">官方大代理名单<span class="new" style="color: #fde68a">新增</span></a>
-<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
-<div class="mgrp">会员管理</div>
-<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
-<div class="mgrp">数据报表</div>
-<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
-</nav>
-<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
-<div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 官方大代理名单</div>
-<h1 style="margin: 8px 0 16px; font-size: 20px">官方大代理名单</h1>
-<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
-<section class="card" style="flex: 999 1 620px; min-width: 0">
-<div style="display: flex; gap: 0; margin-bottom: 14px"><span style="padding: 8px 16px; font-size: 14px; border: 1px solid #1e4fa3; background: #1e4fa3; color: #ffffff; font-weight: 600">新站</span><span style="padding: 8px 16px; font-size: 14px; border: 1px solid #cfd6e0; background: #ffffff; color: #374151">老站</span><span class="bd">1</span></div>
-<p style="margin: 0 0 10px; font-size: 13px; color: #4b5563">用途：投流一级代理绑定会员时，账号所属大代理必须在本名单里。</p>
-<label for="ids" style="display: block; font-size: 14px; margin-bottom: 6px">大代理 ID（逗号分隔，10 个）<span class="bd">2</span></label>
-<textarea id="ids" rows="3" style="width: 100%; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; padding: 8px 10px; font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937">992044707,992045656,9078757,[google_vi 的 ID],[ID 5],[ID 6],[ID 7],[ID 8],[ID 9],992200101</textarea>
-<div role="alert" style="margin-top: 8px; padding: 8px 12px; border-radius: 6px; background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; font-size: 13px">保存失败：992200101（fb_media）是投流总代理，不能加入名单。其余 ID 未保存。<span class="bd">3</span></div>
-<div style="font-size: 14px; font-weight: 600; margin: 16px 0 8px">名单解析（保存前确认弹窗显示同样内容）</div>
-<div style="overflow-x: auto">
-<table style="border-collapse: collapse; width: 100%; min-width: 640px">
-<thead><tr><th class="th">#</th><th class="th">大代理 ID</th><th class="th">大代理账号</th><th class="th">说明</th><th class="th">校验</th></tr></thead>
-<tbody>
-<tr><td class="td">1</td><td class="td">992044707</td><td class="td">5-ji-agent</td><td class="td">会员推广专用线</td><td class="td ok">通过</td></tr>
-<tr><td class="td">2</td><td class="td">992045656</td><td class="td">5ji-wanghong</td><td class="td">网红专用线</td><td class="td ok">通过</td></tr>
-<tr><td class="td">3</td><td class="td">9078757</td><td class="td">ddltomas</td><td class="td">自然流量线（QA）</td><td class="td ok">通过</td></tr>
-<tr><td class="td">4</td><td class="td">[待填]</td><td class="td">google_vi</td><td class="td">自然流量线（QA）</td><td class="td lo">待运营填写</td></tr>
-<tr><td class="td">5–9</td><td class="td">[待填]</td><td class="td">—</td><td class="td">其余官方大代理</td><td class="td lo">待运营填写</td></tr>
-<tr><td class="td">10</td><td class="td">992200101</td><td class="td">fb_media</td><td class="td">投流总代理</td><td class="td no">不通过</td></tr>
-</tbody>
-</table>
-</div>
-<div style="display: flex; gap: 12px; margin-top: 16px"><span class="btn">保存</span><span class="btn2">取消</span><span class="bd">4</span></div>
-<div style="margin-top: 10px; font-size: 13px; color: #4b5563">前 3 个 ID 来自 11-11 QA 测试记录，其余待运营指定；示例数据</div>
-</section>
-<aside aria-label="注释" class="note">
-<div class="nt">注释 · 官方大代理名单</div>
-<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>放在「代理管理 › 投流代理」下，新站、老站各配一份。</p>
-<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>运营指定官方自己的 10 个大代理 ID。上线时为空，为空时任何账号都不能被绑定。</p>
-<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>保存校验：ID 存在、是大代理（user_type = DL）、属于本站点、不是投流总代理、不重复；有一个不通过就整份不保存，并标出是哪个。</p>
-<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">4</span>保存即时生效，只影响之后的绑定，已绑定的不变。单独权限码，只开给运营负责人；投流代理端看不到。改动写日志（旧名单 → 新名单）。</p>
-</aside>
-</div>
-</main>
-</div>
-</div></template><div class="mount"></div></section>
-<style>#b-08-official-list{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
-#b-08-official-list a{color:#1e4fa3}
-#b-08-official-list a:hover{color:#163b7a}
-#b-08-official-list .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
-#b-08-official-list .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
-#b-08-official-list .mi:hover{background:#eef2f7;color:#111827}
-#b-08-official-list .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
-#b-08-official-list .mon:hover{color:#ffffff}
-#b-08-official-list .new{font-size:11px;color:#b45309;margin-left:6px}
-#b-08-official-list .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
-#b-08-official-list .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
-#b-08-official-list .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
-#b-08-official-list .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
-#b-08-official-list .btn:hover{color:#ffffff;background:#163b7a}
-#b-08-official-list .btn:disabled{background:#9ca3af;cursor:not-allowed}
-#b-08-official-list .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
-#b-08-official-list .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
-#b-08-official-list .ok{color:#15803d;font-weight:600}
-#b-08-official-list .no{color:#b91c1c}
-#b-08-official-list .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
-#b-08-official-list .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
-#b-08-official-list .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
-#b-08-official-list .np{margin:0 0 10px}
-#b-08-official-list .code{font-family:ui-monospace,Menlo,Consolas,monospace}
-#b-08-official-list .hi{color:#b91c1c;font-weight:600}
-#b-08-official-list .mid{color:#b45309;font-weight:600}
-#b-08-official-list .lo{color:#4b5563}</style>
-<script>window.__DC=window.__DC||{};window.__DC["b-08-official-list"]=function(DCLogic){
-class Component extends DCLogic {
-  renderVals() { return {}; }
-}
-return Component;};</script>
 <section class="board" id="b-03-agents-batch" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 960px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
@@ -501,7 +406,6 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mon" href="#/b-03-agents-batch">投流一级代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -669,7 +573,6 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mon" href="#/b-04-bind-members">绑定会员<span class="new" style="color: #fde68a">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -687,7 +590,7 @@ return Component;};</script>
 <label style="display: flex; align-items: center; gap: 6px; font-size: 14px">绑定到投流一级代理<select class="inp"><option>tt001</option></select></label><span class="bd">1</span>
 <span style="font-size: 14px">已绑定 <b>{{ used }}</b> / 10，还可绑 <b>{{ left }}</b> 个</span>
 </div>
-<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 20px">可绑定 = 投流方<b>自己的账号</b>：上一级是代理（非会员）+ 所属大代理在官方大代理名单 + 未被绑定 + 每个投流一级代理累计 ≤ 10 个<span class="bd">2</span></div>
+<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 20px">可绑定 = 投流方<b>自己的账号</b>：上一级是代理（非会员）+ 所属大代理是官方大代理 + 未被绑定 + 每个投流一级代理累计 ≤ 10 个<span class="bd">2</span></div>
 <label for="ids" style="display: block; font-size: 14px; margin-bottom: 6px">会员 ID（逗号或换行分隔，一次 1～10 个）</label>
 <textarea id="ids" rows="4" style="width: 100%; box-sizing: border-box; border: 1px solid #cfd6e0; border-radius: 6px; padding: 8px 10px; font-size: 14px; font-family: ui-monospace, Menlo, Consolas, monospace; color: #1f2937" onInput="{{ onIds }}">{{ idsText }}</textarea>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 10px">
@@ -729,7 +632,7 @@ return Component;};</script>
 <aside aria-label="注释" class="note">
 <div class="nt">注释 · 绑定自己的账号</div>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>用途：投流方把<b>自己已有的账号</b>挂到投流一级代理下当种子账号。每个投流一级代理累计最多绑定 10 个，一次提交 1～10 个。运营可绑任意线；投流总代理只能绑自己名下的一级代理，受「允许绑定会员」开关控制。</p>
-<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>可绑定条件（全部满足）：会员存在、同站点；<b>上一级是非会员</b>（直属上级是代理账号，且没有会员邀请人）；<b>所属大代理在官方大代理名单</b>（08，10 个）；没被绑定过；不是测试 / 冻结 / 注销账号。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>可绑定条件（全部满足）：会员存在、同站点；<b>上一级是非会员</b>（直属上级是代理账号，且没有会员邀请人）；<b>所属大代理是官方大代理</b>（10 个，在现有大代理系统里标记，不在投流代理模块，投流方看不到）；没被绑定过；不是测试 / 冻结 / 注销账号。</p>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>先校验后绑定，只绑可绑的。按提交顺序累计，到第 10 个为止，之后的显示「超出上限」。代理端看不到原上一级和所属大代理，只显示「不符合绑定条件」。</p>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定后两边都写：现网 super_id / query_code 迁到该投流一级代理下；tldl 字段写入（来源 = 绑定，层级 = 0，邀请链接为空）。绑定前数据留原线；不能改绑或解绑。该账号已有下线是否一并迁入待确认。</p>
 <p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">5</span>每条绑定写记录和操作日志；核验系统巡检「绑定超限」「绑定不合规」，发现即告警（05）。</p>
@@ -773,7 +676,7 @@ class Component extends DCLogic {
       '992100001': { parent: 'google_vi', ptype: '代理', top: 'google_vi（官方）', ok: true },
       '992100002': { parent: 'ddl_sub01', ptype: '代理', top: 'ddltomas（官方）', ok: true },
       '992100003': { parent: '992099120', ptype: '会员', top: '5-ji-agent（官方）', msg: '上一级是会员，不能绑定' },
-      '992100004': { parent: 'pasay001', ptype: '代理', top: 'pasay001', msg: '所属大代理不在官方名单' },
+      '992100004': { parent: 'pasay001', ptype: '代理', top: 'pasay001', msg: '所属大代理不是官方大代理' },
       '992100005': { parent: 'tt002', ptype: '投流一级代理', top: 'fb_media', msg: '已被绑定，不支持改绑' },
       '992100006': { parent: '—', ptype: '—', top: '—', msg: '非本站点会员' },
       '992100008': { parent: 'google_vi', ptype: '代理', top: 'google_vi（官方）', msg: '测试账号，跳过' },
@@ -838,7 +741,6 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
@@ -946,7 +848,6 @@ return Component;};</script>
 <a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
-<a class="mi" href="#/b-08-official-list">官方大代理名单<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mon" href="#/b-09-member-detail">会员详情（投流字段）<span class="new" style="color: #fde68a">改动</span></a>
@@ -1115,7 +1016,7 @@ return Component;};</script>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>只显示本投流总代理名下的投流一级代理和数据。所有接口按登录身份在服务端过滤，传入别人的投流总代理或投流一级代理 ID 返回无权限。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的表单、邀请码顺延规则同 03，所属投流总代理固定为自己。受「允许自建投流一级代理」开关和上限控制，关掉后按钮不显示。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员流程同 04：只能绑投流方自己的账号，每个投流一级代理最多 10 个；只能选自己名下的一级代理，受「允许绑定会员」开关控制。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不在官方名单、已被绑定，都只显示「不符合绑定条件」。会员只显示 ID 和聚合数据，不展示手机号、姓名、余额（待确认 8）。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不是官方大代理、已被绑定，都只显示「不符合绑定条件」；投流代理端不展示官方大代理名单。会员只显示 ID 和聚合数据，不展示手机号、姓名、余额（待确认 8）。</p>
 <p style="margin: 0">投流代理端不能做：建 / 停投流总代理、看其他投流总代理、改绑或解绑会员。</p>
 </aside>
 </div>

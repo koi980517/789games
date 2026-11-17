@@ -100,6 +100,55 @@ body.no-anno .anno{display:none!important}
 .ex-hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;flex-wrap:wrap}
 .ex-bd{padding:0 14px 14px;display:grid;gap:12px}
 .ex-bd[hidden]{display:none}
+#reports{margin-top:16px}
+.rp-hd{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.rp-bd{padding:14px;display:grid;gap:12px}
+.rp-bd[hidden]{display:none}
+.newtag{display:inline-block;font-size:10px;line-height:16px;padding:0 5px;border-radius:8px;background:var(--warn);color:#fff;margin-left:4px;vertical-align:middle;font-weight:600}
+.newcell{background:var(--warn-weak)}
+.crumbs{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px}
+.crumbs a{color:var(--brand);cursor:pointer;text-decoration:none}
+.crumbs .sep{color:var(--muted)}
+.lnk{color:var(--brand);cursor:pointer;background:none;border:0;font:inherit;padding:0}
+.lnk:hover{text-decoration:underline}
+.tagchip{display:inline-block;background:var(--brand-weak);color:var(--brand);border:1px solid var(--brand);border-radius:3px;padding:0 6px;font-size:12px}
+.tagchip.all{background:var(--warn-weak);color:var(--warn);border-color:var(--warn)}
+.rp-tot td{font-weight:600;background:var(--chip)}
+.rp-dlg{position:fixed;inset:0;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.rp-dlg[hidden]{display:none}
+.rp-dlg .box{background:var(--panel);border-radius:6px;width:min(440px,100%);padding:16px 18px;display:grid;gap:12px}
+.rp-dlg label.f{display:grid;grid-template-columns:72px 1fr;gap:8px;align-items:center}
+.sub-row td:first-child{padding-left:28px}
+/* 后台外壳：参考现网 bo-qa（顶栏 + 状态栏 + 左侧菜单 + 面包屑 + 页签） */
+body{margin:0}
+.bo-top{background:#1d5d69;color:#fff;display:flex;align-items:center;gap:10px;padding:0 16px;height:40px;font-size:13px}
+.bo-top b{font-weight:600}.bo-top .env{background:#e6a23c;color:#fff;border-radius:3px;padding:0 6px;font-size:12px;line-height:20px}
+.bo-top .sp{flex:1}
+.bo-status{background:#174f5a;color:#fff;display:flex;gap:16px;align-items:center;padding:0 16px;height:36px;font-size:13px;overflow-x:auto;white-space:nowrap}
+.bo-status i{font-style:normal;display:inline-block;min-width:18px;text-align:center;border-radius:3px;padding:0 5px;margin-left:4px;color:#fff}
+.bo-status .r{background:#d9363e}.bo-status .g{background:#2e9d5a}.bo-status .y{color:#f5c24a;background:none}
+.bo{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:calc(100vh - 76px)}
+.bo-side{background:#eef3f4;border-right:1px solid var(--line);font-size:13px;overflow-y:auto}
+.bo-side .mh{background:#1d7a6c;color:#fff;padding:0 16px;height:44px;display:flex;align-items:center;gap:8px;font-weight:600}
+.bo-side .grp>button{appearance:none;width:100%;background:none;border:0;border-bottom:1px solid var(--line);font:inherit;color:var(--fg);text-align:left;padding:12px 16px;cursor:pointer;display:flex;justify-content:space-between;font-weight:600}
+.bo-side .grp>button::after{content:"⌄";color:var(--muted)}
+.bo-side .grp.open>button::after{content:"⌃"}
+.bo-side .items{display:none;background:var(--panel)}
+.bo-side .grp.open .items{display:block}
+.bo-side .items a{display:block;padding:9px 16px 9px 34px;color:var(--fg);text-decoration:none;position:relative}
+.bo-side .items a::before{content:"▸";position:absolute;left:18px;color:var(--muted)}
+.bo-side .items a.on{background:#1d7a6c;color:#fff}.bo-side .items a.on::before{color:#fff}
+.bo-side .items a .chg{font-size:10px;background:var(--warn);color:#fff;border-radius:8px;padding:0 5px;margin-left:4px}
+.bo-main{min-width:0;display:flex;flex-direction:column}
+.bo-crumb{padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel);font-size:13px;color:var(--muted)}
+.bo-crumb b{color:var(--fg);font-weight:400}
+.bo-tabs{display:flex;gap:6px;padding:8px 16px;background:var(--panel);border-bottom:1px solid var(--line);overflow-x:auto}
+.bo-tabs button{appearance:none;font:inherit;font-size:12px;border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:3px;padding:3px 8px;cursor:pointer;white-space:nowrap}
+.bo-tabs button.on{border-color:#1d7a6c;color:#1d7a6c;background:var(--brand-weak)}
+.bo-tabs button .x{margin-left:6px;color:var(--muted)}
+.bo-main .wrap{max-width:none;margin:0;width:100%;box-sizing:border-box}
+.bo-menu-btn{display:none}
+@media (max-width:900px){.bo{grid-template-columns:minmax(0,1fr)}.bo-side{display:none}.bo.side-open .bo-side{display:block}.bo-menu-btn{display:inline-block}.bo-status{gap:10px}}
 .anno-bar{display:flex;align-items:center;gap:8px;justify-content:flex-end;margin-top:8px}
 .memo{margin:8px 0 0;padding:8px 12px;border:1px dashed var(--warn);border-radius:6px;background:var(--warn-weak);color:var(--fg);font-size:12px;display:flex;gap:8px;align-items:flex-start}
 .memo-tag{flex:none;background:var(--warn);color:#fff;border-radius:3px;padding:0 6px;font-size:11px;line-height:18px;margin-top:1px}
@@ -111,15 +160,62 @@ table.cmp td{white-space:normal}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
+<div class="bo-top"><button class="btn bo-menu-btn" id="bo-menu" style="padding:2px 8px">☰</button><span>当前时间: <b id="bo-clock">2026/11/16 15:25:24 +08:00</b></span><span class="env">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></div>
+<div class="bo-status"><span>在线人数:<i class="y">13</i></span><span>当日注册:<i class="y">18</i></span><span>实名认证-待处理:<i class="y">0</i></span><span>当日充值成功:<i class="y">15</i></span><span>充值:<i class="r">0</i></span><span>提款:<i class="g">1</i></span><span>提款超时(&gt;10分):<i class="r">8</i></span><span>风控审核:<i class="g">0</i></span><span>预算告警:<i class="r">0</i></span></div>
+<div class="bo" id="bo">
+<nav class="bo-side" id="bo-side" aria-label="菜单"><div class="mh">菜单 ☰</div>
+<div class="grp"><button type="button">个人中心</button><div class="items">
+</div></div>
+<div class="grp"><button type="button">用户管理</button><div class="items">
+<a href="#" data-na="1">用户列表</a>
+<a href="#" data-na="1">会员日志</a>
+</div></div>
+<div class="grp"><button type="button">财务管理</button><div class="items">
+<a href="#" data-na="1">充值记录</a>
+<a href="#" data-na="1">资金流水</a>
+</div></div>
+<div class="grp"><button type="button">提现管理</button><div class="items">
+<a href="#" data-na="1">提现审核</a>
+</div></div>
+<div class="grp"><button type="button">数据报表</button><div class="items">
+<a href="#" data-na="1">平台报表</a>
+</div></div>
+<div class="grp"><button type="button">数据报表中心</button><div class="items">
+<a href="#" data-na="1">每小时数据</a>
+<a href="#" data-na="1">每日数据</a>
+</div></div>
+<div class="grp open"><button type="button">平台概况</button><div class="items">
+<a href="#" data-na="1">监控大盘</a>
+<a href="#" data-na="1">OTP 短信监控报表</a>
+<a href="#" data-na="1">新用户注册全链路跟踪</a>
+<a href="#" data-go="login">代理登录数据报表<span class=chg>改</span></a>
+<a href="#" data-go="ret">代理充值留存<span class=chg>改</span></a>
+<a href="#" data-go="attr">代理关系归属表<span class=chg>改</span></a>
+<a href="#" data-na="1">全平台用户质量</a>
+<a href="#" data-na="1">代理用户留存报表</a>
+</div></div>
+<div class="grp"><button type="button">代理管理</button><div class="items">
+<a href="#" data-na="1">大代理</a>
+<a href="#" data-na="1">代理</a>
+<a href="#" data-na="1">会员代理标签配置</a>
+<a href="#" data-na="1">代理报表</a>
+</div></div>
+<div class="grp"><button type="button">活动中心</button><div class="items">
+<a href="#" data-na="1">活动列表</a>
+</div></div>
+<div class="grp open"><button type="button">系统管理</button><div class="items">
+<a href="#" data-go="param">系统参数管理<span class=chg>改</span></a>
+</div></div>
+</nav>
+<main class="bo-main"><div class="bo-crumb" id="bo-crumb"></div><div class="bo-tabs" id="bo-tabs"></div>
 <div class="wrap">
-  <header>
-    <div class="crumb">位置 › 系统管理 › 系统参数管理</div>
+  <header data-page="param">
     <h1>网红代理设置</h1>
     <p class="memo anno"><span class="memo-tag">备注</span>在「系统参数管理」新增页签，把网红名单从一个文本框改成可添加、可导入、可查看的列表，并新增独立的「全链路网红名单」（all-life-wanghong）。数据为示例，ID 与账号取自 2026-11-11 QA 测试。</p>
-    <div class="anno-bar"><span class="hint">虚线框 + 「注释 · 不开发」的内容只是说明，不做进页面</span><button class="btn" id="anno-tg" aria-pressed="false">隐藏注释，看开发后的页面</button></div>
+    <div class="anno-bar"><span class="hint" style="margin-right:auto">虚线框 + 「注释 · 不开发」的内容只是说明，不做进页面</span><button class="btn" id="anno-tg" aria-pressed="false">隐藏注释，看开发后的页面</button></div>
   </header>
 
-  <section class="panel">
+  <section class="panel" data-page="param">
     <div class="tabs" role="tablist" id="tabs">
       <button class="tab" role="tab" aria-selected="false" data-v="x">注册登陆</button>
       <button class="tab" role="tab" aria-selected="false" data-v="x">充值提款</button>
@@ -230,7 +326,97 @@ table.cmp td{white-space:normal}
     </div>
   </section>
 
-  <section class="panel anno" id="explain">
+
+  <section class="panel" id="reports" data-page="login ret attr">
+    <div class="rp-hd"><div><h1 id="rp-title" style="font-size:18px">报表</h1><p class="hint anno" style="padding:6px 10px;margin-top:8px">橙色「新增」是本次改动（全链路网红），其余沿用现网；只列部分列。示例数据，非线上配置。</p></div></div>
+
+    <!-- 代理关系归属表 -->
+    <div class="rp-bd" id="rp-attr">
+      <div class="row">
+        <button class="btn pri" id="ra-new">＋ 新建分类</button>
+        <button class="btn" data-toast="原型：更新 = 按当前上下级关系重新展开全部分类；全链路网红分类只同步名单">更新</button>
+        <button class="btn" data-toast="原型：刷新列表">刷新</button>
+        <span class="hint">拖动行可排序（= 代理充值留存首页顺序）。</span>
+      </div>
+      <div class="tw"><table>
+        <thead><tr><th>顺序</th><th>分类</th><th class="newcell">类型<span class="newtag">新增</span></th><th>备注</th><th>配置</th><th>展开代理数</th><th>最下层代理数</th><th>最近更新</th><th>操作</th></tr></thead>
+        <tbody id="ra-body"></tbody>
+      </table></div>
+    </div>
+
+    <!-- 代理充值留存 -->
+    <div class="rp-bd" id="rp-ret">
+      <div class="row">
+        <span>首充日：</span><input type="text" value="2026-11-01 ~ 2026-11-16" readonly style="width:200px">
+        <button class="btn pri" data-toast="原型：按首充日查询">搜索</button>
+        <span id="rr-scope-wrap" class="row" hidden><span class="newcell" style="padding:2px 6px;border-radius:3px">下线范围<span class="newtag">新增</span></span>
+          <select id="rr-scope"><option value="all">全部（含加入前补写的）</option><option value="after">只看加入后注册的</option></select></span>
+        <span style="flex:1"></span><span class="hint">今天的数据约 5 分钟更新，往日数据每小时更新</span>
+      </div>
+      <div class="crumbs" id="rr-crumbs"></div>
+      <div class="tw"><table>
+        <thead><tr><th id="rr-c0">分类</th><th>注册人数</th><th>首充人数</th><th>登录人数</th><th>活跃人数</th><th>充值人数</th><th>充值金额</th><th>投注人数</th><th>累计充值金额</th><th>D2</th><th>D7</th><th>D30</th></tr></thead>
+        <tbody id="rr-body"></tbody>
+      </table></div>
+      <p class="hint">只列部分列；其余列（新客充提、活跃率 / 充值率 / 投注率、累计有效投注、打码倍数、D3–D60）沿用现网。</p>
+    </div>
+
+    <!-- 代理登录数据报表 -->
+    <div class="rp-bd" id="rp-login">
+      <div class="row">
+        <span>代理编号：</span>
+        <select id="rl-agent">
+          <option value="ddltomas">ddltomas(9078757)</option>
+          <option value="google_vi">google_vi(9079562)</option>
+          <option value="all-life" selected>all-life-wanghong（新增）</option>
+        </select>
+        <span id="rl-kol-wrap" class="row"><span class="newcell" style="padding:2px 6px;border-radius:3px">网红<span class="newtag">新增</span></span>
+          <select id="rl-kol"><option value="">全部（按代理合计）</option></select></span>
+        <span id="rl-lv-wrap" class="row"><span class="newcell" style="padding:2px 6px;border-radius:3px">层级<span class="newtag">新增</span></span>
+          <select id="rl-lv"><option value="">全部</option></select></span>
+        <span>邀请码：</span><input type="text" placeholder="邀请码" style="width:110px">
+        <div class="seg" role="group" aria-label="时间"><button aria-pressed="false">今日</button><button aria-pressed="true">昨日</button><button aria-pressed="false">本月</button></div>
+        <button class="btn pri" id="rl-go">搜索</button><button class="btn" data-toast="原型：导出带上新增的筛选和列">导出</button>
+      </div>
+      <p class="hint" id="rl-note"></p>
+      <div class="tw"><table>
+        <thead><tr id="rl-head"></tr></thead>
+        <tbody id="rl-body"></tbody>
+      </table></div>
+      <p class="hint">只列部分列；新客充提、打码倍数、登录率 / 活跃率 / 充值率 / 投注率沿用现网。</p>
+    </div>
+  </section>
+
+  <div class="rp-dlg" id="ma-dlg" hidden role="dialog" aria-modal="true" aria-labelledby="ma-t">
+    <div class="box" style="width:min(560px,100%)">
+      <div class="row" style="justify-content:space-between"><h2 id="ma-t">管理代理</h2><span class="hint" id="ma-count"></span></div>
+      <p class="hint" style="margin:0">统计范围 = 配置代理的整个团队（含其下所有代理和会员）；一个分类最多 200 个代理。</p>
+      <div><div class="hint" style="margin-bottom:4px">已配置代理</div><div id="ma-cur" class="row" style="gap:6px"></div></div>
+      <label style="display:grid;gap:4px"><span class="hint">添加代理账号（粘贴，换行 / 逗号 / 空格分隔，一次最多 200 个）</span>
+        <textarea id="ma-in" rows="3" placeholder="例如：ddltomas, google_vi"></textarea></label>
+      <div class="row"><button class="btn" id="ma-add">校验并添加</button><span class="hint">可试：ddltomas、google_vi、all-life-wanghong、abc</span></div>
+      <div id="ma-res"></div>
+      <p class="hint anno" id="ma-allhint" hidden style="padding:6px 10px;margin:0">配置 all-life-wanghong 只统计上级是它的会员（按代理树）；要按网红统计、含补写标记的老下线，用「全链路网红」类型分类。</p>
+      <div class="row" style="justify-content:flex-end"><button class="btn" id="ma-cancel">取消</button><button class="btn pri" id="ma-ok">保存</button></div>
+    </div>
+  </div>
+  <div class="rp-dlg" id="ra-dlg" hidden role="dialog" aria-modal="true" aria-labelledby="ra-dlg-t">
+    <div class="box">
+      <h2 id="ra-dlg-t">新建分类</h2>
+      <label class="f"><span>* 分类</span><input type="text" id="ra-name" placeholder="0/64"></label>
+      <label class="f"><span>备注</span><input type="text" placeholder="0/255"></label>
+      <div class="f" style="display:grid;grid-template-columns:72px 1fr;gap:8px"><span>类型<span class="newtag">新增</span></span>
+        <div style="display:grid;gap:4px">
+          <label><input type="radio" name="ra-type" value="agent" checked> 代理（现有：配置代理账号，统计代理整个团队）</label>
+          <label><input type="radio" name="ra-type" value="all" id="ra-type-all"> 全链路网红（统计全链路网红名单带来的会员）</label>
+          <span class="hint" id="ra-type-hint"></span>
+        </div></div>
+      <label class="f"><span>其他</span><span><input type="checkbox"> 配置为「其他」分类</span></label>
+      <div class="row" style="justify-content:flex-end"><button class="btn" id="ra-cancel">取消</button><button class="btn pri" id="ra-ok">确认</button></div>
+    </div>
+  </div>
+
+  <section class="panel anno" id="explain" data-page="param">
     <div class="ex-hd"><div><h2>规则解释</h2><p class="hint" id="ex-sub">当前页签：现有网红名单 · 5ji-wanghong</p></div><button class="btn" id="ex-tg" aria-expanded="true" aria-controls="ex-bd">收起</button></div>
     <div class="ex-bd" id="ex-bd">
         <div class="card" id="rules-5ji">
@@ -323,6 +509,8 @@ table.cmp td{white-space:normal}
       </div>
     </div>
   </section>
+</div>
+</main>
 </div>
 
 <div class="mask" id="mask" hidden><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
@@ -435,6 +623,151 @@ window.addEventListener('hashchange',()=>show(location.hash==='#promo'?'promo':'
 $('#t-5ji').onclick=()=>{T='5ji';render()};$('#t-all').onclick=()=>{T='all';render()};
 render();
 </script>
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const tip=m=>{const t=document.getElementById('toast');if(t){t.textContent=m;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,2600)}else alert(m)};
+// 示例：两个全链路网红，lv = 各级人数，pre = 其中加入前已有、补写标记的人数
+const KOLS=[
+  {id:'992107949',acc:'Playerbne058720',join:'2026-11-12 09:30',lv:[12,5,2,1,1],pre:[3,1,0,0,0]},
+  {id:'992108401',acc:'Playerqk7m21803',join:'2026-11-14 16:05',lv:[8,3,1],pre:[0,0,0]}
+];
+const sum=a=>a.reduce((x,y)=>x+y,0);
+const kolLv=(k,scope)=>k.lv.map((c,i)=>scope==='after'?c-k.pre[i]:c);
+// 由人数生成一行示例指标
+function m(n,seed){const f=Math.round(n*.6),r=x=>Math.round(x);return [n,f,n,r(n*.7),f,(f*1500+seed*100).toLocaleString('en',{minimumFractionDigits:2}),r(n*.5),(f*2100+seed*120).toLocaleString('en',{minimumFractionDigits:2}),r(f*.5),r(f*.3),r(f*.2)]}
+const cells=a=>a.map(v=>`<td>${v}</td>`).join('');
+// 切换报表
+document.querySelectorAll('[data-rp]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-rp]').forEach(x=>x.setAttribute('aria-pressed',x===b));['attr','ret','login'].forEach(k=>$('#rp-'+k).hidden=k!==b.dataset.rp)});
+document.querySelectorAll('#reports [data-toast]').forEach(b=>b.onclick=()=>tip(b.dataset.toast));
+
+/* 代理关系归属表 */
+let openAll=false;
+const AG={'谷歌':[],'123test':[],'网红':['5ji-wanghong']};
+function renderAttr(){
+  const all=KOLS.length,tot=sum(KOLS.map(k=>sum(k.lv)));
+  const ag=(n,o,remark,ex,lf)=>`<tr><td>${o}</td><td>${n}</td><td class="newcell">代理</td><td>${remark}</td><td>${AG[n].length?AG[n].map(a=>`<span class="tagchip">${a}</span>`).join(' '):'–'} <button class="lnk" data-ma="${n}">管理代理 (${AG[n].length})</button></td><td>${AG[n].length?ex:0}</td><td>${AG[n].length?lf:0}</td><td>2026-11-11 17:30:14</td><td><button class="lnk">查看展开</button> <button class="lnk">编辑</button></td></tr>`;
+  let h=ag('谷歌',2,'',1,1)+ag('123test',3,'',1,1)+ag('网红',4,'现有，不调整',2,1)+`
+  <tr class="newcell"><td>5</td><td>全链路网红<span class="newtag">新增</span></td><td>全链路网红</td><td>按 all_life_wanghong 统计</td><td><span class="tagchip all">全链路网红 ${all} 个</span> <button class="lnk" id="ra-golist">去名单维护</button></td><td>—</td><td>—</td><td>2026-11-16 10:00:00</td><td><button class="lnk" id="ra-exp">${openAll?'收起展开':'查看展开'}</button> <button class="lnk">编辑</button></td></tr>`;
+  if(openAll){
+    h+=`<tr class="sub-row"><td colspan="9" style="padding:0"><div class="tw" style="padding:8px 12px 12px 28px"><table><thead><tr><th>网红会员 ID</th><th>账号</th><th>加入时间</th><th>归因会员数</th><th>其中加入前补写</th><th>层级分布</th></tr></thead><tbody>`+
+    KOLS.map(k=>`<tr><td class="code">${k.id}</td><td>${k.acc}</td><td>${k.join}</td><td>${sum(k.lv)}</td><td>${sum(k.pre)}</td><td>${k.lv.map((c,i)=>(i+1)+' 级 '+c).join(' / ')}</td></tr>`).join('')+
+    `</tbody></table></div><p class="hint" style="margin:0 12px 10px 28px">合计 ${tot} 人。名单只在「网红代理设置 › 全链路网红名单」维护，这里只读。</p></td></tr>`;
+  }
+  $('#ra-body').innerHTML=h;
+  $('#ra-exp').onclick=()=>{openAll=!openAll;renderAttr()};
+  $('#ra-golist').onclick=()=>{const b=document.getElementById('t-all');if(b){b.click();document.getElementById('v-kol').scrollIntoView({behavior:'smooth'})}};
+}
+renderAttr();
+$('#ra-new').onclick=()=>{$('#ra-dlg').hidden=false;$('#ra-type-all').disabled=true;$('#ra-type-hint').textContent='「全链路网红」类型已存在（全链路网红），每个平台只能有一个。';$('#ra-name').focus()};
+$('#ra-cancel').onclick=()=>$('#ra-dlg').hidden=true;
+$('#ra-ok').onclick=()=>{$('#ra-dlg').hidden=true;tip('原型：不保存')};
+/* 管理代理弹窗（现网功能，本次不改；示例校验） */
+const KNOWN={'pasay001':'投注站','ddltomas':'大代理','google_vi':'大代理','5ji-wanghong':'大代理','5-ji-agent':'大代理','all-life-wanghong':'大代理（新增）','henny888123333':'代理','t1111_kol_01':'代理'};
+let maCat='',maList=[];
+function maRender(){
+  $('#ma-cur').innerHTML=maList.length?maList.map(a=>`<span class="tagchip" style="display:inline-flex;gap:4px;align-items:center">${a}<button class="lnk" data-rm="${a}" aria-label="移除 ${a}" style="color:var(--bad)">×</button></span>`).join(' '):'<span class="hint">暂无配置代理</span>';
+  $('#ma-count').textContent=`已配置 ${maList.length} / 200`;
+  $('#ma-allhint').hidden=!maList.includes('all-life-wanghong');
+}
+$('#ra-body').addEventListener('click',e=>{const b=e.target.closest('[data-ma]');if(!b)return;maCat=b.dataset.ma;maList=[...AG[maCat]];$('#ma-t').textContent='管理代理 · '+maCat;$('#ma-in').value='';$('#ma-res').innerHTML='';maRender();$('#ma-dlg').hidden=false;$('#ma-in').focus()});
+$('#ma-cur').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;maList=maList.filter(x=>x!==b.dataset.rm);maRender()});
+$('#ma-add').onclick=()=>{const ids=[...new Set($('#ma-in').value.split(/[\s,，]+/).map(x=>x.trim()).filter(Boolean))];if(!ids.length)return;
+  const rows=ids.map(id=>{let r;if(maList.includes(id))r=['已在本分类','off'];else if(!KNOWN[id])r=['代理账号不存在','bad'];else if(maList.length>=200)r=['超过 200 个上限','bad'];else{maList.push(id);r=['已添加（'+KNOWN[id]+'）','ok']}return `<tr><td class="code">${id}</td><td><span class="pill ${r[1]}">${r[0]}</span></td></tr>`});
+  $('#ma-res').innerHTML=`<div class="tw"><table><thead><tr><th>代理账号</th><th>结果</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;$('#ma-in').value='';maRender()};
+$('#ma-cancel').onclick=()=>$('#ma-dlg').hidden=true;
+$('#ma-ok').onclick=()=>{AG[maCat]=[...maList];$('#ma-dlg').hidden=true;renderAttr();tip('已保存「'+maCat+'」的配置代理（原型）。点「更新」后按新配置重新展开代理树')};
+
+/* 代理充值留存 */
+let path=[]; // [] 首页 / ['all'] / ['all','seg'] / ['all','seg',kolIdx]
+function renderRet(){
+  const scope=$('#rr-scope').value,isAll=path[0]==='all';
+  $('#rr-scope-wrap').hidden=!isAll;
+  const names=['首页'];if(isAll)names.push('全链路网红');if(path[1])names.push(path[1]);if(path[2]!==undefined)names.push(KOLS[path[2]].acc+'（'+KOLS[path[2]].id+'）');
+  $('#rr-crumbs').innerHTML=names.map((n,i)=>i<names.length-1?`<a data-i="${i}">${n}</a><span class="sep">/</span>`:`<b>${n}</b>`).join('')+(isAll?' <span class="hint">全链路网红按会员字段 all_life_wanghong 统计，不按代理树；补写标记的老下线也算在网红名下。</span>':'');
+  document.querySelectorAll('#rr-crumbs a').forEach(a=>a.onclick=()=>{path=path.slice(0,[0,1,2][+a.dataset.i]===0?0:+a.dataset.i);renderRet()});
+  const allTot=sum(KOLS.map(k=>sum(kolLv(k,scope))));
+  let rows=[],c0='分类';
+  if(!isAll){
+    rows=[['谷歌',m(0,0)],['123test',m(0,0)],['网红',m(9,1),'5ji'],[`全链路网红<span class="newtag">新增</span>`,m(allTot,2),'all']];
+  }else if(!path[1]){
+    const a=Math.round(allTot*.4);
+    rows=[['全链路网红',m(allTot,2),'seg'],['全链路网红（已领789）',m(a,3),'seg'],['全链路网红（未领789）',m(allTot-a,4),'seg']];
+  }else if(path[2]===undefined){
+    c0='网红';rows=KOLS.map((k,i)=>[`${k.acc}（${k.id}）`,m(sum(kolLv(k,scope)),5+i),'kol',i]);
+  }else{
+    c0='层级';const k=KOLS[path[2]];rows=kolLv(k,scope).map((c,i)=>[`${i+1} 级`,m(c,7+i)]);
+  }
+  $('#rr-c0').innerHTML=c0+(isAll&&path[1]?'<span class="newtag">新增</span>':'');
+  const tot=rows.length&&path.length===0?null:rows;
+  let h=rows.map((r,i)=>{const nm=r[2]?`<button class="lnk" data-k="${r[2]}" data-x="${r[3]??''}" data-n="${r[0].replace(/<[^>]+>/g,'')}">${r[0]}</button>`:r[0];return `<tr class="${r[2]==='all'||(isAll&&path[1])?'newcell':''}"><td>${nm}</td>${cells(r[1])}</tr>`}).join('');
+  if(isAll&&path[1]){const s=rows.reduce((a,r)=>a+r[1][0],0);h+=`<tr class="rp-tot"><td>合计</td>${cells(m(s,9))}</tr>`}
+  $('#rr-body').innerHTML=h;
+  document.querySelectorAll('#rr-body [data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;
+    if(k==='5ji')return tip('现有「网红」不调整：仍按 分类 → 已领 / 未领 789 → 5ji-wanghong 代理树下钻');
+    if(k==='all')path=['all'];else if(k==='seg')path=['all',b.dataset.n];else if(k==='kol')path=['all',path[1],+b.dataset.x];renderRet()});
+}
+$('#rr-scope').onchange=renderRet;
+renderRet();
+
+/* 代理登录数据报表 */
+KOLS.forEach(k=>$('#rl-kol').insertAdjacentHTML('beforeend',`<option value="${k.id}">${k.acc}（${k.id}）</option>`));
+function lvOpts(){const id=$('#rl-kol').value,max=id?KOLS.find(k=>k.id===id).lv.length:Math.max(...KOLS.map(k=>k.lv.length));$('#rl-lv').innerHTML='<option value="">全部</option>'+Array.from({length:max},(_,i)=>`<option value="${i+1}">${i+1} 级</option>`).join('')}
+function renderLogin(){
+  const ag=$('#rl-agent').value,isAll=ag==='all-life',kol=$('#rl-kol').value,lv=$('#rl-lv').value;
+  $('#rl-kol-wrap').hidden=!isAll;$('#rl-lv-wrap').hidden=!isAll;
+  const showK=isAll&&kol,showL=isAll&&lv;
+  $('#rl-head').innerHTML='<th>代理编号</th>'+(isAll?'<th class="newcell">网红<span class="newtag">新增</span></th>':'')+(showL?'<th class="newcell">层级<span class="newtag">新增</span></th>':'')+'<th>日期</th><th>点击次数</th><th>登录人数</th><th>活跃人数</th><th>首充人数</th><th>当日充值金额</th><th>当日有效投注</th><th>充值人数</th><th>投注人数</th>';
+  const day='2026-11-15';let rows=[];
+  const line=(name,k,l,n,s)=>{const f=Math.round(n*.3),dep=Math.round(n*.25);return `<tr class="${isAll?'newcell':''}"><td>${name}</td>${isAll?`<td>${k}</td>`:''}${showL?`<td>${l}</td>`:''}<td>${day}</td><td>${isAll&&k!=='—'?'—':0}</td><td>${n}</td><td>${Math.round(n*.6)}</td><td>${f}</td><td>${(dep*1500+s*50).toLocaleString('en',{minimumFractionDigits:2})}</td><td>${(n*320+s*10).toLocaleString('en',{minimumFractionDigits:2})}</td><td>${dep}</td><td>${Math.round(n*.4)}</td></tr>`};
+  if(!isAll){rows.push(line(ag==='ddltomas'?'ddltomas(9078757)':'google_vi(9079562)','—','',1,0));
+    $('#rl-note').textContent='现网逻辑：按代理统计，每个代理每天一行。';}
+  else if(!kol){
+    const n=sum(KOLS.map(k=>sum(k.lv)))-sum(KOLS.map(k=>sum(k.pre)));
+    rows.push(line('all-life-wanghong','全部（按代理合计）',lv?lv+' 级':'',n,1));
+    $('#rl-note').textContent='不选网红 = 按代理 all-life-wanghong 合计，只含上级代理是 all-life-wanghong 的会员（不含只补写了标记、上级没改的老下线）。选了网红就按会员字段 all_life_wanghong 统计，每个网红每天一行。';
+  }else{
+    const k=KOLS.find(x=>x.id===kol);
+    if(lv){const i=+lv-1;rows.push(line('all-life-wanghong',`${k.acc}（${k.id}）`,lv+' 级',k.lv[i]||0,3))}
+    else rows.push(line('all-life-wanghong',`${k.acc}（${k.id}）`,'',sum(k.lv),2));
+    $('#rl-note').textContent='按 all_life_wanghong = '+k.id+(lv?'、all_wanghong_tag = '+lv:'')+' 统计，含加入前补写标记的老下线。点击次数：邀请好友链接若没有点击上报，显示「—」（待确认）。';
+  }
+  $('#rl-body').innerHTML=rows.join('');
+}
+$('#rl-agent').onchange=()=>{$('#rl-kol').value='';lvOpts();renderLogin()};
+$('#rl-kol').onchange=()=>{lvOpts();renderLogin()};
+$('#rl-lv').onchange=renderLogin;$('#rl-go').onclick=renderLogin;
+document.querySelectorAll('#rp-login .seg button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#rp-login .seg button').forEach(x=>x.setAttribute('aria-pressed',x===b));renderLogin()});
+lvOpts();renderLogin();
+})();
+</script>
+<script>
+(()=>{
+const P={param:{n:'系统参数管理',g:'系统管理',r:'#/sys-param'},login:{n:'代理登录数据报表',g:'平台概况',r:'#/agent-stats'},ret:{n:'代理充值留存',g:'平台概况',r:'#/agent-rech-retention'},attr:{n:'代理关系归属表',g:'平台概况',r:'#/agent-attr-config'}};
+let open=['param'],cur='param';
+const tip=m=>{const t=document.getElementById('toast');t.textContent=m;t.hidden=false;clearTimeout(t._h);t._h=setTimeout(()=>t.hidden=true,2000)};
+function go(p,push){if(!P[p])p='param';cur=p;if(!open.includes(p))open.push(p);
+  document.querySelectorAll('[data-page]').forEach(e=>e.hidden=!e.dataset.page.split(' ').includes(p));
+  ['attr','ret','login'].forEach(k=>{const e=document.getElementById('rp-'+k);if(e)e.hidden=k!==p});
+  const t=document.getElementById('rp-title');if(t)t.textContent=P[p].n;
+  document.getElementById('bo-crumb').innerHTML=`位置 › ${P[p].g} › <b>${P[p].n}</b>`;
+  document.querySelectorAll('#bo-side [data-go]').forEach(a=>a.classList.toggle('on',a.dataset.go===p));
+  document.getElementById('bo-tabs').innerHTML=open.map(k=>`<button data-t="${k}" class="${k===p?'on':''}">${P[k].n}${open.length>1?`<span class="x" data-x="${k}">×</span>`:''}</button>`).join('');
+  if(push!==false&&location.hash!==P[p].r)history.replaceState(null,'',P[p].r);
+  document.getElementById('bo').classList.remove('side-open');window.scrollTo(0,0)}
+window.boGo=go;
+document.getElementById('bo-side').addEventListener('click',e=>{const a=e.target.closest('a');const b=e.target.closest('.grp>button');
+  if(b){b.parentElement.classList.toggle('open');return}
+  if(!a)return;e.preventDefault();if(a.dataset.go)go(a.dataset.go);else tip('原型只包含本需求涉及的页面（标「改」的菜单）')});
+document.getElementById('bo-tabs').addEventListener('click',e=>{const x=e.target.closest('[data-x]');if(x){open=open.filter(k=>k!==x.dataset.x);if(!open.length)open=['param'];go(open.includes(cur)?cur:open[open.length-1]);return}
+  const t=e.target.closest('[data-t]');if(t)go(t.dataset.t)});
+document.getElementById('bo-menu').onclick=()=>document.getElementById('bo').classList.toggle('side-open');
+const gl=document.getElementById('ra-golist');
+document.getElementById('ra-body')?.addEventListener('click',e=>{if(e.target.id==='ra-golist'){e.stopImmediatePropagation();go('param');document.getElementById('t-all')?.click()}},true);
+const fromHash=Object.keys(P).find(k=>P[k].r===location.hash);go(fromHash||'param',false);
+})();
+</script>
+
 
 </body>
 </html>

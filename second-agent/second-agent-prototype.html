@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>投流代理原型 v1.5</title>
+<title>投流代理原型 v1.6</title>
 <style>
 html,body{margin:0}
 body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:#e9edf2;color:#1f2937}
@@ -24,11 +24,11 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 </head>
 <body>
 <header class="top">
-<b>投流代理原型</b><span class="ver">v1.5</span>
-<span style="font-size:12px;color:#d1d5db">2026-11-16 · 示例数据，非线上配置 · 时间 GMT+8</span>
+<b>投流代理原型</b><span class="ver">v1.6</span>
+<span style="font-size:12px;color:#d1d5db">2026-11-17 · 示例数据，非线上配置 · 时间 GMT+8</span>
 <a class="ext" href="https://claude.ai/artifact/9nuYQbyTi4Pp3Kjnh4wHh4" target="_blank" rel="noopener">PRD</a>
 <a class="ext" href="https://claude.ai/artifact/7bP75wEhSpFss2hQEM1FPH" target="_blank" rel="noopener">Claude 原型画布</a>
-<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a><a href="#/b-10-member-report" data-nav="b-10-member-report">10 报表：投流会员报告（可操作）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a><a href="#/b-11-agent-member-report" data-nav="b-11-agent-member-report">11 投流代理端：会员报告（可操作）</a></div></nav>
+<nav class="navs" aria-label="画板"><div class="ng"><div class="nh">00 归属逻辑总览</div><a href="#/b-Main" data-nav="b-Main">00 归属逻辑总览：会员带来的人都算在投流一级代理下</a></div><div class="ng"><div class="nh">主后台（运营）</div><a href="#/b-01-big-agents" data-nav="b-01-big-agents">01 投流总代理列表</a><a href="#/b-02-big-agent-form" data-nav="b-02-big-agent-form">02 新增投流总代理</a><a href="#/b-05-verify-alarm" data-nav="b-05-verify-alarm">05 投流核验告警（可操作）</a><a href="#/b-03-agents-batch" data-nav="b-03-agents-batch">03 投流一级代理列表 + 批量生成（可操作）</a><a href="#/b-04-bind-members" data-nav="b-04-bind-members">04 绑定自己的账号（可操作，≤10 个）</a><a href="#/b-06-line-report" data-nav="b-06-line-report">06 报表：投流代理线汇总</a><a href="#/b-09-member-detail" data-nav="b-09-member-detail">09 会员详情 · 投流字段（tldl）</a><a href="#/b-10-member-report" data-nav="b-10-member-report">10 报表：投流会员报告（可操作）</a><a href="#/b-12-permission" data-nav="b-12-permission">12 投流权限设置：大区投流总代理（可操作）</a><a href="#/b-14-link-library" data-nav="b-14-link-library">14 投流链接库：比对 + 算法生成（可操作）</a></div><div class="ng"><div class="nh">投流代理端（投流总代理 / 投流方）</div><a href="#/b-07-agent-portal" data-nav="b-07-agent-portal">07 投流代理端：我的投流一级代理（投流总代理登录）</a><a href="#/b-11-agent-member-report" data-nav="b-11-agent-member-report">11 投流代理端：会员报告（可操作）</a><a href="#/b-13-agent-permission" data-nav="b-13-agent-permission">13 投流代理端：一级代理权限（大区投流总代理，可操作）</a></div></nav>
 </header>
 <section class="board" id="b-Main" data-fixed="1" style="--bw:1280px"><template><div style="position: relative; width: 1280px; height: 900px; background: #f5f6f8; font-size: 15px; line-height: 22px">
 <svg role="img" aria-label="从投流一级代理链接注册到上级代理等于该投流一级代理" width="8" height="87" viewBox="0 0 8 87" preserveAspectRatio="none" style="position: absolute; left: 204px; top: 232px; width: 8px; height: 87px; overflow: visible; fill: none; stroke: #6b7280; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round"><defs><marker id="dc-arrow-head-filled-1" orient="auto" markerWidth="5" markerHeight="5" refX="2" refY="2" overflow="visible"><path d="M0 0 L4 2 L0 4 Z" fill="#6b7280" stroke="none" style="stroke: none; fill: #6b7280; fill: context-stroke"/></marker></defs><path d="M 4 0 L 4 83" marker-end="url(#dc-arrow-head-filled-1)"></path></svg>
@@ -68,17 +68,20 @@ body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;background
 • 本线会员带来的人不再进 5-ji-agent，全部算在投流一级代理下
 • 绑定会员：只绑投流方自己的账号（上一级是代理 + 所属大代理是官方大代理；官方大代理在现有大代理系统里标记，投流方看不到），每个一级代理 ≤ 10 个；不可改绑
 • 会员身上新增 tldl 字段，和现网 super_id 两边都写；新增核验系统 + 后台告警
-• 统计：新增一张「投流代理线汇总」
+• 权限：运营建投流总代理并可设为「大区投流总代理」，开通权限上限（12）；大区再给自己的一级代理分权限、分绑定名额 0～10（13）
+• 邀请码由后台算法生成（8 位字母 + 数字），先和链接库比对，撞上就重抽；停用的码永不复用（14）
+• 统计：「投流代理线汇总」+「投流会员报告」
 • 示例数据均为虚构，非线上配置；时间都是 GMT+8</pre></div><div class="note" style="background:#fde8ef"><pre>待确认
 
 1. 「上一级是非会员」是否等于「直属上级是代理且没有会员邀请人」
 2. 绑定时会员已有下线是否一起迁？（原型暂不定）
 3. 绑定要不要运营审核？（原型按即时生效）
 4. 投流代理端用现网 PSP 代理后台？
-5. 投流总代理下的投流一级代理要不要能登录？（原型按不登录）
+5. 投流一级代理登录：v1.6 改为由大区投流总代理按人开通（默认不能登录）
 6. 新站 / 老站各对应哪个站点
 7. 二维码批量下载要不要
-8. 投流方能否看会员明细（原型只给 ID + 聚合）</pre></div><div class="note" style="background:#fff1e0"><pre>投流代理逻辑（一句话版）
+8. 投流方看会员名 / 余额是否脱敏（会员报告沿用现网）
+9. 大区名单（原型 5 个大区为示例）</pre></div><div class="note" style="background:#fff1e0"><pre>投流代理逻辑（一句话版）
 
 • 一条线 = 投流总代理 → 投流一级代理 → 会员 → L1～Ln
 • 会员三种来源：①投流一级代理链接注册 ②投流一级代理绑定已有会员 ③本线会员邀请好友
@@ -113,6 +116,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -201,6 +206,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -282,6 +289,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mon" href="#/b-05-verify-alarm">投流核验告警<span class="new" style="color: #fde68a">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -321,7 +330,7 @@ return Component;};</script>
 <table style="border-collapse: collapse; width: 100%; min-width: 860px">
 <thead><tr><th class="th">编号</th><th class="th">规则</th><th class="th">写入时拦截</th><th class="th">巡检告警</th><th class="th">级别</th></tr></thead>
 <tbody>
-<tr><td class="td">C1</td><td class="td">邀请码重复（不区分大小写，跨站点、含停用）</td><td class="td">✓ 顺延或拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
+<tr><td class="td">C1</td><td class="td">邀请码重复（不区分大小写，跨站点、含停用）</td><td class="td">✓ 重抽或拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
 <tr><td class="td">C2</td><td class="td">投流总代理 / 投流一级代理账号重复</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
 <tr><td class="td">C3</td><td class="td">投流一级代理链接重复（同一链接对应多个一级代理）</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
 <tr><td class="td">C4</td><td class="td">会员有多条投流归属（tldl 归属每人只能一条）</td><td class="td">✓ 拒绝</td><td class="td">✓</td><td class="td"><span class="hi">高</span></td></tr>
@@ -370,6 +379,7 @@ return Component;};</script>
 #b-05-verify-alarm .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
 #b-05-verify-alarm .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
 #b-05-verify-alarm .np{margin:0 0 10px}
+#b-05-verify-alarm tr.sel td{background:#eef6f5}
 #b-05-verify-alarm .code{font-family:ui-monospace,Menlo,Consolas,monospace}
 #b-05-verify-alarm .hi{color:#b91c1c;font-weight:600}
 #b-05-verify-alarm .mid{color:#b45309;font-weight:600}
@@ -383,7 +393,7 @@ class Component extends DCLogic {
       { time: '2026-11-16 13:50:00', rule: 'C5 归属不一致', level: '中', lv: 'mid', obj: '992107950', detail: 'tldl_agent_id = tt001，super_id = 5-ji-agent', status: '未处理', open: true },
       { time: '2026-11-16 13:40:00', rule: 'C6 层级断链', level: '中', lv: 'mid', obj: '992107951', detail: 'tldl_level = 3，邀请人 992107950 的层级 = 1', status: '未处理', open: true },
       { time: '2026-11-16 11:42:10', rule: 'C7 绑定超限', level: '高', lv: 'hi', obj: 'tt002', detail: '并发提交后绑定数 11 / 10', status: '已处理（admin：解绑多出的 1 个）', open: false },
-      { time: '2026-11-16 11:20:05', rule: 'C1 邀请码重复', level: '—', lv: 'lo', obj: 'B20261116-002', detail: '生成时拦截 2 个已占用的码，已自动顺延', status: '写入时已拦截', open: false }
+      { time: '2026-11-16 11:20:05', rule: 'C1 邀请码重复', level: '—', lv: 'lo', obj: 'B20261116-002', detail: '生成时 2 个码撞上链接库，已自动重抽', status: '写入时已拦截', open: false }
     ] };
   }
   renderVals() {
@@ -410,6 +420,8 @@ return Component;};</script>
 <a class="mon" href="#/b-03-agents-batch">投流一级代理列表<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -449,8 +461,8 @@ return Component;};</script>
 <aside aria-label="注释" style="flex: 1 1 280px; background: #fff7ed; border: 1px solid #fdba74; border-radius: 8px; padding: 16px; font-size: 13px; line-height: 20px">
 <div style="font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #9a3412">注释 · 投流一级代理与批量生成</div>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">1</span>点「批量生成投流一级代理」试一下。运营可给任意带标识的投流总代理生成；投流总代理在投流代理端（07）只能给自己生成，表单相同。投流一级代理只有一层，挂在投流总代理下。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>邀请码 = 前缀字母 + 序号数字，不区分大小写。已被占用的（任意站点、任意代理、含停用）自动跳过顺延。示例里 fb002、fb005 已被占用。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>序号用完还不够时整批不生成。确认后整批在一个事务里创建，全部成功或全部失败，生成批次号。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>邀请码由后台算法生成（v1.6 起不再填前缀和序号）：8 位，小写字母 + 数字，去掉 0 / o / 1 / l / i。每个码先和链接库（14）比对，库里已有的（任意站点、任意代理、含停用）自动重抽。示例里第 2 个码撞上了已停用的 k7m2x9qa。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>确认后整批在一个事务里创建并写入链接库，全部成功或全部失败，生成批次号。入库靠唯一索引兜底，并发撞码时整批回滚重试。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>导出固定 4 个字段：投流一级代理 ID、投流一级代理账号、创建时间、投流一级代理链接。CSV（UTF-8 BOM），≥ 1 万条走异步。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>投流一级代理账号默认 = 邀请码；投流一级代理不开登录（待确认 5）。链接 = 代理域名/?vip=邀请码，二维码内容 = 链接。</p>
 <p style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">6</span>停用：链接仍能打开，新注册走自然流量；已有会员归属不变；停用后不能再绑定会员。</p>
@@ -464,13 +476,12 @@ return Component;};</script>
 <div style="display: flex; align-items: center; margin-bottom: 8px"><h2 style="margin: 0; font-size: 18px">批量生成投流一级代理</h2><span style="flex: 1 1 auto"></span><button class="btn2" type="button" aria-label="关闭" onClick="{{ closeModal }}" style="height: 30px">×</button></div>
 <div class="row"><span class="lab">所属投流总代理</span><span style="font-size: 14px">fb_media（投流方 A，新站）</span></div>
 <div class="row"><label class="lab" for="b-count">生成数量</label><input id="b-count" class="inp" style="width: 120px" value="{{ count }}" onInput="{{ onCount }}"><span class="hint">1～1000</span></div>
-<div class="row"><label class="lab" for="b-prefix">邀请码前缀</label><input id="b-prefix" class="inp" style="width: 120px" value="{{ prefix }}" onInput="{{ onPrefix }}"><span class="hint">1～8 位字母</span><span class="bd">2</span></div>
-<div class="row"><label class="lab" for="b-start">起始数字</label><input id="b-start" class="inp" style="width: 120px" value="{{ start }}" onInput="{{ onStart }}"><label for="b-digits" style="font-size: 14px">数字位数</label><input id="b-digits" class="inp" style="width: 80px" value="{{ digits }}" onInput="{{ onDigits }}"><span class="hint">不足补 0</span></div>
+<div class="row"><span class="lab">邀请码</span><span style="font-size: 14px">系统算法生成：8 位小写字母 + 数字，与链接库比对去重</span><span class="bd">2</span></div>
 <div class="row"><label class="lab" for="b-note">备注</label><input id="b-note" class="inp" style="width: 300px" placeholder="投放渠道 / 素材名"></div>
 <div style="margin-top: 8px; padding: 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 21px">
 <b>预览</b><span class="bd">3</span><br>
 <sc-if value="{{ hasError }}"><span style="color: #b91c1c">{{ error }}</span></sc-if>
-<sc-if value="{{ noError }}"><span>将生成 <b>{{ okCount }}</b> 个：<span class="code">{{ first }}</span>　…　末个 <span class="code">{{ last }}</span><br>顺延跳过：<span class="code">{{ skipped }}</span></span></sc-if>
+<sc-if value="{{ noError }}"><span>将生成 <b>{{ okCount }}</b> 个：<span class="code">{{ first }}</span>　…　末个 <span class="code">{{ last }}</span><br>撞库重抽：<span class="code">{{ skipped }}</span></span></sc-if>
 </div>
 <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px">
 <button class="btn2" type="button" onClick="{{ closeModal }}">取消</button>
@@ -507,7 +518,7 @@ class Component extends DCLogic {
     super(props);
     this.state = {
       showModal: false, showDone: false, doneText: '',
-      count: '5', prefix: 'fb', start: '1', digits: '3', batchNo: 3,
+      count: '5', batchNo: 3,
       agents: [
         { id: 992300003, code: 'tt003', batch: 'B20261116-002', src: '运营', link: '[代理域名]/?vip=tt003', bind: 0, direct: 52, team: 52, time: '2026-11-16 11:20:05' },
         { id: 992300002, code: 'tt002', batch: 'B20261116-002', src: '运营', link: '[代理域名]/?vip=tt002', bind: 3, direct: 160, team: 160, time: '2026-11-16 11:20:05' },
@@ -517,22 +528,23 @@ class Component extends DCLogic {
   }
   calc() {
     const s = this.state;
-    const p = String(s.prefix || '').trim().toLowerCase();
-    const c = Number(s.count), st = Number(s.start), d = Number(s.digits || 0);
-    if (!/^[a-z]{1,8}$/.test(p)) return { error: '前缀须为 1～8 位字母' };
+    const c = Number(s.count);
     if (!Number.isInteger(c) || c < 1 || c > 1000) return { error: '生成数量须为 1～1000 的整数' };
-    if (!Number.isInteger(st) || st < 0) return { error: '起始数字须为非负整数' };
-    if (!Number.isInteger(d) || d < 0 || d > 6) return { error: '数字位数须为 0～6' };
-    const taken = new Set(s.agents.map(a => a.code).concat(['fb002', 'fb005']));
-    const max = d > 0 ? Math.pow(10, d) - 1 : Infinity;
+    const AB = 'abcdefghjkmnpqrstuvwxyz23456789';
+    let seed = 7919 * s.batchNo + 17;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed; };
+    const taken = new Set(s.agents.map(a => a.code).concat(['k7m2x9qa', 'p3vd8h2n']));
     const codes = [], skipped = [];
-    let n = st, guard = 0;
-    while (codes.length < c && n <= max && guard < 20000) {
-      const code = p + (d > 0 ? String(n).padStart(d, '0') : String(n));
-      if (taken.has(code)) skipped.push(code); else codes.push(code);
-      n++; guard++;
+    let tries = 0;
+    while (codes.length < c && tries < c * 5 + 10) {
+      let code = '';
+      if (tries === 1 && s.batchNo === 3) code = 'k7m2x9qa';
+      else for (let k = 0; k < 8; k++) code += AB[rnd() % AB.length];
+      tries++;
+      if (taken.has(code)) { skipped.push(code); continue; }
+      taken.add(code); codes.push(code);
     }
-    if (codes.length < c) return { error: '可用邀请码不足（只剩 ' + codes.length + ' 个），请换前缀或增加位数；整批不生成' };
+    if (codes.length < c) return { error: '撞库次数过多，整批不生成，请重试' };
     return { codes, skipped };
   }
   renderVals() {
@@ -542,8 +554,8 @@ class Component extends DCLogic {
     const codes = r.codes || [];
     return {
       showModal: s.showModal, showDone: s.showDone, doneText: s.doneText,
-      count: s.count, prefix: s.prefix, start: s.start, digits: s.digits,
-      onCount: set('count'), onPrefix: set('prefix'), onStart: set('start'), onDigits: set('digits'),
+      count: s.count,
+      onCount: set('count'),
       hasError: !!r.error, noError: !r.error, error: r.error || '',
       okCount: codes.length, first: codes.slice(0, 6).join('、'), last: codes.length ? codes[codes.length - 1] : '',
       skipped: r.skipped && r.skipped.length ? r.skipped.slice(0, 10).join('、') + (r.skipped.length > 10 ? ' 等' : '') : '无',
@@ -556,7 +568,7 @@ class Component extends DCLogic {
         const batch = 'B20261116-' + String(s.batchNo).padStart(3, '0');
         const base = 992300000 + s.agents.length;
         const added = res.codes.map((code, i) => ({ id: base + i + 1, code, batch, src: '运营', link: '[代理域名]/?vip=' + code, bind: 0, direct: 0, team: 0, time: '2026-11-16 13:58:12' })).reverse();
-        this.setState({ agents: added.concat(s.agents), batchNo: s.batchNo + 1, showModal: false, showDone: true, doneText: '已生成 ' + res.codes.length + ' 个投流一级代理，批次号 ' + batch + '（跳过 ' + res.skipped.length + ' 个已占用的码）' });
+        this.setState({ agents: added.concat(s.agents), batchNo: s.batchNo + 1, showModal: false, showDone: true, doneText: '已生成 ' + res.codes.length + ' 个投流一级代理，批次号 ' + batch + '（撞库重抽 ' + res.skipped.length + ' 次），已写入链接库' });
       }
     };
   }
@@ -578,6 +590,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mon" href="#/b-04-bind-members">绑定会员<span class="new" style="color: #fde68a">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -636,7 +650,7 @@ return Component;};</script>
 </section>
 <aside aria-label="注释" class="note">
 <div class="nt">注释 · 绑定自己的账号</div>
-<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>用途：投流方把<b>自己已有的账号</b>挂到投流一级代理下当种子账号。每个投流一级代理累计最多绑定 10 个，一次提交 1～10 个。运营可绑任意线；投流总代理只能绑自己名下的一级代理，受「允许绑定会员」开关控制。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>用途：投流方把<b>自己已有的账号</b>挂到投流一级代理下当种子账号。每个投流一级代理累计最多绑定 10 个，一次提交 1～10 个；大区投流总代理可在「一级代理权限」（13）里把单个一级代理的名额调为 0～10。运营可绑任意线；投流总代理只能绑自己名下的一级代理，受「允许绑定会员」开关控制。</p>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>可绑定条件（全部满足）：会员存在、同站点；<b>上一级是非会员</b>（直属上级是代理账号，且没有会员邀请人）；<b>所属大代理是官方大代理</b>（10 个，在现有大代理系统里标记，不在投流代理模块，投流方看不到）；没被绑定过；不是测试 / 冻结 / 注销账号。</p>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>先校验后绑定，只绑可绑的。按提交顺序累计，到第 10 个为止，之后的显示「超出上限」。代理端看不到原上一级和所属大代理，只显示「不符合绑定条件」。</p>
 <p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定后两边都写：现网 super_id / query_code 迁到该投流一级代理下；tldl 字段写入（来源 = 绑定，层级 = 0，邀请链接为空）。绑定前数据留原线；不能改绑或解绑。该账号已有下线是否一并迁入待确认。</p>
@@ -669,6 +683,7 @@ return Component;};</script>
 #b-04-bind-members .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
 #b-04-bind-members .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
 #b-04-bind-members .np{margin:0 0 10px}
+#b-04-bind-members tr.sel td{background:#eef6f5}
 #b-04-bind-members .code{font-family:ui-monospace,Menlo,Consolas,monospace}
 #b-04-bind-members .hi{color:#b91c1c;font-weight:600}
 #b-04-bind-members .mid{color:#b45309;font-weight:600}
@@ -747,6 +762,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -855,6 +872,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mon" href="#/b-09-member-detail">会员详情（投流字段）<span class="new" style="color: #fde68a">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -946,6 +965,7 @@ return Component;};</script>
 #b-09-member-detail .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
 #b-09-member-detail .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
 #b-09-member-detail .np{margin:0 0 10px}
+#b-09-member-detail tr.sel td{background:#eef6f5}
 #b-09-member-detail .code{font-family:ui-monospace,Menlo,Consolas,monospace}
 #b-09-member-detail .hi{color:#b91c1c;font-weight:600}
 #b-09-member-detail .mid{color:#b45309;font-weight:600}
@@ -971,6 +991,8 @@ return Component;};</script>
 <a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
 <a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
 <a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
 <div class="mgrp">会员管理</div>
 <a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
 <div class="mgrp">数据报表</div>
@@ -1054,6 +1076,7 @@ return Component;};</script>
 #b-10-member-report .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
 #b-10-member-report .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
 #b-10-member-report .np{margin:0 0 10px}
+#b-10-member-report tr.sel td{background:#eef6f5}
 #b-10-member-report .code{font-family:ui-monospace,Menlo,Consolas,monospace}
 #b-10-member-report .hi{color:#b91c1c;font-weight:600}
 #b-10-member-report .mid{color:#b45309;font-weight:600}
@@ -1125,6 +1148,349 @@ class Component extends DCLogic {
   }
 }
 return Component;};</script>
+<section class="board" id="b-12-permission" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 1180px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-17 10:12:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mon" href="#/b-12-permission">投流权限设置<span class="new" style="color: #fde68a">新增</span></a>
+<a class="mi" href="#/b-14-link-library">投流链接库<span class="new">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流权限设置</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">投流权限设置</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 720px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>投流总代理</b>（点一行在下方设置）<span class="bd">1</span></div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 760px">
+<thead><tr><th class="th">投流总代理</th><th class="th">投流方</th><th class="th">类型</th><th class="th">大区</th><th class="th">一级代理数</th><th class="th">自建上限</th><th class="th">已开通权限</th><th class="th">操作</th></tr></thead>
+<tbody>
+<tr data-for="list" data-as="r" class="{{ r.cls }}"><td class="td code">{{ r.k }}</td><td class="td">{{ r.name }}</td><td class="td">{{ r.type }}</td><td class="td">{{ r.area }}</td><td class="td">{{ r.agents }}</td><td class="td">{{ r.cap }}</td><td class="td">{{ r.on }}</td><td class="td"><button class="btn2" type="button" style="height: 28px" onClick="{{ r.pick }}">设置权限</button></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="card">
+<div style="font-size: 15px; margin-bottom: 12px"><b>权限设置 · <span class="code">{{ cur }}</span></b>（{{ mname }}）</div>
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 14px; padding: 10px 12px; border-radius: 6px; background: #f1f4f8">
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px"><input type="checkbox" checked="{{ region }}" onChange="{{ onRegion }}">设为大区投流总代理</label><span class="bd" style="margin-left: -10px">2</span>
+<sc-if value="{{ region }}"><label style="display: flex; align-items: center; gap: 6px; font-size: 14px">所属大区<select id="p-area" class="inp" value="{{ area }}" onChange="{{ onArea }}"><option value="马尼拉大区">马尼拉大区</option><option value="北吕宋大区">北吕宋大区</option><option value="南吕宋大区">南吕宋大区</option><option value="米沙鄢大区">米沙鄢大区</option><option value="棉兰老大区">棉兰老大区</option></select></label></sc-if>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">一级代理自建上限<input id="p-cap" class="inp" style="width: 90px" value="{{ cap }}" onInput="{{ onCap }}"></label>
+</div>
+<div style="font-size: 14px; margin-bottom: 8px"><b>开通给该投流总代理的能力</b><span class="bd">3</span></div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px">
+<sc-for list="{{ perms }}" as="p">
+<label style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border: 1px solid #e1e6ee; border-radius: 6px; font-size: 14px; line-height: 20px"><input type="checkbox" checked="{{ p.on }}" disabled="{{ p.lock }}" onChange="{{ p.toggle }}" style="margin-top: 3px"><span><b>{{ p.t }}</b><br><span style="font-size: 12px; color: #4b5563">{{ p.d }}</span></span></label>
+</sc-for>
+</div>
+<div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 14px"><button class="btn" type="button" onClick="{{ save }}">保存</button><span class="bd">4</span></div>
+<sc-if value="{{ showSaved }}"><div role="status" style="margin-top: 12px; padding: 10px 12px; border-radius: 6px; background: #e3f1ef; border: 1px solid #1a7f74; font-size: 14px; line-height: 22px">{{ saved }}</div></sc-if>
+</div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>权限变更日志</b><span class="bd">5</span></div>
+<table style="border-collapse: collapse; width: 100%">
+<thead><tr><th class="th">时间</th><th class="th">操作人</th><th class="th">投流总代理</th><th class="th">变更</th></tr></thead>
+<tbody>
+<tr data-for="logs" data-as="g"><td class="td">{{ g.time }}</td><td class="td">{{ g.who }}</td><td class="td code">{{ g.master }}</td><td class="td" style="white-space: normal">{{ g.what }}</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 投流权限设置</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>只有我方运营能建投流总代理（02），也只有运营能在这里改它的类型和权限。投流方在投流代理端看不到这个页面。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>大区投流总代理 = 运营指定的、负责一个大区的投流总代理，必须选所属大区（大区名单由运营在系统参数里维护，这里的 5 个是示例）。只有大区投流总代理能给自己名下的一级代理分权限（13）。取消大区后，它给一级代理设的权限全部收回为默认。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>这里开通的是投流总代理的<b>权限上限</b>：没开通的功能在投流代理端不显示按钮、接口返回无权限；大区给一级代理分的权限不能超过这里。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>保存后下次请求即生效（服务端每次校验，不靠前端隐藏）。权限收紧时，一级代理身上超出的部分自动收回；已绑定的会员不受影响。</p>
+<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">5</span>每次修改写日志：操作人、时间、前后值。示例数据，非线上配置。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-12-permission{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-12-permission a{color:#1e4fa3}
+#b-12-permission a:hover{color:#163b7a}
+#b-12-permission .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-12-permission .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-12-permission .mi:hover{background:#eef2f7;color:#111827}
+#b-12-permission .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-12-permission .mon:hover{color:#ffffff}
+#b-12-permission .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-12-permission .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-12-permission .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-12-permission .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-12-permission .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-12-permission .btn:hover{color:#ffffff;background:#163b7a}
+#b-12-permission .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-12-permission .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-12-permission .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-12-permission .ok{color:#15803d;font-weight:600}
+#b-12-permission .no{color:#b91c1c}
+#b-12-permission .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-12-permission .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-12-permission .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-12-permission .np{margin:0 0 10px}
+#b-12-permission tr.sel td{background:#eef6f5}
+#b-12-permission .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-12-permission .hi{color:#b91c1c;font-weight:600}
+#b-12-permission .mid{color:#b45309;font-weight:600}
+#b-12-permission .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-12-permission"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.regions = ['马尼拉大区', '北吕宋大区', '南吕宋大区', '米沙鄢大区', '棉兰老大区'];
+    this.perms = [
+      { k: 'gen', t: '批量生成投流一级代理', d: '投流代理端可自建一级代理' },
+      { k: 'stop', t: '停用 / 启用投流一级代理', d: '' },
+      { k: 'bind', t: '绑定会员', d: '每个一级代理最多 10 个，由大区再分配' },
+      { k: 'report', t: '查看会员报告', d: '只看自己名下' },
+      { k: 'export', t: '导出', d: '一级代理列表、会员报告' },
+      { k: 'login', t: '允许一级代理登录', d: '一级代理用自己的账号登录看自己的数据' },
+      { k: 'sub', t: '设置一级代理权限', d: '只有大区投流总代理可开' }
+    ];
+    this.state = {
+      cur: 'fb_media', saved: '', logs: [
+        { time: '2026-11-16 16:02:11', who: 'admin', master: 'tw_ads', what: '开通「绑定会员」' }
+      ],
+      masters: {
+        fb_media: { name: '投流方 A', region: true, area: '马尼拉大区', cap: '2000', agents: 1003, p: { gen: true, stop: true, bind: true, report: true, export: true, login: true, sub: true } },
+        tw_ads: { name: '投流方 B', region: false, area: '', cap: '500', agents: 2, p: { gen: true, stop: false, bind: true, report: true, export: false, login: false, sub: false } },
+        gg_cebu: { name: '投流方 C', region: true, area: '米沙鄢大区', cap: '1000', agents: 0, p: { gen: true, stop: true, bind: false, report: true, export: false, login: false, sub: true } }
+      }
+    };
+  }
+  upd(fn) { const ms = JSON.parse(JSON.stringify(this.state.masters)); fn(ms[this.state.cur]); this.setState({ masters: ms, saved: '' }); }
+  renderVals() {
+    const s = this.state, m = s.masters[s.cur];
+    const list = Object.keys(s.masters).map(k => { const x = s.masters[k]; return {
+      k, name: x.name, type: x.region ? '大区投流总代理' : '投流总代理', area: x.area || '—', agents: x.agents, cap: x.cap,
+      on: this.perms.filter(p => x.p[p.k]).length + ' / ' + this.perms.length, cls: k === s.cur ? 'sel' : '', pick: () => this.setState({ cur: k, saved: '' }) }; });
+    const perms = this.perms.map(p => {
+      const lock = p.k === 'sub' && !m.region;
+      return { t: p.t, d: lock ? '先设为大区投流总代理' : p.d, on: !!m.p[p.k] && !lock, lock,
+        toggle: () => { if (lock) return; this.upd(x => { x.p[p.k] = !x.p[p.k]; }); } };
+    });
+    return {
+      list, perms, cur: s.cur, mname: m.name, region: m.region, notRegion: !m.region, area: m.area, cap: m.cap, logs: s.logs,
+      saved: s.saved, showSaved: !!s.saved,
+      areas: this.regions,
+      onRegion: () => this.upd(x => { x.region = !x.region; if (!x.region) { x.area = ''; x.p.sub = false; } else if (!x.area) x.area = this.regions[0]; }),
+      onArea: e => this.upd(x => { x.area = e.target.value; }),
+      onCap: e => this.upd(x => { x.cap = e.target.value; }),
+      save: () => {
+        const what = (m.region ? '大区投流总代理（' + m.area + '）' : '投流总代理') + '；开通 ' + this.perms.filter(p => m.p[p.k] && !(p.k === 'sub' && !m.region)).map(p => p.t).join('、');
+        this.setState({ saved: '已保存 ' + s.cur + '：' + what + '。投流代理端下次请求即生效，已在用的一级代理权限超出部分自动收回。',
+          logs: [{ time: '2026-11-17 10:12:30', who: 'admin', master: s.cur, what }].concat(s.logs) });
+      }
+    };
+  }
+}
+return Component;};</script>
+<section class="board" id="b-14-link-library" data-fixed="0" style="--bw:1280px"><template><div style="position: relative; min-height: 1300px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #1e4fa3; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">789games 管理后台</span>
+<span style="font-size: 12px; padding: 2px 8px; border-radius: 4px; background: #f59e0b; color: #111827; font-weight: 700">QA</span>
+<span style="flex: 1 1 auto"></span>
+<a href="#/b-05-verify-alarm" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: #ffffff; text-decoration: none; padding: 4px 10px; border-radius: 14px; background: #b91c1c">投流核验告警 <b>3</b></a>
+<span style="font-size: 13px">2026-11-17 10:20:00（GMT+8）</span>
+<span style="font-size: 13px">admin</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="后台菜单" style="flex: 0 0 220px; background: #ffffff; border-right: 1px solid #e1e6ee; padding-bottom: 24px">
+<div class="mgrp">代理管理 › 投流代理</div>
+<a class="mi" href="#/b-01-big-agents">投流总代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-03-agents-batch">投流一级代理列表<span class="new">新增</span></a>
+<a class="mi" href="#/b-04-bind-members">绑定会员<span class="new">新增</span></a>
+<a class="mi" href="#/b-05-verify-alarm">投流核验告警<span class="new">新增</span></a>
+<a class="mi" href="#/b-12-permission">投流权限设置<span class="new">新增</span></a>
+<a class="mon" href="#/b-14-link-library">投流链接库<span class="new" style="color: #fde68a">新增</span></a>
+<div class="mgrp">会员管理</div>
+<a class="mi" href="#/b-09-member-detail">会员详情（投流字段）<span class="new">改动</span></a>
+<div class="mgrp">数据报表</div>
+<a class="mi" href="#/b-06-line-report">投流代理线汇总<span class="new">新增</span></a>
+<a class="mi" href="#/b-10-member-report">投流会员报告<span class="new">新增</span></a>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">代理管理 / 投流代理 / 投流链接库</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">投流链接库</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 720px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<div class="card" style="padding: 12px 14px"><div style="font-size: 12px; color: #4b5563">链接库总数<span class="bd">1</span></div><div style="font-size: 20px; font-weight: 700">{{ total }}</div><div style="font-size: 12px; color: #4b5563">新站 + 老站，含停用</div></div>
+<div class="card" style="padding: 12px 14px"><div style="font-size: 12px; color: #4b5563">在用有效</div><div style="font-size: 20px; font-weight: 700">{{ live }}</div><div style="font-size: 12px; color: #4b5563">其中现网代理 {{ liveOld }}</div></div>
+<div class="card" style="padding: 12px 14px"><div style="font-size: 12px; color: #4b5563">已停用（永不复用）</div><div style="font-size: 20px; font-weight: 700">{{ dead }}</div><div style="font-size: 12px; color: #4b5563">停用 / 删除的码</div></div>
+<div class="card" style="padding: 12px 14px"><div style="font-size: 12px; color: #4b5563">今日比对</div><div style="font-size: 20px; font-weight: 700" class="ok">0 冲突</div><div style="font-size: 12px; color: #4b5563">03:10 全量比对<span class="bd">5</span></div></div>
+</div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>比对：这个码 / 链接能不能用</b><span class="bd">2</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<input id="l-q" class="inp" style="width: 340px" placeholder="输入邀请码或完整链接，如 [代理域名]/?vip=p3vd8h2n" value="{{ q }}" onInput="{{ onQ }}">
+<button class="btn2" type="button" onClick="{{ check }}">比对</button>
+</div>
+<sc-if value="{{ hit }}"><div role="status" style="margin-top: 10px; font-size: 14px" class="no">{{ hitText }}</div></sc-if>
+<sc-if value="{{ miss }}"><div role="status" style="margin-top: 10px; font-size: 14px" class="ok">{{ missText }}</div></sc-if>
+</div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>算法生成新链接（演示）</b><span class="bd">3</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">数量<input id="l-count" class="inp" style="width: 90px" value="{{ count }}" onInput="{{ onCount }}"></label>
+<span style="font-size: 13px; color: #4b5563">规则：8 位，小写字母 + 数字，去掉 0 / o / 1 / l / i 易混字符（31 个字符）</span>
+<span style="flex: 1 1 auto"></span>
+<button class="btn" type="button" onClick="{{ generate }}">生成并比对</button>
+</div>
+<sc-if value="{{ showGen }}">
+<div style="margin-top: 12px; padding: 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 22px">
+<sc-if value="{{ hasGenErr }}"><span class="no">{{ genErr }}</span></sc-if>
+<sc-if value="{{ genOk }}"><div>{{ genText }}<span class="bd">4</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0"><sc-for list="{{ genList }}" as="x"><span class="code" style="padding: 2px 8px; border-radius: 4px; background: #ffffff; border: 1px solid #cfd6e0">{{ x.code }}</span></sc-for></div>
+<button class="btn2" type="button" onClick="{{ commit }}">写入链接库（演示）</button></sc-if>
+</div>
+</sc-if>
+</div>
+<div class="card">
+<div style="font-size: 14px; margin-bottom: 10px"><b>链接库</b>（全部代理线生成过的链接）</div>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 860px">
+<thead><tr><th class="th">邀请码</th><th class="th">链接</th><th class="th">代理线</th><th class="th">类型</th><th class="th">站点</th><th class="th">状态</th><th class="th">入库时间</th></tr></thead>
+<tbody>
+<tr data-for="rows" data-as="r"><td class="td code">{{ r.code }}</td><td class="td code">{{ r.link }}</td><td class="td">{{ r.line }}</td><td class="td">{{ r.kind }}</td><td class="td">{{ r.site }}</td><td class="td"><span class="{{ r.cls }}">{{ r.st }}</span></td><td class="td">{{ r.time }}</td></tr>
+</tbody>
+</table>
+</div>
+<div style="margin-top: 10px; font-size: 13px; color: #4b5563">示例数据，非线上配置</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 投流链接库（后端）</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>后端建一张链接库表，收录所有代理线生成过的邀请码和链接：投流一级代理、现网大代理 / 代理、新站和老站，在用和停用都在。邀请码统一转小写后建唯一索引。上线时先把现网在用的代理邀请码全量导入。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>比对：输入码或链接，查是否已在库里（不区分大小写）。在用和停用的都不能再用，停用的码永不复用，防止老链接带来的人串到新线。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的新链接由后台算法生成，不再让人填前缀和序号：安全随机数取 8 位，字符集为小写字母 + 数字去掉 0 / o / 1 / l / i，共 31<sup>8</sup> ≈ 8,500 亿种组合。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>每个码先查库，撞上就重抽，单个码最多重抽 5 次；入库靠唯一索引兜底，并发撞上的整批回滚重试。演示里第 1 次抽到已停用的 k7m2x9qa、第 3 次抽到现网在用的 p3vd8h2n，都自动重抽了。</p>
+<p class="np" style="margin: 0"><span class="bd" style="margin: 0 6px 0 0">5</span>每天 03:10 把链接库和现网在用的代理链接全量比对一次，发现重复或库外链接，按核验规则 C1 / C3 告警（05）。</p>
+</aside>
+</div>
+</main>
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-14-link-library{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-14-link-library a{color:#1e4fa3}
+#b-14-link-library a:hover{color:#163b7a}
+#b-14-link-library .mgrp{padding:14px 20px 6px;font-size:12px;color:#4b5563;font-weight:600}
+#b-14-link-library .mi{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#374151;text-decoration:none}
+#b-14-link-library .mi:hover{background:#eef2f7;color:#111827}
+#b-14-link-library .mon{display:block;padding:9px 20px 9px 32px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-14-link-library .mon:hover{color:#ffffff}
+#b-14-link-library .new{font-size:11px;color:#b45309;margin-left:6px}
+#b-14-link-library .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-14-link-library .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-14-link-library .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-14-link-library .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1e4fa3;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-14-link-library .btn:hover{color:#ffffff;background:#163b7a}
+#b-14-link-library .btn:disabled{background:#9ca3af;cursor:not-allowed}
+#b-14-link-library .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-14-link-library .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-14-link-library .ok{color:#15803d;font-weight:600}
+#b-14-link-library .no{color:#b91c1c}
+#b-14-link-library .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-14-link-library .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-14-link-library .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-14-link-library .np{margin:0 0 10px}
+#b-14-link-library tr.sel td{background:#eef6f5}
+#b-14-link-library .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-14-link-library .hi{color:#b91c1c;font-weight:600}
+#b-14-link-library .mid{color:#b45309;font-weight:600}
+#b-14-link-library .lo{color:#4b5563}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-14-link-library"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.AB = 'abcdefghjkmnpqrstuvwxyz23456789';
+    this.seed = 20261117;
+    const L = (code, line, kind, st, site, time) => ({ code, line, kind, st, site, time });
+    this.state = {
+      count: '8', len: '8', q: '', checked: false, gen: null, batch: 1,
+      lib: [
+        L('tt001', 'fb_media / tt001', '投流一级代理', '在用', '新站', '2026-11-16 10:31'),
+        L('tt002', 'fb_media / tt002', '投流一级代理', '在用', '新站', '2026-11-16 11:20'),
+        L('tt003', 'fb_media / tt003', '投流一级代理', '在用', '新站', '2026-11-16 11:20'),
+        L('kol01test', 't1111_kol_big / t1111_kol_01', '现网代理', '在用', '新站', '2026-11-11 15:02'),
+        L('ddltomas', 'ddltomas', '现网大代理', '在用', '新站', '2025-08-18 09:00'),
+        L('google_vi', 'google_vi', '现网大代理', '在用', '新站', '2025-08-18 09:00'),
+        L('fb002', 'old_media / fb002', '投流一级代理', '已停用', '老站', '2026-09-02 12:00'),
+        L('k7m2x9qa', 'fb_media / 992300009', '投流一级代理', '已停用', '新站', '2026-11-15 18:40'),
+        L('p3vd8h2n', '5-ji-agent', '现网代理', '在用', '老站', '2026-03-01 10:00')
+      ]
+    };
+  }
+  rnd() { this.seed = (this.seed * 1103515245 + 12345) % 2147483648; return this.seed; }
+  make(n) {
+    let s = ''; for (let i = 0; i < n; i++) s += this.AB[this.rnd() % this.AB.length]; return s;
+  }
+  run() {
+    const s = this.state, c = Number(s.count), n = Number(s.len);
+    if (!Number.isInteger(c) || c < 1 || c > 1000) return { error: '生成数量须为 1～1000 的整数' };
+    const taken = new Set(s.lib.map(x => x.code.toLowerCase()));
+    const out = [], hits = [];
+    this.seed = 20261117 + s.batch * 7;
+    // 演示：第 1 次抽到库里已停用的 k7m2x9qa、第 3 次抽到现网在用的 p3vd8h2n
+    const forced = { 0: 'k7m2x9qa', 2: 'p3vd8h2n' };
+    let tries = 0;
+    while (out.length < c && tries < c * 5 + 10) {
+      const code = forced[tries] && s.batch === 1 ? forced[tries] : this.make(n);
+      tries++;
+      if (taken.has(code)) { hits.push(code); continue; }
+      taken.add(code); out.push(code);
+    }
+    return { out, hits, tries };
+  }
+  renderVals() {
+    const s = this.state, lib = s.lib;
+    const q = s.q.trim().toLowerCase().replace(/^.*[?&]vip=/, '');
+    const found = lib.find(x => x.code.toLowerCase() === q);
+    const g = s.gen;
+    return {
+      count: s.count, q: s.q,
+      total: lib.length, live: lib.filter(x => x.st === '在用').length, dead: lib.filter(x => x.st !== '在用').length,
+      liveOld: lib.filter(x => x.st === '在用' && x.kind !== '投流一级代理').length,
+      rows: lib.slice().reverse().map(x => Object.assign({}, x, { cls: x.st === '在用' ? 'ok' : 'lo', link: '[代理域名]/?vip=' + x.code })),
+      onCount: e => this.setState({ count: e.target.value }), onQ: e => this.setState({ q: e.target.value, checked: false }),
+      check: () => this.setState({ checked: true }),
+      checked: s.checked && !!q, hit: s.checked && !!q && !!found, miss: s.checked && !!q && !found,
+      hitText: found ? '已存在，不能使用：' + found.code + '（' + found.kind + '，' + found.line + '，' + found.st + '，' + found.site + '）' : '',
+      missText: '库里没有「' + q + '」，可以使用（实际生成时仍以入库时的唯一索引为准）',
+      showGen: !!g, genErr: g && g.error ? g.error : '', hasGenErr: !!(g && g.error),
+      genOk: !!(g && !g.error), genList: g && g.out ? g.out.map(code => ({ code })) : [],
+      genText: g && g.out ? '生成 ' + g.out.length + ' 个，共抽取 ' + g.tries + ' 次，撞库 ' + g.hits.length + ' 次（' + (g.hits.join('、') || '无') + '）已自动重抽' : '',
+      generate: () => this.setState({ gen: this.run() }),
+      commit: () => {
+        if (!g || g.error) return;
+        const add = g.out.map(code => ({ code, line: 'fb_media / 新批次 B20261117-00' + s.batch, kind: '投流一级代理', st: '在用', site: '新站', time: '2026-11-17 10:20' }));
+        this.setState({ lib: lib.concat(add), gen: null, batch: s.batch + 1 });
+      }
+    };
+  }
+}
+return Component;};</script>
 <section class="board" id="b-07-agent-portal" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 960px; background: #f3f5f8">
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #0f3d38; color: #ffffff">
 <span style="font-size: 17px; font-weight: 700">投流代理端</span>
@@ -1136,6 +1502,7 @@ return Component;};</script>
 <div style="display: flex; flex-wrap: wrap">
 <nav aria-label="投流代理端菜单" style="flex: 0 0 200px; background: #ffffff; border-right: 1px solid #e1e6ee; padding: 8px 0 24px">
 <a class="mon" href="#/b-07-agent-portal">我的投流一级代理</a>
+<a class="mi" href="#/b-13-agent-permission">一级代理权限</a>
 <span class="mi">绑定会员</span>
 <span class="mi">数据汇总</span>
 <a class="mi" href="#/b-11-agent-member-report">会员报告</a>
@@ -1192,7 +1559,7 @@ return Component;};</script>
 <div style="font-size: 15px; font-weight: 700; margin-bottom: 8px; color: #9a3412">注释 · 投流代理端（投流方自建）</div>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">1</span>投流方用投流总代理账号（02 创建）登录。投流代理端默认沿用现网 PSP 代理后台（PC + H5），新增「我的投流一级代理」「绑定会员」「数据汇总」（待确认 4）。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">2</span>只显示本投流总代理名下的投流一级代理和数据。所有接口按登录身份在服务端过滤，传入别人的投流总代理或投流一级代理 ID 返回无权限。</p>
-<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的表单、邀请码顺延规则同 03，所属投流总代理固定为自己。受「允许自建投流一级代理」开关和上限控制，关掉后按钮不显示。</p>
+<p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">3</span>批量生成的表单、算法生成邀请码和链接库比对规则同 03，所属投流总代理固定为自己。受运营在 12 开通的「批量生成」权限和自建上限控制，关掉后按钮不显示。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员流程同 04：只能绑投流方自己的账号，每个投流一级代理最多 10 个；只能选自己名下的一级代理，受「允许绑定会员」开关控制。</p>
 <p style="margin: 0 0 10px"><span class="bd" style="margin: 0 6px 0 0">5</span>跳过原因不暴露原上一级和所属大代理：上一级是会员、大代理不是官方大代理、已被绑定，都只显示「不符合绑定条件」；投流代理端不展示官方大代理名单。本页只显示聚合数据；会员明细在「会员报告」（11），字段沿用现网会员报告。</p>
 <p style="margin: 0">投流代理端不能做：建 / 停投流总代理、看其他投流总代理、改绑或解绑会员。</p>
@@ -1231,6 +1598,7 @@ return Component;};</script>
 <div style="display: flex; flex-wrap: wrap">
 <nav aria-label="投流代理端菜单" style="flex: 0 0 200px; background: #ffffff; border-right: 1px solid #e1e6ee; padding: 8px 0 24px">
 <a class="mi" href="#/b-07-agent-portal">我的投流一级代理</a>
+<a class="mi" href="#/b-13-agent-permission">一级代理权限</a>
 <span class="mi">绑定会员</span>
 <span class="mi">数据汇总</span>
 <a class="mon" href="#/b-11-agent-member-report">会员报告</a>
@@ -1375,6 +1743,130 @@ class Component extends DCLogic {
       reset: () => { const nf = { master: this.PORTAL ? 'fb_media' : '', agent: '', lv: '', src: '', mid: '', name: '', start: '2026-11-01', end: '2026-11-16', quick: '本月' }; this.setState({ f: nf, q: this.PORTAL ? Object.assign({}, nf) : null, warn: '', page: 1 }); },
       prev: () => this.setState({ page: Math.max(1, page - 1) }), next: () => this.setState({ page: Math.min(pages, page + 1) }),
       noPrev: page <= 1, noNext: page >= pages
+    };
+  }
+}
+return Component;};</script>
+<section class="board" id="b-13-agent-permission" data-fixed="0" style="--bw:1280px"><template><div style="min-height: 900px; background: #f3f5f8">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 0 20px; min-height: 56px; background: #0f3d38; color: #ffffff">
+<span style="font-size: 17px; font-weight: 700">投流代理端</span>
+<span style="font-size: 13px">fb_media · 投流方 A · 马尼拉大区投流总代理</span>
+<span style="flex: 1 1 auto"></span>
+<span style="font-size: 13px">2026-11-17 10:15:00（GMT+8）</span>
+<span style="font-size: 13px">退出</span>
+</div>
+<div style="display: flex; flex-wrap: wrap">
+<nav aria-label="投流代理端菜单" style="flex: 0 0 200px; background: #ffffff; border-right: 1px solid #e1e6ee; padding: 8px 0 24px">
+<a class="mi" href="#/b-07-agent-portal">我的投流一级代理</a>
+<a class="mon" href="#/b-13-agent-permission">一级代理权限</a>
+<span class="mi">绑定会员</span>
+<span class="mi">数据汇总</span>
+<a class="mi" href="#/b-11-agent-member-report">会员报告</a>
+<span class="mi">账号设置</span>
+</nav>
+<main style="flex: 999 1 560px; min-width: 0; padding: 20px 24px; box-sizing: border-box">
+<div style="font-size: 13px; color: #4b5563">投流一级代理 / 一级代理权限</div>
+<h1 style="margin: 8px 0 16px; font-size: 20px">一级代理权限<span class="bd">1</span></h1>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 999 1 720px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<div class="card">
+<div style="margin-bottom: 12px; padding: 10px 12px; border-radius: 6px; background: #f1f4f8; font-size: 13px; line-height: 21px">运营给你开通的上限：允许一级代理登录 ✓ · 绑定会员 ✓（每个一级代理 ≤ 10）· 查看会员报告 ✓ · 导出 ✓ · 看会员名 / 余额 ✗<span class="bd">2</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px">
+<button class="btn2" type="button" onClick="{{ pickAll }}">全选 / 取消</button>
+<span style="font-size: 14px">已选 <b>{{ picked }}</b> 个</span>
+<label style="display: flex; align-items: center; gap: 6px; font-size: 14px">批量套用<select id="t-tpl" class="inp" value="{{ tpl }}" onChange="{{ onTpl }}"><option value="all">全部开（登录 + 绑定 10 + 报告 + 导出）</option><option value="bind">只开绑定会员（10）</option><option value="none">全部关</option></select></label>
+<button class="btn2" type="button" onClick="{{ apply }}" disabled="{{ noPick }}">应用到所选</button><span class="bd">3</span>
+<span style="flex: 1 1 auto"></span>
+<button class="btn" type="button" onClick="{{ save }}">保存</button>
+</div>
+<sc-if value="{{ showSaved }}"><div role="status" style="margin-bottom: 12px; padding: 10px 12px; border-radius: 6px; background: #e3f1ef; border: 1px solid #1a7f74; font-size: 14px">{{ saved }}</div></sc-if>
+<div style="overflow-x: auto">
+<table style="border-collapse: collapse; width: 100%; min-width: 900px">
+<thead><tr><th class="th"></th><th class="th">投流一级代理</th><th class="th">状态</th><th class="th">可登录</th><th class="th">绑定会员名额<span class="bd">4</span></th><th class="th">已绑</th><th class="th">查看会员报告</th><th class="th">导出</th><th class="th">看会员名 / 余额</th></tr></thead>
+<tbody>
+<tr data-for="rows" data-as="r"><td class="td"><input type="checkbox" checked="{{ r.pick }}" onChange="{{ r.onPick }}" aria-label="选择"></td><td class="td"><span class="code">{{ r.code }}</span><br><span style="font-size: 12px; color: #4b5563">{{ r.id }}</span></td><td class="td"><span class="{{ r.stCls }}">{{ r.status }}</span></td>
+<td class="td"><input type="checkbox" checked="{{ r.login }}" disabled="{{ r.noLogin }}" onChange="{{ r.onLogin }}" aria-label="可登录"></td>
+<td class="td"><select class="inp" style="height: 30px" value="{{ r.quota }}" disabled="{{ r.noBind }}" onChange="{{ r.onQuota }}" aria-label="绑定名额"><option value="0">不允许</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select><br><span style="font-size: 12px; color: #b45309">{{ r.warn }}</span></td>
+<td class="td">{{ r.used }}</td>
+<td class="td"><input type="checkbox" checked="{{ r.report }}" disabled="{{ r.noReport }}" onChange="{{ r.onReport }}" aria-label="查看会员报告"></td>
+<td class="td"><input type="checkbox" checked="{{ r.exp }}" disabled="{{ r.noExp }}" onChange="{{ r.onExp }}" aria-label="导出"></td>
+<td class="td"><input type="checkbox" checked="{{ r.detail }}" disabled="{{ r.noDetail }}" aria-label="看会员名和余额"><span style="font-size: 12px; color: #4b5563"> 未开通</span></td></tr>
+</tbody>
+</table>
+</div>
+<div style="margin-top: 10px; font-size: 13px; color: #4b5563">只显示 fb_media 名下的投流一级代理 · 示例数据，非线上配置</div>
+</div>
+</section>
+<aside aria-label="注释" class="note">
+<div class="nt">注释 · 一级代理权限（大区投流总代理）</div>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">1</span>只有被运营设为<b>大区投流总代理</b>、且开通了「设置一级代理权限」的账号能看到这个菜单（12）。普通投流总代理看不到，它的一级代理一律用默认权限。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">2</span>能分的权限不超过运营给的上限。没开通的列整列置灰；接口也按上限校验，绕过前端提交会被拒绝。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">3</span>勾选多个一级代理后一次套用模板，再点保存。已停用的一级代理不能选、不能改。</p>
+<p class="np"><span class="bd" style="margin: 0 6px 0 0">4</span>绑定会员名额 0～10，替代原来固定的 10 个。调低到已绑数以下时，已绑的保留，只是不能再绑。名额只在绑定会员（04 / 07）时校验。</p>
+<p class="np" style="margin: 0">一级代理开了「可登录」后，用自己的账号登录投流代理端，只能看自己的会员报告；默认权限 = 不能登录、绑定名额 0。</p>
+</aside>
+</div>
+</main>
+
+</div>
+</div></template><div class="mount"></div></section>
+<style>#b-13-agent-permission{margin:0;background:#f3f5f8;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:#1f2937}
+#b-13-agent-permission a{color:#1e4fa3}
+#b-13-agent-permission a:hover{color:#163b7a}
+#b-13-agent-permission .mi{display:block;padding:11px 20px;font-size:14px;color:#374151;text-decoration:none}
+#b-13-agent-permission .mi:hover{background:#eef2f7;color:#111827}
+#b-13-agent-permission .mon{display:block;padding:11px 20px;font-size:14px;color:#ffffff;background:#1a7f74;font-weight:600;text-decoration:none}
+#b-13-agent-permission .th{padding:10px 12px;text-align:left;font-weight:600;font-size:13px;color:#374151;background:#f1f4f8;border-bottom:1px solid #e1e6ee;white-space:nowrap}
+#b-13-agent-permission .td{padding:9px 12px;font-size:13px;border-bottom:1px solid #eef1f5;white-space:nowrap}
+#b-13-agent-permission .bd{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:10px;background:#c2410c;color:#ffffff;font-size:12px;font-weight:700;margin-left:6px;vertical-align:middle;flex:0 0 auto}
+#b-13-agent-permission .btn{display:inline-flex;align-items:center;height:34px;padding:0 16px;border-radius:6px;background:#1a7f74;color:#ffffff;font-size:14px;text-decoration:none;border:0;cursor:pointer}
+#b-13-agent-permission .btn:hover{color:#ffffff;background:#14655c}
+#b-13-agent-permission .btn2{display:inline-flex;align-items:center;height:34px;padding:0 14px;border-radius:6px;background:#ffffff;color:#1f2937;font-size:14px;border:1px solid #cfd6e0;cursor:pointer;text-decoration:none}
+#b-13-agent-permission .inp{height:34px;box-sizing:border-box;border:1px solid #cfd6e0;border-radius:6px;padding:0 10px;font-size:14px;background:#ffffff;color:#1f2937}
+#b-13-agent-permission .code{font-family:ui-monospace,Menlo,Consolas,monospace}
+#b-13-agent-permission .card{background:#ffffff;border:1px solid #e1e6ee;border-radius:8px;padding:16px}
+#b-13-agent-permission .note{flex:1 1 280px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;padding:16px;font-size:13px;line-height:20px}
+#b-13-agent-permission .nt{font-size:15px;font-weight:700;margin-bottom:8px;color:#9a3412}
+#b-13-agent-permission .np{margin:0 0 10px}
+#b-13-agent-permission .ok{color:#15803d;font-weight:600}
+#b-13-agent-permission .no{color:#b91c1c}
+#b-13-agent-permission .mid{color:#b45309;font-weight:600}
+#b-13-agent-permission .lo{color:#4b5563}
+#b-13-agent-permission .btn:disabled,#b-13-agent-permission .btn2:disabled{opacity:.5;cursor:not-allowed}</style>
+<script>window.__DC=window.__DC||{};window.__DC["b-13-agent-permission"]=function(DCLogic){
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    // 运营给 fb_media 开通的上限（12）
+    this.ceil = { login: true, bind: true, report: true, export: true, detail: false };
+    const mk = (code, on, login, quota, report, exp, used) => ({ code, id: 992300000 + Number(code.slice(2)), on, login, quota, report, exp, detail: false, used, pick: false });
+    this.state = {
+      saved: '', tpl: 'all',
+      rows: [mk('tt001', true, true, '10', true, true, 10), mk('tt002', true, true, '5', true, false, 3), mk('tt003', true, false, '3', false, false, 0),
+             mk('tt004', true, false, '0', false, false, 0), mk('tt005', false, false, '0', false, false, 0)]
+    };
+  }
+  set(i, k, v) { const rows = this.state.rows.map((r, j) => j === i ? Object.assign({}, r, { [k]: v }) : r); this.setState({ rows, saved: '' }); }
+  renderVals() {
+    const s = this.state, c = this.ceil;
+    const rows = s.rows.map((r, i) => ({
+      code: r.code, id: r.id, used: r.used, pick: r.pick, status: r.on ? '启用' : '已停用', stCls: r.on ? 'ok' : 'lo',
+      login: r.login && c.login, report: r.report && c.report, exp: r.exp && c.export, detail: r.detail && c.detail,
+      noLogin: !c.login || !r.on, noReport: !c.report || !r.on, noExp: !c.export || !r.on, noDetail: !c.detail || !r.on, noBind: !c.bind || !r.on,
+      quota: r.quota, warn: Number(r.quota) < r.used ? '低于已绑 ' + r.used + ' 个：已绑的保留，不能再绑' : '',
+      onPick: () => this.set(i, 'pick', !r.pick), onLogin: () => this.set(i, 'login', !r.login), onReport: () => this.set(i, 'report', !r.report),
+      onExp: () => this.set(i, 'exp', !r.exp), onQuota: e => this.set(i, 'quota', e.target.value)
+    }));
+    const picked = s.rows.filter(r => r.pick).length;
+    return {
+      rows, picked, noPick: picked === 0, tpl: s.tpl, saved: s.saved, showSaved: !!s.saved,
+      onTpl: e => this.setState({ tpl: e.target.value }),
+      pickAll: () => { const all = s.rows.every(r => r.pick || !r.on); this.setState({ rows: s.rows.map(r => Object.assign({}, r, { pick: r.on ? !all : false })) }); },
+      apply: () => {
+        const t = { all: { login: true, quota: '10', report: true, exp: true }, bind: { login: false, quota: '10', report: false, exp: false }, none: { login: false, quota: '0', report: false, exp: false } }[s.tpl];
+        this.setState({ rows: s.rows.map(r => r.pick ? Object.assign({}, r, t, { pick: false }) : r), saved: '' });
+      },
+      save: () => this.setState({ saved: '已保存 ' + s.rows.length + ' 个投流一级代理的权限，立即生效；超出运营开通范围的项不会保存。' })
     };
   }
 }

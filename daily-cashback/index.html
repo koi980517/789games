@@ -524,14 +524,14 @@ function cCategory(){
   ${cur.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>{const f=featOf(g);return `<span class="gchip">${g}${f&&S.sel.on?` <i>Selected</i>`:''}<b title="移出" onclick="rmGame('${g.replace(/'/g,"\\'")}')">×</b></span>`}).join('')}</div></div>`).join(''):'<div class="tip warn">该类型还没有选择游戏，前台不显示、无返水。点「选择厂商与游戏」配置。</div>'}
   </div></div>`;
 }
-let pick=null;
-function openGamePick(){const cur=CATS[selCat];pick=new Set(cur.games);drawPick()}
+let pick=null,pickMode='cat';
+function openGamePick(m){pickMode=m||'cat';pick=new Set(pickMode==='sel'?S.featured[selG].games:CATS[selCat].games);drawPick()}
 function drawPick(){
-  const cur=CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k);const vs=[...new Set(L.map(x=>x[1]))];
+  const sel=pickMode==='sel';const cur=sel?(CATS.find(c=>c.k==='slot')||CATS[0]):CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k&&(!sel||cur.games.includes(x[0])));const vs=[...new Set(L.map(x=>x[1]))];
   const st=(arr)=>{const n=arr.filter(g=>pick.has(g)).length;return n===0?'':n===arr.length?'all':'some'};
   const box=(state,on)=>`<span class="tcb ${state}" onclick="${on}"></span>`;
   const all=L.map(x=>x[0]);
-  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:760px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">可以参与活动游戏 · ${cur.n}</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
+  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:760px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">${sel?'Selected Games 游戏 · '+cur.n:'可以参与活动游戏 · '+cur.n}</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
   <p class="note" style="margin:8px 0">支持按 游戏类型 → 游戏厂商 → 具体游戏 三级选择，勾选上级自动联动下级，以最终勾选的游戏范围生效</p>
   <div class="tree"><div class="t1">${box(st(all),`pickAll(${JSON.stringify(all).replace(/"/g,'&quot;')})`)}<b>${cur.n}</b> <span>${all.filter(g=>pick.has(g)).length}/${all.length}</span></div>
   ${vs.map(v=>{const gs=L.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2">▾ ${box(st(gs),`pickAll(${JSON.stringify(gs).replace(/"/g,'&quot;')})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${g}</label>`).join('')}</div></div>`}).join('')}</div>
@@ -539,7 +539,7 @@ function drawPick(){
 }
 function pickOne(g){pick.has(g)?pick.delete(g):pick.add(g);drawPick()}
 function pickAll(arr){const full=arr.every(g=>pick.has(g));arr.forEach(g=>full?pick.delete(g):pick.add(g));drawPick()}
-function savePick(){const cur=CATS[selCat];const before=cur.games.length;cur.games=LIB.filter(x=>x[2]===cur.k&&pick.has(x[0])).map(x=>x[0]);S.featured.forEach(f=>{for(let j=f.games.length-1;j>=0;j--){if(!CATS.some(c=>c.games.includes(f.games[j]))){f.games.splice(j,1);f.w.splice(j,1)}}});log('活动配置','配置游戏',`${cur.n}：${before} → ${cur.games.length} 款`);pick=null;document.getElementById('modal').innerHTML='';mark();arender()}
+function savePick(){if(pickMode==='sel'){const f=S.featured[selG];const ow={};f.games.forEach((g,j)=>ow[g]=f.w[j]);const n=LIB.filter(x=>pick.has(x[0])).map(x=>x[0]);f.games=n;f.w=n.map(g=>ow[g]??10);log('活动配置','Selected Games 游戏',n.length+' 款');pick=null;document.getElementById('modal').innerHTML='';mark();arender();return}const cur=CATS[selCat];const before=cur.games.length;cur.games=LIB.filter(x=>x[2]===cur.k&&pick.has(x[0])).map(x=>x[0]);S.featured.forEach(f=>{for(let j=f.games.length-1;j>=0;j--){if(!CATS.some(c=>c.games.includes(f.games[j]))){f.games.splice(j,1);f.w.splice(j,1)}}});log('活动配置','配置游戏',`${cur.n}：${before} → ${cur.games.length} 款`);pick=null;document.getElementById('modal').innerHTML='';mark();arender()}
 function addCat(){const n=document.getElementById('newCat').value.trim();if(!n)return alert('请输入分类名称');if(CATS.some(c=>c.n===n))return alert('分类名称不能重复');const k='c'+Date.now();const pal=['#0EA5A4','#B45309','#6D28D9','#BE185D','#047857'];CATS.push({k,n,c:pal[CATS.length%pal.length],games:[],on:true});S.tiers.forEach(t=>t.r[k]=0.3);S.vip[k]=1;selCat=CATS.length-1;mark();log('活动配置','新增分类',n);arender()}
 function delCat(i){if(!confirm(`删除分类「${CATS[i].n}」？其 ${CATS[i].games.length} 款游戏将不返水；引用该分类的 Selected Games 组需改类型（原型）`))return;log('活动配置','删除分类',CATS[i].n);CATS.splice(i,1);selCat=0;mark();arender()}
 function mvCat(i,d){const t=CATS[i];CATS[i]=CATS[i+d];CATS[i+d]=t;selCat=i+d;mark();arender()}
@@ -559,7 +559,7 @@ function cSelected(){
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
   <label>类型</label><div><b>${cat.n}</b> <span class="chip n">固定</span><span class="h">Selected Games 只支持 Slot 类型，不可切换</span></div>
   <label><i>*</i> 比例</label><div><input class="rin ${rateCls(f.rate)} ${low?'bad':''}" value="${f.rate}" onchange="S.featured[${selG}].rate=+this.value;mark();arender()"> %<span class="h">须高于「${cat.n}」普通玩家最高档 ${maxStd}%${low?'（当前不满足，不可发布）':''}</span></div>
-  <label><i>*</i> 游戏</label><div><div class="gpick">${cat.games.map(g=>{const on=f.games.includes(g),dis=taken(g);return `<label class="${on?'on':''} ${dis?'dis':''}"><input type="checkbox" ${on?'checked':''} ${dis?'disabled':''} onchange="togSelGame('${g.replace(/'/g,"\\'")}',this.checked)">${g}${dis?' <small>已在其他组</small>':''}</label>`}).join('')||'<span class="note">该类型下暂无游戏，请先在「② Category 配置」添加</span>'}</div></div>
+  <label><i>*</i> 游戏</label><div><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span class="note">已选 ${f.games.length} / ${cat.games.length} 款（只能从 Slot 已开启的游戏中选）</span><button class="ab p" onclick="openGamePick('sel')">选择厂商与游戏</button></div>${(()=>{const vend={};f.games.forEach(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'—';(vend[v]=vend[v]||[]).push(g)});return f.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>`<span class="gchip">${g}<b title="移出" onclick="togSelGame('${g.replace(/'/g,"\\'")}',false)">×</b></span>`).join('')}</div></div>`).join(''):'<div class="tip warn">还没有选择游戏</div>'})()}</div>
   <label>排序权重</label><div><table class="at" style="max-width:420px"><tr><th>游戏</th><th>权重（越小越靠前，默认 10）</th></tr>${f.games.map((g,j)=>`<tr><td>${g}</td><td><input class="rin" value="${f.w[j]}" onchange="S.featured[${selG}].w[${j}]=+this.value;mark()"></td></tr>`).join('')||'<tr><td colspan="2" class="note">未选游戏</td></tr>'}</table></div>
   <label>有效期</label><div class="note">同活动时间</div>
 </div>`;

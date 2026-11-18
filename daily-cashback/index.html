@@ -171,6 +171,8 @@ table.rt tr.fe td{background:#FFF7D6}
 .ptabs a.on{color:#2A6FDB;border-color:#2A6FDB;font-weight:600}
 .panel{background:#fff;border-radius:8px;padding:16px;margin-bottom:14px}
 .panel h3{margin:0 0 10px;font-size:14px}
+.p2{display:inline-block;margin-left:4px;padding:0 5px;border-radius:8px;background:#FFE7BA;color:#AD4E00;font-size:10px;line-height:16px;vertical-align:1px}
+.p2box{opacity:.55;pointer-events:none;filter:grayscale(.3)}
 .subt{border-left:3px solid #1677FF;padding-left:8px;font-weight:700;font-size:15px;color:#1F2937;margin:14px 0 12px}
 .at.bbt td,.at.bbt th{text-align:center}.at.bbt td{padding:8px 10px}.at.bbt .rin{text-align:left}
 a.lk{color:#1677FF;cursor:pointer}a.lk:hover{text-decoration:underline}
@@ -497,7 +499,7 @@ let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
 function mark(){pubDirty=true}
 function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''}" onclick="${onClick}(true)">${a||'开启'}</button><button class="${on?'':'off'}" onclick="${onClick}(false)">${b||'关闭'}</button></span>`}
 function arender(){
-  document.getElementById('ptabs').innerHTML=PT.map((t,i)=>`<button class="${i===pt?'on':''}" onclick="pt=${i};arender()">${t}</button>`).join('')+(pt===1?`<span class="pv-note">前台当前预览 →</span>`:'');
+  document.getElementById('ptabs').innerHTML=PT.map((t,i)=>`<button class="${i===pt?'on':''}" onclick="pt=${i};arender()">${t}${i===5?'<span class="p2">二期</span>':''}</button>`).join('')+(pt===1?`<span class="pv-note">前台当前预览 →</span>`:'');
   document.getElementById('apage').innerHTML=[aList,aConfig,aBudget,aReview,aPayout,aPush,aRecords,aStats,aLogs][pt]();
   pvPaint();
   const bar=document.getElementById('pubbar'); if(bar) bar.className='pubbar'+(pubDirty?' dirty':'');
@@ -730,14 +732,14 @@ function aPayout(){
   <tr><td>11-16</td><td>17,105</td><td>₱802,950.10</td><td>₱20,880,000.00</td><td>₱18,220,410.00</td><td>₱2,659,590.00</td><td>3.85%</td><td><span class="chip r">触发封控：涨幅 62%</span></td><td><span class="chip o">已转手动</span></td><td><button class="ab p" onclick="alert('问题确认：当日返水总额较近 7 日均值涨幅 62%。\\n可选：发放 / 暂停 / 取消（原型）')">核查并发放</button></td></tr></table></div>`;
 }
 function aPush(){
-  return `<div class="tip">只发给已结算、Available Cashback > 0、仍有未领取且未过期记录的玩家；<b>已领取的不推 Push、不发短信，每轮发送前实时判定</b>；同一批次每人 1 条，多笔合并。</div>
+  return `<div class="tip warn"><b>二期制作</b>：一期不开发 Push · 短信，结算后不发送任何 Push / 短信；本页仅作二期设计参考。</div><div class="p2box"><div class="tip">只发给已结算、Available Cashback > 0、仍有未领取且未过期记录的玩家；<b>已领取的不推 Push、不发短信，每轮发送前实时判定</b>；同一批次每人 1 条，多笔合并。</div>
   <div class="panel"><h3>Push（最多 3 轮，时间须晚于结算时间 ${S.cfg.settle} 且递增）</h3><table class="at"><tr><th>轮次</th><th>次日发送时间</th><th>推送内容</th><th>启用</th><th>应推送</th><th>已领取剔除</th><th>送达</th><th>推送不到</th><th>打开客户端</th><th>打开率</th></tr>
   <tr><td>第 1 轮</td><td>09:00</td><td>Your ₱{CashbackAmount} cashback is ready!</td><td><span class="sw"></span></td><td>12,480</td><td>0</td><td>10,942</td><td>1,538</td><td>3,610</td><td>33.0%</td></tr>
   <tr><td>第 2 轮</td><td>14:00</td><td>{UserName}, don't miss ₱{CashbackAmount}</td><td><span class="sw"></span></td><td>12,480</td><td>4,215</td><td>7,190</td><td>1,075</td><td>1,882</td><td>26.2%</td></tr>
   <tr><td>第 3 轮</td><td>20:00</td><td>Last call! Cashback expires soon</td><td><span class="sw off"></span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table><div class="foot"><button class="ab">发送测试 Push</button><button class="ab p">保存并发布 Push</button></div></div>
   <div class="panel"><h3>短信</h3><div class="form"><label>开关 / 发送时间</label><div><span class="sw"></span> 次日 <input value="18:00" style="width:70px"> <label><input type="checkbox" checked> 个性化发送（按近 7 日最常活跃时段）</label></div><label>Smart 文案</label><div><input style="width:100%" value="789Games: P{CashbackAmount} cashback waiting for you. Claim before it expires!"><span class="h">≤ 160 字符</span></div><label>Globe 文案</label><div><input style="width:100%" value="789Games: Your P{CashbackAmount} daily cashback is ready. Claim now!"></div></div>
   <div class="kpis" style="margin-top:12px"><div>发送名单<b>8,240</b></div><div>已领取剔除<b>5,112</b></div><div>已送达<b>2,980</b></div><div>失败<b>148</b></div></div>
-  <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div>`;
+  <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div></div>`;
 }
 function aRecords(){
   const rows=[];['std','vip'].forEach(u=>S.history[u].forEach(h=>rows.push({acc:u==='std'?'juan88':'vip_ana',...h})));

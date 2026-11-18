@@ -1,4 +1,4 @@
-# 【789games】次日返水活动（Daily Cashback）PRD v1.1
+# 【789games】次日返水活动（Daily Cashback）PRD v1.2
 
 > 正本：Claude Doc https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP （本文件为 Markdown 副本，两边不一致时以 Claude Doc 为准）
 > 原型画布：https://claude.ai/artifact/2aWDMpb9urK3BLnwaYkJrV ；页面截图见画布 prd/f01–f06（前台）、prd/a01–a13（后台）
@@ -46,12 +46,14 @@
 9. 当日返水 = 各分类（含精选组）Reward 之和，先套上限，再向下取整到 ₱1；取整后低于 ₱1 不发放。
 
 ## 4. 前台（APP，390 × 844）
-### 4.1 首页入口与弹窗
-- 打开顺序：开屏弹窗 → 返水领取弹窗。开屏频率：每次打开 / 每日一次 / 仅一次。
-- 领取弹窗：有 Available to Claim 时弹出，显示可领总额 + Claim Now，一键领取全部有效记录；领取中 Claiming… 禁用；成功后余额即时增加；失败弹窗可重试。
-- 自动领取开启时结算后直接入账，不弹领取弹窗。
-- 悬浮框常驻边缘，点击进活动页；领取弹窗出现时隐藏。首页 Banner、分类入口进入活动页。
-- 视觉：金额 Lilita One 金黄 #FFE36A + 橙描边；橙黄渐变主按钮高 54；开屏弹窗两种样式（返水模板 / 纯图片）；不做金币飞入动画。
+### 4.1 首页、弹窗与挂件（v1.2，参考返水充返转盘 PRD 3.0）
+- 首页按现网 QA 首页结构（https://qa.789node.com/）：顶栏（Logo / 余额 + 充值 / Rewards / 搜索）→ Banner 轮播 → 分类页签（Hot + 返水分类）→ 快捷入口（1.5%+2% Cashback / 2% Instant Return / Rank Cup / Bag）→ 跑马灯 → Recent Games → Hot Games → 底部导航。
+- 首页 Banner 首张：PH BIGGEST SLOTS CASHBACK · 1.5% UNLI CASHBACK（assets/banner.webp），点击进活动页。
+- 打开 APP：活动弹窗 → 活动奖励弹窗（有可领时）。
+- 活动弹窗（专属）：整图直出 MAXIMUM REWARDS · STACK 5 DAILY（assets/popup.webp），图内 PLAY NOW 热区跳活动页，× 关闭；频率后台配（默认每日首次打开）。
+- 活动奖励弹窗：人物图 + 彩带「Congratulations !」、标题 DAILY CASHBACK BONUS!、金币 + 可领总额（向下取整）、Claim（一键领取，Claiming… 禁用，成功后余额即时增加，失败可重试）、Cashback Details（跳 History）、Cashback Date（多笔显示「N days · from」）。自动领取时不弹。
+- 独立挂件：首页右侧礼盒图 + 角标「1.5%+2%」（前端渲染），点击进活动页；弹窗出现时隐藏，可拖动吸边。
+- 不做金币飞入动画，仅余额数字更新。
 
 ### 4.2 Daily Cashback 活动页
 - 不放顶部 Banner；标题栏右上 ? 进规则页（结算时间、领取有效期只在规则页展示）。Today / Yesterday 切换（Today 预估每 10 分钟更新；Yesterday 可领 + 领取，已领显示 Claimed today）。
@@ -106,7 +108,7 @@
 活动图 1098×366，≤1MB，仅用于首页入口 Banner（活动页、规则页不放）；比例表自动生成；条款每行一条，**文字** 加粗。
 
 ### 5.5 页面素材
-开屏弹窗（开关、频率、图片、样式、标题≤30、说明≤90、按钮≤16、跳转）；悬浮框（开关、200×200 圆形 ≤300KB、角标≤12、跳转）；保存并发布即时生效。
+① 活动弹窗整图（开关、频率、图片 750×1068 ≤1MB、PLAY NOW 热区跳转）；② 活动奖励弹窗（人物图 500×370、彩带文字、标题、主 / 次按钮文字）；③ 独立挂件（开关、图片 210×168、角标「1.5%+2%」≤12、跳转）；④ 首页 Banner（1098×474）。保存并发布即时生效。
 
 ### 5.6 返点核对
 每日 03:00–04:00（可配）；检测对冲、多账号作弊、流水与返点不一致、风控标记；逐条移除 / 确认正常，可撤销；完成核对后其余放行；被移除不生成 Available。
@@ -148,6 +150,7 @@
 ## 8. 变更记录
 | 日期 | 变更 |
 |---|---|
+| 2026-11-18 | v1.2：参考返水充返转盘 PRD 3.0，新增专属活动弹窗、活动奖励弹窗、独立挂件「1.5%+2%」；首页按 QA 现网重做；首页 Banner 换 SLOTS CASHBACK；在线原型同步 v1.2 |
 | 2026-11-18 | v1.1：返水向下取整到 ₱1、低于 ₱1 不发；移除前台领取时间 / 倒计时，写入规则页；活动页去掉顶部 Banner；后台「④ 返水分类与游戏」可配置分类及游戏；在线原型同步 v1.1 |
 | 2026-11-18 | 迁入 789games 项目，PRD 转 Claude Doc，建 GitHub 目录 |
 | 2026-10-03 | v1.0 初稿 |

@@ -110,6 +110,8 @@ button{font:inherit;cursor:pointer}
 .gsel{border:1px solid #E3E6EA;border-radius:6px;margin-bottom:8px}.gsel-v{background:#F7F8FA;padding:6px 10px;font-weight:600;font-size:12.5px;border-bottom:1px solid #E3E6EA}.gsel-v span{color:#8A93A1;font-weight:400;margin-left:4px}.gsel-l{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px}.gchip{display:inline-flex;align-items:center;gap:4px;border:1px solid #CFE0FF;background:#EAF2FF;color:#1D4ED8;border-radius:12px;padding:2px 4px 2px 10px;font-size:12px}.gchip i{font-style:normal;font-size:10px;background:#FFE7A3;color:#8A5A00;border-radius:6px;padding:0 4px}.gchip b{cursor:pointer;color:#6B7480;padding:0 4px;font-weight:400}.gchip b:hover{color:#D93025}
 .tree{border:1px solid #E3E6EA;border-radius:4px;max-height:420px;overflow:auto;padding:8px 12px;font-size:13px}.tree span{color:#8A93A1;font-size:12px}.t1{padding:4px 0 8px;border-bottom:1px solid #EEF0F3;margin-bottom:6px}.t2{padding:4px 0 4px 6px}.t3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;padding:4px 0 6px 26px}.t3 label{display:flex;align-items:center;gap:6px;color:#3A4150;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tcb{display:inline-block;width:13px;height:13px;border:1px solid #B8C0CC;border-radius:2px;vertical-align:-2px;margin-right:6px;cursor:pointer;background:#fff;position:relative;flex-shrink:0}.tcb.all{background:#2A6FDB;border-color:#2A6FDB}.tcb.all:after{content:'';position:absolute;left:3px;top:0;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}.tcb.some{border-color:#2A6FDB}.tcb.some:after{content:'';position:absolute;left:2px;top:5px;width:7px;height:2px;background:#2A6FDB}
+.card.total.two{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}.card.total.two .amt{font-size:30px}.card.total .vl{width:1px;height:56px;background:#ECEBF4}.amt.g{color:#0E9F84}
+.bbx .bb-top{display:flex;justify-content:space-between}.bbx small{display:block;font-size:11px;color:#7A808C}.bbx .bb-top b{font-size:18px}.bbx .bb-top b.g{color:#0E9F84}.bb-row{display:flex;align-items:center;gap:8px;border:1px solid #E3F2EE;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:12.5px}.bb-row span:first-child{flex:1;font-weight:700}.bb-row i{width:18px;height:18px;border-radius:50%;background:#EEF0F3;color:#fff;font-style:normal;font-size:12px;text-align:center;line-height:18px}.bb-row.ok{background:#E8F7F3;border-color:#B7E6DA}.bb-row.ok i{background:#0E9F84}.btn.bbtn{background:linear-gradient(90deg,#13a58c,#0E7C6B)}
 .sg{background:#fff;border-radius:14px;padding:10px 10px 8px;margin-top:8px;cursor:pointer;box-shadow:0 1px 4px rgba(74,18,184,.06)}
 .sg .row{display:flex;align-items:center;gap:8px}
 .sg .gi{width:50px;height:50px;border-radius:10px;flex-shrink:0;object-fit:cover;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;line-height:1.1;text-align:center;overflow:hidden;word-break:break-word;padding:2px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
@@ -217,6 +219,8 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
   <div class="side">
     <h4>身份</h4>
     <div class="seg" id="segUser"><button data-u="std" class="on">普通玩家 juan88</button><button data-u="new">新玩家（首日）</button></div>
+    <h4>活动组合（后台配置）</h4>
+    <div class="seg" id="segMods"><button data-m="cb">仅 Cashback</button><button data-m="both" class="on">Cashback + Bet Bonus</button><button data-m="bb">仅 Bet Bonus</button></div>
     <h4>领取方式（后台配置）</h4>
     <div class="seg" id="segClaim"><button data-c="manual" class="on">手动领取</button><button data-c="auto">自动领取</button></div>
     <h4>演示</h4>
@@ -285,6 +289,8 @@ function defaults(){return{
     {th:200000,r:{slot:1,casino:.8,arcade:1,poker:.8,fishing:1,bingo:1}}],
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
+  mods:{cb:true,bb:true},
+  bb:{tiers:[[100,1],[1000,2],[5000,5],[10000,10]],calc:'single',mode:'manual',keep:3,autoAt:'09:00',budget:300000,used:216400,wg:{slot:1,casino:3,arcade:2,poker:5,fishing:2,bingo:2},yBet:{std:19800,new:0},claimed:{std:false,new:false}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
@@ -304,6 +310,14 @@ let S=defaults(); CATS=S.cats; let user='std', view='home', fv='today', htab='al
 function tierIdx(bet){let i=-1;S.tiers.forEach((t,k)=>{if(bet>=t.th)i=k});return i}
 const ACATS=()=>CATS.filter(c=>c.on!==false);
 const STD_ACC='juan88';
+const M=()=>S.mods;
+function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);if(!hit.length)return 0;return S.bb.calc==='sum'?hit.reduce((a,t)=>a+t[1],0):hit.at(-1)[1]}
+const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
+function bbSection(){const b=allBet(user),r=bbReward(b);const T=S.bb.tiers;const nx=T.find(t=>b<t[0]);
+  return `<div class="h3">Daily Bet Bonus</div><div class="card bbx"><div class="bb-top"><div><small>Today's valid bet</small><b>${peso(b)}</b></div><div style="text-align:right"><small>Bet Bonus (est.)</small><b class="g">${pesoI(r)}</b></div></div>${nx?`<div class="note" style="margin:6px 0 2px">Bet ${peso(nx[0]-b)} more → ${pesoI(S.bb.calc==='sum'?T.filter(t=>nx[0]>=t[0]).reduce((a,t)=>a+t[1],0):nx[1])}</div>`:'<div class="note" style="margin:6px 0 2px">Top tier reached</div>'}
+  ${T.map(t=>{const ok=b>=t[0];return `<div class="bb-row ${ok?'ok':''}"><span>Bet ≥ ${pesoI(t[0])}</span><span>Reward <b>${pesoI(t[1])}</b></span><i>${ok?'✓':''}</i></div>`}).join('')}
+  <div class="note" style="margin-top:6px">${S.bb.calc==='sum'?'Rewards of all tiers you reach add up.':'You get the reward of the highest tier you reach.'} One reward per day, settled at 01:00. ${S.bb.mode==='auto'?`Sent to your balance at ${S.bb.autoAt}.`:`Claim within ${S.bb.keep} days.`}</div></div>`}
+
 const A=()=>S.assets;
 let popShown=0, popDay='';
 function safeHtml(h){const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('script,iframe,object,embed,style').forEach(e=>e.remove());d.querySelectorAll('*').forEach(e=>[...e.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))e.removeAttribute(a.name)}));return d.innerHTML}
@@ -353,28 +367,35 @@ let hb=0;
 function maxRate(){let m=0;S.tiers.forEach(t=>CATS.forEach(c=>m=Math.max(m,t.r[c.k])));CATS.forEach(c=>m=Math.max(m,S.vip[c.k]));S.featured.forEach(f=>m=Math.max(m,f.rate));return m}
 function act(){
   const c=calc(user), a=avail(user), isNew=user==='new';
-  let h=barT('Daily Cashback','home',true)+`<div class="body">
+  const cbOn=M().cb, bbOn=M().bb;
+  let h=barT(cbOn?'Daily Cashback':'Daily Bet Bonus','home',true)+`<div class="body">
   ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Cashback already generated can still be claimed within its validity period.</div>'}${S.cfg.kyc==='需要 KYC'&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join Daily Cashback.</div>':''}
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
-    h+=`<div class="card total"><div class="lb">Total Bonus (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
+    const bbr=bbReward(allBet(user));
+    if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (est.)</div><div class="amt">${pesoI(c.total)}</div></div><i class="vl"></i><div><div class="lb">Bet Bonus (est.)</div><div class="amt g">${pesoI(bbr)}</div></div><div class="note" style="grid-column:1/-1">Updates every 10 min</div></div>`;
+    else if(bbOn) h+=`<div class="card total"><div class="lb">Bet Bonus (estimated)</div><div class="amt g">${pesoI(bbr)}</div><div class="note">Updates every 10 min</div></div>`;
+    else h+=`<div class="card total"><div class="lb">Cashback (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
   }else{
     const y=S.history[user].find(x=>x.d==='11-17');
+    if(cbOn){
     h+=`<div class="card total"><div class="lb">Yesterday's Cashback (11-17)</div>`;
     if(!y) h+=`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback yesterday</div>`;
     else if(y.s==='a') h+=`<div class="amt" style="margin-bottom:10px">${pesoI(y.amt)}</div><button class="btn" onclick="claimAll()">Claim ${pesoI(a)}</button>`;
     else h+=`<div class="amt" style="color:#17914A">${pesoI(y.amt)}</div><div class="note">Claimed today</div>`;
-    h+=`</div>`;
+    h+=`</div>`;}
+    if(bbOn){const yb=bbReward(S.bb.yBet[user]||0),cl=S.bb.claimed[user];h+=`<div class="card total"><div class="lb">Yesterday's Bet Bonus (11-17)</div>${!yb?'<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus yesterday</div>':cl||S.bb.mode==='auto'?`<div class="amt g" style="color:#17914A">${pesoI(yb)}</div><div class="note">${S.bb.mode==='auto'?'Sent at '+S.bb.autoAt:'Claimed today'}</div>`:`<div class="amt g" style="margin-bottom:10px">${pesoI(yb)}</div><button class="btn bbtn" onclick="S.bb.claimed[user]=true;S.balance[user]+=${yb};flash('+${pesoI(yb)} Bet Bonus')">Claim ${pesoI(yb)}</button>`}</div>`}
   }
-  if(!isNew){
+  if(cbOn&&!isNew){
     if(S.sel.on) h+=`<div class="h3">Selected Games</div>`+c.feats.map((x,i)=>selCard(x,i)).join('');
     if(S.catMod.on) h+=`<div class="h3">Category</div>`+c.rows.map(x=>gtRow(x)).join('');
-  }else{
-    h+=`<div class="card" style="font-size:12.5px;color:#6B7480;text-align:center">Place your first bet today — your cashback is credited tomorrow.</div>`;
+  }else if(isNew){
+    h+=`<div class="card" style="font-size:12.5px;color:#6B7480;text-align:center">Place your first bet today — your ${cbOn?'cashback':'bet bonus'} is credited tomorrow.</div>`;
   }
-  h+=`<div class="h3">Cashback History<a onclick="go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;font-size:12px;cursor:pointer" onclick="go('hist')">Available ${pesoI(a)} · ${S.history[user].length} records</div>`;
-  h+=ratesTable()+`</div>`;
-  return h;
+  if(cbOn) h+=`<div class="h3">Cashback History<a onclick="go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;font-size:12px;cursor:pointer" onclick="go('hist')">Available ${pesoI(a)} · ${S.history[user].length} records</div>`;
+  if(cbOn) h+=ratesTable();
+  if(bbOn&&fv==='today') h+=bbSection();
+  return h+`</div>`;
 }
 function gtRow(x){
   let mid=`<div class="nm">${x.c.n}</div><div>Bet ${peso(x.bet)}</div>`;
@@ -419,12 +440,14 @@ function featPage(){
   <div class="fp-grid">${order.map(o=>{const p=pal[hs(o.g)%pal.length];return `<div class="fp-g"><div class="fp-img" style="background:linear-gradient(150deg,${p[0]},${p[1]})"><span class="fp-tag">${f.rate}% Cashback</span><b>${o.g}</b></div><p>${o.g}</p><button onclick="toast='Opening ${o.g.replace(/'/g,"\\'")}…';render();setTimeout(()=>{toast='';render()},1500)">Play</button></div>`}).join('')||'<div class="note" style="grid-column:1/-1;text-align:center">No games yet</div>'}</div></div>`;
 }
 function rules(){
+  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets from 00:00 to 23:59 each day are added up.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>${S.bb.calc==='sum'?'Rewards of all tiers you reach are added up.':'You get the reward of the highest tier you reach.'}</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>${S.bb.mode==='auto'?`Rewards are sent to your balance automatically at ${S.bb.autoAt} every day.`:`Claim your reward within ${S.bb.keep} days, or it expires.`}</li><li>Rewards need wagering before withdrawal: reward × multiplier of the game type (${CATS.filter(c=>S.bb.wg[c.k]>0).map(c=>c.n+' '+S.bb.wg[c.k]+'x').join(', ')}).</li></ol></div>`:'';
+  if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and ${S.cfg.expireH?`can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.`:'can be claimed at any time — it does not expire.'}</li>
   <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>
   <li>Claimed cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
   <li>Minimum daily valid bet ${pesoI(S.cfg.minBet)}; standard players' daily cap ${pesoI(S.cfg.cap)}.</li>
-  <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}</div>`;
+  <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}${bbR}</div>`;
 }
 function splash(){
   return `<div class="mask"><div class="actpop"><img src="${A().pop.img}" alt="Daily Cashback"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
@@ -457,7 +480,9 @@ function openApp(){view='home';fv='today';
 document.querySelectorAll('#segUser button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segUser button').forEach(x=>x.classList.remove('on'));b.classList.add('on');user=b.dataset.u;openApp()});
 document.querySelectorAll('#segClaim button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segClaim button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.cfg.claim=b.dataset.c;openApp()});
 document.getElementById('reopen').onclick=openApp;
-document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
+function syncMods(){const k=M().cb&&M().bb?'both':M().cb?'cb':'bb';document.querySelectorAll('#segMods button').forEach(b=>b.classList.toggle('on',b.dataset.m===k))}
+document.querySelectorAll('#segMods button').forEach(b=>b.onclick=()=>{const m=b.dataset.m;S.mods.cb=m!=='bb';S.mods.bb=m!=='cb';syncMods();view='act';fv='today';render()});
+document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();setTimeout(syncMods);CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
 
 const PT=['活动列表','活动配置','费用使用情况','返点核对','返水发放','Push · 短信','返水记录','日报表','操作日志'];
 let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
@@ -479,9 +504,22 @@ function aConfig(){
   sec(4,'返水等级',bTiers())+
   sec(5,'页面素材（活动弹窗 / 奖励弹窗 / 挂件；Banner 走轮播图素材管理）',aAssets())+
   sec(6,'活动规则页',aRules())+
+  sec(7,'活动 2 · Bet Bonus（每日投注奖）',cBB(),`<span class="sec-r">${tg(M().bb,'setBB')}</span>`)+
   `<div id="pubbar" class="pubbar"><span>${pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`+
   `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（普通玩家 · Today），随配置实时更新</div></div></div>`;
 }
+function setBB(v){if(!v&&!M().cb)return alert('至少开启 1 个活动');M().bb=v;mark();log('活动配置','活动组合','Bet Bonus'+(v?' 开启':' 关闭'));syncMods();arender()}
+function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus 已关闭：前台不显示 Bet Bonus 金额与档位区块。配置保留，开启后恢复。</div>`;
+  return `<div class="note" style="margin-bottom:8px">按玩家自然日有效投注总额（所有游戏类型）给固定奖励，配置项沿用「每日投注奖」后台。与 Cashback 同时开启时，前台顶部右侧显示 Bet Bonus，档位区块排在 Cashback 内容下面。</div><div class="form" style="grid-template-columns:150px 1fr">
+  <label><i>*</i> 返奖档位</label><div><table class="at" style="max-width:520px"><tr><th>档位</th><th>每日有效投注额</th><th>奖励金额</th><th></th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>≥ <input class="rin" style="width:90px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td><input class="rin" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<button class="ab r" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</button>`:''}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均从低到高递增；投注额为 ≥</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
+  <label><i>*</i> 计算方式</label><div>${tg(b.calc==='single','setBBCalc','不累加','累加')}<span class="h">不累加：只取达到的最高一档；累加：达到的各档奖励相加</span></div>
+  <label>结算</label><div class="note">每天 01:00 结算前一天 00:00–23:59 的有效投注；每人每天最多 1 笔奖励</div>
+  <label><i>*</i> 领奖方式</label><div>${tg(b.mode==='manual','setBBMode','手动领取','自动发放')} ${b.mode==='manual'?`领取有效期 <input class="rin" value="${b.keep}" onchange="S.bb.keep=Math.max(1,+this.value||1);mark();arender()"> 天`:`发放时间 <input type="time" value="${b.autoAt}" onchange="S.bb.autoAt=this.value;mark();arender()">`}</div>
+  <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div>
+  <label><i>*</i> 流水倍数</label><div><table class="at" style="max-width:520px"><tr><th>游戏类型</th><th>计入流水</th><th>倍数</th></tr>${CATS.map(c=>`<tr><td>${c.n}</td><td><input type="checkbox" ${b.wg[c.k]>0?'checked':''} onchange="S.bb.wg['${c.k}']=this.checked?1:0;mark();arender()"></td><td>${b.wg[c.k]>0?`<input class="rin" value="${b.wg[c.k]}" onchange="S.bb.wg['${c.k}']=+this.value;mark()"> 倍`:'<span class="note">不计入</span>'}</td></tr>`).join('')}</table><div class="note">某类型流水要求 = 奖励 × 该类型倍数</div></div></div>`;}
+function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
+function setBBMode(v){S.bb.mode=v?'manual':'auto';mark();arender()}
+function setMod(k){const o=k==='cb'?'bb':'cb';if(M()[k]&&!M()[o])return alert('至少开启 1 个活动');M()[k]=!M()[k];mark();log('活动配置','活动组合',(k==='cb'?'Cashback':'Bet Bonus')+(M()[k]?' 开启':' 关闭'));syncMods();arender()}
 function setCatMod(v){S.catMod.on=v;mark();log('活动配置','Category 区块',v?'显示':'隐藏');arender()}
 function setSel(v){S.sel.on=v;mark();log('活动配置','Selected Games',v?'开启':'关闭');arender()}
 function setOn(v){S.cfg.on=v;mark();log('活动配置','活动状态',v?'开启':'关闭');arender()}
@@ -489,6 +527,7 @@ function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
 function log(m,a,d){S.logs.unshift({t:'11-18 '+now(),op:'koi',m,a,d})}
 function cBasic(){const c=S.cfg;
   return `<div class="form">
+  <label><i>*</i> 活动组合</label><div><span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px">活动 1 · Cashback <span class="sw ${M().cb?'':'off'}" onclick="setMod('cb')"></span></span><span style="display:inline-flex;align-items:center;gap:6px">活动 2 · Bet Bonus <span class="sw ${M().bb?'':'off'}" onclick="setMod('bb')"></span></span><span class="h">至少开 1 个。两个都开：活动页顶部左 Cashback、右 Bet Bonus，Cashback 内容在前、Bet Bonus 在下；只开一个则只显示该活动</span></div>
   <label>挂件显示</label><div class="note">在「⑤ 页面素材」配置开关、图片与角标；弹窗出现时隐藏</div>
   <label><i>*</i> 活动名称</label><div><input value="Daily Cashback 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题固定 Daily Cashback</span></div>
   <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>
@@ -644,7 +683,7 @@ function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:now
 function aList(){
   return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可查看设置。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
-  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
+  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月<div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div></td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
   <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>${bud(430118,500000)}</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
   <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>${bud(39880,50000)}</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
 }

@@ -498,6 +498,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 结算时间</label><div>次日 <input value="${c.settle}" style="width:70px" onchange="S.cfg.settle=this.value;mark();arender()"><span class="h">须晚于返点核对结束（04:00）；前台只在规则页展示</span></div>
   <label><i>*</i> 最低有效投注</label><div><input value="${c.minBet}" style="width:110px" onchange="S.cfg.minBet=+this.value;mark();arender()"> ₱ / 日</div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
+  <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）。上线后追加走「费用配置 › 临时增加预算」</span></div>
   <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">所有玩家（VIP 不受限为二期）</span></div>
   <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，不弹奖励弹窗</span></div>
   <label>领取有效期</label><div><input value="${c.expireH||''}" placeholder="不填 = 不失效" style="width:110px" onchange="const v=this.value.trim();S.cfg.expireH=v===''?null:Math.max(1,parseInt(v)||1);mark();log('活动配置','领取有效期',S.cfg.expireH?S.cfg.expireH+' 小时':'不失效');arender()"> 小时<span class="h">选填，正整数；不填则返水不会过期（无 Expired 状态）。前台不显示倒计时，只写在规则页</span></div>
@@ -641,12 +642,13 @@ function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
   return `<div class="sec"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:13px">模块 <select onchange="logM=this.value;arender()">${['全部','活动配置','费用配置','返点核对','返水发放','Push · 短信'].map(m=>`<option ${m===logM?'selected':''}>${m}</option>`).join('')}</select><button class="ab" style="margin-left:auto">导出</button></div>
   <table class="at"><tr><th>时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>变更内容</th></tr>${L.map(l=>`<tr><td>${l.t}</td><td>${l.op}</td><td>${l.m}</td><td>${l.a}</td><td>${l.d}</td></tr>`).join('')||'<tr><td colspan="5" class="note">暂无</td></tr>'}</table><div class="note" style="margin-top:6px">记录时间、操作人、模块、操作类型、变更前后内容；权限修改记入系统管理日志。</div></div>`;
 }
+function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}
 function aList(){
   return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可查看设置。</span></div>
-  <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>参与人数</th><th>操作</th></tr>
-  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
-  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
-  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
+  <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
+  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
+  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>${bud(430118,500000)}</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
+  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>${bud(39880,50000)}</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
 }
 function aReview(){
   const done=S.review.filter(r=>r.s!=='待核对');

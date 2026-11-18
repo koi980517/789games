@@ -417,8 +417,6 @@ function ratesTable(){
   let h=`<div class="h3">Cashback Rates</div><div class="card" style="margin-top:6px;padding:8px"><table class="rt"><tr><th></th><th>Rate</th></tr>`;
   if(S.sel.on) S.featured.forEach(f=>h+=`<tr class="fe"><td style="text-align:left">${f.name} <span class="tag">SELECTED</span></td><td>${f.rate}%</td></tr>`);
   ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td></tr>`});
-  h+=`</table></div><div class="h3">Standard Player Tiers</div><div class="card" style="margin-top:6px;padding:8px;overflow-x:auto"><table class="rt"><tr><th>Tier</th><th>Daily bet ≥</th>${ACATS().map(c=>`<th>${c.n}</th>`).join('')}</tr>`;
-  S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td>${t.th.toLocaleString()}</td>${ACATS().map(c=>`<td>${t.r[c.k]}%</td>`).join('')}</tr>`);
   return h+`</table></div>`;
 }
 function fmtLeft(h){return `${Math.floor(h)}h ${Math.round((h%1)*60)}m`}

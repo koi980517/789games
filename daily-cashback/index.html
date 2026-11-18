@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789Games 次日返水活动（Daily Cashback）原型 v1.1</title>
+<title>789Games 次日返水活动（Daily Cashback）原型 v1.2</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -37,6 +37,54 @@ button{font:inherit;cursor:pointer}
 .ic{width:44px;height:44px;border-radius:12px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px}
 .float{position:absolute;right:10px;bottom:120px;width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE36A,#F08A1C);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#7A2E00;box-shadow:0 4px 12px rgba(0,0,0,.2);cursor:pointer;text-align:center;line-height:1.1}
 .float i{position:absolute;top:-4px;right:-4px;background:#E8253A;color:#fff;font-style:normal;border-radius:8px;padding:1px 5px;font-size:10px}
+.hhdr{height:54px;display:flex;align-items:center;gap:8px;padding:0 12px;background:linear-gradient(180deg,#E9FBF3,#D6F5E9);flex-shrink:0}
+.hlogo{display:flex;align-items:baseline;gap:1px;line-height:1}.hlogo b{font-size:17px;font-weight:900;color:#E8253A}.hlogo b+b{color:#F59E0B}.hlogo b+b+b{color:#17914A}.hlogo span{font-size:9px;font-weight:900;color:#1F2430;margin-left:3px}
+.hbal{flex:1;display:flex;align-items:center;gap:6px;background:#fff;border-radius:18px;padding:4px 4px 4px 6px;font-weight:700;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.hbal i{width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE36A,#F0A21C);font-style:normal;font-size:10px;display:flex;align-items:center;justify-content:center;color:#7A2E00}
+.hbal em{margin-left:auto;width:22px;height:22px;border-radius:50%;background:linear-gradient(#34D399,#047857);color:#fff;font-style:normal;display:flex;align-items:center;justify-content:center}
+.hrew{background:linear-gradient(90deg,#F2486A,#F59E0B);color:#fff;font-size:11px;font-weight:800;border-radius:12px;padding:5px 9px}
+.hsrch{width:30px;height:30px;border-radius:50%;background:#1F2430 radial-gradient(circle at 45% 45%,transparent 5px,#fff 6px,#fff 7px,transparent 8px)}
+.hbody{background:linear-gradient(180deg,#D6F5E9 0,#F4FBF8 220px,#F6F7F9 100%);padding-bottom:90px}
+.hban{border-radius:14px;overflow:hidden;position:relative;aspect-ratio:446/193}
+.hban-track{display:flex;height:100%;transition:transform .35s}.hban-track>*{flex:0 0 100%;width:100%;height:100%}
+.hban img{object-fit:cover;cursor:pointer;display:block}
+.hban-ph{display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:20px}.hban-ph small{font-size:10px;font-weight:400;opacity:.8}
+.hdots{display:flex;gap:4px;justify-content:center;margin-top:6px}.hdots i{width:6px;height:6px;border-radius:3px;background:#B8C4BF;cursor:pointer}.hdots i.on{width:14px;background:#17914A}
+.htabs{display:flex;gap:8px;overflow-x:auto;margin-top:12px;padding-bottom:2px}.htabs::-webkit-scrollbar{display:none}
+.htabs>div{flex:0 0 56px;height:58px;border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#4A5262;gap:3px}
+.htabs>div span{width:24px;height:24px;border-radius:8px;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;font-weight:900}
+.htabs>div.on{background:linear-gradient(#34D399,#047857);color:#fff}
+.htiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.htiles>div{height:58px;border-radius:10px;color:#fff;display:flex;flex-direction:column;justify-content:center;padding:0 8px;cursor:pointer;line-height:1.1}.htiles b{font-size:15px;font-weight:900}.htiles small{font-size:8.5px;font-weight:800}
+.hmarq{margin-top:10px;background:#fff;border-radius:16px;padding:7px 12px;font-size:11.5px;color:#4A5262;overflow:hidden;white-space:nowrap}.hmarq span{display:inline-block;animation:mq 14s linear infinite}@keyframes mq{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
+.hsec{font-weight:800;font-size:15px;margin:14px 0 8px;display:flex}.hsec a{margin-left:auto;font-size:12px;color:#6B7480;font-weight:600}
+.hrecent{display:flex;gap:8px;overflow:hidden}.hrecent>div{flex:0 0 58px;height:58px;border-radius:10px;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center}
+.hgames{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.hgames p{margin:4px 0 0;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hg-img{height:100px;border-radius:12px;color:#fff;font-weight:900;font-size:13px;display:flex;align-items:flex-end;justify-content:center;padding:6px;text-align:center;position:relative}
+.hg-tag{position:absolute;left:0;top:0;background:#1D4ED8;font-size:8px;line-height:1.1;padding:2px 4px;border-radius:12px 0 8px 0;font-weight:800}
+.hnav{position:absolute;left:0;right:0;bottom:0;height:62px;background:#fff;border-top:1px solid #EEEFF4;display:flex;border-radius:0 0 28px 28px}
+.hnav>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:#9AA1AD;gap:3px}.hnav i{width:22px;height:22px;border-radius:7px;background:#D9DDE3}
+.hnav>div.on{color:#17914A;font-weight:700}.hnav>div.on i{background:#34D399}.hnav .promo i{width:34px;height:30px;background:linear-gradient(#34D399,#047857);margin-top:-14px}
+.widget{position:absolute;right:6px;bottom:150px;width:74px;text-align:center;cursor:pointer;z-index:3;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
+.widget img{width:70px;display:block;margin:0 auto -6px;-webkit-mask-image:radial-gradient(ellipse 50% 52% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 52% at 50% 50%,#000 75%,transparent 100%)}
+.widget span{display:inline-block;background:linear-gradient(#E8253A,#B5122A);color:#fff;font-weight:900;font-size:12px;border:2px solid #FFD1D6;border-radius:12px;padding:1px 8px;letter-spacing:.3px}
+.actpop{position:relative;width:340px}
+.actpop img{width:100%;display:block;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 70%,transparent 100%)}
+.actpop-go{position:absolute;left:24%;right:24%;bottom:2%;height:13%;border:0;background:transparent;cursor:pointer}
+.actpop-x{position:absolute;right:4px;top:-6px;width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.8);background:rgba(0,0,0,.35);color:#fff;font-size:18px;line-height:1;cursor:pointer}
+.rwpop{position:relative;width:310px;padding-top:150px}
+.rw-model{position:absolute;top:0;left:50%;transform:translateX(-50%);width:250px;-webkit-mask-image:radial-gradient(ellipse 42% 62% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 42% 62% at 50% 50%,#000 62%,transparent 100%);z-index:1}
+.rwpop::before{content:"";position:absolute;top:10px;left:50%;transform:translateX(-50%);width:240px;height:170px;background:radial-gradient(ellipse at 50% 60%,rgba(255,214,120,.55),transparent 70%);z-index:0}
+.rw-ribbon{position:absolute;top:150px;left:-8px;right:-8px;z-index:3;height:46px;background:linear-gradient(#E9455D,#B5122A);color:#fff;font-weight:900;font-size:22px;display:flex;align-items:center;justify-content:center;border-radius:8px;box-shadow:0 3px 0 #8B0D21}
+.rw-card{position:relative;z-index:2;background:linear-gradient(#FFD6DC,#FFF 55%);border-radius:22px;padding:66px 22px 16px;text-align:center}
+.rw-t{font-weight:900;font-size:17px;color:#1F2430}
+.rw-amt{display:flex;align-items:center;justify-content:center;gap:10px;margin:22px 0;font-size:34px;font-weight:900;color:#A3123A}
+.rw-amt i{width:44px;height:44px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFE36A,#F0A21C);color:#B86E00;font-style:normal;font-size:20px;display:flex;align-items:center;justify-content:center;box-shadow:inset 0 -3px 0 #D98A12}
+.rw-claim{width:100%;height:48px;border:0;border-radius:24px;background:#A3123A;color:#fff;font-size:18px;font-weight:800}
+.rw-claim[disabled]{opacity:.6}
+.rw-det{margin-top:14px;height:40px;border:2px solid #A3123A;background:#fff;color:#A3123A;border-radius:20px;padding:0 18px;font-weight:700;font-size:14px}
+.rw-det b{display:inline-flex;width:18px;height:18px;border:1.5px solid #A3123A;border-radius:50%;align-items:center;justify-content:center;font-size:11px;margin-right:4px}
+.rw-date{font-size:11.5px;color:#6B7480;margin-top:10px}
 .card{background:#fff;border-radius:14px;padding:12px;margin-top:12px}
 .seg2{display:flex;background:#fff;border-radius:22px;padding:4px;margin-top:12px}
 .seg2 button{flex:1;border:0;background:none;padding:8px;border-radius:18px;font-weight:700;color:#6B7480}
@@ -127,7 +175,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 </style>
 </head>
 <body>
-<div class="top"><b>789Games · 次日返水活动（Daily Cashback）原型</b><span class="ver">v1.1</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789Games · 次日返水活动（Daily Cashback）原型</b><span class="ver">v1.2</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button></div></div>
 
 <div id="front">
@@ -140,8 +188,9 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
     <div class="seg"><button id="reopen">重新打开 APP</button><button id="reset">重置演示数据</button></div>
     <h4>本页规则要点</h4>
     <ul>
-      <li>打开 APP：开屏弹窗 → 返水领取弹窗（有可领时）。</li>
-      <li>自动领取时结算后直接入账，不弹领取弹窗。</li>
+      <li>打开 APP：活动弹窗（整图，PLAY NOW 进活动页）→ 活动奖励弹窗（有可领时）。</li>
+      <li>首页右侧独立挂件「1.5%+2%」，首页 Banner 首张为 Slots Cashback。</li>
+      <li>自动领取时结算后直接入账，不弹活动奖励弹窗。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
       <li>VIP：固定比例，不受最高返水上限限制。</li>
       <li>精选组内游戏按精选比例，不再按分类计算。</li>
@@ -150,7 +199,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>返水分类及每类包含的游戏由后台「④ 返水分类与游戏」指定。</li>
       <li>后台改分类 / 游戏 / 比例后，前台即时更新（同一页面内）。</li>
     </ul>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水活动 PRD v1.1</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水活动 PRD v1.2</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -232,12 +281,21 @@ function render(){
 function barT(t,back,help){return `<div class="bar">${back?`<button class="back" onclick="go('${back}')">‹</button>`:''}<div class="t">${t}</div>${help?`<button class="back" title="Rules" onclick="go('rules')" style="width:24px;height:24px;border-radius:50%;background:#F3F2FB;font-size:14px;font-weight:900;color:#D21740">?</button>`:''}<div class="bal">${peso(S.balance[user])}</div></div>`}
 function home(){
   const a=avail(user);
-  return `<div class="bar"><div class="logo">789GAMES</div><div class="bal">${peso(S.balance[user])}</div></div><div class="body">
-  <div class="banner" onclick="go('act')"><h2>DAILY CASHBACK</h2><p>Bet today, get up to ${maxRate()}% back tomorrow</p><div class="coin"></div></div>
-  <div class="grid6">${CATS.map(c=>`<div class="cat" onclick="go('act')">${icon(c)}${c.n}</div>`).join('')}</div>
-  <div class="card" style="font-size:12px;color:#6B7480">Hot games · Jackpots · Live Casino（首页其余内容略）</div></div>
-  ${popup?'':`<div class="float" onclick="go('act')">DAILY<br>CASHBACK${a>0?'<i>Claim</i>':''}</div>`}`;
+  const tiles=[['1.5%+2%','CASHBACK','#2A6FDB','#5B9BFF',"go('act')"],['2%','INSTANT RETURN','#D21740','#F2486A',''],['RANK','CUP','#17914A','#35C46E',''],['BAG','','#4A12B8','#7B2CF0','']];
+  const games=[['Super Ace','JILI','#B45309','#F59E0B'],['Fortune Gems','JILI','#047857','#10B981'],['Money Coming','JILI','#1D4ED8','#60A5FA'],['Mahjong Ways','PG','#9D174D','#F472B6'],['Fortune Tiger','PG','#B91C1C','#F87171'],['Crazy Time','EVO','#6D28D9','#A78BFA']];
+  return `<div class="hhdr"><div class="hlogo"><b>7</b><b>8</b><b>9</b><span>GAMES</span></div><div class="hbal"><i>₱</i>${peso(S.balance[user]).slice(1)}<em>+</em></div><div class="hrew">Rewards</div><div class="hsrch"></div></div>
+  <div class="body hbody">
+  <div class="hban"><div class="hban-track" style="transform:translateX(-${hb*100}%)"><img src="assets/banner.webp" alt="PH Biggest Slots Cashback 1.5% Unli Cashback" onclick="go('act')"><div class="hban-ph" style="background:linear-gradient(120deg,#0F766E,#34D399)">SMASH THE GOLDEN EGG<small>（现网其他 Banner 示意）</small></div><div class="hban-ph" style="background:linear-gradient(120deg,#1E3A8A,#60A5FA)">DEPOSIT &amp; SPIN<small>（现网其他 Banner 示意）</small></div></div></div><div class="hdots">${[0,1,2].map(i=>`<i class="${i===hb?'on':''}" onclick="hb=${i};render()"></i>`).join('')}</div>
+  <div class="htabs">${[['Hot','#F97316'],...CATS.map(c=>[c.n,c.c])].map((t,i)=>`<div class="${i===0?'on':''}"><span style="background:${t[1]}">${t[0][0]}</span>${t[0]}</div>`).join('')}</div>
+  <div class="htiles">${tiles.map(t=>`<div style="background:linear-gradient(135deg,${t[2]},${t[3]})" ${t[4]?`onclick="${t[4]}"`:''}><b>${t[0]}</b><small>${t[1]}</small></div>`).join('')}</div>
+  <div class="hmarq"><span>Welcome to 789Games.com! Daily Cashback up to 1.5% on Slots — claim it every day.</span></div>
+  <div class="hsec">Recent Games</div><div class="hrecent">${games.map(g=>`<div style="background:linear-gradient(135deg,${g[2]},${g[3]})">${g[0].split(' ').map(x=>x[0]).join('')}</div>`).join('')}</div>
+  <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">1.5%+2%<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
+  </div>
+  <div class="hnav"><div class="on"><i></i>Home</div><div><i></i>Chat</div><div class="promo"><i></i>Promo</div><div><i></i>Wallet</div><div><i></i>Account</div></div>
+  ${popup?'':`<div class="widget" onclick="go('act')"><img src="assets/gift.webp" alt=""><span>1.5%+2%</span></div>`}`;
 }
+let hb=0;
 function maxRate(){let m=0;S.tiers.forEach(t=>CATS.forEach(c=>m=Math.max(m,t.r[c.k])));CATS.forEach(c=>m=Math.max(m,S.vip[c.k]));S.featured.forEach(f=>m=Math.max(m,f.rate));return m}
 function act(){
   const c=calc(user), a=avail(user), isNew=user==='new';
@@ -315,12 +373,12 @@ function rules(){
   <li>Eligible games by type: ${CATS.map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}</div>`;
 }
 function splash(){
-  return `<div class="mask"><div class="pop" style="background:#fff"><button class="x" onclick="closePop()">×</button><div class="ill" style="margin-top:-60px">%</div><div style="font-weight:900;font-size:20px">Daily Cashback is Live!</div><div class="note">Bet today, get cashback tomorrow.</div><div class="rates">${CATS.map(c=>`<div>${c.n}<b>up to ${Math.max(...S.tiers.map(t=>t.r[c.k]),S.vip[c.k])}%</b></div>`).join('')}</div><button class="btn" onclick="popup=null;afterSplash();go('act')">Check It Out</button></div></div>`;
+  return `<div class="mask"><div class="actpop"><img src="assets/popup.webp" alt="Maximum Rewards · Stack 5 Daily"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
 }
 let claiming=false;
 function claimPop(){
-  const a=avail(user);
-  return `<div class="mask"><div class="pop"><button class="x" onclick="closePop()">×</button><div class="ill">₱</div><div style="font-weight:900;font-size:18px">Your Cashback is Ready!</div><div class="big">${pesoI(a)}</div><button class="btn gold" ${claiming?'disabled':''} onclick="claimAll(true)">${claiming?'Claiming…':'Claim Now'}</button><div class="note" style="margin-top:8px">${S.history[user].filter(h=>h.s==='a').length} records · ${S.cfg.turnover}× turnover</div></div></div>`;
+  const a=avail(user), L=S.history[user].filter(h=>h.s==='a'), d=L.length?L.map(h=>h.d).sort()[0]:'';
+  return `<div class="mask"><div class="rwpop"><img class="rw-model" src="assets/model.webp" alt=""><div class="rw-ribbon">Congratulations !</div><div class="rw-card"><div class="rw-t">DAILY CASHBACK BONUS!</div><div class="rw-amt"><i>₱</i>${Math.floor(a).toLocaleString('en-US')}</div><button class="rw-claim" ${claiming?'disabled':''} onclick="claimAll(true)">${claiming?'Claiming…':'Claim'}</button><button class="rw-det" onclick="popup=null;go('hist')"><b>?</b> Cashback Details</button><div class="rw-date">Cashback Date: ${L.length>1?L.length+' days · from ':''}2026-${d}</div></div><button class="actpop-x" style="top:auto;bottom:-46px;right:50%;transform:translateX(50%)" onclick="closePop()">×</button></div></div>`;
 }
 function failPop(){return `<div class="mask"><div class="pop" style="background:#fff"><div style="font-weight:900;font-size:18px;margin:6px 0">Claim failed</div><div class="note" style="margin-bottom:14px">Network error. Please try again.</div><button class="btn" onclick="popup='claim';render()">Retry</button></div></div>`}
 function go(v){view=v;render();document.querySelector('.body')?.scrollTo(0,0)}
@@ -428,7 +486,7 @@ function aOverride(){
 }
 function addOv(){const a=document.getElementById('ovA').value.trim();if(!a)return alert('请输入会员账号');S.overrides.unshift({acc:a,tier:+document.getElementById('ovT').value,until:document.getElementById('ovU').value,why:document.getElementById('ovW').value||'—',op:'koi · 11-18 '+now()});arender()}
 function aRules(){
-  return `<div class="panel"><div class="form"><label>活动图</label><div><span class="chip n">1098 × 366（3:1）PNG / JPG / WebP ≤ 1MB</span> <button class="ab">上传</button><button class="ab">恢复默认图</button><span class="h">仅用于首页入口 Banner；活动页、规则页不放顶部 Banner</span></div>
+  return `<div class="panel"><div class="form"><label>活动图</label><div><span class="chip n">1098 × 366（3:1）PNG / JPG / WebP ≤ 1MB</span> <button class="ab">上传</button><button class="ab">恢复默认图</button><span class="h">仅用于首页 Banner 轮播；活动页、规则页不放顶部 Banner</span></div>
   <label>返水比例表</label><div class="note">自动由「返水等级」+「精选游戏」生成，此处不维护</div>
   <label>活动条款</label><div><textarea style="width:100%;height:140px;border:1px solid #CBD1DA;border-radius:4px;padding:8px;font:inherit;font-size:12.5px">Cashback is calculated on your valid bets from 00:00 to 23:59:59 (PHT).
 **Standard players**: the tier you reach applies to the whole day's bets.
@@ -438,8 +496,18 @@ Cashback must be claimed within ${S.cfg.expireH} hours.</textarea><div class="no
   <label></label><div><button class="ab p">保存并发布</button></div></div></div>`;
 }
 function aAssets(){
-  return `<div class="panel"><h3>开屏弹窗</h3><div class="form"><label>开关</label><div><span class="sw"></span></div><label>弹出频率</label><div><select><option>每日一次</option><option>每次打开</option><option>仅一次</option></select></div><label>展示样式</label><div><select><option>返水模板（插图 + 标题 + 各分类比例 + 按钮）</option><option>纯图片</option></select></div><label>图片</label><div><span class="chip n">模板 900×450 透明 PNG；纯图 990×1320；≤ 1MB</span></div><label>标题</label><div><input value="Daily Cashback is Live!" maxlength="30"><span class="h">≤ 30</span></div><label>说明</label><div><input value="Bet today, get cashback tomorrow." maxlength="90" style="width:320px"><span class="h">≤ 90</span></div><label>按钮文字</label><div><input value="Check It Out" maxlength="16"><span class="h">≤ 16</span></div><label>点击跳转</label><div><select><option>Daily Cashback 活动页</option><option>无跳转</option></select></div></div></div>
-  <div class="panel"><h3>悬浮框</h3><div class="form"><label>开关</label><div><span class="sw"></span></div><label>图片</label><div><span class="chip n">200 × 200，圆形裁切，≤ 300KB</span></div><label>角标文字</label><div><input value="Claim" maxlength="12"><span class="h">≤ 12，留空不显示</span></div><label>点击跳转</label><div><select><option>Daily Cashback 活动页</option></select></div><label></label><div><button class="ab p">保存并发布</button></div></div></div>`;
+  return `<div class="tip">前台视觉参考【返水充返转盘】PRD 3.0：专属活动弹窗（整图）→ 活动奖励弹窗 → 首页独立挂件。素材均由此页上传，修改后「保存并发布」即时生效。</div>
+  <div class="panel"><h3>① 活动弹窗（整图）</h3><div class="form"><label>开关</label><div><span class="sw"></span></div><label>弹出时机 / 频率</label><div><select><option>每日首次打开 APP</option><option>每次打开</option><option>仅一次</option></select><span class="h">位于活动奖励弹窗之前</span></div>
+  <label>弹窗图片</label><div><img src="assets/popup.webp" style="height:120px;vertical-align:middle;border-radius:6px"> <button class="ab">替换</button><span class="h">整图直出（含 PLAY NOW 按钮），建议 750 × 1068 透明 PNG / WebP，≤ 1MB</span></div>
+  <label>按钮热区跳转</label><div><select><option>Daily Cashback 活动页</option><option>无跳转</option></select><span class="h">热区 = 图片底部 PLAY NOW 区域；× 关闭</span></div></div></div>
+  <div class="panel"><h3>② 活动奖励弹窗（有可领返水时弹出）</h3><div class="form"><label>顶部人物图</label><div><img src="assets/model.webp" style="height:80px;vertical-align:middle;border-radius:6px"> <button class="ab">替换</button><span class="h">透明 PNG，建议 500 × 370</span></div>
+  <label>彩带文字</label><div><input value="Congratulations !" maxlength="24"></div><label>标题</label><div><input value="DAILY CASHBACK BONUS!" maxlength="30"></div>
+  <label>按钮</label><div>主按钮 <input value="Claim" style="width:90px"> 次按钮 <input value="Cashback Details" style="width:140px"><span class="h">次按钮跳 Cashback History</span></div>
+  <label>金额与日期</label><div class="note">金额 = 可领总额（向下取整到 ₱1）；日期 = 最早一笔可领记录的结算日（多笔时显示「N days · from」）。自动领取时不弹。</div></div></div>
+  <div class="panel"><h3>③ 独立挂件（首页右侧）</h3><div class="form"><label>开关</label><div><span class="sw"></span></div><label>挂件图</label><div><img src="assets/gift.webp" style="height:56px;vertical-align:middle"> <button class="ab">替换</button><span class="h">透明 PNG，建议 210 × 168</span></div>
+  <label>角标文字</label><div><input value="1.5%+2%" maxlength="12"><span class="h">≤ 12；前端渲染，不进图</span></div><label>点击跳转</label><div><select><option>Daily Cashback 活动页</option></select></div><label>显示规则</label><div class="note">弹窗出现时隐藏；可拖动吸边（同返水转盘 3.0 挂件）</div>
+  <label></label><div><button class="ab p">保存并发布</button></div></div></div>
+  <div class="panel"><h3>④ 首页 Banner（活动图）</h3><div class="form"><label>Banner 图</label><div><img src="assets/banner.webp" style="height:80px;vertical-align:middle;border-radius:6px"> <button class="ab">替换</button><span class="h">1098 × 474（≈ 2.3:1）；在首页 Banner 轮播内，点击进活动页</span></div></div></div>`;
 }
 function aReview(){
   const done=S.review.filter(r=>r.s!=='待核对');

@@ -459,7 +459,7 @@ document.querySelectorAll('#segClaim button').forEach(b=>b.onclick=()=>{document
 document.getElementById('reopen').onclick=openApp;
 document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
 
-const PT=['活动列表','活动配置','费用使用情况','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志'];
+const PT=['活动列表','活动配置','费用使用情况','返点核对','返水发放','Push · 短信','返水记录','日报表','操作日志'];
 let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
 function mark(){pubDirty=true}
 function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''}" onclick="${onClick}(true)">${a||'开启'}</button><button class="${on?'':'off'}" onclick="${onClick}(false)">${b||'关闭'}</button></span>`}
@@ -680,11 +680,14 @@ function aRecords(){
   return `<div class="kpis"><div>已结算返水<b>${pesoI(rows.reduce((a,r)=>a+r.amt,0))}</b></div><div>Available to Claim<b>${sum('a')}</b></div><div>Claimed<b>${sum('c')}</b></div><div>Expired<b>${sum('e')}</b></div><div>Calculating<b>${pesoI(calc('std').total+calc('vip').total)}</b></div></div>
   <div class="panel"><table class="at"><tr><th>Settlement Date</th><th>活动</th><th>账号</th><th>Valid Bet</th><th>Reward Amount</th><th>Claim Status</th><th>Expire Time</th><th>Claim Time</th><th>Claim Source</th><th>Batch Claim ID</th></tr>${rows.map((r,i)=>`<tr><td>2026-${r.d}</td><td>DCB-003</td><td>${r.acc}</td><td>${peso(r.bet)}</td><td>${pesoI(r.amt)}</td><td><span class="chip ${r.s==='a'?'r':r.s==='c'?'g':'n'}">${lab[r.s]}</span></td><td>${r.s==='a'?'11-'+(18+Math.floor(r.left/24))+' '+S.cfg.settle:'—'}</td><td>${r.s==='c'?r.t:'—'}</td><td>${r.s==='c'?(S.cfg.claim==='auto'?'Auto':'Popup'):'—'}</td><td>${r.s==='c'?'BC'+(240000+i):'—'}</td></tr>`).join('')}</table><div class="foot"><button class="ab">导出</button></div></div>`;
 }
+let rpDays=7;
 function aStats(){
-  const c=calc('std'); let rows=c.rows.filter(x=>x.bet>0).map(x=>`<tr><td>juan88</td><td>2026-11-18</td><td>${x.c.n}</td><td>—</td><td>${peso(x.bet)}</td><td>${x.rate}%</td><td>${peso(x.rw)}</td><td><span class="chip o">统计中</span></td></tr>`).join('');
-  rows+=c.feats.map(x=>`<tr><td>juan88</td><td>2026-11-18</td><td>${x.f.name} <span class="chip b">Selected</span></td><td>—</td><td>${peso(x.bet)}</td><td>${x.f.rate}%</td><td>${peso(x.rw)}</td><td><span class="chip o">统计中</span></td></tr>`).join('');
-  return `<div class="kpis"><div>有效投注合计<b>${peso(c.allBet)}</b></div><div>返水合计（向下取整）<b>${pesoI(c.total)}</b></div><div>涉及账号<b>1</b></div><div>返水 / 投注<b>${c.allBet?(c.total/c.allBet*100).toFixed(2):0}%</b></div></div>
-  <div class="panel"><table class="at"><tr><th>账号</th><th>统计日期</th><th>Category / Selected 组</th><th>厂商</th><th>有效投注</th><th>比例</th><th>返水</th><th>发放状态</th></tr>${rows}</table><div class="note" style="margin-top:6px">发放状态：统计中 → 待结算 → 已到账；另有人工审核、未满最低金额。</div><div class="foot"><button class="ab">导出</button></div></div>`;
+  const D=[['11-18',18402,8422641,0,0,0,'统计中'],['11-17',18230,8104520,48210,41022,0,'已结算'],['11-16',17988,7920114,46880,44105,1210,'已结算'],['11-15',17605,7655830,45120,43380,980,'已结算'],['11-14',17320,7402266,43006,41990,1015,'已结算'],['11-13',17011,7210980,41893,40102,1220,'已结算'],['11-12',16840,7031445,40110,38870,940,'已结算'],['11-11',16502,6890210,39020,37750,1270,'已结算'],['11-10',16288,6720045,38215,36980,1235,'已结算'],['11-09',16010,6544380,37104,36020,1084,'已结算']].slice(0,rpDays);
+  let cum=S.budget.used; const rows=D.map(r=>{const html=`<tr><td>2026-${r[0]}</td><td>${r[1].toLocaleString()}</td><td>${pesoI(r[2])}</td><td>${r[3]?pesoI(r[3]):'—'}</td><td>${r[3]?(r[3]/r[2]*100).toFixed(2)+'%':'—'}</td><td>${r[4]?pesoI(r[4]):'—'}</td><td>${r[3]?(r[4]/r[3]*100).toFixed(1)+'%':'—'}</td><td>${r[5]?pesoI(r[5]):'—'}</td><td>${pesoI(cum)}<div class="note">${(cum/S.budget.cap*100).toFixed(1)}%</div></td><td><span class="chip ${r[6]==='统计中'?'o':'g'}">${r[6]}</span></td></tr>`;cum-=r[3];return html}).join('');
+  const sum=(k)=>D.reduce((a,r)=>a+r[k],0);
+  return `<div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:13px">统计周期 ${[7,10].map(n=>`<button class="ab ${rpDays===n?'p':''}" onclick="rpDays=${n};arender()">近 ${n} 天</button>`).join('')}<span class="note">按自然日（GMT+8），D 日数据 D+1 结算后定稿</span><button class="ab" style="margin-left:auto">导出</button></div>
+  <div class="kpis"><div>有效投注合计<b>${pesoI(sum(2))}</b></div><div>返水生成合计<b>${pesoI(sum(3))}</b></div><div>已领取合计<b>${pesoI(sum(4))}</b><small>领取率 ${(sum(4)/sum(3)*100).toFixed(1)}%</small></div><div>过期合计<b>${pesoI(sum(5))}</b></div><div>活动预算已用<b>${pesoI(S.budget.used)}</b><small>${(S.budget.used/S.budget.cap*100).toFixed(1)}% / ${pesoI(S.budget.cap)}</small></div></div>
+  <div class="panel"><table class="at"><tr><th>日期</th><th>参与人数</th><th>有效投注</th><th>返水生成</th><th>返水 / 投注</th><th>已领取</th><th>领取率</th><th>已过期</th><th>预算累计已用</th><th>状态</th></tr>${rows}</table><div class="note" style="margin-top:6px">一行 = 一个自然日的活动汇总；当日为「统计中」，D+1 结算后变「已结算」。点导出下载 Excel。</div></div>`;
 }
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';if(b.dataset.v==='front')render();else arender()});
 openApp();arender();

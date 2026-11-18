@@ -286,8 +286,8 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
-  rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
-  budget:{cap:2000000,used:1512880.36,adds:[{t:'11-16 18:40',op:'koi',amt:300000,why:'周末流量高峰'}]},
+  rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
+  budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
   cfg:{minBet:100,cap:5000,expireH:48,turnover:1,settle:'05:00',claim:'manual',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
@@ -459,7 +459,7 @@ document.querySelectorAll('#segClaim button').forEach(b=>b.onclick=()=>{document
 document.getElementById('reopen').onclick=openApp;
 document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
 
-const PT=['活动列表','活动配置','费用配置','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志'];
+const PT=['活动列表','活动配置','费用使用情况','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志'];
 let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
 function mark(){pubDirty=true}
 function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''}" onclick="${onClick}(true)">${a||'开启'}</button><button class="${on?'':'off'}" onclick="${onClick}(false)">${b||'关闭'}</button></span>`}
@@ -479,7 +479,7 @@ function aConfig(){
   sec(4,'返水等级',bTiers())+
   sec(5,'页面素材（活动弹窗 / 奖励弹窗 / 挂件；Banner 走轮播图素材管理）',aAssets())+
   sec(6,'活动规则页',aRules())+
-  `<div id="pubbar" class="pubbar"><span>${pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab p" onclick="openPub()">提交发布</button><span class="h">活动配置与费用配置一起发布，需谷歌验证码（原型 000000）</span></div>`+
+  `<div id="pubbar" class="pubbar"><span>${pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`+
   `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（普通玩家 · Today），随配置实时更新</div></div></div>`;
 }
 function setCatMod(v){S.catMod.on=v;mark();log('活动配置','Category 区块',v?'显示':'隐藏');arender()}
@@ -498,7 +498,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 结算时间</label><div>次日 <input value="${c.settle}" style="width:70px" onchange="S.cfg.settle=this.value;mark();arender()"><span class="h">须晚于返点核对结束（04:00）；前台只在规则页展示</span></div>
   <label><i>*</i> 最低有效投注</label><div><input value="${c.minBet}" style="width:110px" onchange="S.cfg.minBet=+this.value;mark();arender()"> ₱ / 日</div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
-  <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）。上线后追加走「费用配置 › 临时增加预算」</span></div>
+  <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
   <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">所有玩家（VIP 不受限为二期）</span></div>
   <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，不弹奖励弹窗</span></div>
   <label>领取有效期</label><div><input value="${c.expireH||''}" placeholder="不填 = 不失效" style="width:110px" onchange="const v=this.value.trim();S.cfg.expireH=v===''?null:Math.max(1,parseInt(v)||1);mark();log('活动配置','领取有效期',S.cfg.expireH?S.cfg.expireH+' 小时':'不失效');arender()"> 小时<span class="h">选填，正整数；不填则返水不会过期（无 Expired 状态）。前台不显示倒计时，只写在规则页</span></div>
@@ -625,21 +625,19 @@ function pvRefresh(){const pv=document.getElementById('pvscr');if(pv&&typeof pvP
 function openPub(){
   const tierErr=(window.__tierErr||[]).length, selLow=S.sel.on&&S.featured.some(f=>f.rate<=Math.max(...S.tiers.map(t=>t.r[f.cat]||0)));
   if(tierErr||selLow) return alert('存在不可发布项：'+(tierErr?'返水等级校验未通过；':'')+(selLow?'Selected Games 比例须高于所选类型最高档。':''));
-  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox"><h3>提交发布</h3><p class="note">活动配置与费用配置将一起发布，发布后次日 00:00 生效（Selected Games / Category 前台实时生效）。</p><label>谷歌验证码 <input id="gcode" placeholder="6 位验证码" maxlength="6" style="width:120px;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"></label><div class="note">原型默认 000000</div><div class="foot" style="justify-content:flex-end"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="doPub()">确认发布</button></div></div></div>`;
+  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox"><h3>提交发布</h3><p class="note">活动配置发布后次日 00:00 生效（Selected Games / Category 前台实时生效）。</p><label>谷歌验证码 <input id="gcode" placeholder="6 位验证码" maxlength="6" style="width:120px;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"></label><div class="note">原型默认 000000</div><div class="foot" style="justify-content:flex-end"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="doPub()">确认发布</button></div></div></div>`;
 }
-function doPub(){if(document.getElementById('gcode').value!=='000000')return alert('谷歌验证码错误');document.getElementById('modal').innerHTML='';pubDirty=false;log('活动配置','提交发布','活动配置 + 费用配置');arender();const t=document.getElementById('atoast');t.textContent='设置成功';t.style.display='block';setTimeout(()=>t.style.display='none',5000)}
+function doPub(){if(document.getElementById('gcode').value!=='000000')return alert('谷歌验证码错误');document.getElementById('modal').innerHTML='';pubDirty=false;log('活动配置','提交发布','活动配置');arender();const t=document.getElementById('atoast');t.textContent='设置成功';t.style.display='block';setTimeout(()=>t.style.display='none',5000)}
 function aBudget(){const b=S.budget,p=b.used/b.cap,rest=b.cap-b.used;
-  return `<div class="sec"><div class="sec-h"><span class="no">1</span>次日返水奖励预算</div>
-  <div class="kpis"><div>活动上限<b>${pesoI(b.cap)}</b><small>首次发布后锁定</small></div><div>已用<b>${pesoI(b.used)}</b></div><div>剩余<b>${pesoI(rest)}</b></div><div>使用进度<b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div></div>
+  return `<div class="sec"><div class="sec-h"><span class="no">1</span>活动费用使用情况</div>
+  <div class="kpis"><div>活动预算<b>${pesoI(b.cap)}</b><small>在活动配置设置</small></div><div>已用<b>${pesoI(b.used)}</b></div><div>剩余<b>${pesoI(rest)}</b></div><div>使用进度<b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div></div>
   <div class="prog" style="height:10px;margin:0 0 6px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>
   ${p>=0.7?`<div class="tip warn">已达 70% 预警阈值：计入顶部「预算告警」（沿用运营后台现有预警提醒）。预算用完后停止生成返水，已生成的仍可领取。</div>`:''}
-  <div class="form" style="grid-template-columns:120px 1fr;max-width:620px"><label>临时增加预算</label><div><input id="addAmt" placeholder="金额 ₱" style="width:120px"> <input id="addWhy" placeholder="原因" style="width:160px"> <input id="addCode" placeholder="谷歌验证码" style="width:110px"> <button class="ab p" onclick="addBudget()">确认增加</button><div class="note">立即生效并留记录（原型验证码 000000）</div></div></div>
-  <table class="at" style="margin-top:10px"><tr><th>时间</th><th>操作人</th><th>增加金额</th><th>原因</th></tr>${b.adds.map(a=>`<tr><td>${a.t}</td><td>${a.op}</td><td>${pesoI(a.amt)}</td><td>${a.why}</td></tr>`).join('')}</table><div class="note" style="margin-top:6px">记录支持分页（每页 15 条）</div></div>`;
+  <div class="note">预算在「活动配置 › ① 基本信息 › 活动预算」设置，本页只看使用情况。</div></div>`;
 }
-function addBudget(){const a=+document.getElementById('addAmt').value;if(!a)return alert('请输入金额');if(document.getElementById('addCode').value!=='000000')return alert('谷歌验证码错误');const why=document.getElementById('addWhy').value||'—';S.budget.cap+=a;S.budget.adds.unshift({t:'11-18 '+now(),op:'koi',amt:a,why});log('费用配置','临时增加预算','+'+pesoI(a)+'（谷歌验证）');arender()}
 let logM='全部';
 function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
-  return `<div class="sec"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:13px">模块 <select onchange="logM=this.value;arender()">${['全部','活动配置','费用配置','返点核对','返水发放','Push · 短信'].map(m=>`<option ${m===logM?'selected':''}>${m}</option>`).join('')}</select><button class="ab" style="margin-left:auto">导出</button></div>
+  return `<div class="sec"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:13px">模块 <select onchange="logM=this.value;arender()">${['全部','活动配置','费用使用情况','返点核对','返水发放','Push · 短信'].map(m=>`<option ${m===logM?'selected':''}>${m}</option>`).join('')}</select><button class="ab" style="margin-left:auto">导出</button></div>
   <table class="at"><tr><th>时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>变更内容</th></tr>${L.map(l=>`<tr><td>${l.t}</td><td>${l.op}</td><td>${l.m}</td><td>${l.a}</td><td>${l.d}</td></tr>`).join('')||'<tr><td colspan="5" class="note">暂无</td></tr>'}</table><div class="note" style="margin-top:6px">记录时间、操作人、模块、操作类型、变更前后内容；权限修改记入系统管理日志。</div></div>`;
 }
 function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}

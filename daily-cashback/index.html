@@ -405,7 +405,7 @@ function featPage(){
 function rules(){
   return barT('Rules','act')+`<div class="body rules"><div class="card"><ol>
   ${S.rulesText.split('\n').filter(l=>l.trim()).map(l=>`<li>${mdB(l)}</li>`).join('')}${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
-  <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.</li>
+  <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and ${S.cfg.expireH?`can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.`:'can be claimed at any time — it does not expire.'}</li>
   <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>
   <li>Claimed cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
   <li>Minimum daily valid bet ${pesoI(S.cfg.minBet)}; standard players' daily cap ${pesoI(S.cfg.cap)}.</li>
@@ -486,7 +486,7 @@ function cBasic(){const c=S.cfg;
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">仅普通玩家；VIP 不受限</span></div>
   <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，不弹奖励弹窗</span></div>
-  <label><i>*</i> 领取有效期</label><div><input value="${c.expireH}" style="width:80px" onchange="S.cfg.expireH=+this.value;mark();arender()"> 小时<span class="h">前台不显示倒计时，只写在规则页</span></div>
+  <label>领取有效期</label><div><input value="${c.expireH||''}" placeholder="不填 = 不失效" style="width:110px" onchange="const v=this.value.trim();S.cfg.expireH=v===''?null:Math.max(1,parseInt(v)||1);mark();log('活动配置','领取有效期',S.cfg.expireH?S.cfg.expireH+' 小时':'不失效');arender()"> 小时<span class="h">选填，正整数；不填则返水不会过期（无 Expired 状态）。前台不显示倒计时，只写在规则页</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
   <label>同 IP / 同设备可领账号数</label><div><input value="${c.ipLimit}" style="width:80px" onchange="mark()"> 个</div>
   <label><i>*</i> 活动状态</label><div>${tg(c.on,'setOn')}<span class="h">关闭后次日 00:00 起不再累计，已生成返水有效期内仍可领</span></div>

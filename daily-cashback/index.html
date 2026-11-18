@@ -220,7 +220,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 </div>
 
 <div id="admin">
-  <div class="abar"><b>789games 运营后台</b><span class="qa">QA</span><span class="note" style="color:#c6d4f0">2026-11-18 GMT+8</span><span id="alarm" class="alarm" onclick="pt=1;arender()">预算告警 1</span><span style="margin-left:auto">koi</span></div>
+  <div class="abar"><b>789games 运营后台</b><span class="qa">QA</span><span class="note" style="color:#c6d4f0">2026-11-18 GMT+8</span><span id="alarm" class="alarm" onclick="pt=2;arender()">预算告警 1</span><span style="margin-left:auto">koi</span></div>
   <div class="shell">
     <div class="menu">
       <div class="g">首页</div><div class="g">数据统计</div><div class="g">用户相关</div><div class="g">财务管理</div>
@@ -420,13 +420,13 @@ document.querySelectorAll('#segClaim button').forEach(b=>b.onclick=()=>{document
 document.getElementById('reopen').onclick=openApp;
 document.getElementById('reset').onclick=()=>{S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
 
-const PT=['活动配置','费用配置','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志','历史活动'];
+const PT=['活动列表','活动配置','费用配置','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志'];
 let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
 function mark(){pubDirty=true}
 function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''}" onclick="${onClick}(true)">${a||'开启'}</button><button class="${on?'':'off'}" onclick="${onClick}(false)">${b||'关闭'}</button></span>`}
 function arender(){
-  document.getElementById('ptabs').innerHTML=PT.map((t,i)=>`<button class="${i===pt?'on':''}" onclick="pt=${i};arender()">${t}</button>`).join('')+(pt===0?`<span class="pv-note">前台当前预览 →</span>`:'');
-  document.getElementById('apage').innerHTML=[aConfig,aBudget,aReview,aPayout,aPush,aRecords,aStats,aLogs,aList][pt]();
+  document.getElementById('ptabs').innerHTML=PT.map((t,i)=>`<button class="${i===pt?'on':''}" onclick="pt=${i};arender()">${t}</button>`).join('')+(pt===1?`<span class="pv-note">前台当前预览 →</span>`:'');
+  document.getElementById('apage').innerHTML=[aList,aConfig,aBudget,aReview,aPayout,aPush,aRecords,aStats,aLogs][pt]();
   const pv=document.getElementById('pvscr'); if(pv){const keep=[view,fv,popup,toast];view='act';fv='today';popup=null;toast='';pv.innerHTML=act();[view,fv,popup,toast]=keep}
   const bar=document.getElementById('pubbar'); if(bar) bar.className='pubbar'+(pubDirty?' dirty':'');
   document.getElementById('alarm').textContent=S.budget.used/S.budget.cap>=0.7?'预算告警 1':'预算告警 0';
@@ -569,9 +569,9 @@ function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
   <table class="at"><tr><th>时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>变更内容</th></tr>${L.map(l=>`<tr><td>${l.t}</td><td>${l.op}</td><td>${l.m}</td><td>${l.a}</td><td>${l.d}</td></tr>`).join('')||'<tr><td colspan="5" class="note">暂无</td></tr>'}</table><div class="note" style="margin-top:6px">记录时间、操作人、模块、操作类型、变更前后内容；权限修改记入系统管理日志。</div></div>`;
 }
 function aList(){
-  return `<div class="sec"><div class="note" style="margin-bottom:8px">同一时间只能有 1 个返水活动；历史活动只读，可复制为新活动（当前活动关闭后可用）。</div>
+  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可复制为新活动（当前活动关闭后可用）。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>参与人数</th><th>操作</th></tr>
-  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>18,402</td><td><button class="ab" onclick="pt=0;arender()">编辑</button></td></tr>
+  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
   <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>16,930</td><td><button class="ab">查看设置</button><button class="ab" disabled>复制</button></td></tr>
   <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>2,210</td><td><button class="ab">查看设置</button><button class="ab" disabled>复制</button></td></tr></table></div>`;
 }

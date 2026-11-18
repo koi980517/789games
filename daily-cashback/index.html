@@ -213,7 +213,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 <div id="front">
   <div class="side">
     <h4>身份</h4>
-    <div class="seg" id="segUser"><button data-u="std" class="on">普通玩家 juan88</button><button data-u="vip">VIP</button><button data-u="new">新玩家（首日）</button></div>
+    <div class="seg" id="segUser"><button data-u="std" class="on">普通玩家 juan88</button><button data-u="new">新玩家（首日）</button></div>
     <h4>领取方式（后台配置）</h4>
     <div class="seg" id="segClaim"><button data-c="manual" class="on">手动领取</button><button data-c="auto">自动领取</button></div>
     <h4>演示</h4>
@@ -224,7 +224,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>首页右侧独立挂件「1.5%+2%」，首页 Banner 首张为 Slots Cashback。</li>
       <li>自动领取时结算后直接入账，不弹活动奖励弹窗。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
-      <li>VIP：固定比例，不受最高返水上限限制。</li>
+      <li>VIP 固定返水比例为二期；一期所有玩家按档位计算、受最高返水上限限制。</li>
       <li>Selected Games 组内游戏按组比例，不再按 Category 计算；后台可整体关闭。</li>
       <li>活动页「Category」区块与分类、游戏均由后台配置。</li>
       <li>当日返水向下取整到 ₱1（₱123.99 → ₱123）；低于 ₱1 不发放。</li>
@@ -278,10 +278,9 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
-  rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li><b>VIP</b>: fixed rate per category, no daily cap.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
+  rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
   budget:{cap:2000000,used:1512880.36,adds:[{t:'11-16 18:40',op:'koi',amt:300000,why:'周末流量高峰'}]},
-  featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]},
-            {name:'PG Picks',cat:'slot',rate:1.2,games:['Mahjong Ways','Fortune Tiger'],w:[10,10]}],
+  featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
   cfg:{minBet:100,cap:5000,expireH:48,turnover:1,settle:'05:00',claim:'manual',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
@@ -374,12 +373,12 @@ function gtRow(x){
   if(user==='std'){const nx=S.tiers[x.ti+1];const cur=x.ti<0?0:S.tiers[x.ti].th;
     if(nx){const p=Math.min(100,(x.bet-cur)/(nx.th-cur)*100);mid+=`<div class="prog"><i style="width:${p}%"></i></div><div class="note">Bet ${peso(nx.th-x.bet)} more → ${nx.r[x.c.k]}%</div>`}
     else mid+=`<div class="prog"><i style="width:100%"></i></div><div class="note">Top tier reached</div>`}
-  return `<div class="gt">${icon(x.c)}<div class="mid">${mid}</div><div class="r">${x.rate}%${user==='std'?`<div class="note">VIP ${S.vip[x.c.k]}%</div>`:' <span class="vip">VIP</span>'}<b>${peso(x.rw)}</b></div></div>`;
+  return `<div class="gt">${icon(x.c)}<div class="mid">${mid}</div><div class="r">${x.rate}%<b>${peso(x.rw)}</b></div></div>`;
 }
 function ratesTable(){
-  let h=`<div class="h3">Cashback Rates</div><div class="card" style="margin-top:6px;padding:8px"><table class="rt"><tr><th></th><th>Standard</th><th>VIP</th></tr>`;
-  if(S.sel.on) S.featured.forEach(f=>h+=`<tr class="fe"><td style="text-align:left">${f.name} <span class="tag">SELECTED</span></td><td>${f.rate}%</td><td>${f.rate}%</td></tr>`);
-  ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td><td>${S.vip[c.k]}%</td></tr>`});
+  let h=`<div class="h3">Cashback Rates</div><div class="card" style="margin-top:6px;padding:8px"><table class="rt"><tr><th></th><th>Rate</th></tr>`;
+  if(S.sel.on) S.featured.forEach(f=>h+=`<tr class="fe"><td style="text-align:left">${f.name} <span class="tag">SELECTED</span></td><td>${f.rate}%</td></tr>`);
+  ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td></tr>`});
   h+=`</table></div><div class="h3">Standard Player Tiers</div><div class="card" style="margin-top:6px;padding:8px;overflow-x:auto"><table class="rt"><tr><th>Tier</th><th>Daily bet ≥</th>${ACATS().map(c=>`<th>${c.n}</th>`).join('')}</tr>`;
   S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td>${t.th.toLocaleString()}</td>${ACATS().map(c=>`<td>${t.r[c.k]}%</td>`).join('')}</tr>`);
   return h+`</table></div>`;
@@ -492,7 +491,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 结算时间</label><div>次日 <input value="${c.settle}" style="width:70px" onchange="S.cfg.settle=this.value;mark();arender()"><span class="h">须晚于返点核对结束（04:00）；前台只在规则页展示</span></div>
   <label><i>*</i> 最低有效投注</label><div><input value="${c.minBet}" style="width:110px" onchange="S.cfg.minBet=+this.value;mark();arender()"> ₱ / 日</div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
-  <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">仅普通玩家；VIP 不受限</span></div>
+  <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">所有玩家（VIP 不受限为二期）</span></div>
   <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，不弹奖励弹窗</span></div>
   <label>领取有效期</label><div><input value="${c.expireH||''}" placeholder="不填 = 不失效" style="width:110px" onchange="const v=this.value.trim();S.cfg.expireH=v===''?null:Math.max(1,parseInt(v)||1);mark();log('活动配置','领取有效期',S.cfg.expireH?S.cfg.expireH+' 小时':'不失效');arender()"> 小时<span class="h">选填，正整数；不填则返水不会过期（无 Expired 状态）。前台不显示倒计时，只写在规则页</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
@@ -511,7 +510,7 @@ function cCategory(){
   <div style="display:flex;gap:14px;align-items:flex-start">
   <div style="width:360px;flex-shrink:0"><table class="at"><tr><th>排序</th><th>分类名称（前台显示）</th><th>游戏</th><th>启用</th><th></th></tr>${CATS.map((c,i)=>`<tr class="${i===selCat?'hl':''}" style="cursor:pointer;${c.on===false?'color:#9AA1AD':''}" onclick="selCat=${i};arender()"><td>${i+1}</td><td><span class="ic" style="display:inline-flex;width:20px;height:20px;border-radius:6px;font-size:11px;margin:0 6px 0 0;vertical-align:middle;background:${c.c}">${c.n[0]}</span>${c.n}</td><td>${c.games.length}</td><td><span class="sw ${c.on===false?'off':''}" onclick="event.stopPropagation();CATS[${i}].on=CATS[${i}].on===false;mark();arender()"></span></td><td style="white-space:nowrap">${i>0?`<button class="ab" onclick="event.stopPropagation();mvCat(${i},-1)">↑</button>`:''}${CATS.length>1?`<button class="ab r" onclick="event.stopPropagation();delCat(${i})">删</button>`:''}</td></tr>`).join('')}</table>
   <div style="display:flex;gap:6px;margin-top:8px"><input id="newCat" placeholder="新分类名称（≤ 16 字）" maxlength="16" style="flex:1;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"><button class="ab p" onclick="addCat()">+ 新增分类</button></div>
-  <div class="note" style="margin-top:6px">新增分类默认各档 0.3%、VIP 1%，到「④ 返水等级」调整。停用 = 前台不展示、该类游戏不返水。</div></div>
+  <div class="note" style="margin-top:6px">新增分类默认各档 0.3%，到「④ 返水等级」调整。停用 = 前台不展示、该类游戏不返水。</div></div>
   <div style="flex:1;min-width:0"><div style="font-weight:600;margin-bottom:6px">${cur.n} · ${cur.games.length} 款 <span style="font-weight:400;font-size:12px;color:#6B7480">名称 <input value="${cur.n}" maxlength="16" style="border:1px solid #CBD1DA;border-radius:4px;padding:2px 6px;width:110px" onchange="CATS[${selCat}].n=this.value.trim()||CATS[${selCat}].n;mark();arender()"></span></div>
   <table class="at"><tr><th>游戏</th><th>厂商</th><th>备注</th><th></th></tr>${cur.games.map(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'';const f=featOf(g);return `<tr><td>${g}</td><td>${v}</td><td>${f&&S.sel.on?`<span class="chip b">Selected · ${f}</span>`:''}</td><td><button class="ab r" onclick="rmGame('${g.replace(/'/g,"\\'")}')">移出</button></td></tr>`}).join('')||'<tr><td colspan="4" class="note">暂无游戏</td></tr>'}</table>
   <div style="margin:10px 0 6px;font-weight:600">从官方游戏库添加 <input placeholder="搜索游戏名" value="${gq}" onchange="gq=this.value;arender()" style="font-weight:400;border:1px solid #CBD1DA;border-radius:4px;padding:2px 8px;width:160px;margin-left:6px"></div>
@@ -523,16 +522,15 @@ function mvCat(i,d){const t=CATS[i];CATS[i]=CATS[i+d];CATS[i+d]=t;selCat=i+d;mar
 function addGame(g){CATS.forEach(c=>c.games=c.games.filter(x=>x!==g));CATS[selCat].games.push(g);S.featured.forEach(f=>{if(f.cat!==CATS[selCat].k){const j=f.games.indexOf(g);if(j>=0){f.games.splice(j,1);f.w.splice(j,1)}}});mark();arender()}
 function rmGame(g){CATS[selCat].games=CATS[selCat].games.filter(x=>x!==g);S.featured.forEach(f=>{const j=f.games.indexOf(g);if(j>=0){f.games.splice(j,1);f.w.splice(j,1)}});mark();arender()}
 function cSelected(){
-  if(!S.sel.on) return `<div class="tip warn">Selected Games 已关闭：前台活动页不展示 Selected Games 区块，比例表不展示精选行；组内游戏按其所属 Category 的档位 / VIP 比例计算。组配置保留，重新开启后恢复。</div>`;
+  if(!S.sel.on) return `<div class="tip warn">Selected Games 已关闭：前台活动页不展示 Selected Games 区块，比例表不展示精选行；组内游戏按其所属 Category 的档位比例计算。组配置保留，重新开启后恢复。</div>`;
   if(selG>=S.featured.length) selG=0;
   const f=S.featured[selG];
-  const tabs=S.featured.map((x,i)=>`<button class="ab ${i===selG?'p':''}" onclick="selG=${i};arender()">${x.name}</button>`).join('')+`<button class="ab" onclick="addSel()">+ 新增组</button>`;
+  const tabs='';
   if(!f) return `<div>${tabs}</div>`;
   const cat=CATS.find(c=>c.k===f.cat)||CATS[0];
   const maxStd=Math.max(...S.tiers.map(t=>t.r[cat.k]||0)); const low=f.rate<=maxStd;
   const taken=g=>S.featured.some((x,i)=>i!==selG&&x.games.includes(g));
-  return `<div class="note" style="margin-bottom:8px">开启后前台活动页显示「Selected Games」，每组一张卡；组内游戏按本组比例计算（所有会员相同），不再按 Category 计算，单笔投注只计一次。类型固定为 <b>Slot</b>，每组从 Slot 的游戏中勾选；一个游戏只能属于一个组。</div>
-  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabs}</div>
+  return `<div class="note" style="margin-bottom:8px">开启后前台活动页显示「Selected Games」，只配置 1 组、前台一张卡；组内游戏按本组比例计算（所有会员相同），不再按 Category 计算，单笔投注只计一次。类型固定为 <b>Slot</b>，从 Slot 的游戏中勾选。</div>
   <div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
   <label>类型</label><div><b>${cat.n}</b> <span class="chip n">固定</span><span class="h">Selected Games 只支持 Slot 类型，不可切换</span></div>
@@ -551,11 +549,10 @@ function bTiers(){
   const C=ACATS(); let maxStd={};C.forEach(c=>maxStd[c.k]=Math.max(...S.tiers.map(t=>t.r[c.k])));
   let errs=[];
   S.tiers.forEach((t,i)=>{if(i===0&&t.th!==0)errs.push('T1 门槛须为 ₱0');if(i>0&&t.th<=S.tiers[i-1].th)errs.push(`T${i+1} 门槛须大于 T${i}`);C.forEach(c=>{if(t.r[c.k]>5)errs.push(`T${i+1} ${c.n} > 5%`);if(i>0&&t.r[c.k]<S.tiers[i-1].r[c.k])errs.push(`T${i+1} ${c.n} 低于上一档`)})});
-  C.forEach(c=>{if(S.vip[c.k]>5)errs.push(`VIP ${c.n} > 5%`)});
   window.__tierErr=errs;
   let h=`<div class="note" style="margin-bottom:8px">列 = 启用的 Category。比例 > 1% 蓝色防误填；> 5% 标红不可发布；门槛从 ₱0 递增，比例逐档不降。</div>
-  <div style="font-weight:600;margin-bottom:4px">A · VIP 固定返水比例</div><table class="at"><tr>${C.map(c=>`<th>${c.n}</th>`).join('')}</tr><tr>${C.map(c=>`<td><input class="rin ${rateCls(S.vip[c.k])}" style="${S.vip[c.k]<maxStd[c.k]?'outline:2px solid #D93025':''}" value="${S.vip[c.k]}" onchange="S.vip['${c.k}']=+this.value;mark();arender()"> %</td>`).join('')}</tr></table>
-  <div style="font-weight:600;margin:12px 0 4px">B · 普通玩家返水档位（T1–T10，须连续配置）</div><table class="at"><tr><th>档位</th><th>门槛（≥ ₱）</th>${C.map(c=>`<th>${c.n}</th>`).join('')}<th></th></tr>`;
+  <div class="tip" style="margin-bottom:8px">VIP 固定返水比例：<b>二期</b>。一期 VIP 与普通玩家一样按下方档位计算，受最高返水上限限制。</div>
+  <div style="font-weight:600;margin:12px 0 4px">返水档位（T1–T10，须连续配置）</div><table class="at"><tr><th>档位</th><th>门槛（≥ ₱）</th>${C.map(c=>`<th>${c.n}</th>`).join('')}<th></th></tr>`;
   S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td><input class="rin" style="width:90px" value="${t.th}" onchange="S.tiers[${i}].th=+this.value;mark();arender()"></td>${C.map(c=>`<td><input class="rin ${rateCls(t.r[c.k])}" value="${t.r[c.k]}" onchange="S.tiers[${i}].r['${c.k}']=+this.value;mark();arender()"> %</td>`).join('')}<td>${i===S.tiers.length-1&&i>0?`<button class="ab r" onclick="S.tiers.pop();mark();arender()">删除</button>`:''}</td></tr>`);
   h+=`</table><div class="foot">${S.tiers.length<10?`<button class="ab" onclick="const l=S.tiers.at(-1);S.tiers.push({th:l.th*2,r:{...l.r}});mark();arender()">+ 添加档位</button>`:''}</div>${errs.length?`<div class="tip warn" style="margin-top:10px">不可发布：${errs.join('；')}</div>`:''}`;
   return h;

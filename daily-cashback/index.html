@@ -101,6 +101,8 @@ button{font:inherit;cursor:pointer}
 .feat .pill{background:#FFD54A;color:#4A12B8;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800}
 .feat .m{margin-left:auto;text-align:right;color:#FFE36A;font-weight:800}
 .gt{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px;margin-top:8px}
+.rte{border:1px solid #CBD1DA;border-radius:4px;background:#fff}.rte-tb{display:flex;flex-wrap:wrap;gap:2px;align-items:center;border-bottom:1px solid #E3E6EA;padding:4px 6px}.rte-tb button{border:0;background:none;min-width:26px;height:26px;border-radius:3px;cursor:pointer;color:#333;font-size:13px}.rte-tb button:hover{background:#EEF1F5}.rte-tb i.sep{width:1px;height:18px;background:#E3E6EA;margin:0 4px}.rte-tb select{border:0;background:none;font-size:12.5px;color:#555;height:26px}.rte-ed{min-height:150px;max-height:320px;overflow:auto;padding:10px 14px;font-size:13px;line-height:1.6;outline:none;color:#1F2430}.rte-ed img{max-width:100%}.rte-ft{border-top:1px solid #E3E6EA;padding:2px 8px;font-size:10.5px;color:#8A93A1;text-align:right;letter-spacing:.3px}
+.rich{font-size:12.5px;line-height:1.6;color:#2B2F3A}.rich p{margin:0 0 8px}.rich ul,.rich ol{margin:0 0 8px;padding-left:18px}.rich img{max-width:100%;border-radius:8px}.rich h2{font-size:15px;margin:4px 0 6px}.rich h3{font-size:13.5px;margin:4px 0 6px}.rich blockquote{margin:0 0 8px;padding-left:10px;border-left:3px solid #E3E1EC;color:#6B7480}
 .sg{background:#fff;border-radius:14px;padding:10px 10px 8px;margin-top:8px;cursor:pointer;box-shadow:0 1px 4px rgba(74,18,184,.06)}
 .sg .row{display:flex;align-items:center;gap:8px}
 .sg .gi{width:50px;height:50px;border-radius:10px;flex-shrink:0;object-fit:cover;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;line-height:1.1;text-align:center;overflow:hidden;word-break:break-word;padding:2px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
@@ -272,7 +274,7 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
-  rulesText:'Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).\n**Standard players**: the tier you reach in a category applies to that whole day\'s bets in that category.\n**VIP**: fixed rate per category, no daily cap.\nSelected Games use their own rate instead of the Category rate.', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
+  rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li><b>VIP</b>: fixed rate per category, no daily cap.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
   budget:{cap:2000000,used:1512880.36,adds:[{t:'11-16 18:40',op:'koi',amt:300000,why:'周末流量高峰'}]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]},
             {name:'Live Baccarat',cat:'casino',rate:1.2,games:['Evo Baccarat','Speed Baccarat'],w:[10,10]}],
@@ -293,6 +295,7 @@ const ACATS=()=>CATS.filter(c=>c.on!==false);
 const STD_ACC='juan88';
 const A=()=>S.assets;
 let popShown=0, popDay='';
+function safeHtml(h){const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('script,iframe,object,embed,style').forEach(e=>e.remove());d.querySelectorAll('*').forEach(e=>[...e.attributes].forEach(a=>{if(/^on/i.test(a.name)||/javascript:/i.test(a.value))e.removeAttribute(a.name)}));return d.innerHTML}
 function mdB(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}
 function selIcon(f,big){const c=CATS.find(x=>x.k===f.cat)||{c:'#4A12B8',n:''};return f.img?`<img class="gi" src="${f.img}" alt="">`:`<div class="gi" style="background:linear-gradient(135deg,${c.c},#4A12B8)">${f.name.split(' ').slice(0,2).join('<br>')}</div>`}
 function selCard(x,i){const on=x.bet>=1;const cur=on?x.f.rate:0;
@@ -403,8 +406,7 @@ function featPage(){
   <div class="grid6" style="grid-template-columns:repeat(2,1fr)">${order.map(o=>`<div class="cat" style="padding:14px 8px"><div class="ic" style="background:linear-gradient(135deg,#4A12B8,#F2486A);width:100%;height:80px">${o.g.split(' ').map(s=>s[0]).join('')}</div>${o.g}<div class="note">权重 ${o.w}</div></div>`).join('')}</div></div>`;
 }
 function rules(){
-  return barT('Rules','act')+`<div class="body rules"><div class="card"><ol>
-  ${S.rulesText.split('\n').filter(l=>l.trim()).map(l=>`<li>${mdB(l)}</li>`).join('')}${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
+  return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and ${S.cfg.expireH?`can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.`:'can be claimed at any time — it does not expire.'}</li>
   <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>
   <li>Claimed cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
@@ -527,7 +529,6 @@ function cSelected(){
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabs}</div>
   <div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
-  <label>图标</label><div style="display:flex;align-items:center;gap:8px"><span class="sg" style="display:inline-block;padding:0;margin:0;box-shadow:none">${selIcon(f)}</span>${upBtn('S.featured['+selG+'].img','上传')}${f.img?`<button class="ab" onclick="delete S.featured[${selG}].img;mark();arender()">恢复默认</button>`:''}<span class="h">1:1 PNG/JPG ≤ 500KB；不传则用类型色 + 组名</span></div>
   <label><i>*</i> 类型</label><div><select onchange="setSelCat(this.value)">${ACATS().map(c=>`<option value="${c.k}" ${c.k===f.cat?'selected':''}>${c.n}</option>`).join('')}</select><span class="h">切换类型会清空已选游戏</span></div>
   <label><i>*</i> 比例</label><div><input class="rin ${rateCls(f.rate)} ${low?'bad':''}" value="${f.rate}" onchange="S.featured[${selG}].rate=+this.value;mark();arender()"> %<span class="h">须高于「${cat.n}」普通玩家最高档 ${maxStd}%${low?'（当前不满足，不可发布）':''}</span></div>
   <label><i>*</i> 游戏</label><div><div class="gpick">${cat.games.map(g=>{const on=f.games.includes(g),dis=taken(g);return `<label class="${on?'on':''} ${dis?'dis':''}"><input type="checkbox" ${on?'checked':''} ${dis?'disabled':''} onchange="togSelGame('${g.replace(/'/g,"\\'")}',this.checked)">${g}${dis?' <small>已在其他组</small>':''}</label>`}).join('')||'<span class="note">该类型下暂无游戏，请先在「② Category 配置」添加</span>'}</div></div>
@@ -559,9 +560,27 @@ function aOverride(){
 }
 function addOv(){const a=document.getElementById('ovA').value.trim();if(!a)return alert('请输入会员账号');S.overrides.unshift({acc:a,tier:+document.getElementById('ovT').value,until:document.getElementById('ovU').value,why:document.getElementById('ovW').value||'—',op:'koi · 11-18 '+now()});log('活动配置','新增指定档位',a);arender()}
 function aRules(){
-  return `<div class="form"><label>活动条款</label><div><textarea oninput="S.rulesText=this.value;mark();pvRefresh()" style="width:100%;height:110px;border:1px solid #CBD1DA;border-radius:4px;padding:8px;font:inherit;font-size:12.5px">${S.rulesText.replace(/</g,'&lt;')}</textarea><div class="note">每行一条编号条款；**文字** 加粗。领取时间、取整规则、各 Category 游戏列表由系统自动追加。</div></div>
+  const B=(c,t,v)=>`<button title="${t}" onmousedown="event.preventDefault();rteCmd('${c}'${v?`,'${v}'`:''})">${t.length<3?t:'<span style=\'font-size:11px\'>'+t+'</span>'}</button>`;
+  return `<div class="form"><label><i>*</i> 活动内容</label><div><div class="rte">
+  <div class="rte-tb">${B('undo','↶')}${B('redo','↷')}<i class="sep"></i>
+  <button title="文字颜色" onmousedown="event.preventDefault();rteCmd('foreColor','#7B2CF0')"><b style="border-bottom:3px solid #7B2CF0">A</b></button><button title="清除颜色" onmousedown="event.preventDefault();rteCmd('foreColor','#1F2430')"><b style="border-bottom:3px solid #1F2430">A</b></button>
+  <button title="Bold" onmousedown="event.preventDefault();rteCmd('bold')"><b>B</b></button><button title="Italic" onmousedown="event.preventDefault();rteCmd('italic')"><i>I</i></button><button title="Underline" onmousedown="event.preventDefault();rteCmd('underline')"><u>U</u></button><button title="Strikethrough" onmousedown="event.preventDefault();rteCmd('strikeThrough')"><s>S</s></button><button title="Link" onmousedown="event.preventDefault();rteLink()">🔗</button><i class="sep"></i>
+  ${B('justifyLeft','≡左')}${B('justifyCenter','≡中')}${B('justifyRight','≡右')}${B('outdent','⇤')}${B('indent','⇥')}<i class="sep"></i>
+  <select onmousedown="rteSave()" onchange="rteRestore();rteCmd('formatBlock',this.value);this.selectedIndex=0"><option value="p">Paragraph</option><option value="p">Paragraph</option><option value="h2">Heading 2</option><option value="h3">Heading 3</option><option value="blockquote">Quote</option></select><i class="sep"></i>
+  ${B('insertUnorderedList','•≡')}${B('insertOrderedList','1≡')}<button title="Quote" onmousedown="event.preventDefault();rteCmd('formatBlock','blockquote')">❞</button><button title="Subscript" onmousedown="event.preventDefault();rteCmd('subscript')">X<sub>2</sub></button><button title="Superscript" onmousedown="event.preventDefault();rteCmd('superscript')">X<sup>2</sup></button><button title="Clear formatting" onmousedown="event.preventDefault();rteCmd('removeFormat')"><i>T</i><sub>x</sub></button>
+  <label title="插入图片" style="cursor:pointer;padding:0 6px" onmousedown="rteSave()">🖼<input type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="readImg(this,v=>{rteRestore();rteCmd('insertImage',v)})"></label></div>
+  <div id="rteEd" class="rte-ed" contenteditable="true" oninput="rteSync()" onblur="rteSync(true)">${safeHtml(S.rulesHtml)}</div>
+  <div class="rte-ft" id="rteWc">${rteWords(S.rulesHtml)} WORDS · 富文本（沿用 Promo「活动内容」编辑器）</div></div>
+  <div class="note">沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。前台规则页先展示本内容，再由系统自动追加：领取时间、取整规则、流水倍数、最低投注与上限、各 Category 游戏列表、KYC 要求。</div></div>
   <label>返水比例表</label><div class="note">自动由「返水等级」+「Selected Games」生成，此处不维护</div></div>`;
 }
+let rteRange=null;
+function rteSave(){const s=getSelection();if(s.rangeCount)rteRange=s.getRangeAt(0)}
+function rteRestore(){const e=document.getElementById('rteEd');e.focus();if(rteRange){const s=getSelection();s.removeAllRanges();s.addRange(rteRange)}}
+function rteCmd(c,v){document.getElementById('rteEd').focus();document.execCommand(c,false,v||null);rteSync()}
+function rteLink(){rteSave();const u=prompt('链接地址（https:// 或站内 / 路径）','https://');if(!u)return;rteRestore();rteCmd('createLink',u)}
+function rteWords(h){const d=document.createElement('div');d.innerHTML=h;return (d.textContent.trim().match(/\S+/g)||[]).length}
+function rteSync(end){const e=document.getElementById('rteEd');if(!e)return;S.rulesHtml=e.innerHTML;document.getElementById('rteWc').firstChild.textContent=rteWords(S.rulesHtml)+' WORDS · 富文本（沿用 Promo「活动内容」编辑器）';if(!pubDirty){mark();const b=document.getElementById('pubbar');if(b){b.className='pubbar dirty';b.firstChild.textContent='有未发布的修改'}}}
 function aAssets(){const a=S.assets;
   return `<div class="note" style="margin-bottom:8px">图片可直接替换（原型读取本地文件），所有项改完前台和右侧预览即时生效。</div><div class="form">
   <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页。前台点「重新打开 APP」按频率验证</span></div>

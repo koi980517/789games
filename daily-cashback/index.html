@@ -101,6 +101,18 @@ button{font:inherit;cursor:pointer}
 .feat .pill{background:#FFD54A;color:#4A12B8;border-radius:10px;padding:1px 8px;font-size:11px;font-weight:800}
 .feat .m{margin-left:auto;text-align:right;color:#FFE36A;font-weight:800}
 .gt{display:flex;gap:10px;align-items:center;background:#fff;border-radius:14px;padding:10px;margin-top:8px}
+.sg{background:#fff;border-radius:14px;padding:10px 10px 8px;margin-top:8px;cursor:pointer;box-shadow:0 1px 4px rgba(74,18,184,.06)}
+.sg .row{display:flex;align-items:center;gap:8px}
+.sg .gi{width:50px;height:50px;border-radius:10px;flex-shrink:0;object-fit:cover;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:11px;line-height:1.1;text-align:center;overflow:hidden;word-break:break-word;padding:2px;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+.sg .mid{flex:1;min-width:0}
+.sg .tt{font-weight:800;font-size:12.5px;color:#5A5F6B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:uppercase;letter-spacing:.2px}
+.sg .sub{font-size:11px;color:#7A808C;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sg .sub span{margin-left:8px}
+.sg .bn{text-align:center;padding:0 8px;border-right:1px solid #E3E1EC;flex-shrink:0;white-space:nowrap}
+.sg .bn b{display:block;color:#FF3B1F;font-size:19px;font-weight:900;line-height:1.1}.sg .bn small{color:#7A808C;font-size:13px;font-weight:700}
+.sg .go{width:26px;height:26px;border-radius:50%;background:#A3123A;color:#fff;font-size:15px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-left:2px}
+.sg .bar2{position:relative;height:18px;border-radius:9px;background:#D9D9DE;margin-top:8px;overflow:hidden;font-size:11px;font-weight:800}
+.sg .bar2 i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#FFC9D3,#FF8FA5);border-radius:9px}
+.sg .bar2 em{position:absolute;left:10px;top:1px;font-style:normal;color:#7A808C}.sg .bar2 strong{position:absolute;right:10px;top:1px;color:#FF3B1F}
 .gt .mid{flex:1;font-size:12px}
 .gt .nm{font-weight:800;font-size:14px}
 .prog{height:6px;background:#EEEFF4;border-radius:3px;margin:5px 0 3px;overflow:hidden}.prog i{display:block;height:100%;background:linear-gradient(90deg,#F2486A,#D21740)}
@@ -211,8 +223,8 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>活动页「Category」区块与分类、游戏均由后台配置。</li>
       <li>当日返水向下取整到 ₱1（₱123.99 → ₱123）；低于 ₱1 不发放。</li>
       <li>活动页不放顶部 Banner；结算 / 领取时间只写在规则页（右上 ?）。</li>
-      <li>返水分类及每类包含的游戏由后台「④ 返水分类与游戏」指定。</li>
-      <li>后台改分类 / 游戏 / 比例后，前台即时更新（同一页面内）。</li>
+      <li>Category 及每类游戏、Selected Games 组（类型 / 游戏 / 比例 / 图标）、返水等级、手动指定档位（juan88）、页面素材、规则条款、活动开关均由后台配置。</li>
+      <li>后台任何配置修改后，前台与后台右侧预览即时生效（同一页面内，刷新恢复默认）。</li>
     </ul>
     <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水活动 PRD v1.3</a></div>
   </div>
@@ -258,7 +270,9 @@ function defaults(){return{
     {th:50000,r:{slot:.8,casino:.6,arcade:.8,poker:.6,fishing:.8,bingo:.8}},
     {th:200000,r:{slot:1,casino:.8,arcade:1,poker:.8,fishing:1,bingo:1}}],
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
-  sel:{on:true}, catMod:{on:true}, logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
+  sel:{on:true}, catMod:{on:true},
+  assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
+  rulesText:'Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).\n**Standard players**: the tier you reach in a category applies to that whole day\'s bets in that category.\n**VIP**: fixed rate per category, no daily cap.\nSelected Games use their own rate instead of the Category rate.', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
   budget:{cap:2000000,used:1512880.36,adds:[{t:'11-16 18:40',op:'koi',amt:300000,why:'周末流量高峰'}]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]},
             {name:'Live Baccarat',cat:'casino',rate:1.2,games:['Evo Baccarat','Speed Baccarat'],w:[10,10]}],
@@ -276,10 +290,17 @@ function defaults(){return{
 let S=defaults(); CATS=S.cats; let user='std', view='home', fv='today', htab='all', popup=null, featIdx=0, toast='';
 function tierIdx(bet){let i=-1;S.tiers.forEach((t,k)=>{if(bet>=t.th)i=k});return i}
 const ACATS=()=>CATS.filter(c=>c.on!==false);
+const STD_ACC='juan88';
+const A=()=>S.assets;
+let popShown=0, popDay='';
+function mdB(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}
+function selIcon(f,big){const c=CATS.find(x=>x.k===f.cat)||{c:'#4A12B8',n:''};return f.img?`<img class="gi" src="${f.img}" alt="">`:`<div class="gi" style="background:linear-gradient(135deg,${c.c},#4A12B8)">${f.name.split(' ').slice(0,2).join('<br>')}</div>`}
+function selCard(x,i){const on=x.bet>=1;const cur=on?x.f.rate:0;
+  return `<div class="sg" onclick="featIdx=${i};go('feat')"><div class="row">${selIcon(x.f)}<div class="mid"><div class="tt">${x.f.name} ${x.f.rate}% RETURN</div><div class="sub">Bet:${peso(x.bet)}<span>Current ${cur}%</span></div></div><div class="bn"><b>₱${(Math.floor(x.rw*10)/10).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</b><small>Bonus</small></div><div class="go">»</div></div><div class="bar2"><i style="width:${on?100:0}%"></i><em>Bet:${on?peso(x.bet):'₱1.00'}</em><strong>${x.f.rate}%(${on?'Current':'Next'})</strong></div></div>`}
 function calc(u){
   const b=S.bets[u], rows=[]; let total=0;
   ACATS().forEach(c=>{let bet=b[c.k]||0; if(!S.sel.on) S.featured.forEach((f,i)=>{if(f.cat===c.k) bet+=b['feat'+i]||0}); let rate,ti=null;
-    if(u==='vip'){rate=S.vip[c.k]}else{ti=tierIdx(bet);rate=ti<0?0:S.tiers[ti].r[c.k]}
+    if(u==='vip'){rate=S.vip[c.k]}else{ti=tierIdx(bet);const ov=u==='std'&&S.overrides.find(o=>o.acc===STD_ACC);if(ov&&ov.tier>ti&&ov.tier<S.tiers.length)ti=ov.tier;rate=ti<0?0:S.tiers[ti].r[c.k]}
     const rw=r2(bet*rate/100);total+=rw;rows.push({c,bet,rate,ti,rw})});
   const feats=S.sel.on?S.featured.map((f,i)=>{const bet=b['feat'+i]||0;const rw=r2(bet*f.rate/100);total+=rw;return{f,bet,rw}}):[];
   const allBet=rows.reduce((a,x)=>a+x.bet,0)+feats.reduce((a,x)=>a+x.bet,0);
@@ -300,11 +321,11 @@ function render(){
 function barT(t,back,help){return `<div class="bar">${back?`<button class="back" onclick="go('${back}')">‹</button>`:''}<div class="t">${t}</div>${help?`<button class="back" title="Rules" onclick="go('rules')" style="width:24px;height:24px;border-radius:50%;background:#F3F2FB;font-size:14px;font-weight:900;color:#D21740">?</button>`:''}<div class="bal">${peso(S.balance[user])}</div></div>`}
 function home(){
   const a=avail(user);
-  const tiles=[['1.5%+2%','CASHBACK','#2A6FDB','#5B9BFF',"go('act')"],['2%','INSTANT RETURN','#D21740','#F2486A',''],['RANK','CUP','#17914A','#35C46E',''],['BAG','','#4A12B8','#7B2CF0','']];
+  const tiles=[[A().wid.label,'CASHBACK','#2A6FDB','#5B9BFF',"go('act')"],['2%','INSTANT RETURN','#D21740','#F2486A',''],['RANK','CUP','#17914A','#35C46E',''],['BAG','','#4A12B8','#7B2CF0','']];
   const games=[['Super Ace','JILI','#B45309','#F59E0B'],['Fortune Gems','JILI','#047857','#10B981'],['Money Coming','JILI','#1D4ED8','#60A5FA'],['Mahjong Ways','PG','#9D174D','#F472B6'],['Fortune Tiger','PG','#B91C1C','#F87171'],['Crazy Time','EVO','#6D28D9','#A78BFA']];
   return `<div class="hhdr"><div class="hlogo"><b>7</b><b>8</b><b>9</b><span>GAMES</span></div><div class="hbal"><i>₱</i>${peso(S.balance[user]).slice(1)}<em>+</em></div><div class="hrew">Rewards</div><div class="hsrch"></div></div>
   <div class="body hbody">
-  <div class="hban"><div class="hban-track" style="transform:translateX(-${hb*100}%)"><img src="assets/banner.webp" alt="PH Biggest Slots Cashback 1.5% Unli Cashback" onclick="go('act')"><div class="hban-ph" style="background:linear-gradient(120deg,#0F766E,#34D399)">SMASH THE GOLDEN EGG<small>（现网其他 Banner 示意）</small></div><div class="hban-ph" style="background:linear-gradient(120deg,#1E3A8A,#60A5FA)">DEPOSIT &amp; SPIN<small>（现网其他 Banner 示意）</small></div></div></div><div class="hdots">${[0,1,2].map(i=>`<i class="${i===hb?'on':''}" onclick="hb=${i};render()"></i>`).join('')}</div>
+  <div class="hban"><div class="hban-track" style="transform:translateX(-${hb*100}%)">${S.cfg.on?`<img src="${A().banner.img}" alt="Daily Cashback" onclick="go('act')">`:''}<div class="hban-ph" style="background:linear-gradient(120deg,#0F766E,#34D399)">SMASH THE GOLDEN EGG<small>（现网其他 Banner 示意）</small></div><div class="hban-ph" style="background:linear-gradient(120deg,#1E3A8A,#60A5FA)">DEPOSIT &amp; SPIN<small>（现网其他 Banner 示意）</small></div></div></div><div class="hdots">${[0,1,2].slice(S.cfg.on?0:1).map((x,i)=>`<i class="${i===hb?'on':''}" onclick="hb=${i};render()"></i>`).join('')}</div>
   <div class="htabs">${[['Hot','#F97316'],...ACATS().map(c=>[c.n,c.c])].map((t,i)=>`<div class="${i===0?'on':''}"><span style="background:${t[1]}">${t[0][0]}</span>${t[0]}</div>`).join('')}</div>
   <div class="htiles">${tiles.map(t=>`<div style="background:linear-gradient(135deg,${t[2]},${t[3]})" ${t[4]?`onclick="${t[4]}"`:''}><b>${t[0]}</b><small>${t[1]}</small></div>`).join('')}</div>
   <div class="hmarq"><span>Welcome to 789Games.com! Daily Cashback up to 1.5% on Slots — claim it every day.</span></div>
@@ -312,13 +333,14 @@ function home(){
   <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">1.5%+2%<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
   </div>
   <div class="hnav"><div class="on"><i></i>Home</div><div><i></i>Chat</div><div class="promo"><i></i>Promo</div><div><i></i>Wallet</div><div><i></i>Account</div></div>
-  ${popup?'':`<div class="widget" onclick="go('act')"><img src="assets/gift.webp" alt=""><span>1.5%+2%</span></div>`}`;
+  ${popup||!S.cfg.on||!A().wid.on?'':`<div class="widget" onclick="go('act')"><img src="${A().wid.img}" alt=""><span>${A().wid.label}</span></div>`}`;
 }
 let hb=0;
 function maxRate(){let m=0;S.tiers.forEach(t=>CATS.forEach(c=>m=Math.max(m,t.r[c.k])));CATS.forEach(c=>m=Math.max(m,S.vip[c.k]));S.featured.forEach(f=>m=Math.max(m,f.rate));return m}
 function act(){
   const c=calc(user), a=avail(user), isNew=user==='new';
   let h=barT('Daily Cashback','home',true)+`<div class="body">
+  ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Cashback already generated can still be claimed within its validity period.</div>'}${S.cfg.kyc==='需要 KYC'&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join Daily Cashback.</div>':''}
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
     h+=`<div class="card total"><div class="lb">Total Bonus (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
@@ -331,7 +353,7 @@ function act(){
     h+=`</div>`;
   }
   if(!isNew){
-    if(S.sel.on) h+=`<div class="h3">Selected Games</div>`+c.feats.map((x,i)=>`<div class="feat" onclick="featIdx=${i};go('feat')"><div class="ic" style="background:rgba(255,255,255,.18);margin:0">★</div><div><div style="font-weight:800">${x.f.name} <span class="pill">${x.f.rate}%</span></div><div style="font-size:11px;opacity:.85">${x.f.games.length} games · Bet ${peso(x.bet)}</div></div><div class="m">${peso(x.rw)}</div></div>`).join('');
+    if(S.sel.on) h+=`<div class="h3">Selected Games</div>`+c.feats.map((x,i)=>selCard(x,i)).join('');
     if(S.catMod.on) h+=`<div class="h3">Category</div>`+c.rows.map(x=>gtRow(x)).join('');
   }else{
     h+=`<div class="card" style="font-size:12.5px;color:#6B7480;text-align:center">Place your first bet today — your cashback is credited tomorrow.</div>`;
@@ -376,15 +398,13 @@ function detail(){
 }
 function featPage(){
   const f=S.featured[featIdx]; const order=f.games.map((g,i)=>({g,w:f.w[i]})).sort((a,b)=>a.w-b.w);
-  return barT(f.name,'act')+`<div class="body"><div class="feat" style="cursor:default"><div><div style="font-weight:800;font-size:16px">${f.name}</div><div style="font-size:11px;opacity:.85">All members get the same rate</div></div><div class="m" style="font-size:22px">${f.rate}%</div></div>
+  const cx=calc(user).feats.find(x=>x.f===f)||{f,bet:0,rw:0};
+  return barT(f.name,'act')+`<div class="body">${S.sel.on?selCard(cx,featIdx).replace('onclick=','data-x='):''}<div class="note" style="margin:8px 2px 0">All members get the same rate · ${(CATS.find(c=>c.k===f.cat)||{n:''}).n}</div>
   <div class="grid6" style="grid-template-columns:repeat(2,1fr)">${order.map(o=>`<div class="cat" style="padding:14px 8px"><div class="ic" style="background:linear-gradient(135deg,#4A12B8,#F2486A);width:100%;height:80px">${o.g.split(' ').map(s=>s[0]).join('')}</div>${o.g}<div class="note">权重 ${o.w}</div></div>`).join('')}</div></div>`;
 }
 function rules(){
   return barT('Rules','act')+`<div class="body rules"><div class="card"><ol>
-  <li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li>
-  <li><b>Standard players</b>: the tier you reach in a category applies to that whole day's bets in that category.</li>
-  <li><b>VIP</b>: fixed rate per category, no daily cap.</li>
-  <li>Selected Games use their own rate instead of the Category rate.</li>
+  ${S.rulesText.split('\n').filter(l=>l.trim()).map(l=>`<li>${mdB(l)}</li>`).join('')}${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.</li>
   <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>
   <li>Claimed cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
@@ -392,12 +412,12 @@ function rules(){
   <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}</div>`;
 }
 function splash(){
-  return `<div class="mask"><div class="actpop"><img src="assets/popup.webp" alt="Maximum Rewards · Stack 5 Daily"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
+  return `<div class="mask"><div class="actpop"><img src="${A().pop.img}" alt="Daily Cashback"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
 }
 let claiming=false;
 function claimPop(){
   const a=avail(user), L=S.history[user].filter(h=>h.s==='a'), d=L.length?L.map(h=>h.d).sort()[0]:'';
-  return `<div class="mask"><div class="rwpop"><img class="rw-model" src="assets/model.webp" alt=""><div class="rw-ribbon">Congratulations !</div><div class="rw-card"><div class="rw-t">DAILY CASHBACK BONUS!</div><div class="rw-amt"><i>₱</i>${Math.floor(a).toLocaleString('en-US')}</div><button class="rw-claim" ${claiming?'disabled':''} onclick="claimAll(true)">${claiming?'Claiming…':'Claim'}</button><button class="rw-det" onclick="popup=null;go('hist')"><b>?</b> Cashback Details</button><div class="rw-date">Cashback Date: ${L.length>1?L.length+' days · from ':''}2026-${d}</div></div><button class="actpop-x" style="top:auto;bottom:-46px;right:50%;transform:translateX(50%)" onclick="closePop()">×</button></div></div>`;
+  return `<div class="mask"><div class="rwpop"><img class="rw-model" src="${A().rw.img}" alt=""><div class="rw-ribbon">${A().rw.ribbon}</div><div class="rw-card"><div class="rw-t">${A().rw.title}</div><div class="rw-amt"><i>₱</i>${Math.floor(a).toLocaleString('en-US')}</div><button class="rw-claim" ${claiming?'disabled':''} onclick="claimAll(true)">${claiming?'Claiming…':'Claim'}</button><button class="rw-det" onclick="popup=null;go('hist')"><b>?</b> Cashback Details</button><div class="rw-date">Cashback Date: ${L.length>1?L.length+' days · from ':''}2026-${d}</div></div><button class="actpop-x" style="top:auto;bottom:-46px;right:50%;transform:translateX(50%)" onclick="closePop()">×</button></div></div>`;
 }
 function failPop(){return `<div class="mask"><div class="pop" style="background:#fff"><div style="font-weight:900;font-size:18px;margin:6px 0">Claim failed</div><div class="note" style="margin-bottom:14px">Network error. Please try again.</div><button class="btn" onclick="popup='claim';render()">Retry</button></div></div>`}
 function go(v){view=v;render();document.querySelector('.body')?.scrollTo(0,0)}
@@ -414,11 +434,15 @@ function now(){const d=new Date(Date.now()+8*3600e3);return d.toISOString().slic
 function flash(t){toast=t;render();setTimeout(()=>{toast='';render()},1800)}
 function openApp(){view='home';fv='today';
   if(S.cfg.claim==='auto'){const a=avail(user);if(a>0){doClaim();toast=`Auto-credited ${pesoI(a)}`;setTimeout(()=>{toast='';render()},2200)}}
-  popup='splash';render()}
+  hb=0;const p=A().pop;const day='11-18';let show=S.cfg.on&&p.on;
+  if(show&&p.freq==='once'&&popShown>0) show=false;
+  if(show&&p.freq==='daily'&&popDay===day+user) show=false;
+  if(show){popShown++;popDay=day+user;popup='splash'}else{popup=null;afterSplash();return}
+  render()}
 document.querySelectorAll('#segUser button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segUser button').forEach(x=>x.classList.remove('on'));b.classList.add('on');user=b.dataset.u;openApp()});
 document.querySelectorAll('#segClaim button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#segClaim button').forEach(x=>x.classList.remove('on'));b.classList.add('on');S.cfg.claim=b.dataset.c;openApp()});
 document.getElementById('reopen').onclick=openApp;
-document.getElementById('reset').onclick=()=>{S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
+document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();CATS=S.cats;pubDirty=false;document.querySelector('#segClaim [data-c=manual]').click()};
 
 const PT=['活动列表','活动配置','费用配置','返点核对','返水发放','Push · 短信','返水记录','活动统计','操作日志'];
 let pt=0, pubDirty=false, selCat=0, gq='', selG=0;
@@ -427,7 +451,7 @@ function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''
 function arender(){
   document.getElementById('ptabs').innerHTML=PT.map((t,i)=>`<button class="${i===pt?'on':''}" onclick="pt=${i};arender()">${t}</button>`).join('')+(pt===1?`<span class="pv-note">前台当前预览 →</span>`:'');
   document.getElementById('apage').innerHTML=[aList,aConfig,aBudget,aReview,aPayout,aPush,aRecords,aStats,aLogs][pt]();
-  const pv=document.getElementById('pvscr'); if(pv){const keep=[view,fv,popup,toast];view='act';fv='today';popup=null;toast='';pv.innerHTML=act();[view,fv,popup,toast]=keep}
+  pvPaint();
   const bar=document.getElementById('pubbar'); if(bar) bar.className='pubbar'+(pubDirty?' dirty':'');
   document.getElementById('alarm').textContent=S.budget.used/S.budget.cap>=0.7?'预算告警 1':'预算告警 0';
 }
@@ -451,7 +475,7 @@ function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
 function log(m,a,d){S.logs.unshift({t:'11-18 '+now(),op:'koi',m,a,d})}
 function cBasic(){const c=S.cfg;
   return `<div class="form">
-  <label>挂件显示</label><div class="note">前端控制（只读）：首页右侧独立挂件「1.5%+2%」，弹窗出现时隐藏</div>
+  <label>挂件显示</label><div class="note">在「⑥ 页面素材」配置开关、图片与角标；弹窗出现时隐藏</div>
   <label><i>*</i> 活动名称</label><div><input value="Daily Cashback 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题固定 Daily Cashback</span></div>
   <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>
   <label><i>*</i> 参与人群</label><div>全部会员</div>
@@ -503,7 +527,7 @@ function cSelected(){
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabs}</div>
   <div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
-  <label>图标</label><div><span class="chip n">1:1 PNG/JPG ≤ 500KB</span> <button class="ab">上传</button></div>
+  <label>图标</label><div style="display:flex;align-items:center;gap:8px"><span class="sg" style="display:inline-block;padding:0;margin:0;box-shadow:none">${selIcon(f)}</span>${upBtn('S.featured['+selG+'].img','上传')}${f.img?`<button class="ab" onclick="delete S.featured[${selG}].img;mark();arender()">恢复默认</button>`:''}<span class="h">1:1 PNG/JPG ≤ 500KB；不传则用类型色 + 组名</span></div>
   <label><i>*</i> 类型</label><div><select onchange="setSelCat(this.value)">${ACATS().map(c=>`<option value="${c.k}" ${c.k===f.cat?'selected':''}>${c.n}</option>`).join('')}</select><span class="h">切换类型会清空已选游戏</span></div>
   <label><i>*</i> 比例</label><div><input class="rin ${rateCls(f.rate)} ${low?'bad':''}" value="${f.rate}" onchange="S.featured[${selG}].rate=+this.value;mark();arender()"> %<span class="h">须高于「${cat.n}」普通玩家最高档 ${maxStd}%${low?'（当前不满足，不可发布）':''}</span></div>
   <label><i>*</i> 游戏</label><div><div class="gpick">${cat.games.map(g=>{const on=f.games.includes(g),dis=taken(g);return `<label class="${on?'on':''} ${dis?'dis':''}"><input type="checkbox" ${on?'checked':''} ${dis?'disabled':''} onchange="togSelGame('${g.replace(/'/g,"\\'")}',this.checked)">${g}${dis?' <small>已在其他组</small>':''}</label>`}).join('')||'<span class="note">该类型下暂无游戏，请先在「② Category 配置」添加</span>'}</div></div>
@@ -535,19 +559,22 @@ function aOverride(){
 }
 function addOv(){const a=document.getElementById('ovA').value.trim();if(!a)return alert('请输入会员账号');S.overrides.unshift({acc:a,tier:+document.getElementById('ovT').value,until:document.getElementById('ovU').value,why:document.getElementById('ovW').value||'—',op:'koi · 11-18 '+now()});log('活动配置','新增指定档位',a);arender()}
 function aRules(){
-  return `<div class="form"><label>活动条款</label><div><textarea onchange="mark()" style="width:100%;height:110px;border:1px solid #CBD1DA;border-radius:4px;padding:8px;font:inherit;font-size:12.5px">Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).
-**Standard players**: the tier you reach applies to the whole day's bets.
-**VIP**: fixed rate per category, no daily cap.
-Selected Games use their own rate.</textarea><div class="note">每行一条编号条款；**文字** 加粗。领取时间、取整规则、各 Category 游戏列表由系统自动追加。</div></div>
+  return `<div class="form"><label>活动条款</label><div><textarea oninput="S.rulesText=this.value;mark();pvRefresh()" style="width:100%;height:110px;border:1px solid #CBD1DA;border-radius:4px;padding:8px;font:inherit;font-size:12.5px">${S.rulesText.replace(/</g,'&lt;')}</textarea><div class="note">每行一条编号条款；**文字** 加粗。领取时间、取整规则、各 Category 游戏列表由系统自动追加。</div></div>
   <label>返水比例表</label><div class="note">自动由「返水等级」+「Selected Games」生成，此处不维护</div></div>`;
 }
-function aAssets(){
-  return `<div class="form">
-  <label>① 活动弹窗（整图）</label><div><img src="assets/popup.webp" style="height:96px;vertical-align:middle;border-radius:6px"> <button class="ab">替换</button> <span class="sw"></span> <select><option>每日首次打开</option><option>每次打开</option><option>仅一次</option></select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页</span></div>
-  <label>② 活动奖励弹窗</label><div><img src="assets/model.webp" style="height:64px;vertical-align:middle;border-radius:6px"> <button class="ab">替换人物图</button> 彩带 <input value="Congratulations !" style="width:130px"> 标题 <input value="DAILY CASHBACK BONUS!" style="width:170px"><div class="note">按钮 Claim / Cashback Details；金额向下取整；自动领取时不弹</div></div>
-  <label>③ 独立挂件</label><div><img src="assets/gift.webp" style="height:48px;vertical-align:middle"> <button class="ab">替换</button> <span class="sw"></span> 角标 <input value="1.5%+2%" maxlength="12" style="width:90px"><span class="h">≤ 12，前端渲染；弹窗时隐藏，可拖动吸边</span></div>
-  <label>④ 首页 Banner</label><div><img src="assets/banner.webp" style="height:56px;vertical-align:middle;border-radius:6px"> <button class="ab">替换</button><span class="h">1098 × 474；在首页轮播内，点击进活动页</span></div></div>`;
+function aAssets(){const a=S.assets;
+  return `<div class="note" style="margin-bottom:8px">图片可直接替换（原型读取本地文件），所有项改完前台和右侧预览即时生效。</div><div class="form">
+  <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页。前台点「重新打开 APP」按频率验证</span></div>
+  <label>② 活动奖励弹窗</label><div><img src="${a.rw.img}" style="height:64px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.rw.img",'替换人物图')} 彩带 <input value="${a.rw.ribbon}" maxlength="24" style="width:130px" oninput="S.assets.rw.ribbon=this.value;mark()"> 标题 <input value="${a.rw.title}" maxlength="30" style="width:170px" oninput="S.assets.rw.title=this.value;mark()"><div class="note">按钮 Claim / Cashback Details；金额向下取整；自动领取时不弹</div></div>
+  <label>③ 独立挂件</label><div><img src="${a.wid.img}" style="height:48px;vertical-align:middle"> ${upBtn("S.assets.wid.img")} ${tg(a.wid.on,'setWidOn')} 角标 <input value="${a.wid.label}" maxlength="12" style="width:90px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();arender()"><span class="h">≤ 12，前端渲染；同时用于首页快捷入口；弹窗时隐藏</span></div>
+  <label>④ 首页 Banner</label><div><img src="${a.banner.img}" style="height:56px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.banner.img")}<span class="h">1098 × 474；在首页轮播首张，点击进活动页；活动关闭时自动下架</span></div></div>`;
 }
+function upBtn(path,txt){return `<label class="ab" style="display:inline-block;cursor:pointer">${txt||'替换'}<input type="file" accept="image/*" style="display:none" onchange="readImg(this,v=>{${path}=v;mark();log('活动配置','替换素材','${path.split('.').slice(2).join('.')}');arender()})"></label>`}
+function readImg(inp,cb){const f=inp.files[0];if(!f)return;if(f.size>1048576)return alert('图片须 ≤ 1MB');const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}
+function setPopOn(v){S.assets.pop.on=v;mark();log('活动配置','活动弹窗',v?'开启':'关闭');arender()}
+function setWidOn(v){S.assets.wid.on=v;mark();log('活动配置','独立挂件',v?'开启':'关闭');arender()}
+function pvPaint(){const pv=document.getElementById('pvscr'); if(pv){const keep=[view,fv,popup,toast,user];view='act';fv='today';popup=null;toast='';user='std';pv.innerHTML=act();[view,fv,popup,toast,user]=keep}}
+function pvRefresh(){const pv=document.getElementById('pvscr');if(pv&&typeof pvPaint==='function')pvPaint()}
 function openPub(){
   const tierErr=(window.__tierErr||[]).length, selLow=S.sel.on&&S.featured.some(f=>f.rate<=Math.max(...S.tiers.map(t=>t.r[f.cat]||0)));
   if(tierErr||selLow) return alert('存在不可发布项：'+(tierErr?'返水等级校验未通过；':'')+(selLow?'Selected Games 比例须高于所选类型最高档。':''));
@@ -569,11 +596,11 @@ function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
   <table class="at"><tr><th>时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>变更内容</th></tr>${L.map(l=>`<tr><td>${l.t}</td><td>${l.op}</td><td>${l.m}</td><td>${l.a}</td><td>${l.d}</td></tr>`).join('')||'<tr><td colspan="5" class="note">暂无</td></tr>'}</table><div class="note" style="margin-top:6px">记录时间、操作人、模块、操作类型、变更前后内容；权限修改记入系统管理日志。</div></div>`;
 }
 function aList(){
-  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可复制为新活动（当前活动关闭后可用）。</span></div>
+  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可查看设置。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>参与人数</th><th>操作</th></tr>
   <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月</td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
-  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>16,930</td><td><button class="ab">查看设置</button><button class="ab" disabled>复制</button></td></tr>
-  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>2,210</td><td><button class="ab">查看设置</button><button class="ab" disabled>复制</button></td></tr></table></div>`;
+  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
+  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
 }
 function aReview(){
   const done=S.review.filter(r=>r.s!=='待核对');

@@ -277,7 +277,7 @@ function defaults(){return{
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li><b>VIP</b>: fixed rate per category, no daily cap.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'},{t:'11-16 18:40',op:'koi',m:'费用配置',a:'临时增加预算',d:'+₱300,000（谷歌验证）'}],
   budget:{cap:2000000,used:1512880.36,adds:[{t:'11-16 18:40',op:'koi',amt:300000,why:'周末流量高峰'}]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]},
-            {name:'Live Baccarat',cat:'casino',rate:1.2,games:['Evo Baccarat','Speed Baccarat'],w:[10,10]}],
+            {name:'PG Picks',cat:'slot',rate:1.2,games:['Mahjong Ways','Fortune Tiger'],w:[10,10]}],
   cfg:{minBet:100,cap:5000,expireH:48,turnover:1,settle:'05:00',claim:'manual',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
@@ -525,20 +525,20 @@ function cSelected(){
   const cat=CATS.find(c=>c.k===f.cat)||CATS[0];
   const maxStd=Math.max(...S.tiers.map(t=>t.r[cat.k]||0)); const low=f.rate<=maxStd;
   const taken=g=>S.featured.some((x,i)=>i!==selG&&x.games.includes(g));
-  return `<div class="note" style="margin-bottom:8px">开启后前台活动页显示「Selected Games」，每组一张卡；组内游戏按本组比例计算（所有会员相同），不再按 Category 计算，单笔投注只计一次。每组先选<b>类型（Category）</b>，再从该类型的游戏中勾选；一个游戏只能属于一个组。</div>
+  return `<div class="note" style="margin-bottom:8px">开启后前台活动页显示「Selected Games」，每组一张卡；组内游戏按本组比例计算（所有会员相同），不再按 Category 计算，单笔投注只计一次。类型固定为 <b>Slot</b>，每组从 Slot 的游戏中勾选；一个游戏只能属于一个组。</div>
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${tabs}</div>
   <div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
-  <label><i>*</i> 类型</label><div><select onchange="setSelCat(this.value)">${ACATS().map(c=>`<option value="${c.k}" ${c.k===f.cat?'selected':''}>${c.n}</option>`).join('')}</select><span class="h">切换类型会清空已选游戏</span></div>
+  <label>类型</label><div><b>${cat.n}</b> <span class="chip n">固定</span><span class="h">Selected Games 只支持 Slot 类型，不可切换</span></div>
   <label><i>*</i> 比例</label><div><input class="rin ${rateCls(f.rate)} ${low?'bad':''}" value="${f.rate}" onchange="S.featured[${selG}].rate=+this.value;mark();arender()"> %<span class="h">须高于「${cat.n}」普通玩家最高档 ${maxStd}%${low?'（当前不满足，不可发布）':''}</span></div>
   <label><i>*</i> 游戏</label><div><div class="gpick">${cat.games.map(g=>{const on=f.games.includes(g),dis=taken(g);return `<label class="${on?'on':''} ${dis?'dis':''}"><input type="checkbox" ${on?'checked':''} ${dis?'disabled':''} onchange="togSelGame('${g.replace(/'/g,"\\'")}',this.checked)">${g}${dis?' <small>已在其他组</small>':''}</label>`}).join('')||'<span class="note">该类型下暂无游戏，请先在「② Category 配置」添加</span>'}</div></div>
   <label>排序权重</label><div><table class="at" style="max-width:420px"><tr><th>游戏</th><th>权重（越小越靠前，默认 10）</th></tr>${f.games.map((g,j)=>`<tr><td>${g}</td><td><input class="rin" value="${f.w[j]}" onchange="S.featured[${selG}].w[${j}]=+this.value;mark()"></td></tr>`).join('')||'<tr><td colspan="2" class="note">未选游戏</td></tr>'}</table></div>
   <label>有效期</label><div class="note">同活动时间</div>
-  <label></label><div><button class="ab r" onclick="delSel()">删除本组</button></div></div>`;
+</div>`;
 }
 function setSelCat(k){const f=S.featured[selG];f.cat=k;f.games=[];f.w=[];mark();arender()}
 function togSelGame(g,on){const f=S.featured[selG];const j=f.games.indexOf(g);if(on&&j<0){f.games.push(g);f.w.push(10)}if(!on&&j>=0){f.games.splice(j,1);f.w.splice(j,1)}mark();arender()}
-function addSel(){const c=ACATS()[0];S.featured.push({name:'New Group '+(S.featured.length+1),cat:c.k,rate:1.5,games:[],w:[]});S.bets.std['feat'+(S.featured.length-1)]=0;S.bets.vip['feat'+(S.featured.length-1)]=0;S.bets.new['feat'+(S.featured.length-1)]=0;selG=S.featured.length-1;mark();arender()}
+function addSel(){const c=CATS.find(x=>x.k==='slot')||ACATS()[0];S.featured.push({name:'New Group '+(S.featured.length+1),cat:c.k,rate:1.5,games:[],w:[]});S.bets.std['feat'+(S.featured.length-1)]=0;S.bets.vip['feat'+(S.featured.length-1)]=0;S.bets.new['feat'+(S.featured.length-1)]=0;selG=S.featured.length-1;mark();arender()}
 function delSel(){if(!confirm('删除本组？组内游戏回到所属 Category 比例（原型）'))return;log('活动配置','删除 Selected Games 组',S.featured[selG].name);S.featured.splice(selG,1);selG=0;mark();arender()}
 function rateCls(v){return v>5?'bad':v>1?'blue':''}
 function bTiers(){

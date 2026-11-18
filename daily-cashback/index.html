@@ -378,13 +378,13 @@ function act(){
     else h+=`<div class="card total"><div class="lb">Cashback (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
   }else{
     const y=S.history[user].find(x=>x.d==='11-17');
-    if(cbOn){
-    h+=`<div class="card total"><div class="lb">Yesterday's Cashback (11-17)</div>`;
-    if(!y) h+=`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback yesterday</div>`;
-    else if(y.s==='a') h+=`<div class="amt" style="margin-bottom:10px">${pesoI(y.amt)}</div><button class="btn" onclick="claimAll()">Claim ${pesoI(a)}</button>`;
-    else h+=`<div class="amt" style="color:#17914A">${pesoI(y.amt)}</div><div class="note">Claimed today</div>`;
-    h+=`</div>`;}
-    if(bbOn){const yb=bbReward(S.bb.yBet[user]||0),cl=S.bb.claimed[user];h+=`<div class="card total"><div class="lb">Yesterday's Bet Bonus (11-17)</div>${!yb?'<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus yesterday</div>':cl||S.bb.mode==='auto'?`<div class="amt g" style="color:#17914A">${pesoI(yb)}</div><div class="note">${S.bb.mode==='auto'?'Sent at '+S.bb.autoAt:'Claimed today'}</div>`:`<div class="amt g" style="margin-bottom:10px">${pesoI(yb)}</div><button class="btn bbtn" onclick="S.bb.claimed[user]=true;S.balance[user]+=${yb};flash('+${pesoI(yb)} Bet Bonus')">Claim ${pesoI(yb)}</button>`}</div>`}
+    const yb=bbReward(S.bb.yBet[user]||0), bbDone=S.bb.claimed[user]||S.bb.mode==='auto', bbAv=bbOn&&yb>0&&!bbDone?yb:0, cbAv=cbOn&&y&&y.s==='a'?a:0;
+    const cbAmt=!y?`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback</div>`:`<div class="amt" ${y.s==='a'?'':'style="color:#17914A"'}>${pesoI(y.amt)}</div><div class="note">${y.s==='a'?'Available':'Claimed today'}</div>`;
+    const bbAmt=!yb?`<div class="amt g" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus</div>`:`<div class="amt g" ${bbDone?'style="color:#17914A"':''}>${pesoI(yb)}</div><div class="note">${S.bb.mode==='auto'?'Sent at '+S.bb.autoAt:bbDone?'Claimed today':'Available'}</div>`;
+    const tot=cbAv+bbAv, btn=tot?`<button class="btn ${cbOn?'':'bbtn'}" style="grid-column:1/-1;margin-top:8px" onclick="claimY()">Claim ${pesoI(tot)}</button>`:'';
+    if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (11-17)</div>${cbAmt}</div><i class="vl"></i><div><div class="lb">Bet Bonus (11-17)</div>${bbAmt}</div>${btn}</div>`;
+    else if(bbOn) h+=`<div class="card total"><div class="lb">Yesterday's Bet Bonus (11-17)</div>${bbAmt}${btn}</div>`;
+    else h+=`<div class="card total"><div class="lb">Yesterday's Cashback (11-17)</div>${cbAmt}${btn}</div>`;
   }
   if(cbOn&&!isNew){
     if(S.sel.on) h+=`<div class="h3">Selected Games</div>`+c.feats.map((x,i)=>selCard(x,i)).join('');
@@ -461,6 +461,7 @@ function failPop(){return `<div class="mask"><div class="pop" style="background:
 function go(v){view=v;render();document.querySelector('.body')?.scrollTo(0,0)}
 function closePop(){const p=popup;popup=null;if(p==='splash')afterSplash();else render()}
 function afterSplash(){if(S.cfg.claim==='manual'&&avail(user)>0){popup='claim'}render()}
+function claimY(){const yb=bbReward(S.bb.yBet[user]||0);let t=0;if(M().cb&&avail(user)>0){t+=avail(user);doClaim()}if(M().bb&&yb>0&&!S.bb.claimed[user]&&S.bb.mode!=='auto'){S.bb.claimed[user]=true;S.balance[user]=r2(S.balance[user]+yb);t+=yb}flash(`+${pesoI(t)} added to balance`)}
 function claimAll(fromPop){
   const a=avail(user); if(a<=0) return;
   if(fromPop){claiming=true;render();setTimeout(()=>{claiming=false;doClaim('Popup');popup=null;flash(`+${pesoI(a)} added to balance`)},900);return}

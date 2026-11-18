@@ -710,9 +710,8 @@ function aReview(){
 }
 function aPayout(){
   return `<div class="panel"><h3>发放方式</h3><div class="form"><label>发放方式</label><div><select><option>自动（复查通过后自动发放）</option><option>手动</option></select></div>
-  <label>封控条件</label><div style="line-height:2"><label style="text-align:left"><input type="checkbox" checked> 当日返水总额较近 7 日均值涨幅 > <input class="rin" value="50">%</label><br><label><input type="checkbox" checked> 单用户当日返水 > ₱<input class="rin" style="width:80px" value="20000"></label><br><label><input type="checkbox" checked> 返水总额 / 当日充值总额 > <input class="rin" value="3">%</label><br><label><input type="checkbox"> 同 IP / 设备多账号领取 > <input class="rin" value="5"> 组</label></div>
-  <label>通知人员</label><div>ops_kim（邮件 / 短信） · risk_lee（邮件 / 电话） <button class="ab">+ 添加</button></div></div>
-  <div class="tip warn" style="margin-top:12px">自动模式下任一条件触发 → 预警 → 暂停当日自动发放 → 切换为手动 → 通知运营核查；次日恢复自动。</div></div>
+  <label>封控条件</label><div style="line-height:2"><label style="text-align:left"><input type="checkbox" checked> 当日返水总额较近 7 日均值涨幅 > <input class="rin" value="50">%</label><br><label><input type="checkbox" checked> 单用户当日返水 > ₱<input class="rin" style="width:80px" value="20000"></label><br><label><input type="checkbox" checked> 返水总额 / 当日充值总额 > <input class="rin" value="3">%</label><br><label><input type="checkbox"> 同 IP / 设备多账号领取 > <input class="rin" value="5"> 组</label></div></div>
+  <div class="tip warn" style="margin-top:12px">自动模式下任一条件触发 → 预警 → 暂停当日自动发放 → 切换为手动 → 运营在本页核查；次日恢复自动。</div></div>
   <div class="panel"><h3>返水复查报告（按日）</h3><table class="at"><tr><th>统计日</th><th>返水人数</th><th>返水总额</th><th>充值</th><th>提款</th><th>留存款项</th><th>返水 / 充值</th><th>复查结论</th><th>发放状态</th><th>操作</th></tr>
   <tr><td>11-17</td><td>16,882</td><td>₱488,210.40</td><td>₱21,400,500.00</td><td>₱17,980,300.00</td><td>₱3,420,200.00</td><td>2.28%</td><td><span class="chip g">通过</span></td><td><span class="chip g">已自动发放</span></td><td><button class="ab">明细</button></td></tr>
   <tr><td>11-16</td><td>17,105</td><td>₱802,950.10</td><td>₱20,880,000.00</td><td>₱18,220,410.00</td><td>₱2,659,590.00</td><td>3.85%</td><td><span class="chip r">触发封控：涨幅 62%</span></td><td><span class="chip o">已转手动</span></td><td><button class="ab p" onclick="alert('问题确认：当日返水总额较近 7 日均值涨幅 62%。\\n可选：发放 / 暂停 / 取消（原型）')">核查并发放</button></td></tr></table></div>`;

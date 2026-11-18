@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.3</title>
+<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.4</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -171,6 +171,12 @@ table.rt tr.fe td{background:#FFF7D6}
 .ptabs a.on{color:#2A6FDB;border-color:#2A6FDB;font-weight:600}
 .panel{background:#fff;border-radius:8px;padding:16px;margin-bottom:14px}
 .panel h3{margin:0 0 10px;font-size:14px}
+.subt{border-left:3px solid #1677FF;padding-left:8px;font-weight:700;font-size:15px;color:#1F2937;margin:14px 0 12px}
+.at.bbt td,.at.bbt th{text-align:center}.at.bbt td{padding:8px 10px}.at.bbt .rin{text-align:left}
+a.lk{color:#1677FF;cursor:pointer}a.lk:hover{text-decoration:underline}
+.dis{display:inline-block;background:#F5F6F8;border:1px solid #DDE1E7;border-radius:4px;padding:6px 12px;color:#8A93A0;font-size:13px}
+.rdo{display:inline-flex;gap:14px;margin-right:6px}.rdo label{display:inline-flex;align-items:center;gap:5px;cursor:pointer;color:#1F2937;text-align:left}.rdo span{width:14px;height:14px;border-radius:50%;border:1px solid #BFC5CF;display:inline-block;box-sizing:border-box}.rdo span.on{border:4px solid #1677FF}
+.trial{max-width:560px;background:#F7F9FC;border:1px dashed #C9D3E3;border-radius:6px;padding:10px 14px;font-size:13px;color:#374151}
 .tip{background:#EAF2FF;border:1px solid #BcD3F7;color:#1A4FA8;border-radius:6px;padding:8px 12px;font-size:12px;margin-bottom:12px}
 .warn{background:#FFF4E5;border-color:#F6C98B;color:#9A5A00}
 table.at{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -212,7 +218,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 </style>
 </head>
 <body>
-<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.3</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.4</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button></div></div>
 
 <div id="front">
@@ -239,7 +245,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>Category 及每类游戏、Selected Games 组（类型 / 游戏 / 比例 / 图标）、返水等级、页面素材、规则条款、活动开关均由后台配置。</li>
       <li>后台任何配置修改后，前台与后台右侧预览即时生效（同一页面内，刷新恢复默认）。</li>
     </ul>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.3</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.4</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -290,7 +296,7 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
-  bb:{tiers:[[100,1,null],[1000,2,null],[5000,5,['Super Ace','Fortune Gems','Money Coming','Boxing King','Golden Empire','Mahjong Ways','Fortune Tiger','Crash','Aviator']],[10000,10,null]],calc:'single',mode:'manual',keep:3,autoAt:'09:00',budget:300000,used:216400,wg:{slot:1,casino:3,arcade:2,poker:5,fishing:2,bingo:2},yBet:{std:19800,new:0},claimed:{std:false,new:false}},
+  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'manual',keep:3,autoAt:'09:00',budget:300000,used:216400,wg:{slot:1,casino:3,arcade:2,poker:5,fishing:2,bingo:2},yBet:{std:12350,new:0},claimed:{std:false,new:false}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
@@ -311,9 +317,10 @@ function tierIdx(bet){let i=-1;S.tiers.forEach((t,k)=>{if(bet>=t.th)i=k});return
 const ACATS=()=>CATS.filter(c=>c.on!==false);
 const STD_ACC='juan88';
 const M=()=>S.mods;
+function bbBet(u){const g=S.bb.games||LIB.map(x=>x[0]);return Math.round(Object.entries(S.bets[u]).reduce((a,[k,v])=>{const c=CATS.find(c=>c.k===k)||(k.startsWith('feat')?CATS.find(c=>c.k==='slot'):null);if(!c)return a;const L=LIB.filter(x=>x[2]===c.k);return a+(L.length?v*L.filter(x=>g.includes(x[0])).length/L.length:0)},0)*100)/100}
 function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);if(!hit.length)return 0;return S.bb.calc==='sum'?hit.reduce((a,t)=>a+t[1],0):hit.at(-1)[1]}
 const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
-function bbSection(){const b=allBet(user),r=bbReward(b);const T=S.bb.tiers;const nx=T.find(t=>b<t[0]);
+function bbSection(){const b=bbBet(user),r=bbReward(b);const T=S.bb.tiers;const nx=T.find(t=>b<t[0]);
   return `<div class="h3">Daily Bet Bonus</div><div class="card bbx"><div class="bb-top"><div><small>Today's valid bet</small><b>${peso(b)}</b></div><div style="text-align:right"><small>Bet Bonus (est.)</small><b class="g">${pesoI(r)}</b></div></div>${nx?`<div class="note" style="margin:6px 0 2px">Bet ${peso(nx[0]-b)} more → ${pesoI(S.bb.calc==='sum'?T.filter(t=>nx[0]>=t[0]).reduce((a,t)=>a+t[1],0):nx[1])}</div>`:'<div class="note" style="margin:6px 0 2px">Top tier reached</div>'}
   ${T.map(t=>{const ok=b>=t[0];return `<div class="bb-row ${ok?'ok':''}"><span>Bet ≥ ${pesoI(t[0])}</span><span>Reward <b>${pesoI(t[1])}</b></span><i>${ok?'✓':''}</i></div>`}).join('')}
   <div class="note" style="margin-top:6px">${S.bb.calc==='sum'?'Rewards of all tiers you reach add up.':'You get the reward of the highest tier you reach.'} One reward per day, settled at 01:00. ${S.bb.mode==='auto'?`Sent to your balance at ${S.bb.autoAt}.`:`Claim within ${S.bb.keep} days.`}</div></div>`}
@@ -372,7 +379,7 @@ function act(){
   ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Cashback already generated can still be claimed within its validity period.</div>'}${S.cfg.kyc==='需要 KYC'&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join Daily Cashback.</div>':''}
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
-    const bbr=bbReward(allBet(user));
+    const bbr=bbReward(bbBet(user));
     if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (est.)</div><div class="amt">${pesoI(c.total)}</div></div><i class="vl"></i><div><div class="lb">Bet Bonus (est.)</div><div class="amt g">${pesoI(bbr)}</div></div><div class="note" style="grid-column:1/-1">Updates every 10 min</div></div>`;
     else if(bbOn) h+=`<div class="card total"><div class="lb">Bet Bonus (estimated)</div><div class="amt g">${pesoI(bbr)}</div><div class="note">Updates every 10 min</div></div>`;
     else h+=`<div class="card total"><div class="lb">Cashback (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
@@ -440,7 +447,7 @@ function featPage(){
   <div class="fp-grid">${order.map(o=>{const p=pal[hs(o.g)%pal.length];return `<div class="fp-g"><div class="fp-img" style="background:linear-gradient(150deg,${p[0]},${p[1]})"><span class="fp-tag">${f.rate}% Cashback</span><b>${o.g}</b></div><p>${o.g}</p><button onclick="toast='Opening ${o.g.replace(/'/g,"\\'")}…';render();setTimeout(()=>{toast='';render()},1500)">Play</button></div>`}).join('')||'<div class="note" style="grid-column:1/-1;text-align:center">No games yet</div>'}</div></div>`;
 }
 function rules(){
-  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets from 00:00 to 23:59 each day are added up.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>${S.bb.calc==='sum'?'Rewards of all tiers you reach are added up.':'You get the reward of the highest tier you reach.'}</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>${S.bb.mode==='auto'?`Rewards are sent to your balance automatically at ${S.bb.autoAt} every day.`:`Claim your reward within ${S.bb.keep} days, or it expires.`}</li><li>Rewards need wagering before withdrawal on the tier's eligible games: reward × multiplier of the game type (${CATS.filter(c=>S.bb.wg[c.k]>0).map(c=>c.n+' '+S.bb.wg[c.k]+'x').join(', ')}).</li></ol></div>`:'';
+  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>${S.bb.calc==='sum'?'Rewards of all tiers you reach are added up.':'You get the reward of the highest tier you reach.'}</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>${S.bb.mode==='auto'?`Rewards are sent to your balance automatically at ${S.bb.autoAt} every day.`:`Claim your reward within ${S.bb.keep} days, or it expires.`}</li><li>Rewards need wagering before withdrawal on eligible games: reward × multiplier of the game type (${CATS.filter(c=>S.bb.wg[c.k]>0).map(c=>c.n+' '+S.bb.wg[c.k]+'x').join(', ')}).</li></ol></div>`:'';
   if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and ${S.cfg.expireH?`can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.`:'can be claimed at any time — it does not expire.'}</li>
@@ -511,13 +518,18 @@ function aConfig(){
 }
 function setBB(v){if(!v&&!M().cb)return alert('至少开启 1 个活动');M().bb=v;mark();log('活动配置','活动组合','Bet Bonus'+(v?' 开启':' 关闭'));syncMods();arender()}
 function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus 已关闭：前台不显示 Bet Bonus 金额与档位区块。配置保留，开启后恢复。</div>`;
-  return `<div class="note" style="margin-bottom:8px">按玩家自然日有效投注总额（所有游戏类型）给固定奖励，配置项沿用「每日投注奖」后台。与 Cashback 同时开启时，前台顶部右侧显示 Bet Bonus，档位区块排在 Cashback 内容下面。</div><div class="form" style="grid-template-columns:150px 1fr">
-  <label><i>*</i> 返奖档位</label><div><table class="at" style="max-width:780px"><tr><th>档位</th><th>每日有效投注额</th><th>奖励金额</th><th>奖励打码范围（流水指定游戏）</th><th></th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>≥ <input class="rin" style="width:90px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td><input class="rin" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td><button class="ab p" onclick="openBBPick(${i})">选择参与活动游戏</button><div class="note" style="margin-top:3px">${bbScope(t).txt}</div></td><td>${b.tiers.length>1?`<button class="ab r" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</button>`:''}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2,l[2]?[...l[2]]:null]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均从低到高递增；投注额为 ≥</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
-  <label><i>*</i> 计算方式</label><div>${tg(b.calc==='single','setBBCalc','不累加','累加')}<span class="h">不累加：只取达到的最高一档；累加：达到的各档奖励相加</span></div>
-  <label>结算</label><div class="note">每天 01:00 结算前一天 00:00–23:59 的有效投注；每人每天最多 1 笔奖励</div>
+  return `<div class="note" style="margin-bottom:8px">按玩家自然日在「参与活动游戏」上的有效投注总额给固定奖励，配置项沿用「每日投注奖」后台。与 Cashback 同时开启时，前台顶部右侧显示 Bet Bonus，档位区块排在 Cashback 内容下面。</div><div class="form" style="grid-template-columns:150px 1fr">
+</div><div class="subt">档位配置</div><div class="form" style="grid-template-columns:150px 1fr">
+  <label><i>*</i> 参与活动游戏</label><div><button class="ab" onclick="openBBPick()">选择参与活动游戏</button><span style="margin-left:10px">${bbScope().txt}</span><span class="h">只有被勾选的游戏产生的有效投注，才计入本活动</span></div>
+  <label style="align-self:start;padding-top:8px"><i>*</i> 返奖档位</label><div><table class="at bbt" style="max-width:560px"><tr><th style="width:56px">档位</th><th>每日有效投注额</th><th>奖励金额</th><th style="width:70px">操作</th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>投注额 ≥ <input class="rin" style="width:100px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td>返 <input class="rin" style="width:100px" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<a class="lk" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</a>`:'<span class="note">—</span>'}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均需从低到高递增；投注额为 ≥（大于等于）</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
+  <label><i>*</i> 计算方式</label><div>${rd(b.calc==='single','setBBCalc','不累加','累加')}<span class="h">默认不累加：只取达到的最高一档；累加：达到的各档奖励相加</span></div>
+  <label>结算</label><div><span class="dis">每天 01:00 结算前一天 00:00—23:59 的有效投注</span><span class="h">每人每天最多 1 笔奖励</span></div>
+  <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
+</div><div class="subt">发放与流水</div><div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 领奖方式</label><div>${tg(b.mode==='manual','setBBMode','手动领取','自动发放')} ${b.mode==='manual'?`领取有效期 <input class="rin" value="${b.keep}" onchange="S.bb.keep=Math.max(1,+this.value||1);mark();arender()"> 天`:`发放时间 <input type="time" value="${b.autoAt}" onchange="S.bb.autoAt=this.value;mark();arender()">`}</div>
   <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div>
-  <label><i>*</i> 流水倍数</label><div><table class="at" style="max-width:520px"><tr><th>游戏类型</th><th>计入流水</th><th>倍数</th></tr>${CATS.map(c=>`<tr><td>${c.n}</td><td><input type="checkbox" ${b.wg[c.k]>0?'checked':''} onchange="S.bb.wg['${c.k}']=this.checked?1:0;mark();arender()"></td><td>${b.wg[c.k]>0?`<input class="rin" value="${b.wg[c.k]}" onchange="S.bb.wg['${c.k}']=+this.value;mark()"> 倍`:'<span class="note">不计入</span>'}</td></tr>`).join('')}</table><div class="note">某类型流水要求 = 奖励 × 该类型倍数；只有该档「奖励打码范围」内游戏的有效投注计入流水</div></div></div>`;}
+  <label><i>*</i> 流水倍数</label><div><table class="at" style="max-width:520px"><tr><th>游戏类型</th><th>计入流水</th><th>倍数</th></tr>${CATS.map(c=>`<tr><td>${c.n}</td><td><input type="checkbox" ${b.wg[c.k]>0?'checked':''} onchange="S.bb.wg['${c.k}']=this.checked?1:0;mark();arender()"></td><td>${b.wg[c.k]>0?`<input class="rin" value="${b.wg[c.k]}" onchange="S.bb.wg['${c.k}']=+this.value;mark()"> 倍`:'<span class="note">不计入</span>'}</td></tr>`).join('')}</table><div class="note">某类型流水要求 = 奖励 × 该类型倍数；只有「参与活动游戏」的有效投注计入流水</div></div></div>`;}
+function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
 function setBBMode(v){S.bb.mode=v?'manual':'auto';mark();arender()}
 function setMod(k){const o=k==='cb'?'bb':'cb';if(M()[k]&&!M()[o])return alert('至少开启 1 个活动');M()[k]=!M()[k];mark();log('活动配置','活动组合',(k==='cb'?'Cashback':'Bet Bonus')+(M()[k]?' 开启':' 关闭'));syncMods();arender()}
@@ -568,13 +580,14 @@ function cCategory(){
 let pick=null,pickMode='cat';
 function openGamePick(m){pickMode=m||'cat';pick=new Set(pickMode==='sel'?S.featured[selG].games:CATS[selCat].games);drawPick()}
 let pickTier=0;
-function openBBPick(i){pickMode='bbt';pickTier=i;const g=S.bb.tiers[i][2];pick=new Set(g||LIB.map(x=>x[0]));drawPick()}
-function bbScope(t){const g=t[2];if(!g||g.length===LIB.length)return {txt:'全部游戏',v:[...new Set(LIB.map(x=>x[1]))].length,n:LIB.length};const v=new Set(LIB.filter(x=>g.includes(x[0])).map(x=>x[1]));return {txt:`已选择 ${v.size} 个厂商 / ${g.length} 个游戏`,v:v.size,n:g.length}}
+function openBBPick(){pickMode='bbt';pick=new Set(S.bb.games||LIB.map(x=>x[0]));drawPick()}
+if(S.bb.games==='DEF'){const ex=['Super Ace Deluxe','Fortune Gems 2','Pinata Wins','Pusoy Go','Fishing YiLuFa','Sic Bo','Mines','Bingo Adventure'];S.bb.games=LIB.map(x=>x[0]).filter(g=>!ex.includes(g))}
+function bbScope(){const g=S.bb.games||LIB.map(x=>x[0]);const v=new Set(LIB.filter(x=>g.includes(x[0])).map(x=>x[1]));return {txt:`已选择 ${v.size} 个厂商 / ${g.length} 个游戏`,v:v.size,n:g.length}}
 function drawPickAll(){
   const st=(arr)=>{const n=arr.filter(g=>pick.has(g)).length;return n===0?'':n===arr.length?'all':'some'};
   const box=(state,on)=>`<span class="tcb ${state}" onclick="${on}"></span>`;const J=a=>JSON.stringify(a).replace(/"/g,'&quot;');
   const all=LIB.map(x=>x[0]);
-  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:780px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">可以参与活动游戏 · 第 ${pickTier+1} 档流水</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
+  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:780px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">选择参与活动游戏 · Bet Bonus</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
   <p class="note" style="margin:8px 0">支持按 游戏类型 → 游戏厂商 → 具体游戏 三级选择，勾选上级自动联动下级，以最终勾选的游戏范围生效</p>
   <div class="tree" style="max-height:460px"><div class="t1">${box(st(all),`pickAll(${J(all)})`)}<b>全部</b> <span>${all.filter(g=>pick.has(g)).length}/${all.length}</span></div>
   ${CATS.map(c=>{const L=LIB.filter(x=>x[2]===c.k);const ga=L.map(x=>x[0]);const vs=[...new Set(L.map(x=>x[1]))];return `<div class="t2">▾ ${box(st(ga),`pickAll(${J(ga)})`)}<b>${c.n}</b> <span>${ga.filter(g=>pick.has(g)).length}/${ga.length}</span>${vs.map(v=>{const gs=L.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2" style="padding-left:22px">▾ ${box(st(gs),`pickAll(${J(gs)})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${g}</label>`).join('')}</div></div>`}).join('')}</div>`}).join('')}</div>
@@ -593,7 +606,7 @@ function drawPick(){if(pickMode==='bbt')return drawPickAll();
 }
 function pickOne(g){pick.has(g)?pick.delete(g):pick.add(g);drawPick()}
 function pickAll(arr){const full=arr.every(g=>pick.has(g));arr.forEach(g=>full?pick.delete(g):pick.add(g));drawPick()}
-function savePick(){if(pickMode==='bbt'){const n=LIB.filter(x=>pick.has(x[0])).map(x=>x[0]);if(!n.length)return alert('至少选择 1 个游戏');S.bb.tiers[pickTier][2]=n.length===LIB.length?null:n;log('活动配置','Bet Bonus 流水游戏',`第 ${pickTier+1} 档：${bbScope(S.bb.tiers[pickTier]).txt}`);pick=null;document.getElementById('modal').innerHTML='';mark();arender();return}if(pickMode==='sel'){const f=S.featured[selG];const ow={};f.games.forEach((g,j)=>ow[g]=f.w[j]);const n=LIB.filter(x=>pick.has(x[0])).map(x=>x[0]);f.games=n;f.w=n.map(g=>ow[g]??10);log('活动配置','Selected Games 游戏',n.length+' 款');pick=null;document.getElementById('modal').innerHTML='';mark();arender();return}const cur=CATS[selCat];const before=cur.games.length;cur.games=LIB.filter(x=>x[2]===cur.k&&pick.has(x[0])).map(x=>x[0]);S.featured.forEach(f=>{for(let j=f.games.length-1;j>=0;j--){if(!CATS.some(c=>c.games.includes(f.games[j]))){f.games.splice(j,1);f.w.splice(j,1)}}});log('活动配置','配置游戏',`${cur.n}：${before} → ${cur.games.length} 款`);pick=null;document.getElementById('modal').innerHTML='';mark();arender()}
+function savePick(){if(pickMode==='bbt'){const n=LIB.filter(x=>pick.has(x[0])).map(x=>x[0]);if(!n.length)return alert('至少选择 1 个游戏');S.bb.games=n;log('活动配置','Bet Bonus 参与活动游戏',bbScope().txt);pick=null;document.getElementById('modal').innerHTML='';mark();arender();return}if(pickMode==='sel'){const f=S.featured[selG];const ow={};f.games.forEach((g,j)=>ow[g]=f.w[j]);const n=LIB.filter(x=>pick.has(x[0])).map(x=>x[0]);f.games=n;f.w=n.map(g=>ow[g]??10);log('活动配置','Selected Games 游戏',n.length+' 款');pick=null;document.getElementById('modal').innerHTML='';mark();arender();return}const cur=CATS[selCat];const before=cur.games.length;cur.games=LIB.filter(x=>x[2]===cur.k&&pick.has(x[0])).map(x=>x[0]);S.featured.forEach(f=>{for(let j=f.games.length-1;j>=0;j--){if(!CATS.some(c=>c.games.includes(f.games[j]))){f.games.splice(j,1);f.w.splice(j,1)}}});log('活动配置','配置游戏',`${cur.n}：${before} → ${cur.games.length} 款`);pick=null;document.getElementById('modal').innerHTML='';mark();arender()}
 function addCat(){const n=document.getElementById('newCat').value.trim();if(!n)return alert('请输入分类名称');if(CATS.some(c=>c.n===n))return alert('分类名称不能重复');const k='c'+Date.now();const pal=['#0EA5A4','#B45309','#6D28D9','#BE185D','#047857'];CATS.push({k,n,c:pal[CATS.length%pal.length],games:[],on:true});S.tiers.forEach(t=>t.r[k]=0.3);S.vip[k]=1;selCat=CATS.length-1;mark();log('活动配置','新增分类',n);arender()}
 function delCat(i){if(!confirm(`删除分类「${CATS[i].n}」？其 ${CATS[i].games.length} 款游戏将不返水；引用该分类的 Selected Games 组需改类型（原型）`))return;log('活动配置','删除分类',CATS[i].n);CATS.splice(i,1);selCat=0;mark();arender()}
 function mvCat(i,d){const t=CATS[i];CATS[i]=CATS[i+d];CATS[i+d]=t;selCat=i+d;mark();arender()}

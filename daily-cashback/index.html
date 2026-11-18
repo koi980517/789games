@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789Games 次日返水活动（Daily Cashback）原型 v1.3</title>
+<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.3</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -212,7 +212,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 </style>
 </head>
 <body>
-<div class="top"><b>789Games · 次日返水活动（Daily Cashback）原型</b><span class="ver">v1.3</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.3</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button></div></div>
 
 <div id="front">
@@ -239,7 +239,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>Category 及每类游戏、Selected Games 组（类型 / 游戏 / 比例 / 图标）、返水等级、页面素材、规则条款、活动开关均由后台配置。</li>
       <li>后台任何配置修改后，前台与后台右侧预览即时生效（同一页面内，刷新恢复默认）。</li>
     </ul>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水活动 PRD v1.3</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.3</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -249,11 +249,11 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
   <div class="shell">
     <div class="menu">
       <div class="g">首页</div><div class="g">数据统计</div><div class="g">用户相关</div><div class="g">财务管理</div>
-      <div class="g open">活动配置 ▾</div><a>充值活动</a><a>新用户转盘活动</a><a>返水与充返转盘抽奖活动</a><a class="on">次日返水活动</a>
+      <div class="g open">活动配置 ▾</div><a>充值活动</a><a>新用户转盘活动</a><a>返水与充返转盘抽奖活动</a><a class="on">次日返水与投注奖励活动</a>
       <div class="g">数据报表</div><div class="g">系统管理</div>
     </div>
     <div class="main">
-      <div class="crumb">位置 › 活动配置 › 活动中心 › <b>次日返水活动</b></div>
+      <div class="crumb">位置 › 活动配置 › 活动中心 › <b>次日返水与投注奖励活动</b></div>
       <div class="ptabs2" id="ptabs"></div>
       <div id="apage"></div>
     </div>
@@ -358,7 +358,7 @@ function home(){
   <div class="htiles">${tiles.map(t=>`<div style="background:linear-gradient(135deg,${t[2]},${t[3]})" ${t[4]?`onclick="${t[4]}"`:''}><b>${t[0]}</b><small>${t[1]}</small></div>`).join('')}</div>
   <div class="hmarq"><span>Welcome to 789Games.com! Daily Cashback up to 1.5% on Slots — claim it every day.</span></div>
   <div class="hsec">Recent Games</div><div class="hrecent">${games.map(g=>`<div style="background:linear-gradient(135deg,${g[2]},${g[3]})">${g[0].split(' ').map(x=>x[0]).join('')}</div>`).join('')}</div>
-  <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">1.5%+2%<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
+  <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">${A().wid.label}<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
   </div>
   <div class="hnav"><div class="on"><i></i>Home</div><div><i></i>Chat</div><div class="promo"><i></i>Promo</div><div><i></i>Wallet</div><div><i></i>Account</div></div>
   ${popup||!S.cfg.on||!A().wid.on?'':`<div class="widget" onclick="go('act')"><img src="${A().wid.img}" alt=""><span>${A().wid.label}</span></div>`}`;
@@ -530,7 +530,8 @@ function cBasic(){const c=S.cfg;
   return `<div class="form">
   <label><i>*</i> 活动组合</label><div><span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px">活动 1 · Cashback <span class="sw ${M().cb?'':'off'}" onclick="setMod('cb')"></span></span><span style="display:inline-flex;align-items:center;gap:6px">活动 2 · Bet Bonus <span class="sw ${M().bb?'':'off'}" onclick="setMod('bb')"></span></span><span class="h">至少开 1 个。两个都开：活动页顶部左 Cashback、右 Bet Bonus，Cashback 内容在前、Bet Bonus 在下；只开一个则只显示该活动</span></div>
   <label>挂件显示</label><div class="note">在「⑤ 页面素材」配置开关、图片与角标；弹窗出现时隐藏</div>
-  <label><i>*</i> 活动名称</label><div><input value="Daily Cashback 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题固定 Daily Cashback</span></div>
+  <label><i>*</i> 活动名称</label><div><input value="次日返水与投注奖励活动 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题按活动组合显示 Daily Cashback / Daily Bet Bonus</span></div>
+  <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、独立挂件角标、Hot Games 游戏角标统一显示此别名（与「⑤ 页面素材 › 挂件角标」同一字段）</span></div>
   <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
@@ -684,7 +685,7 @@ function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:now
 function aList(){
   return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可查看设置。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
-  <tr class="hl"><td>DCB-003</td><td>Daily Cashback 11月<div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div></td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
+  <tr class="hl"><td>DCB-003</td><td>次日返水与投注奖励活动 11月 <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div></td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
   <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>${bud(430118,500000)}</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
   <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>${bud(39880,50000)}</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
 }

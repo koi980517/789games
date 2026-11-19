@@ -238,7 +238,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
     <ul>
       <li>打开 APP：活动弹窗（整图，PLAY NOW 进活动页）→ 活动奖励弹窗（有可领时）。</li>
       <li>首页右侧独立挂件「1.5%+2%」，首页 Banner 首张为 Slots Cashback。</li>
-      <li>自动领取时结算后直接入账，不弹活动奖励弹窗。</li>
+      <li>自动领取时结算后直接入账；玩家进入 Home 页后弹一次活动奖励弹窗，提示已到账金额（按钮 OK）。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
       <li>VIP 固定返水比例为二期；一期所有玩家按档位计算、受最高返水上限限制。</li>
       <li>Selected Games 组内游戏按组比例，不再按 Category 计算；后台可整体关闭。</li>
@@ -352,7 +352,7 @@ function icon(c){return `<div class="ic" style="background:${c.c}">${c.n[0]}</di
 function render(){
   const el=document.getElementById('scr'); let h='';
   if(view==='home') h=home(); else if(view==='act') h=act(); else if(view==='hist') h=hist(); else if(view==='feat') h=featPage(); else if(view==='rules') h=rules(); else if(view==='detail') h=detail();
-  if(popup==='splash') h+=splash(); else if(popup==='claim') h+=claimPop(); else if(popup==='fail') h+=failPop();
+  if(popup==='splash') h+=splash(); else if(popup==='claim') h+=claimPop(); else if(popup==='auto') h+=autoPop(); else if(popup==='fail') h+=failPop();
   if(toast) h+=`<div class="toast">${toast}</div>`;
   el.innerHTML=h;
 }
@@ -461,6 +461,10 @@ function splash(){
   return `<div class="mask"><div class="actpop"><img src="${A().pop.img}" alt="Daily Cashback"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
 }
 let claiming=false;
+let autoN=null;
+function autoPop(){const n=autoN;
+  return `<div class="mask"><div class="rwpop"><img class="rw-model" src="${A().rw.img}" alt=""><div class="rw-ribbon">${A().rw.ribbon}</div><div class="rw-card"><div class="rw-t">${A().rw.title}</div><div class="rw-amt"><i>₱</i>${Math.floor(n.amt).toLocaleString('en-US')}</div><div class="rw-date" style="margin:-2px 0 10px">Credited to your balance</div><button class="rw-claim" onclick="closePop()">OK</button><button class="rw-det" onclick="autoN=null;popup=null;go('hist')"><b>?</b> Cashback Details</button><div class="rw-date">Cashback Date: ${n.n>1?n.n+' days · from ':''}2026-${n.d}</div></div><button class="actpop-x" style="top:auto;bottom:-46px;right:50%;transform:translateX(50%)" onclick="closePop()">×</button></div></div>`;
+}
 function claimPop(){
   const a=avail(user), L=S.history[user].filter(h=>h.s==='a'), d=L.length?L.map(h=>h.d).sort()[0]:'';
   return `<div class="mask"><div class="rwpop"><img class="rw-model" src="${A().rw.img}" alt=""><div class="rw-ribbon">${A().rw.ribbon}</div><div class="rw-card"><div class="rw-t">${A().rw.title}</div><div class="rw-amt"><i>₱</i>${Math.floor(a).toLocaleString('en-US')}</div><button class="rw-claim" ${claiming?'disabled':''} onclick="claimAll(true)">${claiming?'Claiming…':'Claim'}</button><button class="rw-det" onclick="popup=null;go('hist')"><b>?</b> Cashback Details</button><div class="rw-date">Cashback Date: ${L.length>1?L.length+' days · from ':''}2026-${d}</div></div><button class="actpop-x" style="top:auto;bottom:-46px;right:50%;transform:translateX(50%)" onclick="closePop()">×</button></div></div>`;
@@ -468,8 +472,8 @@ function claimPop(){
 function failPop(){return `<div class="mask"><div class="pop" style="background:#fff"><div style="font-weight:900;font-size:18px;margin:6px 0">Claim failed</div><div class="note" style="margin-bottom:14px">Network error. Please try again.</div><button class="btn" onclick="popup='claim';render()">Retry</button></div></div>`}
 let popHome=false;
 function go(v){if(v==='home'&&view!=='home'&&!popup&&S.cfg.on&&A().pop.on&&A().pop.freq==='home'){popup='splash';popHome=true}view=v;render();document.querySelector('.body')?.scrollTo(0,0)}
-function closePop(){const p=popup;popup=null;if(p==='splash')afterSplash();else render()}
-function afterSplash(){if(popHome){popHome=false;popup=null;render();return}if(S.cfg.claim==='manual'&&avail(user)>0){popup='claim'}render()}
+function closePop(){const p=popup;popup=null;if(p==='auto')autoN=null;if(p==='splash')afterSplash();else render()}
+function afterSplash(){if(popHome){popHome=false;popup=null;render();return}if(S.cfg.claim==='manual'&&avail(user)>0){popup='claim'}else if(autoN){popup='auto'}render()}
 function claimY(){const yb=bbReward(S.bb.yBet[user]||0);let t=0;if(M().cb&&avail(user)>0){t+=avail(user);doClaim()}if(M().bb&&yb>0&&!S.bb.claimed[user]&&S.bb.mode!=='auto'){S.bb.claimed[user]=true;S.balance[user]=r2(S.balance[user]+yb);t+=yb}flash(`+${pesoI(t)} added to balance`)}
 function claimAll(fromPop){
   const a=avail(user); if(a<=0) return;
@@ -481,7 +485,7 @@ function doClaim(){S.history[user].forEach(h=>{if(h.s==='a'){S.balance[user]=r2(
 function now(){const d=new Date(Date.now()+8*3600e3);return d.toISOString().slice(11,16)}
 function flash(t){toast=t;render();setTimeout(()=>{toast='';render()},1800)}
 function openApp(){view='home';fv='today';
-  if(S.cfg.claim==='auto'){const a=avail(user);if(a>0){doClaim();toast=`Auto-credited ${pesoI(a)}`;setTimeout(()=>{toast='';render()},2200)}}
+  if(S.cfg.claim==='auto'){const L=S.history[user].filter(h=>h.s==='a'),a=avail(user);if(a>0){autoN={amt:a,n:L.length,d:L.map(h=>h.d).sort()[0]};doClaim()}}
   hb=0;const p=A().pop;const day='11-18';let show=S.cfg.on&&p.on;
   if(show&&p.freq==='once'&&popShown>0) show=false;
   if(show&&p.freq==='daily'&&popDay===day+user) show=false;
@@ -554,7 +558,7 @@ function cBasic(){const c=S.cfg;
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
   <label><i>*</i> 最高返水上限</label><div><input value="${c.cap}" style="width:110px" onchange="S.cfg.cap=+this.value;mark();arender()"> ₱ / 人 / 日<span class="h">所有玩家（VIP 不受限为二期）</span></div>
-  <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，不弹奖励弹窗</span></div>
+  <label><i>*</i> 领取方式</label><div>${tg(c.claim==='manual','setClaim','手动领取','自动领取')}<span class="h">自动 = 结算后直接入账，玩家进入 Home 页后弹一次奖励弹窗提示到账金额</span></div>
   <label>领取有效期</label><div><input value="${c.expireH||''}" placeholder="不填 = 不失效" style="width:110px" onchange="const v=this.value.trim();S.cfg.expireH=v===''?null:Math.max(1,parseInt(v)||1);mark();log('活动配置','领取有效期',S.cfg.expireH?S.cfg.expireH+' 小时':'不失效');arender()"> 小时<span class="h">选填，正整数；不填则返水不会过期（无 Expired 状态）。前台不显示倒计时，只写在规则页</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
   <label>同 IP / 同设备可领账号数</label><div><input value="${c.ipLimit}" style="width:80px" onchange="mark()"> 个</div>
@@ -680,7 +684,7 @@ function rteSync(end){const e=document.getElementById('rteEd');if(!e)return;S.ru
 function aAssets(){const a=S.assets;
   return `<div class="note" style="margin-bottom:8px">图片可直接替换（原型读取本地文件），所有项改完前台和右侧预览即时生效。</div><div class="form">
   <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['home','每次进入 Home 页'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页。前台点「重新打开 APP」按频率验证；「每次进入 Home 页」：从活动页等其他页面返回首页也会弹出（不带出奖励弹窗）</span></div>
-  <label>② 活动奖励弹窗</label><div><img src="${a.rw.img}" style="height:64px;vertical-align:middle;border-radius:6px"> <span class="chip n">固定</span> 彩带「${a.rw.ribbon}」 标题「${a.rw.title}」<div class="note">写死不可配置：人物图、彩带、标题、按钮（Claim / Cashback Details）均为固定样式；金额向下取整；自动领取时不弹</div></div>
+  <label>② 活动奖励弹窗</label><div><img src="${a.rw.img}" style="height:64px;vertical-align:middle;border-radius:6px"> <span class="chip n">固定</span> 彩带「${a.rw.ribbon}」 标题「${a.rw.title}」<div class="note">写死不可配置：人物图、彩带、标题、按钮（Claim / Cashback Details）均为固定样式；金额向下取整；自动领取时改为到账提示（按钮 OK），进入 Home 页弹一次</div></div>
   <label>③ 独立挂件</label><div><img src="${a.wid.img}" style="height:48px;vertical-align:middle"> ${upBtn("S.assets.wid.img")} ${tg(a.wid.on,'setWidOn')} 角标 <input value="${a.wid.label}" maxlength="12" style="width:90px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();arender()"><span class="h">≤ 12，前端渲染；同时用于首页快捷入口；弹窗时隐藏</span></div>
   <label>④ 首页 Banner</label><div><img src="${a.banner.img}" style="height:56px;vertical-align:middle;border-radius:6px;opacity:.85"> <span class="chip n">只读</span><div class="note" style="margin-top:4px">走现有配置项「活动配置 › 轮播图素材管理」：上传 Banner 图（1098 × 474）、排序、生效时间、跳转（H5 / App 内部链接指向 Daily Cashback 活动页），本活动不单独上传，上下架也由该配置项的生效时间控制。</div></div></div>`;
 }

@@ -610,7 +610,7 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus �
   <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
 </div><div class="subt">发放与预算</div><div class="form" style="grid-template-columns:150px 1fr">
   <label>发放方式</label><div><span class="dis">自动发放</span></div>
-  <label><i>*</i> 发放时间</label><div><input type="time" value="${b.autoAt}" onchange="S.bb.autoAt=this.value;mark();arender()"><span class="h">每天该时间自动发放到玩家余额（需晚于 01:00 结算完成）</span></div>
+  <label><i>*</i> 发放时间</label><div><input type="time" value="${b.autoAt}" onchange="S.bb.autoAt=this.value;mark();arender()"><span class="h">每天该时间自动发放到玩家余额（需晚于 01:00 结算完成）；前台进度卡「Credited tomorrow ${b.autoAt}」、规则页、到账 Push 时间同步读取此项</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div></div>`;}
 function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}

@@ -402,6 +402,7 @@ function act(){
   const cbOn=M().cb, bbOn=M().bb;
   let h=barT(cbOn?'Daily Cashback':'Daily Bet Bonus','home',true)+`<div class="body">
   ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Cashback already generated can still be claimed within its validity period.</div>'}${S.cfg.kyc==='需要 KYC'&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join Daily Cashback.</div>':''}
+${cbOn?`<div class="h3" style="margin-top:0">Cashback History<a onclick="go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;margin-bottom:10px;font-size:12px;cursor:pointer" onclick="go('hist')">Available ${pesoI(a)} · ${S.history[user].length} records</div>`:''}
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
     const bbr=bbReward(bbBet(user));
@@ -411,8 +412,8 @@ function act(){
   }else{
     const y=S.history[user].find(x=>x.d==='11-17');
     const yb=bbReward(S.bb.yBet[user]||0), bbDone=S.bb.claimed[user]||S.bb.mode==='auto', bbAv=bbOn&&yb>0&&!bbDone?yb:0, cbAv=cbOn&&y&&y.s==='a'?a:0;
-    const cbAmt=!y?`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback</div>`:`<div class="amt" ${y.s==='a'?'':'style="color:#17914A"'}>${pesoI(y.amt)}</div><div class="note">${y.s==='a'?'Available':'Claimed today'}</div>`;
-    const bbAmt=!yb?`<div class="amt g" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus</div>`:`<div class="amt g" ${bbDone?'style="color:#17914A"':''}>${pesoI(yb)}</div>${S.bb.mode==='auto'?'':`<div class="note">${bbDone?'Claimed today':'Available'}</div>`}`;
+    const cbAmt=!y?`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback</div>`:`<div class="amt" ${y.s==='a'?'':'style="color:#17914A"'}>${pesoI(y.amt)}</div>${y.s==='a'?'<div class="note">Available</div>':''}`;
+    const bbAmt=!yb?`<div class="amt g" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus</div>`:`<div class="amt g" ${bbDone?'style="color:#17914A"':''}>${pesoI(yb)}</div>${S.bb.mode==='auto'||bbDone?'':'<div class="note">Available</div>'}`;
     const tot=cbAv+bbAv, btn=tot?`<button class="btn ${cbOn?'':'bbtn'}" style="grid-column:1/-1;margin-top:8px" onclick="claimY()">Claim ${pesoI(tot)}</button>`:'';
     if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (11-17)</div>${cbAmt}</div><i class="vl"></i><div><div class="lb">Bet Bonus (11-17)</div>${bbAmt}</div>${btn}</div>`;
     else if(bbOn) h+=`<div class="card total"><div class="lb">Yesterday's Bet Bonus (11-17)</div>${bbAmt}${btn}</div>`;
@@ -424,7 +425,6 @@ function act(){
   }else if(isNew){
     h+=`<div class="card" style="font-size:12.5px;color:#6B7480;text-align:center">Place your first bet today — your ${cbOn?'cashback':'bet bonus'} is credited tomorrow.</div>`;
   }
-  if(cbOn) h+=`<div class="h3">Cashback History<a onclick="go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;font-size:12px;cursor:pointer" onclick="go('hist')">Available ${pesoI(a)} · ${S.history[user].length} records</div>`;
   if(cbOn) h+=ratesTable();
   if(bbOn&&fv==='today') h+=bbSection();
   return h+`</div>`;

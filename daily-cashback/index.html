@@ -134,8 +134,6 @@ button{font:inherit;cursor:pointer}
 .bbl-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .bbl-go{background:#A3123A;color:#fff;border:0;border-radius:16px;padding:6px 22px;font-weight:800;font-size:13px;cursor:pointer}
 .bbl-lock{background:#EEEDF3;color:#9AA1AD;border-radius:16px;padding:6px 12px;font-weight:800;font-size:12px}
-.bbl-mini{width:96px;height:6px;border-radius:3px;background:#ECEAF3;position:relative;overflow:hidden}.bbl-mini i{position:absolute;left:0;top:0;bottom:0;background:#F08A00;border-radius:3px}
-.bbl-mt{font-size:10px;color:#6B7480;font-weight:700}
 .bbl.out{animation:bbOut .75s ease forwards;background:#E8F8F1;border:1.5px solid #17B794}
 @keyframes bbOut{0%{transform:none;opacity:1}45%{transform:translateY(-14px);opacity:.9}100%{transform:translateY(-40px);opacity:0;max-height:0;padding-top:0;padding-bottom:0;margin-top:0}}
 .bbl-done{font-size:12px;color:#17914A;font-weight:800;text-align:center;padding:12px;background:#E8F8F1;border-radius:14px;margin-top:8px}
@@ -375,8 +373,8 @@ let bbOut=null;
 function bbAdd(x){const T=S.bb.tiers,b0=bbBet(user);bbOut=T.filter(t=>b0>=t[0]).length;S.bb.tBet[user]=x?b0+x:0;if(!x)bbOut=null;popup=null;rq=[];view='act';fv='today';render();if(x&&bbOut!==T.filter(t=>bbBet(user)>=t[0]).length)setTimeout(()=>{bbOut=null;render()},800);else bbOut=null}
 function bbSection(){const b=bbBet(user),r=bbReward(b),T=S.bb.tiers,done=T.filter(t=>b>=t[0]).length,max=T.at(-1)[0];
   const nx=T[done],tgt=nx?nx[0]:max,p=Math.min(100,b/tgt*100);
-  const row=(t,i,cls)=>{const cur=i===done&&!cls,mp=Math.min(100,b/t[0]*100);
-    return `<div class="bbl ${cls||(cur?'cur':'')}"><div class="bbl-lv"><small>Level</small><b>${i+1}</b></div><span class="bbl-gift">🎁</span><div class="bbl-m">Reach <b>${pesoI(t[0])}</b><br>Get <em>${pesoI(t[1])}</em> Bonus</div><div class="bbl-r">${cls?'<span class="bbt2-ok" style="margin:0">✓</span>':cur?`<button class="bbl-go" onclick="goLink('/games')">Go</button><div class="bbl-mini"><i style="width:${mp}%"></i></div><span class="bbl-mt">${pesoI(Math.floor(b))} / ${pesoI(t[0])}</span>`:'<span class="bbl-lock">🔒 Locked</span>'}</div></div>`};
+  const row=(t,i,cls)=>{const cur=i===done&&!cls;
+    return `<div class="bbl ${cls||(cur?'cur':'')}"><div class="bbl-lv"><small>Level</small><b>${i+1}</b></div><span class="bbl-gift">🎁</span><div class="bbl-m">Reach <b>${pesoI(t[0])}</b><br>Get <em>${pesoI(t[1])}</em> Bonus</div><div class="bbl-r">${cls?'<span class="bbt2-ok" style="margin:0">✓</span>':cur?`<button class="bbl-go" onclick="goLink('/games')">Go</button>`:'<span class="bbl-lock">🔒 Locked</span>'}</div></div>`};
   const outs=bbOut!=null?T.map((t,i)=>[t,i]).filter(([t,i])=>i>=bbOut&&i<done):[];
   return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-cal">📅</span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} <span>/ ${pesoI(tgt)}</span></b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b></div></div>
   <div class="bbp-bar"><i style="width:${p}%"></i><span class="bbp-tip" style="left:${Math.max(8,Math.min(92,p))}%">${pesoI(Math.floor(b))}</span></div>

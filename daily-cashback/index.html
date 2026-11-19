@@ -317,7 +317,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <ul>
       <li>登录 APP 时判断弹窗（账号有缓存、未掉登录则不弹）：21 岁提示弹窗为第一层级，本活动弹窗为第二层级（21 岁弹窗不在原型中模拟）。</li>
       <li>点活动弹窗 → 进入活动页，在活动页依次弹出当日已发放的奖励弹窗；点 × 关闭活动弹窗 → 在首页依次弹出奖励弹窗。奖励弹窗按发放时间先后弹出（相同时间 Cashback 在前），未发奖的不弹。</li>
-      <li>两个活动都是自动发放：Cashback 次日 04:00 结算后入账，Bet Bonus 次日 04:00 发放到余额；没有手动领取，也没有过期。</li>
+      <li>两个活动都是自动发放：Cashback 次日结算后入账，Bet Bonus 次日发放到余额（时间系统写死，默认 04:00 为示例，后台不可配置，需调整由技术侧修改）；没有手动领取，也没有过期。</li>
       <li>活动入口「1.5%+2%」放在首页右侧小猫挂件里，随活动开关显示；首页 Banner 首张为 Slots Cashback。</li>
       <li>Push · 短信为一期：派奖时发送，每个活动单独配置文案；免打扰时段 21:00 – 07:00 内不发，顺延到 07:00。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）；VIP 固定返水比例为二期。</li>
@@ -638,7 +638,7 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">本活动�
   <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
 </div><div class="subt">发放与预算</div><div class="form" style="grid-template-columns:150px 1fr">
   <label>发放方式</label><div><span class="dis">自动发放</span></div>
-  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">固定，非配置项；自动发放到玩家余额（晚于 01:00 结算完成）；前台进度卡、规则页、到账 Push 读取此时间</span></div>
+  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；自动发放到玩家余额（晚于 01:00 结算完成）；前台进度卡、规则页、到账 Push 读取此时间</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div></div>`;}
 function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
@@ -658,7 +658,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
   <label>活动关系</label><div class="note">同一时间只能有 1 个返水活动；开启本活动时若另一返水活动开启中，弹窗「无法开启」，拦截记录写入操作日志</div>
-  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">固定，非配置项；结算后自动发放；前台只在规则页展示</span></div>
+  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
   <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，玩家进入 Home 页后弹一次到账提示；不设领取有效期</span></div>
@@ -929,8 +929,8 @@ function aRecords(){
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
   {v:'v1.5',d:'2026-11-19',sum:'两个活动改为自动发放；奖励记录页精简 + 分批加载；弹窗层级；后台精简与新建 / 取消流程；Category 与 Selected Games 重叠取高',
-   sec:[['用户侧',['奖励记录页（Rules › View all，更名为 Reward History）：只显示记录，去掉可领金额、Claimed / Expired 汇总和筛选页签；Cashback 与 Bet Bonus 记录都显示，没有 Expired；默认 20 条，滚动到底自动加载下一批 20 条。','两个活动都改为自动发放：Cashback 结算与 Bet Bonus 发放统一为次日 04:00；去掉 Claim 按钮、可领（Available）状态、手动领取弹窗；Yesterday 卡只显示已发放金额（Credited）。','弹窗：活动弹窗在每次登录时判断（账号有缓存未掉登录则不弹），排在 21 岁提示弹窗之后；点活动弹窗进活动页后弹奖励弹窗，点关闭则在首页弹；奖励弹窗按发放时间先后弹出，未发奖的不弹。']],
-        ['后台',['活动列表：去掉页签行，活动配置、费用使用情况、返水记录、Push · 短信、操作日志改为从列表「操作」进入；列表新增状态开关（与活动配置「活动状态」同一功能）；补全新建活动流程。','活动配置：新增「取消」（新建时取消不生成活动，编辑时取消不改动）；活动组合改为多选，创建后置灰不可改；去掉 Bet Bonus 单独开关。','基本信息：去掉最低有效投注、最高返水上限、领取有效期；结算时间（次日 04:00）、发放方式（自动发放）改为固定显示。⑦ Bet Bonus 发放时间改为固定显示（次日 04:00）。','Selected Games「权重」改为「排序」，交互同 Category。','页面素材只保留活动弹窗开关，其余由客户端写死（标题旁「?」说明）；图标去掉点击跳转链接配置。','返水记录：两个活动独立记录，哪个活动发了奖励就生成一条（一行 = 会员 · 结算日 · 活动），没发放的不生成；去掉领取状态 / 来源与 Claimed / Available / Expired 汇总，筛选改为按活动；Push · 短信发送效果去掉「已领取剔除」。','删除返点核对、返水发放、日报表页面。']],
+   sec:[['用户侧',['奖励记录页（Rules › View all，更名为 Reward History）：只显示记录，去掉可领金额、Claimed / Expired 汇总和筛选页签；Cashback 与 Bet Bonus 记录都显示，没有 Expired；默认 20 条，滚动到底自动加载下一批 20 条。','两个活动都改为自动发放：Cashback 结算与 Bet Bonus 发放时间系统写死（默认次日 04:00，仅为示例；后台不可配置，需调整时由技术侧修改）；去掉 Claim 按钮、可领（Available）状态、手动领取弹窗；Yesterday 卡只显示已发放金额（Credited）。','弹窗：活动弹窗在每次登录时判断（账号有缓存未掉登录则不弹），排在 21 岁提示弹窗之后；点活动弹窗进活动页后弹奖励弹窗，点关闭则在首页弹；奖励弹窗按发放时间先后弹出，未发奖的不弹。']],
+        ['后台',['活动列表：去掉页签行，活动配置、费用使用情况、返水记录、Push · 短信、操作日志改为从列表「操作」进入；列表新增状态开关（与活动配置「活动状态」同一功能）；补全新建活动流程。','活动配置：新增「取消」（新建时取消不生成活动，编辑时取消不改动）；活动组合改为多选，创建后置灰不可改；去掉 Bet Bonus 单独开关。','基本信息：去掉最低有效投注、最高返水上限、领取有效期；结算时间、⑦ Bet Bonus 发放时间改为系统写死、后台只作显示（默认 04:00 为示例，需调整时由技术侧修改）；发放方式固定为自动发放。','Selected Games「权重」改为「排序」，交互同 Category。','页面素材只保留活动弹窗开关，其余由客户端写死（标题旁「?」说明）；图标去掉点击跳转链接配置。','返水记录：两个活动独立记录，哪个活动发了奖励就生成一条（一行 = 会员 · 结算日 · 活动），没发放的不生成；去掉领取状态 / 来源与 Claimed / Available / Expired 汇总，筛选改为按活动；Push · 短信发送效果去掉「已领取剔除」。','删除返点核对、返水发放、日报表页面。']],
         ['计算规则',['Category 与 Selected Games 可以配置相同的游戏：同一游戏重叠时取较高的返水比例（相同则任取其一），单笔投注只计一次；因组比例须高于 Slot 普通玩家最高档，重叠的游戏实际按 Selected Games 组比例返。']]],
    ft:'以上改动对应的界面设计都已同步调整，以原型为准。'},
   {v:'v1.4',d:'2026-11-19',sum:'Bet Bonus 改为总进度条 + 奖励表；新增 Bet Bonus 到账弹窗；Push · 短信改为一期',

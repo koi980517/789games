@@ -422,7 +422,7 @@ ${cbOn?`<div class="h3" style="margin-top:0">Cashback History<a onclick="go('his
   }
   if(cbOn&&!isNew){
     if(S.sel.on) h+=`<div class="h3">Selected Games</div>`+c.feats.map((x,i)=>selCard(x,i)).join('');
-    if(S.catMod.on) h+=`<div class="h3">Category</div>`+c.rows.map(x=>gtRow(x)).join('');
+    h+=`<div class="h3">Category</div>`+c.rows.map(x=>gtRow(x)).join('');
   }else if(isNew){
     h+=`<div class="card" style="font-size:12.5px;color:#6B7480;text-align:center">Place your first bet today — your ${cbOn?'cashback':'bet bonus'} is credited tomorrow.</div>`;
   }
@@ -544,7 +544,7 @@ function sec(n,title,body,extra){return `<div class="sec"><div class="sec-h"><sp
 function aConfig(){
   return `<div class="cfgwrap"><div class="cfgmain">`+
   sec(1,'基本信息配置',cBasic())+
-  sec(2,'Category 配置',cCategory(),`<span class="sec-r">前台显示 Category 区块 ${tg(S.catMod.on,'setCatMod','显示','隐藏')}</span>`)+
+  sec(2,'Category 配置',cCategory())+
   sec(3,'Selected Games 配置',cSelected(),`<span class="sec-r">${tg(S.sel.on,'setSel')}</span>`)+
   sec(4,'返水等级',bTiers())+
   sec(5,'页面素材（活动弹窗 / 奖励弹窗 / 挂件；Banner 走轮播图素材管理）',aAssets())+
@@ -570,7 +570,6 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus �
 function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
 function setMod(k){const o=k==='cb'?'bb':'cb';if(M()[k]&&!M()[o])return alert('至少开启 1 个活动');M()[k]=!M()[k];mark();log('活动配置','活动组合',(k==='cb'?'Cashback':'Bet Bonus')+(M()[k]?' 开启':' 关闭'));syncMods();arender()}
-function setCatMod(v){S.catMod.on=v;mark();log('活动配置','Category 区块',v?'显示':'隐藏');arender()}
 function setSel(v){S.sel.on=v;mark();log('活动配置','Selected Games',v?'开启':'关闭');arender()}
 function setOn(v){S.cfg.on=v;mark();log('活动配置','活动状态',v?'开启':'关闭');arender()}
 function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}

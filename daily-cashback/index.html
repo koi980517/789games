@@ -78,7 +78,7 @@ button{font:inherit;cursor:pointer}
 .widget span{display:inline-block;background:linear-gradient(#E8253A,#B5122A);color:#fff;font-weight:900;font-size:12px;border:2px solid #FFD1D6;border-radius:12px;padding:1px 8px;letter-spacing:.3px}
 .actpop{position:relative;width:340px}
 .actpop img{width:100%;display:block;-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 72% 70% at 50% 50%,#000 70%,transparent 100%)}
-.actpop-go{position:absolute;left:24%;right:24%;bottom:2%;height:13%;border:0;background:transparent;cursor:pointer}
+.actpop-img{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer;overflow:hidden;aspect-ratio:360/358}
 .actpop-x{position:absolute;right:4px;top:-6px;width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.8);background:rgba(0,0,0,.35);color:#fff;font-size:18px;line-height:1;cursor:pointer}
 .rwpop{position:relative;width:310px;padding-top:150px}
 .rw-model{position:absolute;top:0;left:50%;transform:translateX(-50%);width:250px;-webkit-mask-image:radial-gradient(ellipse 42% 62% at 50% 50%,#000 62%,transparent 100%);mask-image:radial-gradient(ellipse 42% 62% at 50% 50%,#000 62%,transparent 100%);z-index:1}
@@ -244,7 +244,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
     <div class="seg"><button id="reopen">重新打开 APP</button><button id="reset">重置演示数据</button></div>
     <h4>本页规则要点</h4>
     <ul>
-      <li>打开 APP：活动弹窗（整图，PLAY NOW 进活动页）→ 活动奖励弹窗（有可领时）。</li>
+      <li>打开 APP：活动弹窗（整图，无 PLAY NOW 按钮，点击图片任意位置进活动页）→ 活动奖励弹窗（有可领时）。</li>
       <li>活动入口「1.5%+2%」放在首页右侧小猫挂件里（点小猫展开 JOIN NOW 列表），随活动开关显示；首页 Banner 首张为 Slots Cashback。</li>
       <li>自动领取时结算后直接入账；玩家进入 Home 页后弹一次活动奖励弹窗，提示已到账金额（按钮 OK）。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
@@ -471,7 +471,7 @@ function rules(){
   <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}${bbR}</div>`;
 }
 function splash(){
-  return `<div class="mask"><div class="actpop"><img src="${A().pop.img}" alt="Daily Cashback"><button class="actpop-go" title="PLAY NOW" onclick="popup=null;afterSplash();go('act')"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
+  return `<div class="mask"><div class="actpop"><button class="actpop-img" title="进入活动页" onclick="popup=null;afterSplash();go('act')"><img src="${A().pop.img}" alt="Daily Cashback"></button><button class="actpop-x" onclick="closePop()">×</button></div></div>`;
 }
 let claiming=false;
 let autoN=null;
@@ -709,7 +709,7 @@ function cIcons(){
 }
 function aAssets(){const a=S.assets;
   return `<div class="note" style="margin-bottom:8px">图片可直接替换（原型读取本地文件），所有项改完前台和右侧预览即时生效。</div><div class="form">
-  <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['home','每次进入 Home 页'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页。前台点「重新打开 APP」按频率验证；「每次进入 Home 页」：从活动页等其他页面返回首页也会弹出（不带出奖励弹窗）</span></div>
+  <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['home','每次进入 Home 页'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；整图不含 PLAY NOW 按钮，点击图片任意位置跳活动页（美术需出无按钮版本）。前台点「重新打开 APP」按频率验证；「每次进入 Home 页」：从活动页等其他页面返回首页也会弹出（不带出奖励弹窗）</span></div>
   <label>② 活动奖励弹窗</label><div><img src="${a.rw.img}" style="height:64px;vertical-align:middle;border-radius:6px"> <span class="chip n">固定</span> 彩带「${a.rw.ribbon}」 标题「${a.rw.title}」<div class="note">写死不可配置：人物图、彩带、标题、按钮（Claim / Cashback Details）均为固定样式；金额向下取整；自动领取时改为到账提示（按钮 OK），进入 Home 页弹一次</div></div>
   <label>③ 小猫挂件入口</label><div><img src="${a.wid.img}" style="height:48px;vertical-align:middle"> <span class="chip n">固定</span> 角标「${a.wid.label}」<div class="note">写死不可配置：放进现网首页右侧「小猫挂件」展开后的活动列表（JOIN NOW）里，排第一个，点进活动页；不再单独悬浮。显示与「活动状态」开关一致：开启显示，关闭自动下线。角标 = ① 活动别名。</div></div>
   <label>④ 首页 Banner</label><div><img src="${a.banner.img}" style="height:56px;vertical-align:middle;border-radius:6px;opacity:.85"> <span class="chip n">只读</span><div class="note" style="margin-top:4px">走现有配置项「活动配置 › 轮播图素材管理」：上传 Banner 图（1098 × 474）、排序、生效时间、跳转（H5 / App 内部链接指向 Daily Cashback 活动页），本活动不单独上传，上下架也由该配置项的生效时间控制。</div></div></div>`;
@@ -740,11 +740,11 @@ function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
 }
 function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}
 function aList(){
-  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已结束 / 已关闭的活动只读，可查看设置。</span></div>
-  <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
-  <tr class="hl"><td>DCB-003</td><td>次日返水与投注奖励活动 11月 <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div></td><td><span class="chip g">进行中</span></td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
-  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><span class="chip n">已结束</span></td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>${bud(430118,500000)}</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
-  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><span class="chip n">已关闭</span></td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>${bud(39880,50000)}</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
+  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" disabled title="已有进行中活动">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动；进行中活动点「编辑」进入「活动配置」。已停用的活动只读，可查看设置。状态：进行中（绿）/ 已停用（红）；修改人 = 最近一次提交发布的账号。</span></div>
+  <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>创建时间</th><th>修改人</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
+  <tr class="hl"><td>DCB-003</td><td>次日返水与投注奖励活动 11月 <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div></td><td><b style="color:#17914A">进行中</b></td><td>2026-10-29 14:02</td><td>cs_kei</td><td>2026-11-01 ~ 长期</td><td>₱84,226,410.00</td><td>₱512,880</td><td>${bud(S.budget.used,S.budget.cap)}</td><td>18,402</td><td><button class="ab p" onclick="pt=1;arender()">编辑</button></td></tr>
+  <tr class="gray"><td>DCB-002</td><td>Daily Cashback 10月</td><td><b style="color:#E8253A">已停用</b></td><td>2026-10-18 10:30</td><td>90556663</td><td>10-01 ~ 10-31</td><td>₱71,005,220.00</td><td>₱430,118</td><td>${bud(430118,500000)}</td><td>16,930</td><td><button class="ab">查看设置</button></td></tr>
+  <tr class="gray"><td>DCB-001</td><td>Cashback 试运行</td><td><b style="color:#E8253A">已停用</b></td><td>2026-09-15 16:20</td><td>cs_kei</td><td>09-20 ~ 09-30</td><td>₱8,420,000.00</td><td>₱39,880</td><td>${bud(39880,50000)}</td><td>2,210</td><td><button class="ab">查看设置</button></td></tr></table></div>`;
 }
 function aReview(){
   const done=S.review.filter(r=>r.s!=='待核对');

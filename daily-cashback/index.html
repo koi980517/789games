@@ -65,6 +65,14 @@ button{font:inherit;cursor:pointer}
 .hnav{position:absolute;left:0;right:0;bottom:0;height:62px;background:#fff;border-top:1px solid #EEEFF4;display:flex;border-radius:0 0 28px 28px}
 .hnav>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:11px;color:#9AA1AD;gap:3px}.hnav i{width:22px;height:22px;border-radius:7px;background:#D9DDE3}
 .hnav>div.on{color:#17914A;font-weight:700}.hnav>div.on i{background:#34D399}.hnav .promo i{width:34px;height:30px;background:linear-gradient(#34D399,#047857);margin-top:-14px}
+.catw{position:absolute;right:6px;bottom:170px;width:56px;height:56px;border-radius:50%;border:3px solid #fff;background:radial-gradient(circle at 50% 40%,#FFF7E6,#FCD9A5);box-shadow:0 3px 8px rgba(0,0,0,.25);cursor:pointer;z-index:3;padding:0}.catw .cat-face{font-size:30px;line-height:50px}.catw .cat-hat{position:absolute;top:-8px;right:-2px;width:22px;height:16px;background:#D32F2F;border-radius:10px 10px 2px 2px;border-bottom:4px solid #fff}
+.catp{position:absolute;right:6px;bottom:96px;width:70px;background:linear-gradient(#1F7A3A,#0F5A28);border:3px solid #F6C453;border-radius:14px;padding:6px 5px 4px;z-index:3;box-shadow:0 4px 10px rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;gap:6px}
+.catp-h{background:linear-gradient(#FFD54A,#F59E0B);color:#7A2E00;font-weight:900;font-size:10px;border-radius:8px;padding:2px 5px;margin-top:-14px;white-space:nowrap}
+.catp-i{position:relative;width:58px;background:#FFF8E1;border:0;border-radius:8px;padding:3px 2px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center}
+.catp-i img,.catp-i i{width:40px;height:40px;border-radius:8px;object-fit:contain;display:block}
+.catp-i span{font-size:8.5px;font-weight:800;color:#fff;background:#C62828;border-radius:6px;padding:0 4px;margin-top:2px;white-space:nowrap}
+.catp-i.me{outline:2px solid #E8253A}.catp-i em{position:absolute;top:-4px;right:-4px;background:#E8253A;color:#fff;font-size:9px;font-style:normal;border-radius:8px;padding:0 4px}
+.catp-x{background:#C62828;color:#fff;border:0;border-radius:6px;font-size:9px;font-weight:800;padding:2px 6px;cursor:pointer}
 .widget{position:absolute;right:6px;bottom:150px;width:74px;text-align:center;cursor:pointer;z-index:3;filter:drop-shadow(0 3px 6px rgba(0,0,0,.25))}
 .widget img{width:70px;display:block;margin:0 auto -6px;-webkit-mask-image:radial-gradient(ellipse 50% 52% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 52% at 50% 50%,#000 75%,transparent 100%)}
 .widget span{display:inline-block;background:linear-gradient(#E8253A,#B5122A);color:#fff;font-weight:900;font-size:12px;border:2px solid #FFD1D6;border-radius:12px;padding:1px 8px;letter-spacing:.3px}
@@ -237,7 +245,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
     <h4>本页规则要点</h4>
     <ul>
       <li>打开 APP：活动弹窗（整图，PLAY NOW 进活动页）→ 活动奖励弹窗（有可领时）。</li>
-      <li>首页右侧独立挂件「1.5%+2%」，首页 Banner 首张为 Slots Cashback。</li>
+      <li>活动入口「1.5%+2%」放在首页右侧小猫挂件里（点小猫展开 JOIN NOW 列表），随活动开关显示；首页 Banner 首张为 Slots Cashback。</li>
       <li>自动领取时结算后直接入账；玩家进入 Home 页后弹一次活动奖励弹窗，提示已到账金额（按钮 OK）。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
       <li>VIP 固定返水比例为二期；一期所有玩家按档位计算、受最高返水上限限制。</li>
@@ -334,7 +342,7 @@ function safeHtml(h){const d=document.createElement('div');d.innerHTML=h;d.query
 function mdB(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')}
 function selIcon(f,big){const c=CATS.find(x=>x.k===f.cat)||{c:'#4A12B8',n:''};return f.img?`<img class="gi" src="${f.img}" alt="">`:`<div class="gi" style="background:linear-gradient(135deg,${c.c},#4A12B8)">${f.name.split(' ').slice(0,2).join('<br>')}</div>`}
 function selCard(x,i){const on=x.bet>=1;const cur=on?x.f.rate:0;
-  return `<div class="sg" onclick="featIdx=${i};go('feat')"><div class="row">${selIcon(x.f)}<div class="mid"><div class="tt">${x.f.name} ${x.f.rate}% RETURN</div><div class="sub">Bet:${peso(x.bet)}<span>Current ${cur}%</span></div></div><div class="bn"><b>₱${(Math.floor(x.rw*10)/10).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</b><small>Bonus</small></div><div class="go">»</div></div><div class="bar2"><i style="width:${on?100:0}%"></i><em>Bet:${on?peso(x.bet):'₱1.00'}</em><strong>${x.f.rate}%(${on?'Current':'Next'})</strong></div></div>`}
+  return `<div class="sg" onclick="${x.f.link?`goLink('${x.f.link.replace(/'/g,'')}')`:`featIdx=${i};go('feat')`}"><div class="row">${selIcon(x.f)}<div class="mid"><div class="tt">${x.f.name} ${x.f.rate}% RETURN</div><div class="sub">Bet:${peso(x.bet)}<span>Current ${cur}%</span></div></div><div class="bn"><b>₱${(Math.floor(x.rw*10)/10).toLocaleString('en-US',{minimumFractionDigits:1,maximumFractionDigits:1})}</b><small>Bonus</small></div><div class="go">»</div></div><div class="bar2"><i style="width:${on?100:0}%"></i><em>Bet:${on?peso(x.bet):'₱1.00'}</em><strong>${x.f.rate}%(${on?'Current':'Next'})</strong></div></div>`}
 function calc(u){
   const b=S.bets[u], rows=[]; let total=0;
   ACATS().forEach(c=>{let bet=b[c.k]||0; if(!S.sel.on) S.featured.forEach((f,i)=>{if(f.cat===c.k) bet+=b['feat'+i]||0}); let rate,ti=null;
@@ -348,7 +356,8 @@ function calc(u){
   return{rows,feats,total,raw,below,capped,allBet}
 }
 const avail=u=>r2(S.history[u].filter(h=>h.s==='a').reduce((a,h)=>a+h.amt,0));
-function icon(c){return `<div class="ic" style="background:${c.c}">${c.n[0]}</div>`}
+function icon(c){return c.img?`<div class="ic" style="background:#fff url('${c.img}') center/cover"></div>`:`<div class="ic" style="background:${c.c}">${c.n[0]}</div>`}
+function goLink(u){flash('跳转：'+u+'（原型）')}
 function render(){
   const el=document.getElementById('scr'); let h='';
   if(view==='home') h=home(); else if(view==='act') h=act(); else if(view==='hist') h=hist(); else if(view==='feat') h=featPage(); else if(view==='rules') h=rules(); else if(view==='detail') h=detail();
@@ -371,9 +380,13 @@ function home(){
   <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">${A().wid.label}<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
   </div>
   <div class="hnav"><div class="on"><i></i>Home</div><div><i></i>Chat</div><div class="promo"><i></i>Promo</div><div><i></i>Wallet</div><div><i></i>Account</div></div>
-  ${popup||!S.cfg.on||!A().wid.on?'':`<div class="widget" onclick="go('act')"><img src="${A().wid.img}" alt=""><span>${A().wid.label}</span></div>`}`;
+  ${popup?'':catWidget()}`;
 }
-let hb=0;
+let hb=0, catOpen=false;
+function catWidget(){
+  if(!catOpen) return `<button class="catw" onclick="catOpen=true;render()" aria-label="打开活动挂件（现网小猫挂件）"><span class="cat-face">🐱</span><span class="cat-hat"></span></button>`;
+  const items=[...(S.cfg.on?[{img:A().wid.img,t:A().wid.label,on:"catOpen=false;go('act')",me:1}]:[]),{ph:'linear-gradient(135deg,#F59E0B,#EF4444)',t:'Invite Now'},{ph:'linear-gradient(135deg,#EC4899,#F97316)',t:'Lucky Spin',dot:1},{ph:'linear-gradient(135deg,#8B5CF6,#06B6D4)',t:'42D 13:45:17'}];
+  return `<div class="catp"><div class="catp-h">JOIN NOW</div>${items.map(i=>`<button class="catp-i ${i.me?'me':''}" ${i.on?`onclick="${i.on}"`:''}>${i.img?`<img src="${i.img}" alt="">`:`<i style="background:${i.ph}"></i>`}${i.dot?'<em>1</em>':''}<span>${i.t}</span></button>`).join('')}<button class="catp-x" onclick="catOpen=false;render()">Hide ⌃</button></div>`}
 function maxRate(){let m=0;S.tiers.forEach(t=>CATS.forEach(c=>m=Math.max(m,t.r[c.k])));CATS.forEach(c=>m=Math.max(m,S.vip[c.k]));S.featured.forEach(f=>m=Math.max(m,f.rate));return m}
 function act(){
   const c=calc(user), a=avail(user), isNew=user==='new';
@@ -412,7 +425,7 @@ function gtRow(x){
   if(user==='std'){const nx=S.tiers[x.ti+1];const cur=x.ti<0?0:S.tiers[x.ti].th;
     if(nx){const p=Math.min(100,(x.bet-cur)/(nx.th-cur)*100);mid+=`<div class="prog"><i style="width:${p}%"></i></div><div class="note">Bet ${peso(nx.th-x.bet)} more → ${nx.r[x.c.k]}%</div>`}
     else mid+=`<div class="prog"><i style="width:100%"></i></div><div class="note">Top tier reached</div>`}
-  return `<div class="gt">${icon(x.c)}<div class="mid">${mid}</div><div class="r">${x.rate}%<b>${peso(x.rw)}</b></div></div>`;
+  return `<div class="gt" ${x.c.link?`style="cursor:pointer" onclick="goLink('${x.c.link.replace(/'/g,'')}')"`:''}>${icon(x.c)}<div class="mid">${mid}</div><div class="r">${x.rate}%<b>${peso(x.rw)}</b></div></div>`;
 }
 function ratesTable(){
   let h=`<div class="h3">Cashback Rates</div><div class="card" style="margin-top:6px;padding:8px"><table class="rt"><tr><th></th><th>Rate</th></tr>`;
@@ -519,6 +532,7 @@ function aConfig(){
   sec(5,'页面素材（活动弹窗 / 奖励弹窗 / 挂件；Banner 走轮播图素材管理）',aAssets())+
   sec(6,'活动规则页',aRules())+
   sec(7,'活动 2 · Bet Bonus（每日投注奖）',cBB(),`<span class="sec-r">${tg(M().bb,'setBB')}</span>`)+
+  sec(8,'图标与链接（Selected Games / Category 卡片）',cIcons())+
   `<div id="pubbar" class="pubbar"><span>${pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`+
   `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（普通玩家 · Today），随配置实时更新</div></div></div>`;
 }
@@ -548,7 +562,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 活动组合</label><div><span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px">活动 1 · Cashback <span class="sw ${M().cb?'':'off'}" onclick="setMod('cb')"></span></span><span style="display:inline-flex;align-items:center;gap:6px">活动 2 · Bet Bonus <span class="sw ${M().bb?'':'off'}" onclick="setMod('bb')"></span></span><span class="h">至少开 1 个。两个都开：活动页顶部左 Cashback、右 Bet Bonus，Cashback 内容在前、Bet Bonus 在下；只开一个则只显示该活动</span></div>
   <label>挂件显示</label><div class="note">在「⑤ 页面素材」配置开关、图片与角标；弹窗出现时隐藏</div>
   <label><i>*</i> 活动名称</label><div><input value="次日返水与投注奖励活动 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题按活动组合显示 Daily Cashback / Daily Bet Bonus</span></div>
-  <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、独立挂件角标、Hot Games 游戏角标统一显示此别名（与「⑤ 页面素材 › 挂件角标」同一字段）</span></div>
+  <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、小猫挂件内活动入口角标、Hot Games 游戏角标统一显示此别名</span></div>
   <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
@@ -681,11 +695,21 @@ function rteCmd(c,v){document.getElementById('rteEd').focus();document.execComma
 function rteLink(){rteSave();const u=prompt('链接地址（https:// 或站内 / 路径）','https://');if(!u)return;rteRestore();rteCmd('createLink',u)}
 function rteWords(h){const d=document.createElement('div');d.innerHTML=h;return (d.textContent.trim().match(/\S+/g)||[]).length}
 function rteSync(end){const e=document.getElementById('rteEd');if(!e)return;S.rulesHtml=e.innerHTML;document.getElementById('rteWc').firstChild.textContent=rteWords(S.rulesHtml)+' WORDS · 富文本（沿用 Promo「活动内容」编辑器）';if(!pubDirty){mark();const b=document.getElementById('pubbar');if(b){b.className='pubbar dirty';b.firstChild.textContent='有未发布的修改'}}}
+function cIcons(){
+  const prev=(img,bg,txt)=>img?`<span style="display:inline-block;width:44px;height:44px;border-radius:10px;background:#fff url('${img}') center/cover;border:1px solid #E3E6EC;vertical-align:middle"></span>`:`<span style="display:inline-flex;width:44px;height:44px;border-radius:10px;background:${bg};color:#fff;font-weight:800;align-items:center;justify-content:center;vertical-align:middle;font-size:11px;text-align:center;line-height:1.1">${txt}</span>`;
+  const row=(name,img,bg,txt,path,link,lp,ph,def)=>`<tr><td style="text-align:left">${name}</td><td>${prev(img,bg,txt)}</td><td style="white-space:nowrap">${upBtn(path,img?'替换':'上传')} ${img?`<button class="ab" onclick="${path}='';mark();arender()">恢复默认</button>`:''}</td><td style="text-align:left"><input value="${link||''}" placeholder="${ph}" style="width:240px" onchange="${lp}=this.value.trim();mark();log('活动配置','图标链接','${name.replace(/'/g,'')} → '+(this.value||'默认'));arender()"><div class="note" style="margin-top:2px">${def}</div></td></tr>`;
+  const sel=S.featured[0];
+  return `<div class="note" style="margin-bottom:8px">配置前台活动页 Selected Games 卡和每个 Category 卡左侧的图标，以及点击卡片跳转的链接。图标 1:1，建议 132 × 132（@3x），PNG / JPG / WebP，≤ 300KB；不上传时前台用默认图标（类型色 + 首字母 / 组名）。链接支持 https:// 外链或站内路径（如 /games?type=slot）。改完前台和右侧预览即时生效。</div>
+  <table class="at"><tr><th style="text-align:left">卡片</th><th>当前图标</th><th>图标</th><th style="text-align:left">点击跳转链接</th></tr>
+  ${sel&&S.sel.on?row('Selected Games · '+sel.name,sel.img,'linear-gradient(135deg,#C81E5B,#4A12B8)',sel.name.split(' ').slice(0,2).join('<br>'),'S.featured[0].img',sel.link,'S.featured[0].link','留空 = 进入组内游戏页','默认进入组内游戏页（Promo 游戏列表）'):''}
+  ${ACATS().map(c=>{const i=CATS.indexOf(c);return row('Category · '+c.n,c.img,c.c,c.n[0],`CATS[${i}].img`,c.link,`CATS[${i}].link`,'留空 = 卡片不可点击','例：/games?type='+c.k)}).join('')}
+  </table>${S.sel.on?'':'<div class="note" style="margin-top:6px">Selected Games 已关闭，开启后在此配置其图标与链接。</div>'}`;
+}
 function aAssets(){const a=S.assets;
   return `<div class="note" style="margin-bottom:8px">图片可直接替换（原型读取本地文件），所有项改完前台和右侧预览即时生效。</div><div class="form">
   <label>① 活动弹窗（整图）</label><div><img src="${a.pop.img}" style="height:96px;vertical-align:middle;border-radius:6px"> ${upBtn("S.assets.pop.img")} ${tg(a.pop.on,'setPopOn')} <select onchange="S.assets.pop.freq=this.value;mark();log('活动配置','活动弹窗频率',this.options[this.selectedIndex].text)">${[['daily','每日首次打开'],['every','每次打开'],['home','每次进入 Home 页'],['once','仅一次']].map(o=>`<option value="${o[0]}" ${a.pop.freq===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select><span class="h">750 × 1068 ≤ 1MB；PLAY NOW 热区跳活动页。前台点「重新打开 APP」按频率验证；「每次进入 Home 页」：从活动页等其他页面返回首页也会弹出（不带出奖励弹窗）</span></div>
   <label>② 活动奖励弹窗</label><div><img src="${a.rw.img}" style="height:64px;vertical-align:middle;border-radius:6px"> <span class="chip n">固定</span> 彩带「${a.rw.ribbon}」 标题「${a.rw.title}」<div class="note">写死不可配置：人物图、彩带、标题、按钮（Claim / Cashback Details）均为固定样式；金额向下取整；自动领取时改为到账提示（按钮 OK），进入 Home 页弹一次</div></div>
-  <label>③ 独立挂件</label><div><img src="${a.wid.img}" style="height:48px;vertical-align:middle"> ${upBtn("S.assets.wid.img")} ${tg(a.wid.on,'setWidOn')} 角标 <input value="${a.wid.label}" maxlength="12" style="width:90px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();arender()"><span class="h">≤ 12，前端渲染；同时用于首页快捷入口；弹窗时隐藏</span></div>
+  <label>③ 小猫挂件入口</label><div><img src="${a.wid.img}" style="height:48px;vertical-align:middle"> <span class="chip n">固定</span> 角标「${a.wid.label}」<div class="note">写死不可配置：放进现网首页右侧「小猫挂件」展开后的活动列表（JOIN NOW）里，排第一个，点进活动页；不再单独悬浮。显示与「活动状态」开关一致：开启显示，关闭自动下线。角标 = ① 活动别名。</div></div>
   <label>④ 首页 Banner</label><div><img src="${a.banner.img}" style="height:56px;vertical-align:middle;border-radius:6px;opacity:.85"> <span class="chip n">只读</span><div class="note" style="margin-top:4px">走现有配置项「活动配置 › 轮播图素材管理」：上传 Banner 图（1098 × 474）、排序、生效时间、跳转（H5 / App 内部链接指向 Daily Cashback 活动页），本活动不单独上传，上下架也由该配置项的生效时间控制。</div></div></div>`;
 }
 function upBtn(path,txt){return `<label class="ab" style="display:inline-block;cursor:pointer">${txt||'替换'}<input type="file" accept="image/*" style="display:none" onchange="readImg(this,v=>{${path}=v;mark();log('活动配置','替换素材','${path.split('.').slice(2).join('.')}');arender()})"></label>`}

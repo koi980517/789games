@@ -343,7 +343,7 @@ function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);if(!hit.length)retu
 const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
 function bbSection(){const b=bbBet(user),r=bbReward(b);const T=S.bb.tiers;const done=T.filter(t=>b>=t[0]).length;
   return `<div class="h3">Daily Bet Bonus</div><div class="bbt2"><div class="bbt2-h"><span class="bbt2-ic">₱</span><b>Bet Bonus</b><em>${pesoI(r)}</em><i>${done}/${T.length}</i></div>
-  ${T.map(t=>{const ok=b>=t[0],p=Math.min(100,b/t[0]*100);return `<div class="bbt2-r"><div class="bbt2-row"><span class="bbt2-g">₱${t[1]}</span><div class="bbt2-m"><b>Bet ${pesoI(t[0])}</b><small>Reward ${pesoI(t[1])}</small></div>${ok?'<span class="bbt2-ok">✓</span>':`<button class="bbt2-go" onclick="goLink('/games')">Go</button>`}</div><div class="bbt2-bar"><i style="width:${p}%"></i><span>₱${Math.floor(Math.min(b,t[0])).toLocaleString('en-US')}/${t[0].toLocaleString('en-US')}</span></div></div>`}).join('')}</div>`}
+  ${T.map((t,i)=>{const ok=b>=t[0],pv=i?T[i-1][0]:0,p=Math.max(0,Math.min(100,(b-pv)/(t[0]-pv)*100));return `<div class="bbt2-r"><div class="bbt2-row"><span class="bbt2-g">₱${t[1]}</span><div class="bbt2-m"><b>Bet ${pesoI(t[0])}</b><small>Reward ${pesoI(t[1])}</small></div>${ok?'<span class="bbt2-ok">✓</span>':`<button class="bbt2-go" onclick="goLink('/games')">Go</button>`}</div><div class="bbt2-bar"><i style="width:${p}%"></i><span>₱${Math.floor(Math.max(0,Math.min(b,t[0])-pv)).toLocaleString('en-US')}/${(t[0]-pv).toLocaleString('en-US')}</span></div></div>`}).join('')}</div>`}
 
 const A=()=>S.assets;
 let popShown=0, popDay='';

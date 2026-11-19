@@ -244,7 +244,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 <div id="front">
   <div class="side">
     <h4>身份</h4>
-    <div class="seg" id="segUser"><button data-u="std" class="on">普通玩家 juan88</button><button data-u="new">新玩家（首日）</button></div>
+    <div class="seg" id="segUser"><button data-u="std" class="on">所有玩家</button><button data-u="new">新玩家（首日）</button></div>
     <h4>活动组合（后台配置）</h4>
     <div class="seg" id="segMods"><button data-m="cb">仅 Cashback</button><button data-m="both" class="on">Cashback + Bet Bonus</button><button data-m="bb">仅 Bet Bonus</button></div>
     <h4>领取方式（后台配置）</h4>
@@ -542,7 +542,7 @@ function aConfig(){
   sec(7,'活动 2 · Bet Bonus（每日投注奖）',cBB(),`<span class="sec-r">${tg(M().bb,'setBB')}</span>`)+
   sec(8,'图标与链接（Selected Games / Category 卡片）',cIcons())+
   `<div id="pubbar" class="pubbar"><span>${pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`+
-  `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（普通玩家 · Today），随配置实时更新</div></div></div>`;
+  `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（所有玩家 · Today），随配置实时更新</div></div></div>`;
 }
 function setBB(v){if(!v&&!M().cb)return alert('至少开启 1 个活动');M().bb=v;mark();log('活动配置','活动组合','Bet Bonus'+(v?' 开启':' 关闭'));syncMods();arender()}
 function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus 已关闭：前台不显示 Bet Bonus 金额与档位区块。配置保留，开启后恢复。</div>`;

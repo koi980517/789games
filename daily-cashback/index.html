@@ -130,6 +130,7 @@ button{font:inherit;cursor:pointer}
 @keyframes bbUp{0%{transform:translateY(4px) scale(.6);opacity:0}60%{transform:translateY(-3px) scale(1.15);opacity:1}100%{transform:none}}
 .bbp-l{flex:1;min-width:0}.bbp-l small{display:block;font-size:11px;color:#6B7480;font-weight:600}.bbp-l b{font-size:20px;font-weight:900;color:#1F2430}.bbp-l b span{font-size:12px;color:#9AA1AD;font-weight:700}
 .bbp-rw{text-align:right}.bbp-rw small{display:block;font-size:10.5px;color:#6B7480;font-weight:600}.bbp-rw b{font-size:18px;font-weight:900;color:#E8253A}
+.bbp-rw .bbp-when{font-size:10px;color:#17914A;font-weight:700;margin-top:1px}
 .bbp-bar{position:relative;height:12px;border-radius:6px;background:#ECEAF3;margin:34px 0 8px}.bbp-bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,#FBBF24,#F08A00);transition:width .6s}
 .bbp-tip{position:absolute;top:-24px;transform:translateX(-50%);background:#FFF3D6;border:1px solid #F5C451;color:#B45309;font-size:10.5px;font-weight:800;border-radius:8px;padding:1px 6px;white-space:nowrap;transition:left .6s}
 .bbp-next{font-size:11.5px;color:#4A5262;font-weight:600}.bbp-next b{color:#E8253A}
@@ -380,10 +381,10 @@ function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);return hit.length?h
 const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
 let bbOut=null;
 let bbUpPop=false;
-function bbAdd(x){const b0=bbBet(user),r0=bbReward(b0);S.bb.tBet[user]=x?b0+x:0;bbUpPop=bbReward(bbBet(user))>r0;popup=null;rq=[];view='act';fv='today';render();bbUpPop=false}
+function bbAdd(x){const b0=bbBet(user),r0=bbReward(b0);S.bb.tBet[user]=x?b0+x:0;bbUpPop=x>0&&bbReward(bbBet(user))>r0;popup=null;rq=[];view='act';fv='today';render();bbUpPop=false}
 function bbSection(){const b=bbBet(user),r=bbReward(b),T=S.bb.tiers,done=T.filter(t=>b>=t[0]).length,max=T.at(-1)[0];
   const nx=T[done],tgt=nx?nx[0]:max,p=Math.min(100,b/tgt*100);
-  return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-coin"><i>₱</i><i>₱</i><b>₱${(+r).toLocaleString('en-US')}</b>${r?`<em class="bbp-up ${bbUpPop?'upa':''}">▲UP</em>`:''}</span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} <span>/ ${pesoI(tgt)}</span></b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b></div></div>
+  return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-coin"><i>₱</i><i>₱</i><b>₱${(+(nx||T.at(-1))[1]).toLocaleString('en-US')}</b><em class="bbp-up ${bbUpPop?'upa':''}">${nx?'▲UP':'MAX'}</em></span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} ${nx?`<span>/ ${pesoI(tgt)}</span>`:''}</b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b><small class="bbp-when">Credited tomorrow ${S.bb.autoAt}</small></div></div>
   <div class="bbp-bar"><i style="width:${p}%"></i><span class="bbp-tip" style="left:${Math.max(8,Math.min(92,p))}%">${pesoI(Math.floor(b))}</span></div>
   <div class="bbp-next">${nx?`Bet <b>${pesoI(Math.ceil(nx[0]-b))}</b> more to reach Level ${done+1} and get <b>${pesoI(nx[1])}</b>`:`All levels completed! <b>${pesoI(r)}</b> will be credited tomorrow.`}</div></div>
   `}

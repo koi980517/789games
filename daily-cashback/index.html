@@ -142,6 +142,8 @@ button{font:inherit;cursor:pointer}
 .bbl-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .bbl-go{background:#A3123A;color:#fff;border:0;border-radius:16px;padding:6px 22px;font-weight:800;font-size:13px;cursor:pointer}
 .bbl-lock{background:#EEEDF3;color:#9AA1AD;border-radius:16px;padding:6px 12px;font-weight:800;font-size:12px}
+.bbl-mini{width:96px;height:6px;border-radius:3px;background:#ECEAF3;position:relative;overflow:hidden}.bbl-mini i{position:absolute;left:0;top:0;bottom:0;background:#F08A00;border-radius:3px}
+.bbl-mt{font-size:10px;color:#6B7480;font-weight:700}
 .bbl.out{animation:bbOut .75s ease forwards;background:#E8F8F1;border:1.5px solid #17B794}
 @keyframes bbOut{0%{transform:none;opacity:1}45%{transform:translateY(-14px);opacity:.9}100%{transform:translateY(-40px);opacity:0;max-height:0;padding-top:0;padding-bottom:0;margin-top:0}}
 .bbl-done{font-size:12px;color:#17914A;font-weight:800;text-align:center;padding:12px;background:#E8F8F1;border-radius:14px;margin-top:8px}
@@ -153,6 +155,13 @@ button{font:inherit;cursor:pointer}
 .bbt2-m{flex:1;min-width:0}.bbt2-m b{display:block;color:#F08A00;font-size:14px;font-weight:900}.bbt2-m small{font-size:11px;color:#4A5262;font-weight:600}
 .bbt2-go{background:#A3123A;color:#fff;border:0;border-radius:16px;padding:6px 20px;font-weight:800;font-size:13px;cursor:pointer}
 .bbt2-ok{width:30px;height:30px;border-radius:50%;background:#17B794;color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;margin-right:14px}
+.bbt2-r{display:flex;align-items:center;gap:10px}.bbt2-row{flex:1;min-width:0}
+.bbt2-node{position:relative;z-index:1;width:20px;height:20px;border-radius:50%;border:2px solid #D5D7DD;background:#fff;flex-shrink:0;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.bbt2-node.on{background:#17B794;border-color:#17B794}
+.bbt2-node.ln::after{content:"";position:absolute;left:50%;top:16px;width:2px;height:46px;transform:translateX(-50%);background:#D5D7DD}.bbt2-node.lnon::after{background:#17B794}
+.bbt2-r.pay{background:#FFF6E6}.bbt2-r.pay .bbt2-m small{color:#F08A00;font-size:13px;font-weight:900}
+.bbt2-g.off{filter:grayscale(1);opacity:.45}
+.bbt2-pay{background:linear-gradient(90deg,#F59E0B,#F08A00);color:#fff;font-size:11px;font-weight:800;border-radius:12px;padding:5px 10px;white-space:nowrap;box-shadow:0 2px 6px rgba(240,138,0,.35)}
 .bbt2-bar{position:relative;height:12px;border-radius:6px;background:#DADADA;margin-top:6px;overflow:hidden}.bbt2-bar i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#F59E0B,#F08A00);border-radius:6px}.bbt2-bar span{position:relative;display:block;text-align:center;font-size:9px;font-weight:700;color:#fff;line-height:12px}
 .bbx .bb-top{display:flex;justify-content:space-between}.bbx small{display:block;font-size:11px;color:#7A808C}.bbx .bb-top b{font-size:18px}.bbx .bb-top b.g{color:#0E9F84}.bb-row{display:flex;align-items:center;gap:8px;border:1px solid #E3F2EE;border-radius:10px;padding:8px 10px;margin-top:6px;font-size:12.5px}.bb-row span:first-child{flex:1;font-weight:700}.bb-row i{width:18px;height:18px;border-radius:50%;background:#EEF0F3;color:#fff;font-style:normal;font-size:12px;text-align:center;line-height:18px}.bb-row.ok{background:#E8F7F3;border-color:#B7E6DA}.bb-row.ok i{background:#0E9F84}.btn.bbtn{background:linear-gradient(90deg,#13a58c,#0E7C6B)}
 .sg{background:#fff;border-radius:14px;padding:10px 10px 8px;margin-top:8px;cursor:pointer;box-shadow:0 1px 4px rgba(74,18,184,.06)}
@@ -269,12 +278,25 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 .kpis small{display:block;font-size:11px;color:#9AA1AD}
 .mbg{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:50}.mbox{background:#fff;border-radius:8px;padding:18px 20px;width:420px;font-size:13px}.mbox h3{margin:0 0 6px}
 .atoast{display:none;position:fixed;top:60px;left:50%;transform:translateX(-50%);background:#17914A;color:#fff;border-radius:6px;padding:8px 22px;font-weight:700;z-index:60}
-
+#clog{display:none;padding:24px}
+.clog{max-width:900px;margin:0 auto}
+.clog-top{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}.clog-top b{font-size:17px}.clog-top span{font-size:12px;color:#6B7480}
+.clog-e{background:#fff;border-radius:10px;margin-bottom:10px;overflow:hidden;border:1px solid #E3E6EA}
+.clog-e summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:90px 120px 1fr 20px;align-items:center;gap:12px;padding:12px 16px;font-size:13px}
+.clog-e summary::-webkit-details-marker{display:none}
+.clog-e summary:after{content:"▸";color:#9AA1AD;transition:transform .2s}.clog-e[open] summary:after{transform:rotate(90deg)}
+.clog-e[open] summary{border-bottom:1px solid #EEF0F3;background:#F7F8FA}
+.clog-ver{font-weight:800;color:#E8253A}.clog-date{color:#4A5262}.clog-sum{color:#1F2430;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clog-th{display:grid;grid-template-columns:90px 120px 1fr 20px;gap:12px;padding:0 16px 6px;font-size:12px;color:#8A93A0}
+.clog-b{padding:4px 22px 16px}.clog-b h5{margin:12px 0 4px;font-size:13px}.clog-b ol{margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:#2B2F3A}
+.clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 </head>
 <body>
+
+
 <div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.4</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
-<div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button></div></div>
+<div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
   <div class="side">
@@ -293,13 +315,13 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
       <li>打开 APP：活动弹窗（整图，无 PLAY NOW 按钮，点击图片任意位置进活动页）→ Cashback 奖励弹窗（有可领 / 新到账时）→ Bet Bonus 奖励弹窗（新到账时），依次弹出，关掉一个再弹下一个。</li>
       <li>活动入口「1.5%+2%」放在首页右侧小猫挂件里（点小猫展开 JOIN NOW 列表），随活动开关显示；首页 Banner 首张为 Slots Cashback。</li>
       <li>自动领取时结算后直接入账；玩家进入 Home 页后弹一次 Cashback 奖励弹窗，提示已到账金额（按钮 OK）。Bet Bonus 每天自动发放，发放后进入 Home 弹一次到账提示。两个弹窗标题可在后台「页面素材」配置。</li>
-      <li>Push · 短信为一期：结算后按轮次推送可领返水提醒，已领取的不推。</li>
+      <li>Push · 短信为一期：派奖时发送（Cashback 结算时、Bet Bonus 发放时），每个活动单独配置文案；免打扰时段 21:00 – 07:00 内不发，顺延到 07:00。</li>
       <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）。</li>
       <li>VIP 固定返水比例为二期；一期所有玩家按档位计算、受最高返水上限限制。</li>
       <li>Selected Games 组内游戏按组比例，不再按 Category 计算；后台可整体关闭。</li>
       <li>活动页「Category」区块与分类、游戏均由后台配置。</li>
       <li>当日返水向下取整到 ₱1（₱123.99 → ₱123）；低于 ₱1 不发放。</li>
-      <li>活动页不放顶部 Banner；结算 / 领取时间只写在规则页（右上 ?）。</li>
+      <li>活动页不放顶部 Banner；Cashback 的结算 / 领取时间只写在规则页（右上 ?）；Bet Bonus 进度卡显示发放时间（Credited tomorrow 09:00）。</li><li>Cashback History 入口在 Rules 页顶部。</li><li>Daily Bet Bonus：一条总进度条（今日投注 ÷ 下一档门槛）+ 所有档位的奖励表，达成的档位高亮；奖励只拿达到的最高一档。</li>
       <li>Category 及每类游戏、Selected Games 组（类型 / 游戏 / 比例 / 图标）、返水等级、页面素材、规则条款、活动开关均由后台配置。</li>
       <li>后台任何配置修改后，前台与后台右侧预览即时生效（同一页面内，刷新恢复默认）。</li>
     </ul>
@@ -324,6 +346,8 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
   </div>
   <div id="modal"></div><div id="atoast" class="atoast"></div>
 </div>
+
+<div id="clog"><div class="clog"><div class="clog-top"><b>更新日志</b><span>按时间倒序，点击展开 / 收起</span></div><div id="clogList"></div></div></div>
 
 <script>
 const LIB=[['Super Ace','JILI','slot'],['Super Ace Deluxe','JILI','slot'],['Fortune Gems','JILI','slot'],['Fortune Gems 2','JILI','slot'],['Money Coming','JILI','slot'],['Boxing King','JILI','slot'],['Golden Empire','JILI','slot'],['Mahjong Ways','PG Soft','slot'],['Fortune Tiger','PG Soft','slot'],['Treasures of Aztec','PG Soft','slot'],['Wild Bounty Showdown','PG Soft','slot'],['Pinata Wins','PG Soft','slot'],['Gates of Olympus','Pragmatic Play','slot'],['Sweet Bonanza','Pragmatic Play','slot'],['Sugar Bang Bang','FC','slot'],['Chinese New Year','FC','slot'],['Magic Ace Wild Lock','JDB','slot'],['Piggy Bank','JDB','slot'],
@@ -861,6 +885,16 @@ function aPush(){const q=S.push.quiet;
   <div class="panel"><h3>短信回调明细</h3><table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>活动</th><th>金额</th><th>发送时间</th><th>回调状态</th><th>说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>Cashback</td><td>₱134</td><td>11-18 07:00:12</td><td><span class="chip g">DELIVRD</span></td><td>—</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>Cashback</td><td>₱52</td><td>11-18 07:00:15</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>Bet Bonus</td><td>₱10</td><td>11-18 09:00:08</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table>
   <div class="foot"><button class="ab p" onclick="log('Push · 短信','保存配置','Push / 短信 / 免打扰');arender()">保存</button></div></div></div>`;
 }
+function aPushOld(){
+  return `<div><div class="tip">只发给已结算、Available Cashback > 0、仍有未领取且未过期记录的玩家；<b>已领取的不推 Push、不发短信，每轮发送前实时判定</b>；同一批次每人 1 条，多笔合并。</div>
+  <div class="panel"><h3>Push（最多 3 轮，时间须晚于结算时间 ${S.cfg.settle} 且递增）</h3><table class="at"><tr><th>轮次</th><th>次日发送时间</th><th>推送内容</th><th>启用</th><th>应推送</th><th>已领取剔除</th><th>送达</th><th>推送不到</th><th>打开客户端</th><th>打开率</th></tr>
+  <tr><td>第 1 轮</td><td>09:00</td><td>Your ₱{CashbackAmount} cashback is ready!</td><td><span class="sw"></span></td><td>12,480</td><td>0</td><td>10,942</td><td>1,538</td><td>3,610</td><td>33.0%</td></tr>
+  <tr><td>第 2 轮</td><td>14:00</td><td>{UserName}, don't miss ₱{CashbackAmount}</td><td><span class="sw"></span></td><td>12,480</td><td>4,215</td><td>7,190</td><td>1,075</td><td>1,882</td><td>26.2%</td></tr>
+  <tr><td>第 3 轮</td><td>20:00</td><td>Last call! Cashback expires soon</td><td><span class="sw off"></span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table><div class="foot"><button class="ab">发送测试 Push</button><button class="ab p">保存并发布 Push</button></div></div>
+  <div class="panel"><h3>短信</h3><div class="form"><label>开关 / 发送时间</label><div><span class="sw"></span> 次日 <input value="18:00" style="width:70px"> <label><input type="checkbox" checked> 个性化发送（按近 7 日最常活跃时段）</label></div><label>Smart 文案</label><div><input style="width:100%" value="789Games: P{CashbackAmount} cashback waiting for you. Claim before it expires!"><span class="h">≤ 160 字符</span></div><label>Globe 文案</label><div><input style="width:100%" value="789Games: Your P{CashbackAmount} daily cashback is ready. Claim now!"></div></div>
+  <div class="kpis" style="margin-top:12px"><div>发送名单<b>8,240</b></div><div>已领取剔除<b>5,112</b></div><div>已送达<b>2,980</b></div><div>失败<b>148</b></div></div>
+  <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div></div>`;
+}
 let RQ={d:'2026-11-17',q:'',s:'',p:0,ps:30},RQin={d:'2026-11-17',q:'',s:''};
 const REC_DAYS=['2026-11-17','2026-11-16','2026-11-15','2026-11-14','2026-11-13'];
 let __REC=null;
@@ -922,8 +956,20 @@ function aStats(){
   <div class="kpis"><div>有效投注合计<b>${pesoI(sum(2))}</b></div><div>返水生成合计<b>${pesoI(sum(3))}</b></div><div>已领取合计<b>${pesoI(sum(4))}</b><small>领取率 ${(sum(4)/sum(3)*100).toFixed(1)}%</small></div><div>过期合计<b>${pesoI(sum(5))}</b></div><div>活动预算已用<b>${pesoI(S.budget.used)}</b><small>${(S.budget.used/S.budget.cap*100).toFixed(1)}% / ${pesoI(S.budget.cap)}</small></div></div>
   <div class="panel"><table class="at"><tr><th>日期</th><th>参与人数</th><th>有效投注</th><th>返水生成</th><th>返水 / 投注</th><th>已领取</th><th>领取率</th><th>已过期</th><th>预算累计已用</th><th>状态</th></tr>${rows}</table><div class="note" style="margin-top:6px">一行 = 一个自然日的活动汇总；当日为「统计中」，D+1 结算后变「已结算」。点导出下载 Excel。</div></div>`;
 }
-document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';if(b.dataset.v==='front')render();else arender()});
+document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
+const CLOG=[
+  {v:'v1.4',d:'2026-11-19',sum:'Bet Bonus 改为总进度条 + 奖励表；新增 Bet Bonus 到账弹窗；Push · 短信改为一期',
+   sec:[['用户侧',['Daily Bet Bonus 显示逻辑：原来每一档一条进度条，改为一条总进度条，加上所有档位的奖励表，玩家达成的档位在奖励表里高亮。奖励只拿达到的最高一档，不累加。','弹窗：新增 Bet Bonus 到账弹窗。打开 APP 后，活动弹窗、Cashback 弹窗、Bet Bonus 弹窗依次弹出。','Cashback History 入口：从活动页移到 Rules 页。','Category：区块固定显示，进度条改为按「当前档 → 下一档」计算。']],
+        ['后台',['⑦ Bet Bonus：只保留自动发放，流水固定 1 倍，计算方式固定不累加。','页面素材：奖励弹窗拆成 Cashback / Bet Bonus 两个，标题可配置。','Push · 短信：从二期改为一期，派奖时发送，新增免打扰时段。','返水记录：改为每日全部用户记录，可搜索、可查看明细。','去掉「前台显示 Category 区块」开关。']]],
+   ft:'以上改动对应的界面设计都已同步调整，以原型为准。'}
+];
+function clogRender(){const L=[...CLOG].sort((a,b)=>b.d.localeCompare(a.d));
+  document.getElementById('clogList').innerHTML='<div class="clog-th"><span>版本号</span><span>更新日期</span><span>更新内容</span><span></span></div>'+L.map((e,i)=>`<details class="clog-e" ${i===0?'open':''}><summary><span class="clog-ver">${e.v}</span><span class="clog-date">${e.d}</span><span class="clog-sum">${e.sum}</span></summary><div class="clog-b">${e.sec.map(([t,items])=>`<h5>${t}</h5><ol>${items.map(x=>`<li>${x}</li>`).join('')}</ol>`).join('')}${e.ft?`<div class="clog-ft">${e.ft}详细规则见 <a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">PRD</a>。</div>`:''}</div></details>`).join('')}
+clogRender();
 openApp();arender();
 </script>
+
+
+
 </body>
 </html>

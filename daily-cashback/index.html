@@ -675,7 +675,7 @@ function aOverride(){
 function addOv(){const a=document.getElementById('ovA').value.trim();if(!a)return alert('请输入会员账号');S.overrides.unshift({acc:a,tier:+document.getElementById('ovT').value,until:document.getElementById('ovU').value,why:document.getElementById('ovW').value||'—',op:'koi · 11-18 '+now()});log('活动配置','新增指定档位',a);arender()}
 function aRules(){
   const B=(c,t,v)=>`<button title="${t}" onmousedown="event.preventDefault();rteCmd('${c}'${v?`,'${v}'`:''})">${t.length<3?t:'<span style=\'font-size:11px\'>'+t+'</span>'}</button>`;
-  return `<div class="form"><label><i>*</i> 活动内容</label><div><div class="rte">
+  return `<div style="display:flex;gap:16px;align-items:flex-start"><div style="flex:1;min-width:0"><div class="form" style="grid-template-columns:110px 1fr"><label style="align-self:start;padding-top:6px"><i>*</i> 活动规则页</label><div><div class="rte">
   <div class="rte-tb">${B('undo','↶')}${B('redo','↷')}<i class="sep"></i>
   <button title="文字颜色" onmousedown="event.preventDefault();rteCmd('foreColor','#7B2CF0')"><b style="border-bottom:3px solid #7B2CF0">A</b></button><button title="清除颜色" onmousedown="event.preventDefault();rteCmd('foreColor','#1F2430')"><b style="border-bottom:3px solid #1F2430">A</b></button>
   <button title="Bold" onmousedown="event.preventDefault();rteCmd('bold')"><b>B</b></button><button title="Italic" onmousedown="event.preventDefault();rteCmd('italic')"><i>I</i></button><button title="Underline" onmousedown="event.preventDefault();rteCmd('underline')"><u>U</u></button><button title="Strikethrough" onmousedown="event.preventDefault();rteCmd('strikeThrough')"><s>S</s></button><button title="Link" onmousedown="event.preventDefault();rteLink()">🔗</button><i class="sep"></i>
@@ -685,8 +685,9 @@ function aRules(){
   <label title="插入图片" style="cursor:pointer;padding:0 6px" onmousedown="rteSave()">🖼<input type="file" accept="image/png,image/jpeg,image/webp" style="display:none" onchange="readImg(this,v=>{rteRestore();rteCmd('insertImage',v)})"></label></div>
   <div id="rteEd" class="rte-ed" contenteditable="true" oninput="rteSync()" onblur="rteSync(true)">${safeHtml(S.rulesHtml)}</div>
   <div class="rte-ft" id="rteWc">${rteWords(S.rulesHtml)} WORDS · 富文本（沿用 Promo「活动内容」编辑器）</div></div>
-  <div class="note">沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。前台规则页先展示本内容，再由系统自动追加：领取时间、取整规则、流水倍数、最低投注与上限、各 Category 游戏列表、KYC 要求。</div></div>
-  <label>返水比例表</label><div class="note">自动由「返水等级」+「Selected Games」生成，此处不维护</div></div>`;
+  <div class="note">即前台活动页右上「?」打开的 Rules 页，与右侧预览一一对应、实时同步。沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。</div></div>
+  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：领取时间（结算 ${S.cfg.settle}${S.cfg.expireH?`，${S.cfg.expireH} 小时内可领`:'，不过期'}）、取整规则、流水 ${S.cfg.turnover}×、最低投注 ${pesoI(S.cfg.minBet)} 与上限 ${pesoI(S.cfg.cap)}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成。':''}</div></div></div>
+  <div style="width:300px;flex-shrink:0"><div class="note" style="margin-bottom:4px">前台 Rules 页预览（与玩家看到的一致）</div><div class="pvphone" style="height:640px"><div class="scr" id="rulesPv">${rulesPv()}</div></div></div></div>`;
 }
 let rteRange=null;
 function rteSave(){const s=getSelection();if(s.rangeCount)rteRange=s.getRangeAt(0)}
@@ -694,7 +695,8 @@ function rteRestore(){const e=document.getElementById('rteEd');e.focus();if(rteR
 function rteCmd(c,v){document.getElementById('rteEd').focus();document.execCommand(c,false,v||null);rteSync()}
 function rteLink(){rteSave();const u=prompt('链接地址（https:// 或站内 / 路径）','https://');if(!u)return;rteRestore();rteCmd('createLink',u)}
 function rteWords(h){const d=document.createElement('div');d.innerHTML=h;return (d.textContent.trim().match(/\S+/g)||[]).length}
-function rteSync(end){const e=document.getElementById('rteEd');if(!e)return;S.rulesHtml=e.innerHTML;document.getElementById('rteWc').firstChild.textContent=rteWords(S.rulesHtml)+' WORDS · 富文本（沿用 Promo「活动内容」编辑器）';if(!pubDirty){mark();const b=document.getElementById('pubbar');if(b){b.className='pubbar dirty';b.firstChild.textContent='有未发布的修改'}}}
+function rulesPv(){const k=[view,user];view='rules';user='std';const h=rules();[view,user]=k;return h}
+function rteSync(end){const e=document.getElementById('rteEd');if(!e)return;S.rulesHtml=e.innerHTML;const rp=document.getElementById('rulesPv');if(rp)rp.innerHTML=rulesPv();document.getElementById('rteWc').firstChild.textContent=rteWords(S.rulesHtml)+' WORDS · 富文本（沿用 Promo「活动内容」编辑器）';if(!pubDirty){mark();const b=document.getElementById('pubbar');if(b){b.className='pubbar dirty';b.firstChild.textContent='有未发布的修改'}}}
 function cIcons(){
   const prev=(img,bg,txt)=>img?`<span style="display:inline-block;width:44px;height:44px;border-radius:10px;background:#fff url('${img}') center/cover;border:1px solid #E3E6EC;vertical-align:middle"></span>`:`<span style="display:inline-flex;width:44px;height:44px;border-radius:10px;background:${bg};color:#fff;font-weight:800;align-items:center;justify-content:center;vertical-align:middle;font-size:11px;text-align:center;line-height:1.1">${txt}</span>`;
   const row=(name,img,bg,txt,path,link,lp,ph,def)=>`<tr><td style="text-align:left">${name}</td><td>${prev(img,bg,txt)}</td><td style="white-space:nowrap">${upBtn(path,img?'替换':'上传')} ${img?`<button class="ab" onclick="${path}='';mark();arender()">恢复默认</button>`:''}</td><td style="text-align:left"><input value="${link||''}" placeholder="${ph}" style="width:240px" onchange="${lp}=this.value.trim();mark();log('活动配置','图标链接','${name.replace(/'/g,'')} → '+(this.value||'默认'));arender()"><div class="note" style="margin-top:2px">${def}</div></td></tr>`;

@@ -217,6 +217,7 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
 .kpis b{display:block;font-size:18px;color:#1F2430}
 .chip{font-size:11px;border-radius:10px;padding:1px 8px}
 .chip.g{background:#DDF6E4;color:#17914A}.chip.o{background:#FFF0D6;color:#B86E00}.chip.r{background:#FFE4E8;color:#D21740}.chip.b{background:#EAF2FF;color:#2A6FDB}.chip.n{background:#EEEFF4;color:#5A6080}
+.modsw{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;color:#1F2430;margin:2px 0 8px}.modsw span:first-child{min-width:170px}.modsw .sw{transform:scale(1.3);transform-origin:left center}
 .sw{display:inline-block;width:34px;height:18px;border-radius:9px;background:#2A6FDB;position:relative;vertical-align:middle;cursor:pointer}
 .sw::after{content:"";position:absolute;right:2px;top:2px;width:14px;height:14px;border-radius:50%;background:#fff}
 .sw.off{background:#C5CBD5}.sw.off::after{right:auto;left:2px}
@@ -567,8 +568,8 @@ function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
 function log(m,a,d){S.logs.unshift({t:'11-18 '+now(),op:'koi',m,a,d})}
 function cBasic(){const c=S.cfg;
   return `<div class="form">
-  <label><i>*</i> 活动组合</label><div><span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px">活动 1 · Cashback <span class="sw ${M().cb?'':'off'}" onclick="setMod('cb')"></span></span><span style="display:inline-flex;align-items:center;gap:6px">活动 2 · Bet Bonus <span class="sw ${M().bb?'':'off'}" onclick="setMod('bb')"></span></span><span class="h">至少开 1 个。两个都开：活动页顶部左 Cashback、右 Bet Bonus，Cashback 内容在前、Bet Bonus 在下；只开一个则只显示该活动</span></div>
-  <label>挂件显示</label><div class="note">在「⑤ 页面素材」配置开关、图片与角标；弹窗出现时隐藏</div>
+  <label><i>*</i> 活动组合</label><div><div class="modsw"><span>活动 1 · Cashback</span><span class="sw ${M().cb?'':'off'}" onclick="setMod('cb')"></span></div><div class="modsw"><span>活动 2 · Bet Bonus</span><span class="sw ${M().bb?'':'off'}" onclick="setMod('bb')"></span></div><span class="h" style="margin-left:0">至少开 1 个。两个都开：活动页顶部左 Cashback、右 Bet Bonus，Cashback 内容在前、Bet Bonus 在下；只开一个则只显示该活动</span></div>
+  <label>小猫挂件入口</label><div class="note">写死不可配置，放在首页小猫挂件的 JOIN NOW 列表里；随「活动状态」开关显示 / 下线，角标 = 活动别名</div>
   <label><i>*</i> 活动名称</label><div><input value="次日返水与投注奖励活动 11月" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题按活动组合显示 Daily Cashback / Daily Bet Bonus</span></div>
   <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、小猫挂件内活动入口角标、Hot Games 游戏角标统一显示此别名</span></div>
   <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>

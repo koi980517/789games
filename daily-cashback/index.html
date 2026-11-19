@@ -150,6 +150,12 @@ table.rt{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:6px}
 table.rt th,table.rt td{border-bottom:1px solid #EEEFF4;padding:5px 3px;text-align:center}
 table.rt th{color:#6B7480;font-weight:600}
 table.rt tr.fe td{background:#FFF7D6}
+.bbtb{margin-top:6px;border-radius:12px;overflow:hidden;border:2px solid #E8A33C;background:#7A1410}
+.bbtb table{width:100%;table-layout:fixed;border-collapse:collapse;font-size:12.5px;color:#fff;text-align:center}
+.bbtb th{background:linear-gradient(#5A0C08,#7A1410);color:#FFD34D;font-weight:800;padding:9px 4px;font-size:13px}
+.bbtb th+th,.bbtb td+td{border-left:1px solid rgba(255,255,255,.18)}
+.bbtb td{padding:7px 4px;font-weight:700;background:#A3261A}
+.bbtb tr:nth-child(odd) td{background:#C2553F}
 .tag{font-size:9px;background:#FFD54A;color:#4A12B8;border-radius:4px;padding:0 4px;font-weight:800}
 .hs{display:flex;gap:8px;margin-top:10px}
 .hs div{flex:1;background:#fff;border-radius:12px;padding:8px;text-align:center;font-size:11px;color:#6B7480}
@@ -428,6 +434,7 @@ ${cbOn?`<div class="h3" style="margin-top:0">Cashback History<a onclick="go('his
   }
   if(cbOn) h+=ratesTable();
   if(bbOn&&fv==='today') h+=bbSection();
+  if(bbOn) h+=bbTable();
   return h+`</div>`;
 }
 function gtRow(x){
@@ -443,6 +450,8 @@ function ratesTable(){
   ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td></tr>`});
   return h+`</table></div>`;
 }
+function bbTable(){const T=[...S.bb.tiers].sort((a,b)=>a[0]-b[0]);
+  return `<div class="h3">Bet Bonus Rewards</div><div class="bbtb"><table><tr><th>Betting Amount</th><th>Bonus</th></tr>${T.map(t=>`<tr><td>≥ ₱${(+t[0]).toLocaleString('en-US')}</td><td>₱${(+t[1]).toLocaleString('en-US')}</td></tr>`).join('')}</table></div>`}
 function fmtLeft(h){return `${Math.floor(h)}h ${Math.round((h%1)*60)}m`}
 function hist(){
   const L=S.history[user]; const sum=s=>r2(L.filter(h=>h.s===s).reduce((a,h)=>a+h.amt,0));

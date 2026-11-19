@@ -174,6 +174,8 @@ table.rt tr.fe td{background:#FFF7D6}
 .bbtb th+th,.bbtb td+td{border-left:1px solid rgba(255,255,255,.18)}
 .bbtb td{padding:7px 4px;font-weight:700;background:#A3261A}
 .bbtb tr:nth-child(odd) td{background:#C2553F}
+.bbtb tr.me td{background:linear-gradient(90deg,#FFE27A,#FFC83D);color:#7A1410}
+.bbtb-me{display:inline-block;margin-left:6px;padding:0 6px;border-radius:8px;background:#7A1410;color:#FFD34D;font-size:10px;font-weight:800;line-height:16px;vertical-align:1px}
 .tag{font-size:9px;background:#FFD54A;color:#4A12B8;border-radius:4px;padding:0 4px;font-weight:800}
 .hs{display:flex;gap:8px;margin-top:10px}
 .hs div{flex:1;background:#fff;border-radius:12px;padding:8px;text-align:center;font-size:11px;color:#6B7480}
@@ -367,19 +369,16 @@ const ACATS=()=>CATS.filter(c=>c.on!==false);
 const STD_ACC='juan88';
 const M=()=>S.mods;
 function bbBet(u){if(S.bb.tBet&&S.bb.tBet[u]!=null)return S.bb.tBet[u];const g=S.bb.games||LIB.map(x=>x[0]);return Math.round(Object.entries(S.bets[u]).reduce((a,[k,v])=>{const c=CATS.find(c=>c.k===k)||(k.startsWith('feat')?CATS.find(c=>c.k==='slot'):null);if(!c)return a;const L=LIB.filter(x=>x[2]===c.k);return a+(L.length?v*L.filter(x=>g.includes(x[0])).length/L.length:0)},0)*100)/100}
-function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);if(!hit.length)return 0;return S.bb.calc==='sum'?hit.reduce((a,t)=>a+t[1],0):hit.at(-1)[1]}
+function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);return hit.length?hit.at(-1)[1]:0}
 const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
 let bbOut=null;
-function bbAdd(x){const T=S.bb.tiers,b0=bbBet(user);bbOut=T.filter(t=>b0>=t[0]).length;S.bb.tBet[user]=x?b0+x:0;if(!x)bbOut=null;popup=null;rq=[];view='act';fv='today';render();if(x&&bbOut!==T.filter(t=>bbBet(user)>=t[0]).length)setTimeout(()=>{bbOut=null;render()},800);else bbOut=null}
+function bbAdd(x){const b0=bbBet(user);S.bb.tBet[user]=x?b0+x:0;popup=null;rq=[];view='act';fv='today';render()}
 function bbSection(){const b=bbBet(user),r=bbReward(b),T=S.bb.tiers,done=T.filter(t=>b>=t[0]).length,max=T.at(-1)[0];
   const nx=T[done],tgt=nx?nx[0]:max,p=Math.min(100,b/tgt*100);
-  const row=(t,i,cls)=>{const cur=i===done&&!cls;
-    return `<div class="bbl ${cls||(cur?'cur':'')}"><div class="bbl-lv"><small>Level</small><b>${i+1}</b></div><span class="bbl-gift">🎁</span><div class="bbl-m">Reach <b>${pesoI(t[0])}</b><br>Get <em>${pesoI(t[1])}</em> Bonus</div><div class="bbl-r">${cls?'<span class="bbt2-ok" style="margin:0">✓</span>':cur?`<button class="bbl-go" onclick="goLink('/games')">Go</button>`:'<span class="bbl-lock">🔒 Locked</span>'}</div></div>`};
-  const outs=bbOut!=null?T.map((t,i)=>[t,i]).filter(([t,i])=>i>=bbOut&&i<done):[];
   return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-cal">📅</span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} <span>/ ${pesoI(tgt)}</span></b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b></div></div>
   <div class="bbp-bar"><i style="width:${p}%"></i><span class="bbp-tip" style="left:${Math.max(8,Math.min(92,p))}%">${pesoI(Math.floor(b))}</span></div>
   <div class="bbp-next">${nx?`Bet <b>${pesoI(Math.ceil(nx[0]-b))}</b> more to reach Level ${done+1} and get <b>${pesoI(nx[1])}</b>`:`All levels completed! <b>${pesoI(r)}</b> will be credited tomorrow.`}</div></div>
-  ${outs.map(([t,i])=>row(t,i,'out')).join('')}${T.map((t,i)=>i>=done?row(t,i):'').join('')}${done===T.length?'<div class="bbl-done">🎉 All levels completed today</div>':''}`}
+  `}
 
 const A=()=>S.assets;
 let popShown=0, popDay='';
@@ -478,8 +477,8 @@ function ratesTable(){
   ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td></tr>`});
   return h+`</table></div>`;
 }
-function bbTable(){const T=[...S.bb.tiers].sort((a,b)=>a[0]-b[0]);
-  return `<div class="h3">Bet Bonus Rewards</div><div class="bbtb"><table><tr><th>Betting Amount</th><th>Bonus</th></tr>${T.map(t=>`<tr><td>≥ ₱${(+t[0]).toLocaleString('en-US')}</td><td>₱${(+t[1]).toLocaleString('en-US')}</td></tr>`).join('')}</table></div>`}
+function bbTable(){const T=[...S.bb.tiers].sort((a,b)=>a[0]-b[0]),b=bbBet(user),me=T.filter(t=>b>=t[0]).length-1;
+  return `<div class="h3">Bet Bonus Rewards</div><div class="bbtb"><table><tr><th>Betting Amount</th><th>Bonus</th></tr>${T.map((t,i)=>`<tr class="${i===me?'me':''}"><td>${i===me?'🎁 ':''}≥ ₱${(+t[0]).toLocaleString('en-US')}</td><td>₱${(+t[1]).toLocaleString('en-US')}${i===me?'<span class="bbtb-me">YOURS</span>':''}</td></tr>`).join('')}</table></div>`}
 function fmtLeft(h){return `${Math.floor(h)}h ${Math.round((h%1)*60)}m`}
 function hist(){
   const L=S.history[user]; const sum=s=>r2(L.filter(h=>h.s===s).reduce((a,h)=>a+h.amt,0));
@@ -508,7 +507,7 @@ function featPage(){
   <div class="fp-grid">${order.map(o=>{const p=pal[hs(o.g)%pal.length];return `<div class="fp-g"><div class="fp-img" style="background:linear-gradient(150deg,${p[0]},${p[1]})"><span class="fp-tag">${f.rate}% Cashback</span><b>${o.g}</b></div><p>${o.g}</p><button onclick="toast='Opening ${o.g.replace(/'/g,"\\'")}…';render();setTimeout(()=>{toast='';render()},1500)">Play</button></div>`}).join('')||'<div class="note" style="grid-column:1/-1;text-align:center">No games yet</div>'}</div></div>`;
 }
 function rules(){
-  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>${S.bb.calc==='sum'?'Rewards of all tiers you reach are added up.':'You get the reward of the highest tier you reach.'}</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>Rewards are sent to your balance automatically at ${S.bb.autoAt} every day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
+  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>You only get the reward of the highest tier you reach (not added up).</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>Rewards are sent to your balance automatically at ${S.bb.autoAt} every day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
   if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="h3" style="margin-top:0">Cashback History<a onclick="go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;margin-bottom:10px;font-size:12px;cursor:pointer" onclick="go('hist')">Available ${pesoI(avail(user))} · ${S.history[user].length} records</div><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Claim time</b>: cashback is settled at ${S.cfg.settle} (PHT) the next day and ${S.cfg.expireH?`can be claimed within ${S.cfg.expireH} hours. Unclaimed cashback expires after that.`:'can be claimed at any time — it does not expire.'}</li>
@@ -597,7 +596,7 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">Bet Bonus �
 </div><div class="subt">档位配置</div><div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 参与活动游戏</label><div><button class="ab" onclick="openBBPick()">选择参与活动游戏</button><span style="margin-left:10px">${bbScope().txt}</span><span class="h">只有被勾选的游戏产生的有效投注，才计入本活动</span></div>
   <label style="align-self:start;padding-top:8px"><i>*</i> 返奖档位</label><div><table class="at bbt" style="max-width:560px"><tr><th style="width:56px">档位</th><th>每日有效投注额</th><th>奖励金额</th><th style="width:70px">操作</th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>投注额 ≥ <input class="rin" style="width:100px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td>返 <input class="rin" style="width:100px" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<a class="lk" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</a>`:'<span class="note">—</span>'}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均需从低到高递增；投注额为 ≥（大于等于）</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
-  <label><i>*</i> 计算方式</label><div>${rd(b.calc==='single','setBBCalc','不累加','累加')}<span class="h">默认不累加：只取达到的最高一档；累加：达到的各档奖励相加</span></div>
+  <label>计算方式</label><div><span class="dis">只取达到的最高一档（不累加）</span><span class="h">玩家只拿当日有效投注对应档位的奖励，例：投注 ₱6,000 → 只拿 ₱5,000 档的奖励</span></div>
   <label>结算</label><div><span class="dis">每天 01:00 结算前一天 00:00—23:59 的有效投注</span><span class="h">每人每天最多 1 笔奖励</span></div>
   <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
 </div><div class="subt">发放与预算</div><div class="form" style="grid-template-columns:150px 1fr">

@@ -173,6 +173,7 @@ table.rt tr.fe td{background:#FFF7D6}
 .panel h3{margin:0 0 10px;font-size:14px}
 .p2{display:inline-block;margin-left:4px;padding:0 5px;border-radius:8px;background:#FFE7BA;color:#AD4E00;font-size:10px;line-height:16px;vertical-align:1px}
 .p2box{opacity:.55;pointer-events:none;filter:grayscale(.3)}
+.rq{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:13px}.rq label{display:inline-flex;align-items:center;gap:6px;color:#4A5262}.rq input,.rq select{border:1px solid #CBD1DA;border-radius:4px;padding:5px 8px;font:inherit;font-size:13px}
 .subt{border-left:3px solid #1677FF;padding-left:8px;font-weight:700;font-size:15px;color:#1F2937;margin:14px 0 12px}
 .at.bbt td,.at.bbt th{text-align:center}.at.bbt td{padding:8px 10px}.at.bbt .rin{text-align:left}
 a.lk{color:#1677FF;cursor:pointer}a.lk:hover{text-decoration:underline}
@@ -389,7 +390,7 @@ function act(){
     const y=S.history[user].find(x=>x.d==='11-17');
     const yb=bbReward(S.bb.yBet[user]||0), bbDone=S.bb.claimed[user]||S.bb.mode==='auto', bbAv=bbOn&&yb>0&&!bbDone?yb:0, cbAv=cbOn&&y&&y.s==='a'?a:0;
     const cbAmt=!y?`<div class="amt" style="color:#9AA1AD">₱0</div><div class="note">No cashback</div>`:`<div class="amt" ${y.s==='a'?'':'style="color:#17914A"'}>${pesoI(y.amt)}</div><div class="note">${y.s==='a'?'Available':'Claimed today'}</div>`;
-    const bbAmt=!yb?`<div class="amt g" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus</div>`:`<div class="amt g" ${bbDone?'style="color:#17914A"':''}>${pesoI(yb)}</div><div class="note">${S.bb.mode==='auto'?'Sent at '+S.bb.autoAt:bbDone?'Claimed today':'Available'}</div>`;
+    const bbAmt=!yb?`<div class="amt g" style="color:#9AA1AD">₱0</div><div class="note">No bet bonus</div>`:`<div class="amt g" ${bbDone?'style="color:#17914A"':''}>${pesoI(yb)}</div>${S.bb.mode==='auto'?'':`<div class="note">${bbDone?'Claimed today':'Available'}</div>`}`;
     const tot=cbAv+bbAv, btn=tot?`<button class="btn ${cbOn?'':'bbtn'}" style="grid-column:1/-1;margin-top:8px" onclick="claimY()">Claim ${pesoI(tot)}</button>`:'';
     if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (11-17)</div>${cbAmt}</div><i class="vl"></i><div><div class="lb">Bet Bonus (11-17)</div>${bbAmt}</div>${btn}</div>`;
     else if(bbOn) h+=`<div class="card total"><div class="lb">Yesterday's Bet Bonus (11-17)</div>${bbAmt}${btn}</div>`;
@@ -417,8 +418,6 @@ function ratesTable(){
   let h=`<div class="h3">Cashback Rates</div><div class="card" style="margin-top:6px;padding:8px"><table class="rt"><tr><th></th><th>Rate</th></tr>`;
   if(S.sel.on) S.featured.forEach(f=>h+=`<tr class="fe"><td style="text-align:left">${f.name} <span class="tag">SELECTED</span></td><td>${f.rate}%</td></tr>`);
   ACATS().forEach(c=>{const rs=S.tiers.map(t=>t.r[c.k]);h+=`<tr><td style="text-align:left">${c.n}</td><td>${Math.min(...rs)}–${Math.max(...rs)}%</td></tr>`});
-  h+=`</table></div><div class="h3">Standard Player Tiers</div><div class="card" style="margin-top:6px;padding:8px;overflow-x:auto"><table class="rt"><tr><th>Tier</th><th>Daily bet ≥</th>${ACATS().map(c=>`<th>${c.n}</th>`).join('')}</tr>`;
-  S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td>${t.th.toLocaleString()}</td>${ACATS().map(c=>`<td>${t.r[c.k]}%</td>`).join('')}</tr>`);
   return h+`</table></div>`;
 }
 function fmtLeft(h){return `${Math.floor(h)}h ${Math.round((h%1)*60)}m`}
@@ -740,12 +739,57 @@ function aPush(){
   <div class="kpis" style="margin-top:12px"><div>发送名单<b>8,240</b></div><div>已领取剔除<b>5,112</b></div><div>已送达<b>2,980</b></div><div>失败<b>148</b></div></div>
   <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div></div>`;
 }
+let RQ={d:'2026-11-17',q:'',s:'',p:0,ps:30},RQin={d:'2026-11-17',q:'',s:''};
+const REC_DAYS=['2026-11-17','2026-11-16','2026-11-15','2026-11-14','2026-11-13'];
+let __REC=null;
+function recData(){
+  if(__REC)return __REC;
+  let seed=20261118;const rnd=()=>{seed=(seed*1103515245+12345)%2147483648;return seed/2147483648};
+  const names=['juan88','maria_c','pedro_c','ana_lim','vip_ana','mark23','joy_dc','ken_ph','liza09','rico77','bea_r','carlo_s','dina88','eli_pg','fe_mnl','gabby1','hans_ce','ivy_qc','jojo55','kat_tg','leo_bc','mia_cv','nico_d','ola_77','paolo','quin_r','rose_b','sam_ph','tess_m','uly_88','vic_cb','wen_dv','xander','yna_q','zed_99','aiko_m','benj_s','cora_l','dan_ii','emy_t','ferdz','gino_8'];
+  const C=ACATS();const out=[];
+  REC_DAYS.forEach((d,di)=>names.forEach((n,ni)=>{
+    if(rnd()<.12)return;
+    const vip=n.startsWith('vip');const det=[];let tot=0,allBet=0;
+    C.forEach(c=>{if(rnd()<.45)return;const bet=r2(Math.pow(rnd(),2.2)*(c.k==='slot'?60000:25000));if(bet<1)return;let ti=-1,rate;
+      if(vip)rate=S.vip[c.k];else{ti=tierIdx(bet);rate=ti<0?0:S.tiers[ti].r[c.k]}
+      const rw=r2(bet*rate/100);tot+=rw;allBet+=bet;det.push({n:c.n,bet,ti,rate,rw})});
+    if(S.sel.on&&rnd()<.35){const f=S.featured[0];if(f){const bet=r2(rnd()*12000);const rw=r2(bet*f.rate/100);tot+=rw;allBet+=bet;det.push({n:f.name+'（Selected）',bet,ti:null,rate:f.rate,rw})}}
+    if(!det.length)return;
+    let raw=r2(tot);if(allBet<S.cfg.minBet)raw=0;let capped=false;if(!vip&&raw>S.cfg.cap){raw=S.cfg.cap;capped=true}
+    const amt=Math.floor(raw+1e-9);
+    const bb=M().bb?bbReward(allBet):0;
+    const r=rnd();const s=amt<1?'n':di===0?(r<.55?'a':'c'):(r<.6?'c':r<.85?'e':'a');
+    const id=String(10230000+ni*37+7);
+    out.push({d,id,acc:n,vip,det,allBet:r2(allBet),raw,amt,capped,bb,s,t:s==='c'?`11-${String(+d.slice(8)+1).padStart(2,'0')} ${String(5+Math.floor(rnd()*15)).padStart(2,'0')}:${String(Math.floor(rnd()*60)).padStart(2,'0')}`:'',src:s==='c'?(S.cfg.claim==='auto'?'Auto':['Popup','Activity Page','History'][Math.floor(rnd()*3)]):''});
+  }));
+  return __REC=out;
+}
+function recSearch(){RQ={...RQin,p:0,ps:RQ.ps};arender()}
+function recReset(){RQin={d:'2026-11-17',q:'',s:''};RQ={...RQin,p:0,ps:RQ.ps};arender()}
+function recDetail(i){const r=recData()[i];const lab={a:'Available to Claim',c:'Claimed',e:'Expired',n:'不发放（< ₱1）'};
+  document.getElementById('modal').innerHTML=`<div class="mbg" onclick="if(event.target===this)this.parentNode.innerHTML=''"><div class="mbox" style="width:720px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">返水明细 · ${r.d} · 会员 ID ${r.id}（${r.acc}${r.vip?' · VIP':''}）</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="document.getElementById('modal').innerHTML=''">×</span></div>
+  <table class="at" style="margin-top:10px"><tr><th>分类</th><th>有效投注</th><th>档位</th><th>比例</th><th>返水（2 位小数）</th></tr>${r.det.map(x=>`<tr><td>${x.n}</td><td>${peso(x.bet)}</td><td>${x.ti===null?'Selected':r.vip?'VIP':x.ti<0?'未达 T1':'T'+(x.ti+1)}</td><td>${x.rate}%</td><td>${peso(x.rw)}</td></tr>`).join('')}
+  <tr style="font-weight:700"><td>合计</td><td>${peso(r.allBet)}</td><td></td><td></td><td>${peso(r.det.reduce((a,x)=>a+x.rw,0))}</td></tr></table>
+  <div class="note" style="margin-top:8px;line-height:1.8">核对：分类返水合计 ${peso(r.det.reduce((a,x)=>a+x.rw,0))}${r.allBet<S.cfg.minBet?` → 有效投注低于最低 ${peso(S.cfg.minBet)}，不返水`:''}${r.capped?` → 超过单日上限，按 ${pesoI(S.cfg.cap)}`:''} → 向下取整 → <b>发放 ${pesoI(r.amt)}</b>${r.amt<1?'（低于 ₱1 不发放）':''}${M().bb?`；Bet Bonus ${pesoI(r.bb)}`:''}；状态 ${lab[r.s]}${r.t?'，领取时间 '+r.t+'（'+r.src+'）':''}</div>
+  <div class="foot" style="justify-content:flex-end;margin-top:12px"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">关闭</button></div></div></div>`}
 function aRecords(){
-  const rows=[];['std','vip'].forEach(u=>S.history[u].forEach(h=>rows.push({acc:u==='std'?'juan88':'vip_ana',...h})));
-  const lab={a:'Available to Claim',c:'Claimed',e:'Expired'};
-  const sum=s=>pesoI(rows.filter(r=>r.s===s).reduce((a,r)=>a+r.amt,0));
-  return `<div class="kpis"><div>已结算返水<b>${pesoI(rows.reduce((a,r)=>a+r.amt,0))}</b></div><div>Available to Claim<b>${sum('a')}</b></div><div>Claimed<b>${sum('c')}</b></div><div>Expired<b>${sum('e')}</b></div><div>Calculating<b>${pesoI(calc('std').total+calc('vip').total)}</b></div></div>
-  <div class="panel"><table class="at"><tr><th>Settlement Date</th><th>活动</th><th>账号</th><th>Valid Bet</th><th>Reward Amount</th><th>Claim Status</th><th>Expire Time</th><th>Claim Time</th><th>Claim Source</th><th>Batch Claim ID</th></tr>${rows.map((r,i)=>`<tr><td>2026-${r.d}</td><td>DCB-003</td><td>${r.acc}</td><td>${peso(r.bet)}</td><td>${pesoI(r.amt)}</td><td><span class="chip ${r.s==='a'?'r':r.s==='c'?'g':'n'}">${lab[r.s]}</span></td><td>${r.s==='a'?'11-'+(18+Math.floor(r.left/24))+' '+S.cfg.settle:'—'}</td><td>${r.s==='c'?r.t:'—'}</td><td>${r.s==='c'?(S.cfg.claim==='auto'?'Auto':'Popup'):'—'}</td><td>${r.s==='c'?'BC'+(240000+i):'—'}</td></tr>`).join('')}</table><div class="foot"><button class="ab">导出</button></div></div>`;
+  const all=recData();const lab={a:'Available to Claim',c:'Claimed',e:'Expired',n:'不发放'};const cls={a:'r',c:'g',e:'n',n:'n'};
+  const q=RQ.q.trim().toLowerCase();
+  const rows=all.map((r,i)=>({...r,i})).filter(r=>(!RQ.d||r.d===RQ.d)&&(!q||r.id.includes(q)||r.acc.toLowerCase().includes(q))&&(!RQ.s||r.s===RQ.s));
+  const sum=f=>rows.reduce((a,r)=>a+f(r),0);
+  const pages=Math.max(1,Math.ceil(rows.length/RQ.ps));if(RQ.p>=pages)RQ.p=pages-1;const pg=rows.slice(RQ.p*RQ.ps,RQ.p*RQ.ps+RQ.ps);
+  const bbOn=M().bb;
+  return `<div class="tip">每天 ${S.cfg.settle} 结算后生成前一天的返水记录：一行 = 一个会员一个结算日。可按结算日期、会员 ID / 账号、领取状态查询；点「明细」看分类投注、档位、比例和取整过程，用于核对。</div>
+  <div class="panel"><div class="rq">
+    <label>结算日期 <select onchange="RQin.d=this.value"><option value="" ${RQin.d===''?'selected':''}>全部日期</option>${REC_DAYS.map(d=>`<option ${RQin.d===d?'selected':''}>${d}</option>`).join('')}</select></label>
+    <label>会员 ID / 账号 <input placeholder="输入会员 ID 或账号" value="${RQin.q}" oninput="RQin.q=this.value" onkeydown="if(event.key==='Enter')recSearch()" style="width:180px"></label>
+    <label>领取状态 <select onchange="RQin.s=this.value">${[['','全部'],['a','Available to Claim'],['c','Claimed'],['e','Expired'],['n','不发放（< ₱1）']].map(([v,t])=>`<option value="${v}" ${RQin.s===v?'selected':''}>${t}</option>`).join('')}</select></label>
+    <button class="ab p" onclick="recSearch()">查询</button><button class="ab" onclick="recReset()">重置</button><button class="ab" style="margin-left:auto" onclick="alert('导出当前筛选结果 ${rows.length} 条（原型）')">导出 Excel</button>
+  </div></div>
+  <div class="kpis"><div>返水人数<b>${new Set(rows.map(r=>r.id)).size}</b></div><div>有效投注合计<b>${peso(sum(r=>r.allBet))}</b></div><div>返水合计（发放）<b>${pesoI(sum(r=>r.amt))}</b></div><div>Claimed<b>${pesoI(sum(r=>r.s==='c'?r.amt:0))}</b></div><div>Available to Claim<b>${pesoI(sum(r=>r.s==='a'?r.amt:0))}</b></div><div>Expired<b>${pesoI(sum(r=>r.s==='e'?r.amt:0))}</b></div>${bbOn?`<div>Bet Bonus 合计<b>${pesoI(sum(r=>r.bb))}</b></div>`:''}</div>
+  <div class="panel"><table class="at"><tr><th>结算日期</th><th>会员 ID</th><th>账号</th><th>玩家类型</th><th>有效投注</th><th>分类返水合计</th><th>发放金额（取整）</th>${bbOn?'<th>Bet Bonus</th>':''}<th>领取状态</th><th>领取时间</th><th>领取来源</th><th>操作</th></tr>
+  ${pg.map(r=>`<tr><td>${r.d}</td><td>${r.id}</td><td>${r.acc}</td><td>${r.vip?'VIP':'普通'}</td><td>${peso(r.allBet)}</td><td>${peso(r.raw)}${r.capped?' <span class="chip n">封顶</span>':''}</td><td><b>${pesoI(r.amt)}</b></td>${bbOn?`<td>${r.bb?pesoI(r.bb):'—'}</td>`:''}<td><span class="chip ${cls[r.s]}">${lab[r.s]}</span></td><td>${r.t||'—'}</td><td>${r.src||'—'}</td><td><a class="lk" onclick="recDetail(${r.i})">明细</a></td></tr>`).join('')||`<tr><td colspan="12" class="note" style="text-align:center;padding:18px">没有符合条件的记录</td></tr>`}</table>
+  <div class="foot"><span class="note">共 ${rows.length} 条 · 第 ${RQ.p+1} / ${pages} 页</span><select style="margin-left:8px" onchange="RQ.ps=+this.value;RQ.p=0;arender()">${[15,30,50].map(n=>`<option value="${n}" ${RQ.ps===n?'selected':''}>${n} 条/页</option>`).join('')}</select><button class="ab" ${RQ.p?'':'disabled'} onclick="RQ.p--;arender()">上一页</button><button class="ab" ${RQ.p<pages-1?'':'disabled'} onclick="RQ.p++;arender()">下一页</button></div></div>`;
 }
 let rpDays=7;
 function aStats(){

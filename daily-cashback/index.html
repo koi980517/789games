@@ -119,6 +119,26 @@ button{font:inherit;cursor:pointer}
 .tree{border:1px solid #E3E6EA;border-radius:4px;max-height:420px;overflow:auto;padding:8px 12px;font-size:13px}.tree span{color:#8A93A1;font-size:12px}.t1{padding:4px 0 8px;border-bottom:1px solid #EEF0F3;margin-bottom:6px}.t2{padding:4px 0 4px 6px}.t3{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;padding:4px 0 6px 26px}.t3 label{display:flex;align-items:center;gap:6px;color:#3A4150;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tcb{display:inline-block;width:13px;height:13px;border:1px solid #B8C0CC;border-radius:2px;vertical-align:-2px;margin-right:6px;cursor:pointer;background:#fff;position:relative;flex-shrink:0}.tcb.all{background:#2A6FDB;border-color:#2A6FDB}.tcb.all:after{content:'';position:absolute;left:3px;top:0;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}.tcb.some{border-color:#2A6FDB}.tcb.some:after{content:'';position:absolute;left:2px;top:5px;width:7px;height:2px;background:#2A6FDB}
 .card.total.two{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}.card.total.two .amt{font-size:30px}.card.total .vl{width:1px;height:56px;background:#ECEBF4}.amt.g{color:#0E9F84}
+.bbp{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);padding:12px 12px 10px;margin-top:8px}
+.bbp-top{display:flex;align-items:center;gap:10px}.bbp-cal{width:36px;height:36px;border-radius:10px;background:#F3E8FF;color:#6D28D9;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.bbp-l{flex:1;min-width:0}.bbp-l small{display:block;font-size:11px;color:#6B7480;font-weight:600}.bbp-l b{font-size:20px;font-weight:900;color:#1F2430}.bbp-l b span{font-size:12px;color:#9AA1AD;font-weight:700}
+.bbp-rw{text-align:right}.bbp-rw small{display:block;font-size:10.5px;color:#6B7480;font-weight:600}.bbp-rw b{font-size:18px;font-weight:900;color:#E8253A}
+.bbp-bar{position:relative;height:12px;border-radius:6px;background:#ECEAF3;margin:34px 0 8px}.bbp-bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:6px;background:linear-gradient(90deg,#FBBF24,#F08A00);transition:width .6s}
+.bbp-tip{position:absolute;top:-24px;transform:translateX(-50%);background:#FFF3D6;border:1px solid #F5C451;color:#B45309;font-size:10.5px;font-weight:800;border-radius:8px;padding:1px 6px;white-space:nowrap;transition:left .6s}
+.bbp-next{font-size:11.5px;color:#4A5262;font-weight:600}.bbp-next b{color:#E8253A}
+.bbl{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.05);padding:10px 12px;margin-top:8px;overflow:hidden;max-height:90px}
+.bbl.cur{background:linear-gradient(90deg,#FFF7E6,#fff);border:1.5px solid #F5C451}
+.bbl-lv{width:44px;height:44px;border-radius:10px;background:linear-gradient(160deg,#8B5CF6,#5B21B6);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;line-height:1}.bbl-lv small{font-size:9px;font-weight:600;opacity:.85}.bbl-lv b{font-size:18px;font-weight:900;margin-top:2px}
+.bbl-gift{font-size:26px;flex-shrink:0}
+.bbl-m{flex:1;min-width:0;font-size:12.5px;color:#1F2430;font-weight:600;line-height:1.5}.bbl-m b{font-weight:900}.bbl-m em{font-style:normal;color:#E8253A;font-weight:900;font-size:15px}
+.bbl-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.bbl-go{background:#A3123A;color:#fff;border:0;border-radius:16px;padding:6px 22px;font-weight:800;font-size:13px;cursor:pointer}
+.bbl-lock{background:#EEEDF3;color:#9AA1AD;border-radius:16px;padding:6px 12px;font-weight:800;font-size:12px}
+.bbl-mini{width:96px;height:6px;border-radius:3px;background:#ECEAF3;position:relative;overflow:hidden}.bbl-mini i{position:absolute;left:0;top:0;bottom:0;background:#F08A00;border-radius:3px}
+.bbl-mt{font-size:10px;color:#6B7480;font-weight:700}
+.bbl.out{animation:bbOut .75s ease forwards;background:#E8F8F1;border:1.5px solid #17B794}
+@keyframes bbOut{0%{transform:none;opacity:1}45%{transform:translateY(-14px);opacity:.9}100%{transform:translateY(-40px);opacity:0;max-height:0;padding-top:0;padding-bottom:0;margin-top:0}}
+.bbl-done{font-size:12px;color:#17914A;font-weight:800;text-align:center;padding:12px;background:#E8F8F1;border-radius:14px;margin-top:8px}
 .bbt2{background:#fff;border-radius:16px;box-shadow:0 2px 10px rgba(0,0,0,.06);overflow:hidden;margin-top:8px}
 .bbt2-h{display:flex;align-items:center;gap:8px;background:#FDEBDD;padding:10px 12px}.bbt2-h b{font-size:15px;font-weight:900}.bbt2-h em{font-style:normal;font-weight:900;color:#F08A00;font-size:14px}.bbt2-h i{margin-left:auto;font-style:normal;font-size:11px;font-weight:700;color:#6B7480;width:30px;height:30px;border-radius:50%;border:2px solid #E6E7EB;background:#fff;display:flex;align-items:center;justify-content:center}
 .bbt2-ic{width:28px;height:28px;border-radius:8px;background:#FFE1C2;color:#F08A00;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
@@ -258,6 +278,8 @@ table.at tr.hl td{background:#F2F8FF}table.at tr.gray td{color:#9AA1AD}
     <div class="seg" id="segClaim"><button data-c="manual">手动领取</button><button data-c="auto" class="on">自动领取</button></div>
     <h4>演示</h4>
     <div class="seg"><button id="reopen">重新打开 APP</button><button id="reset">重置演示数据</button></div>
+    <h4>Bet Bonus 演示（今日投注）</h4>
+    <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <h4>本页规则要点</h4>
     <ul>
       <li>打开 APP：活动弹窗（整图，无 PLAY NOW 按钮，点击图片任意位置进活动页）→ Cashback 奖励弹窗（有可领 / 新到账时）→ Bet Bonus 奖励弹窗（新到账时），依次弹出，关掉一个再弹下一个。</li>
@@ -324,7 +346,7 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
-  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'09:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false}},
+  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'09:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
@@ -345,12 +367,20 @@ function tierIdx(bet){let i=-1;S.tiers.forEach((t,k)=>{if(bet>=t.th)i=k});return
 const ACATS=()=>CATS.filter(c=>c.on!==false);
 const STD_ACC='juan88';
 const M=()=>S.mods;
-function bbBet(u){const g=S.bb.games||LIB.map(x=>x[0]);return Math.round(Object.entries(S.bets[u]).reduce((a,[k,v])=>{const c=CATS.find(c=>c.k===k)||(k.startsWith('feat')?CATS.find(c=>c.k==='slot'):null);if(!c)return a;const L=LIB.filter(x=>x[2]===c.k);return a+(L.length?v*L.filter(x=>g.includes(x[0])).length/L.length:0)},0)*100)/100}
+function bbBet(u){if(S.bb.tBet&&S.bb.tBet[u]!=null)return S.bb.tBet[u];const g=S.bb.games||LIB.map(x=>x[0]);return Math.round(Object.entries(S.bets[u]).reduce((a,[k,v])=>{const c=CATS.find(c=>c.k===k)||(k.startsWith('feat')?CATS.find(c=>c.k==='slot'):null);if(!c)return a;const L=LIB.filter(x=>x[2]===c.k);return a+(L.length?v*L.filter(x=>g.includes(x[0])).length/L.length:0)},0)*100)/100}
 function bbReward(b){const hit=S.bb.tiers.filter(t=>b>=t[0]);if(!hit.length)return 0;return S.bb.calc==='sum'?hit.reduce((a,t)=>a+t[1],0):hit.at(-1)[1]}
 const allBet=u=>Object.entries(S.bets[u]).reduce((a,[k,v])=>a+(k.startsWith('feat')?v:0)+(CATS.some(c=>c.k===k)?v:0),0);
-function bbSection(){const b=bbBet(user),r=bbReward(b);const T=S.bb.tiers;const done=T.filter(t=>b>=t[0]).length;
-  return `<div class="h3">Daily Bet Bonus</div><div class="bbt2"><div class="bbt2-h"><span class="bbt2-ic">₱</span><b>Bet Bonus</b><em>${pesoI(r)}</em><i>${done}/${T.length}</i></div>
-  ${T.map((t,i)=>{const ok=b>=t[0],pv=i?T[i-1][0]:0,p=Math.max(0,Math.min(100,(b-pv)/(t[0]-pv)*100));return `<div class="bbt2-r"><div class="bbt2-row"><span class="bbt2-g">₱${t[1]}</span><div class="bbt2-m"><b>Bet ${pesoI(t[0])}</b><small>Reward ${pesoI(t[1])}</small></div>${ok?'<span class="bbt2-ok">✓</span>':`<button class="bbt2-go" onclick="goLink('/games')">Go</button>`}</div><div class="bbt2-bar"><i style="width:${p}%"></i><span>₱${Math.floor(Math.max(0,Math.min(b,t[0])-pv)).toLocaleString('en-US')}/${(t[0]-pv).toLocaleString('en-US')}</span></div></div>`}).join('')}</div>`}
+let bbOut=null;
+function bbAdd(x){const T=S.bb.tiers,b0=bbBet(user);bbOut=T.filter(t=>b0>=t[0]).length;S.bb.tBet[user]=x?b0+x:0;if(!x)bbOut=null;popup=null;rq=[];view='act';fv='today';render();if(x&&bbOut!==T.filter(t=>bbBet(user)>=t[0]).length)setTimeout(()=>{bbOut=null;render()},800);else bbOut=null}
+function bbSection(){const b=bbBet(user),r=bbReward(b),T=S.bb.tiers,done=T.filter(t=>b>=t[0]).length,max=T.at(-1)[0];
+  const nx=T[done],tgt=nx?nx[0]:max,p=Math.min(100,b/tgt*100);
+  const row=(t,i,cls)=>{const cur=i===done&&!cls,mp=Math.min(100,b/t[0]*100);
+    return `<div class="bbl ${cls||(cur?'cur':'')}"><div class="bbl-lv"><small>Level</small><b>${i+1}</b></div><span class="bbl-gift">🎁</span><div class="bbl-m">Reach <b>${pesoI(t[0])}</b><br>Get <em>${pesoI(t[1])}</em> Bonus</div><div class="bbl-r">${cls?'<span class="bbt2-ok" style="margin:0">✓</span>':cur?`<button class="bbl-go" onclick="goLink('/games')">Go</button><div class="bbl-mini"><i style="width:${mp}%"></i></div><span class="bbl-mt">${pesoI(Math.floor(b))} / ${pesoI(t[0])}</span>`:'<span class="bbl-lock">🔒 Locked</span>'}</div></div>`};
+  const outs=bbOut!=null?T.map((t,i)=>[t,i]).filter(([t,i])=>i>=bbOut&&i<done):[];
+  return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-cal">📅</span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} <span>/ ${pesoI(tgt)}</span></b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b></div></div>
+  <div class="bbp-bar"><i style="width:${p}%"></i><span class="bbp-tip" style="left:${Math.max(8,Math.min(92,p))}%">${pesoI(Math.floor(b))}</span></div>
+  <div class="bbp-next">${nx?`Bet <b>${pesoI(Math.ceil(nx[0]-b))}</b> more to reach Level ${done+1} and get <b>${pesoI(nx[1])}</b>`:`All levels completed! <b>${pesoI(r)}</b> will be credited tomorrow.`}</div></div>
+  ${outs.map(([t,i])=>row(t,i,'out')).join('')}${T.map((t,i)=>i>=done?row(t,i):'').join('')}${done===T.length?'<div class="bbl-done">🎉 All levels completed today</div>':''}`}
 
 const A=()=>S.assets;
 let popShown=0, popDay='';

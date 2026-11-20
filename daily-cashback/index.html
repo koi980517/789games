@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.4</title>
+<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.6</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -296,11 +296,8 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-b{padding:4px 22px 16px}.clog-b h5{margin:12px 0 4px;font-size:13px}.clog-b ol{margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:#2B2F3A}
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
-</head>
-<body>
 
-
-<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.5</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.6</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -313,21 +310,8 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <div class="seg"><button id="reopen">重新登录 APP</button><button id="reset">重置演示数据</button></div>
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
-    <h4>本页规则要点</h4>
-    <ul>
-      <li>登录 APP 时判断弹窗（账号有缓存、未掉登录则不弹）：21 岁提示弹窗为第一层级，本活动弹窗为第二层级（21 岁弹窗不在原型中模拟）。</li>
-      <li>点活动弹窗 → 进入活动页，在活动页依次弹出当日已发放的奖励弹窗；点 × 关闭活动弹窗 → 在首页依次弹出奖励弹窗。奖励弹窗按发放时间先后弹出（相同时间 Cashback 在前），未发奖的不弹。</li>
-      <li>两个活动都是自动发放：Cashback 次日结算后入账，Bet Bonus 次日发放到余额（时间系统写死，默认 04:00 为示例，后台不可配置，需调整由技术侧修改）；没有手动领取，也没有过期。</li>
-      <li>活动入口「1.5%+2%」放在首页右侧小猫挂件里，随活动开关显示；首页 Banner 首张为 Slots Cashback。</li>
-      <li>Push · 短信为一期：派奖时发送，每个活动单独配置文案；免打扰时段 21:00 – 07:00 内不发，顺延到 07:00。</li>
-      <li>普通玩家：整日该分类投注按所达档位比例计算（非累进）；VIP 固定返水比例为二期。</li>
-      <li>Selected Games 组内游戏按组比例，不再按 Category 计算；后台可整体关闭。</li>
-      <li>当日返水向下取整到 ₱1（₱123.99 → ₱123）；低于 ₱1 不发放。</li>
-      <li>Daily Bet Bonus：一条总进度条（今日投注 ÷ 下一档门槛）+ 所有档位的奖励表，达成的档位高亮；奖励只拿达到的最高一档。</li>
-      <li>Rules 页顶部为奖励记录入口（View all）：只显示记录（Cashback + Bet Bonus），每次加载 20 条，滚动到底自动加载下一批。</li>
-      <li>后台任何配置修改后，前台与后台右侧预览即时生效（同一页面内，刷新恢复默认）。</li>
-    </ul>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.4</a></div>
+    <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.6</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -386,7 +370,7 @@ function defaults(){return{
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
-  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
+  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
         new:{slot:0,casino:0,arcade:0,poker:0,fishing:0,bingo:0,feat0:0,feat1:0}},
@@ -394,8 +378,7 @@ function defaults(){return{
            vip:[{d:'11-17',bet:268000,amt:3166,s:'a',left:31.5},{d:'11-16',bet:241500,amt:2862,s:'c',t:'11-17 07:02'},{d:'11-15',bet:198000,amt:2310,s:'c',t:'11-16 08:40'}],
            new:[]},
   balance:{std:1520.35,vip:48210.6,new:200},
-  overrides:[],
-  review:[{acc:'luckyboy01',item:'同 IP 多账号（4 个）',amt:312.5,s:'待核对'},{acc:'ph_hedger',item:'对冲投注（Baccarat 庄闲同局）',amt:880,s:'待核对'},{acc:'rico_x',item:'流水与返点不一致',amt:45.2,s:'待核对'}]
+  overrides:[]
 };}
 let S=defaults(); CATS=S.cats; let user='std', view='home', fv='today', htab='all', popup=null, featIdx=0, toast='';
 function tierIdx(bet){let i=-1;S.tiers.forEach((t,k)=>{if(bet>=t.th)i=k});return i}
@@ -661,10 +644,9 @@ function cBasic(){const c=S.cfg;
   <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
-  <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，玩家进入 Home 页后弹一次到账提示；不设领取有效期</span></div>
+  <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，奖励弹窗只是到账提示；不设领取有效期</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
-  <label>同 IP / 同设备可领账号数</label><div><input value="${c.ipLimit}" style="width:80px" onchange="mark()"> 个</div>
-  <label><i>*</i> 活动状态</label><div>${tg(c.on,'setOn')}<span class="h">与「活动列表」的状态开关为同一功能；关闭后次日 00:00 起不再累计，已生成的奖励照常发放</span></div>
+  <label><i>*</i> 活动状态</label><div>${tg(c.on,'setOn')}<span class="h">与「活动列表」的状态开关为同一功能；关闭当天的投注照常统计，次日照常结算并发放奖励，之后不再统计</span></div>
   </div>`;
 }
 function setClaim(v){S.cfg.claim=v?'manual':'auto';document.querySelectorAll('#segClaim button').forEach(b=>b.classList.toggle('on',b.dataset.c===S.cfg.claim));mark();arender()}
@@ -798,7 +780,7 @@ function cIcons(){
   </table>${S.sel.on?'':'<div class="note" style="margin-top:6px">Selected Games 已关闭，开启后在此配置其图标。</div>'}`;
 }
 function aAssets(){const a=S.assets;
-  return `<div class="form"><label>活动弹窗</label><div>${tg(a.pop.on,'setPopOn')}<span class="h">开启：玩家每次登录 APP 时弹出（排在 21 岁提示弹窗之后）；关闭：不弹。图片与其余素材由客户端写死，见标题旁「?」</span></div></div>`;
+  return `<div class="form"><label>活动弹窗</label><div>${tg(a.pop.on,'setPopOn')}<span class="h">只控制活动弹窗是否弹出，不影响活动状态。开启：玩家每次登录 APP 时弹出（排在 21 岁提示弹窗之后）；关闭：不弹，活动照常进行，玩家可通过首页 Banner、小猫挂件进入活动页。图片与其余素材由客户端写死，见标题旁「?」</span></div></div>`;
 }
 function upBtn(path,txt){return `<label class="ab" style="display:inline-block;cursor:pointer">${txt||'替换'}<input type="file" accept="image/*" style="display:none" onchange="readImg(this,v=>{${path}=v;mark();log('活动配置','替换素材','${path.split('.').slice(2).join('.')}');arender()})"></label>`}
 function readImg(inp,cb){const f=inp.files[0];if(!f)return;if(f.size>1048576)return alert('图片须 ≤ 1MB');const r=new FileReader();r.onload=()=>cb(r.result);r.readAsDataURL(f)}
@@ -845,7 +827,7 @@ function aPush(){const q=S.push.quiet;
     <label>极光推送（JPush）</label><div>${tg(c.push,`pset.bind(null,'${e.k}.push')`)}</div>
     <label>Push 标题</label><div><input style="width:100%" maxlength="40" value="${c.title}" onchange="S.push.${e.k}.title=this.value;mark()"><span class="h">≤ 40 字符</span></div>
     <label>Push 内容</label><div><input style="width:100%" maxlength="120" value="${c.body}" onchange="S.push.${e.k}.body=this.value;mark()">${vars}</div>
-    <label>点击跳转</label><div><select onchange="S.push.${e.k}.link=this.value;mark()">${['活动页','Cashback History','首页'].map(o=>`<option ${c.link===o?'selected':''}>${o}</option>`).join('')}</select></div>
+    <label>点击跳转</label><div><select onchange="S.push.${e.k}.link=this.value;mark()">${['活动页','Reward History','首页'].map(o=>`<option ${c.link===o?'selected':''}>${o}</option>`).join('')}</select></div>
     <label>短信</label><div>${tg(c.sms,`pset.bind(null,'${e.k}.sms')`)}</div>
     <label>Smart 文案</label><div><input style="width:100%" maxlength="160" value="${c.smart}" onchange="S.push.${e.k}.smart=this.value;mark()"><span class="h">≤ 160 字符；${vars.replace(/<[^>]+>/g,'')}</span></div>
     <label>Globe 文案</label><div><input style="width:100%" maxlength="160" value="${c.globe}" onchange="S.push.${e.k}.globe=this.value;mark()"></div></div>
@@ -928,6 +910,10 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v1.6',d:'2026-11-20',sum:'奖励弹窗只是到账提示，补充一直在线时的弹出规则；关闭活动后次日照常发放；活动弹窗开关只管弹窗；去掉同 IP / 同设备限制；新增 Promotion 字段规则',
+   sec:[['用户侧',['奖励弹窗：奖励在结算时已自动到账，弹窗只是到账提示，玩家怎么点都不影响到账。','新增例外场景：玩家在结算前后一直在线（没有重新登录）时，页面刷新检测到新发放的奖励，就在当前页弹出奖励弹窗；不弹活动弹窗。','活动弹窗开关关闭时：关掉 21 岁弹窗后直接在首页弹奖励弹窗；活动照常进行，可从首页 Banner、小猫挂件进入活动页。','Transaction History 的 Check Details 弹窗、Overview 的 Details 弹窗：本活动发放的 Promotion 字段显示 Cashback / Bet Bonus，与 Reward History 一致。']],
+        ['后台',['活动状态：关闭活动后，当天投注照常统计，次日照常结算并发放奖励（含奖励弹窗、Reward History、Push / 短信），之后不再统计。活动列表的状态开关同样适用。','页面素材「活动弹窗」开关：只控制活动弹窗弹不弹，不影响活动状态；奖励弹窗不受此开关影响。','活动配置 ① 去掉「同 IP / 同设备可领账号数」。','Push 点击跳转选项「Cashback History」改为「Reward History」。','发放方式说明改为：结算后自动发放到余额，奖励弹窗只是到账提示。']]],
+   ft:'原型侧栏的「本页规则要点」已移除，相关规则以 PRD 为准。'},
   {v:'v1.5',d:'2026-11-19',sum:'两个活动改为自动发放；奖励记录页精简 + 分批加载；弹窗层级；后台精简与新建 / 取消流程；Category 与 Selected Games 重叠取高',
    sec:[['用户侧',['奖励记录页（Rules › View all，更名为 Reward History）：只显示记录，去掉可领金额、Claimed / Expired 汇总和筛选页签；Cashback 与 Bet Bonus 记录都显示，没有 Expired；默认 20 条，滚动到底自动加载下一批 20 条。','两个活动都改为自动发放：Cashback 结算与 Bet Bonus 发放时间系统写死（默认次日 04:00，仅为示例；后台不可配置，需调整时由技术侧修改）；去掉 Claim 按钮、可领（Available）状态、手动领取弹窗；Yesterday 卡只显示已发放金额（Credited）。','弹窗：活动弹窗在每次登录时判断（账号有缓存未掉登录则不弹），排在 21 岁提示弹窗之后；点活动弹窗进活动页后弹奖励弹窗，点关闭则在首页弹；奖励弹窗按发放时间先后弹出，未发奖的不弹。']],
         ['后台',['活动列表：去掉页签行，活动配置、费用使用情况、返水记录、Push · 短信、操作日志改为从列表「操作」进入；列表新增状态开关（与活动配置「活动状态」同一功能）；补全新建活动流程。','活动配置：新增「取消」（新建时取消不生成活动，编辑时取消不改动）；活动组合改为多选，创建后置灰不可改；去掉 Bet Bonus 单独开关。','基本信息：去掉最低有效投注、最高返水上限、领取有效期；结算时间、⑦ Bet Bonus 发放时间改为系统写死、后台只作显示（默认 04:00 为示例，需调整时由技术侧修改）；发放方式固定为自动发放。','Selected Games「权重」改为「排序」，交互同 Category。','页面素材只保留活动弹窗开关，其余由客户端写死（标题旁「?」说明）；图标去掉点击跳转链接配置。','返水记录：两个活动独立记录，哪个活动发了奖励就生成一条（一行 = 会员 · 结算日 · 活动），没发放的不生成；去掉领取状态 / 来源与 Claimed / Available / Expired 汇总，筛选改为按活动；Push · 短信发送效果去掉「已领取剔除」。','删除返点核对、返水发放、日报表页面。']],
@@ -943,8 +929,5 @@ function clogRender(){const L=[...CLOG].sort((a,b)=>b.d.localeCompare(a.d));
 clogRender();
 openApp();arender();
 </script>
-
-
-
 </body>
 </html>

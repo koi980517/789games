@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.7</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.8</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.7</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.8</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -311,7 +311,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.7</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.8</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -457,7 +457,7 @@ function act(){
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
     const bbr=bbReward(bbBet(user));
-    if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (est.)</div><div class="amt">${pesoI(c.total)}</div></div><i class="vl"></i><div><div class="lb">Bet Bonus (est.)</div><div class="amt g">${pesoI(bbr)}</div></div><div class="note" style="grid-column:1/-1">Updates every 10 min</div></div>`;
+    if(cbOn&&bbOn) h+=`<div class="card total two"><div><div class="lb">Cashback (est.)</div><div class="amt">${pesoI(c.total)}</div></div><i class="vl"></i><div><div class="lb">Bet Bonus (est.)</div><div class="amt g">${pesoI(bbr)}</div></div><div class="note" style="grid-column:1/-1">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}</div></div>`;
     else if(bbOn) h+=`<div class="card total"><div class="lb">Bet Bonus (estimated)</div><div class="amt g">${pesoI(bbr)}</div><div class="note">Updates every 10 min</div></div>`;
     else h+=`<div class="card total"><div class="lb">Cashback (estimated) ${user==='vip'?'<span class="vip">VIP</span>':''}</div><div class="amt">${pesoI(c.total)}</div><div class="note">Updates every 10 min${c.capped?` · Daily cap ${pesoI(S.cfg.cap)}`:''}${c.below?' · Below ₱1, not credited':''}</div></div>`;
   }else{
@@ -528,7 +528,7 @@ function rules(){
   if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="h3" style="margin-top:0">Reward History<a onclick="hShown=20;go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;margin-bottom:10px;font-size:12px;cursor:pointer" onclick="hShown=20;go('hist')">${hrec().length} records · Cashback &amp; Bet Bonus</div><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Credit time</b>: cashback is settled and credited to your balance automatically at ${S.cfg.settle} (PHT) the next day.</li>
-  <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>
+  <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>${S.cfg.cap===Infinity?'':`<li>Maximum cashback per player per day: ${pesoI(S.cfg.cap)}.</li>`}
   <li>Cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
   <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}${bbR}</div>`;
 }
@@ -576,16 +576,23 @@ document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();
 
 const PGS={list:['活动列表',()=>aList()],config:['活动配置',()=>aConfig()],budget:['费用使用情况',()=>aBudget()],records:['返水记录',()=>aRecords()]};
 let pg='list', cfgMode='edit', SNAP=null, curId='DCB-003', pubDirty=false, selCat=0, gq='', selG=0;
-let ACTS=[{id:'DCB-003',name:'次日返水与投注奖励活动 11月',st:'on',created:'2026-10-29 14:02',ed:'cs_kei',period:'2026-11-01 ~ 长期',bet:'₱84,226,410.00',rw:'₱512,880',users:'18,402',live:1},
-  {id:'DCB-002',name:'Daily Cashback 10月',st:'off',created:'2026-10-18 10:30',ed:'90556663',period:'10-01 ~ 10-31',bet:'₱71,005,220.00',rw:'₱430,118',users:'16,930',b:[430118,500000]},
-  {id:'DCB-001',name:'Cashback 试运行',st:'off',created:'2026-09-15 16:20',ed:'cs_kei',period:'09-20 ~ 09-30',bet:'₱8,420,000.00',rw:'₱39,880',users:'2,210',b:[39880,50000]}];
+const TODAY='2026-11-18';
+let ACTS=[{id:'DCB-004',name:'次日返水与投注奖励活动 12月',st:'wait',s:'2026-12-01',e:'2026-12-31',created:'2026-11-17 15:40',ed:'cs_kei',bet:'—',rw:'—',users:'—',b:[0,2000000]},
+  {id:'DCB-003',name:'次日返水与投注奖励活动 11月',st:'on',s:'2026-11-01',e:'2026-11-30',created:'2026-10-29 14:02',ed:'cs_kei',bet:'₱84,226,410.00',rw:'₱512,880',users:'18,402',live:1},
+  {id:'DCB-002',name:'Daily Cashback 10月',st:'end',s:'2026-10-01',e:'2026-10-31',created:'2026-09-25 10:30',ed:'90556663',bet:'₱71,005,220.00',rw:'₱430,118',users:'16,930',b:[430118,500000]},
+  {id:'DCB-001',name:'Cashback 试运行',st:'end',s:'2026-09-20',e:'2026-09-30',created:'2026-09-15 16:20',ed:'cs_kei',bet:'₱8,420,000.00',rw:'₱39,880',users:'2,210',b:[39880,50000]}];
 const curAct=()=>ACTS.find(a=>a.id===curId)||ACTS[0];
+const STN={on:'进行中',wait:'未开始',end:'已结束',off:'已停用'},STC={on:'#17914A',wait:'#2A6FDB',end:'#9AA1AD',off:'#E8253A'};
+const occEnd=a=>a.st==='off'&&a.offAt&&a.offAt<a.e?a.offAt:a.e;
+function overlapOf(s,e,id){return ACTS.find(a=>a.id!==id&&a.st!=='end'&&!(a.st==='off'&&!a.offAt)&&!(e<a.s||s>occEnd(a)))}
+let NEWT={s:'',e:''};
+
 function goPg(k,id){if(id)curId=id;pg=k;arender();window.scrollTo(0,0)}
-function startEdit(id){curId=id;SNAP=structuredClone(S);cfgMode=ACTS.find(a=>a.id===id).st==='on'?'edit':'view';pubDirty=false;goPg('config')}
-function startNew(){const on=ACTS.find(a=>a.st==='on');if(on)return alert(`同一时间只能有 1 个返水活动。「${on.name}」进行中，请先在列表中停用后再新建。`);SNAP=structuredClone(S);cfgMode='new';pubDirty=false;S.mods={cb:true,bb:true};S.cfg.on=true;syncMods();goPg('config')}
+function startEdit(id){curId=id;SNAP=structuredClone(S);cfgMode=['on','wait'].includes(ACTS.find(a=>a.id===id).st)?'edit':'view';pubDirty=false;goPg('config')}
+function startNew(){NEWT={s:'',e:''};SNAP=structuredClone(S);cfgMode='new';pubDirty=false;S.mods={cb:true,bb:true};S.cfg.on=true;syncMods();goPg('config')}
 function cfgCancel(){if(pubDirty&&!confirm(cfgMode==='new'?'取消后不会生成活动，已填写的内容将丢失。确定取消？':'取消后本次修改不会保存，活动保持原设置。确定取消？'))return;S=SNAP||S;CATS=S.cats;syncMods();const t=cfgMode==='new'?'已取消，未生成活动':'已取消，活动设置未改动';cfgMode='edit';pubDirty=false;goPg('list');atoast(t)}
 function atoast(t){const e=document.getElementById('atoast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2500)}
-function listToggle(id){const a=ACTS.find(x=>x.id===id);if(a.st==='off'){const on=ACTS.find(x=>x.st==='on');if(on)return alert(`同一时间只能有 1 个返水活动。请先停用「${on.name}」。`);if(!confirm(`确定开启「${a.name}」？`))return;a.st='on'}else{if(!confirm(`确定停用「${a.name}」？停用后次日 00:00 起不再累计，已生成的奖励照常发放。`))return;a.st='off'}if(a.live)S.cfg.on=a.st==='on';log('活动列表','活动状态',a.name+(a.st==='on'?' 开启':' 停用'));arender()}
+function listToggle(id){const a=ACTS.find(x=>x.id===id);if(a.st==='end')return;if(a.st==='off'){if(occEnd({...a,st:'on'})<TODAY)return alert('活动时间已过，不能重新开启。');const o=overlapOf(a.offAt&&a.offAt>a.s?a.offAt:a.s,a.e,a.id);if(o)return alert(`与「${o.name}」（${o.s} ~ ${o.e}）时间重叠，不能开启。同一时间只能有 1 个活动生效。`);if(!confirm(`确定开启「${a.name}」？`))return;a.st=a.s>TODAY?'wait':'on';delete a.offAt}else{if(!confirm(`确定停用「${a.name}」？停用当天的投注照常统计，次日照常结算并发放奖励，之后不再统计。`))return;a.st='off';a.offAt=TODAY}if(a.live)S.cfg.on=a.st==='on';log('活动列表','活动状态',a.name+' '+STN[a.st]);arender()}
 function mark(){pubDirty=true}
 function tg(on,onClick,a,b){return `<span class="tg"><button class="${on?'on':''}" onclick="${onClick}(true)">${a||'开启'}</button><button class="${on?'':'off'}" onclick="${onClick}(false)">${b||'关闭'}</button></span>`}
 function arender(){const a=curAct();
@@ -597,7 +604,7 @@ function arender(){const a=curAct();
 }
 function sec(n,title,body,extra){return `<div class="sec"><div class="sec-h"><span class="no">${n}</span>${title}${extra||''}</div>${body}</div>`}
 function aConfig(){
-  return `<div class="cfgwrap"><div class="cfgmain ${cfgMode==='view'?'ro':''}">`+(cfgMode==='view'?'<div class="tip warn">已停用的活动，只可查看设置。</div>':'')+
+  return `<div class="cfgwrap"><div class="cfgmain ${cfgMode==='view'?'ro':''}">`+(cfgMode==='view'?'<div class="tip warn">已结束 / 已停用的活动，只可查看设置。</div>':'')+
   sec(1,'基本信息配置',cBasic())+
   sec(2,'Category 配置',cCategory())+
   sec(3,'Selected Games 配置',cSelected(),`<span class="sec-r">${tg(S.sel.on,'setSel')}</span>`)+
@@ -606,7 +613,7 @@ function aConfig(){
   sec(6,'活动规则页',aRules())+
   sec(7,'活动 2 · Bet Bonus（每日投注奖）',cBB())+
   sec(8,'图标（Selected Games / Category 卡片）',cIcons())+
-  (cfgMode==='view'?`<div id="pubbar" class="pubbar"><span>已停用的活动只读</span><button class="ab" onclick="goPg('list')">返回列表</button></div>`:`<div id="pubbar" class="pubbar"><span>${cfgMode==='new'?'新建活动：提交发布后生成':pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab" onclick="cfgCancel()">取消</button><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`)+
+  (cfgMode==='view'?`<div id="pubbar" class="pubbar"><span>已结束 / 已停用的活动只读</span><button class="ab" onclick="goPg('list')">返回列表</button></div>`:`<div id="pubbar" class="pubbar"><span>${cfgMode==='new'?'新建活动：提交发布后生成':pubDirty?'有未发布的修改':'当前配置已发布'}</span><button class="ab" onclick="cfgCancel()">取消</button><button class="ab p" onclick="openPub()">提交发布</button><span class="h">需谷歌验证码（原型 000000）</span></div>`)+
   `</div><div class="cfgpv"><div class="pvphone"><div class="scr" id="pvscr"></div></div><div class="note" style="text-align:center;margin-top:6px">前台预览（所有玩家 · Today），随配置实时更新</div></div></div>`;
 }
 function setBB(v){if(!v&&!M().cb)return alert('至少开启 1 个活动');M().bb=v;mark();log('活动配置','活动组合','Bet Bonus'+(v?' 开启':' 关闭'));syncMods();arender()}
@@ -626,7 +633,7 @@ function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><s
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
 function setMod(k){const o=k==='cb'?'bb':'cb';if(M()[k]&&!M()[o])return alert('至少开启 1 个活动');M()[k]=!M()[k];mark();log('活动配置','活动组合',(k==='cb'?'Cashback':'Bet Bonus')+(M()[k]?' 开启':' 关闭'));syncMods();arender()}
 function setSel(v){S.sel.on=v;mark();log('活动配置','Selected Games',v?'开启':'关闭');arender()}
-function setOn(v){if(v&&cfgMode!=='new'){const on=ACTS.find(a=>a.st==='on'&&a.id!==curId);if(on)return alert(`同一时间只能有 1 个返水活动。请先停用「${on.name}」。`)}S.cfg.on=v;if(cfgMode!=='new'){curAct().st=v?'on':'off'}mark();log('活动配置','活动状态',v?'开启':'关闭');arender()}
+function setOn(v){if(cfgMode!=='new'){const a=curAct();if(v&&a.st==='off'){const o=overlapOf(a.s,a.e,a.id);if(o)return alert(`与「${o.name}」（${o.s} ~ ${o.e}）时间重叠，不能开启。`)}a.st=v?(a.s>TODAY?'wait':'on'):'off';if(!v)a.offAt=TODAY;else delete a.offAt}S.cfg.on=v;mark();log('活动配置','活动状态',v?'开启':'关闭');arender()}
 function setModCk(k,v){const o=k==='cb'?'bb':'cb';if(!v&&!M()[o]){alert('至少勾选 1 个活动');return arender()}M()[k]=v;mark();syncMods();arender()}
 function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
 function log(m,a,d){S.logs.unshift({t:'11-18 '+now(),op:'koi',m,a,d})}
@@ -636,10 +643,10 @@ function cBasic(){const c=S.cfg;
   <label>小猫挂件入口</label><div class="note">写死不可配置，放在首页小猫挂件的 JOIN NOW 列表里；随「活动状态」开关显示 / 下线，角标 = 活动别名</div>
   <label><i>*</i> 活动名称</label><div><input value="${cfgMode==='new'?'':'次日返水与投注奖励活动 11月'}" placeholder="请输入活动名称" style="width:260px" onchange="mark()"><span class="h">后台与报表显示；前台标题按活动组合显示 Daily Cashback / Daily Bet Bonus</span></div>
   <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、小猫挂件内活动入口角标、Hot Games 游戏角标统一显示此别名</span></div>
-  <label><i>*</i> 活动时间</label><div><input type="datetime-local" value="2026-11-01T00:00" onchange="mark()"> ~ <input value="长期" style="width:90px" readonly> <button class="ab">选择结束时间</button></div>
+  <label><i>*</i> 活动时间</label><div><input type="date" value="${cfgMode==='new'?NEWT.s:curAct().s}" onchange="${cfgMode==='new'?'NEWT.s':'curAct().s'}=this.value;mark()"> 00:00 ~ <input type="date" value="${cfgMode==='new'?NEWT.e:curAct().e}" onchange="${cfgMode==='new'?'NEWT.e':'curAct().e'}=this.value;mark()"> 23:59:59<span class="h">开始、结束都必填；与其他活动时间不能重叠</span></div>
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
-  <label>活动关系</label><div class="note">同一时间只能有 1 个返水活动；开启本活动时若另一返水活动开启中，弹窗「无法开启」，拦截记录写入操作日志</div>
+  <label>活动关系</label><div class="note">可同时存在多个活动，但活动时间不能重叠：同一时间只有 1 个活动生效。提交发布时检查，重叠则不可发布并提示冲突的活动</div>
   <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
@@ -654,15 +661,16 @@ function featOf(g){const f=S.featured.find(x=>x.games.includes(g));return f?f.na
 function cCategory(){
   if(selCat>=CATS.length) selCat=0;
   const cur=CATS[selCat];
-  const vend={};cur.games.forEach(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'—';(vend[v]=vend[v]||[]).push(g)});
+  const selEx=cur.k==='slot'&&S.sel.on?cur.games.filter(g=>featOf(g)):[];
+  const vend={};cur.games.filter(g=>!selEx.includes(g)).forEach(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'—';(vend[v]=vend[v]||[]).push(g)});
   const total=LIB.filter(x=>x[2]===cur.k).length;
   return `<div class="note" style="margin-bottom:8px">游戏类型取渠道后台的游戏类型。① 先开启要参加活动的类型（开启的类型前台「Category」区块才显示）；② 再给每个类型选择参与返水的<b>厂商与游戏</b>（游戏类型 → 游戏厂商 → 具体游戏三级勾选）。未勾选的游戏不返水；官方下架游戏自动不返水。</div>
   <div style="display:flex;gap:14px;align-items:flex-start">
   <div style="width:460px;flex-shrink:0"><table class="at"><tr><th>排序</th><th>游戏类型（前台显示）</th><th>已选游戏</th><th>开启</th><th>操作</th></tr>${CATS.map((c,i)=>{const t=LIB.filter(x=>x[2]===c.k).length;return `<tr class="${i===selCat?'hl':''}" style="cursor:pointer;${c.on===false?'color:#9AA1AD':''}" onclick="selCat=${i};arender()"><td>${i+1}</td><td><span class="ic" style="display:inline-flex;width:20px;height:20px;border-radius:6px;font-size:11px;margin:0 6px 0 0;vertical-align:middle;background:${c.c}">${c.n[0]}</span>${c.n}</td><td>${c.games.length}/${t}</td><td><span class="sw ${c.on===false?'off':''}" onclick="event.stopPropagation();CATS[${i}].on=CATS[${i}].on===false;mark();log('活动配置','游戏类型',CATS[${i}].n+(CATS[${i}].on===false?' 关闭':' 开启'));arender()"></span></td><td style="white-space:nowrap"><button class="ab p" onclick="event.stopPropagation();selCat=${i};openGamePick()">选择游戏</button> ${i>0?`<button class="ab" onclick="event.stopPropagation();mvCat(${i},-1)">↑</button>`:''}</td></tr>`}).join('')}</table>
   <div class="note" style="margin-top:6px">关闭 = 前台不展示该类型、该类型游戏不返水。新开启的类型默认各档 0.3%，到「④ 返水等级」调整。</div></div>
   <div style="flex:1;min-width:0">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><b style="font-size:14px">${cur.n}</b><span class="note">已选 ${cur.games.length} / ${total} 款${cur.on===false?' · 当前类型已关闭':''}</span><button class="ab p" style="margin-left:auto" onclick="openGamePick()">选择厂商与游戏</button></div>
-  ${cur.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>{const f=featOf(g);return `<span class="gchip">${g}${f&&S.sel.on?` <i>Selected</i>`:''}<b title="移出" onclick="rmGame('${g.replace(/'/g,"\\'")}')">×</b></span>`}).join('')}</div></div>`).join(''):'<div class="tip warn">该类型还没有选择游戏，前台不显示、无返水。点「选择厂商与游戏」配置。</div>'}
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><b style="font-size:14px">${cur.n}</b><span class="note">已选 ${cur.games.length-selEx.length} / ${total-selEx.length} 款${cur.on===false?' · 当前类型已关闭':''}</span><button class="ab p" style="margin-left:auto" onclick="openGamePick()">选择厂商与游戏</button></div>${selEx.length?`<div class="tip" style="margin-bottom:8px">${selEx.length} 个游戏在 Selected Games 中按组比例计算，已从 Slot 中剔除，不参与 Slot 档位计算。</div>`:''}
+  ${cur.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>{const f=featOf(g);return `<span class="gchip">${g}<b title="移出" onclick="rmGame('${g.replace(/'/g,"\\'")}')">×</b></span>`}).join('')}</div></div>`).join(''):'<div class="tip warn">该类型还没有选择游戏，前台不显示、无返水。点「选择厂商与游戏」配置。</div>'}
   </div></div>`;
 }
 let pick=null,pickMode='cat';
@@ -682,7 +690,7 @@ function drawPickAll(){
   <div class="foot" style="justify-content:flex-end;margin-top:12px"><button class="ab" onclick="pick=null;document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="savePick()">确定（${all.filter(g=>pick.has(g)).length} 款）</button></div></div></div>`;
 }
 function drawPick(){if(pickMode==='bbt')return drawPickAll();
-  const sel=pickMode==='sel';const cur=sel?(CATS.find(c=>c.k==='slot')||CATS[0]):CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k&&(!sel||cur.games.includes(x[0])));const vs=[...new Set(L.map(x=>x[1]))];
+  const sel=pickMode==='sel';const cur=sel?(CATS.find(c=>c.k==='slot')||CATS[0]):CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k&&(sel||!(cur.k==='slot'&&S.sel.on&&featOf(x[0]))));const vs=[...new Set(L.map(x=>x[1]))];
   const st=(arr)=>{const n=arr.filter(g=>pick.has(g)).length;return n===0?'':n===arr.length?'all':'some'};
   const box=(state,on)=>`<span class="tcb ${state}" onclick="${on}"></span>`;
   const all=L.map(x=>x[0]);
@@ -714,7 +722,7 @@ function cSelected(){
   <label><i>*</i> 组名</label><div><input value="${f.name}" maxlength="20" onchange="S.featured[${selG}].name=this.value;mark();arender()"><span class="h">≤ 20 字，不重名，前台直接显示</span></div>
   <label>类型</label><div><b>${cat.n}</b> <span class="chip n">固定</span><span class="h">Selected Games 只支持 Slot 类型，不可切换</span></div>
   <label><i>*</i> 比例</label><div><input class="rin ${rateCls(f.rate)} ${low?'bad':''}" value="${f.rate}" onchange="S.featured[${selG}].rate=+this.value;mark();arender()"> %<span class="h">须高于「${cat.n}」普通玩家最高档 ${maxStd}%${low?'（当前不满足，不可发布）':''}</span></div>
-  <label><i>*</i> 游戏</label><div><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span class="note">已选 ${f.games.length} / ${cat.games.length} 款（只能从 Slot 已开启的游戏中选）</span><button class="ab p" onclick="openGamePick('sel')">选择厂商与游戏</button></div>${(()=>{const vend={};f.games.forEach(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'—';(vend[v]=vend[v]||[]).push(g)});return f.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>`<span class="gchip">${g}<b title="移出" onclick="togSelGame('${g.replace(/'/g,"\\'")}',false)">×</b></span>`).join('')}</div></div>`).join(''):'<div class="tip warn">还没有选择游戏</div>'})()}</div>
+  <label><i>*</i> 游戏</label><div><div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span class="note">已选 ${f.games.length} 款（选入的游戏自动从 Category 的 Slot 中剔除）</span><button class="ab p" onclick="openGamePick('sel')">选择厂商与游戏</button></div>${(()=>{const vend={};f.games.forEach(g=>{const v=(LIB.find(x=>x[0]===g)||[])[1]||'—';(vend[v]=vend[v]||[]).push(g)});return f.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>`<span class="gchip">${g}<b title="移出" onclick="togSelGame('${g.replace(/'/g,"\\'")}',false)">×</b></span>`).join('')}</div></div>`).join(''):'<div class="tip warn">还没有选择游戏</div>'})()}</div>
   <label style="align-self:start;padding-top:8px">排序</label><div style="display:flex;gap:16px;align-items:flex-start"><div style="flex:1;min-width:0"><table class="at" style="max-width:420px"><tr><th>排序</th><th>游戏</th><th>操作</th></tr>${(()=>{const o=selOrder(f);return o.map((x,k)=>`<tr><td>${k+1}</td><td>${x.g}</td><td>${k>0?`<button class="ab" onclick="mvSel(${k},-1)">↑</button>`:''}</td></tr>`).join('')})()||'<tr><td colspan="3" class="note">未选游戏</td></tr>'}</table><div class="note" style="margin-top:6px">与 Category 配置一致，点 ↑ 调整顺序；前台游戏页按此顺序显示，改完右侧预览即时更新。</div></div>
   <div style="width:300px;flex-shrink:0"><div class="note" style="margin-bottom:4px">前台游戏页预览（Selected Games › 点卡片进入）</div><div class="pvphone" style="height:520px"><div class="scr">${(()=>{const k=[view,featIdx];featIdx=selG;const h=featPage();[view,featIdx]=k;return h})()}</div></div></div></div>
   <label>有效期</label><div class="note">同活动时间</div>
@@ -735,7 +743,7 @@ function bTiers(){
   let h=`<div class="note" style="margin-bottom:8px">列 = 启用的 Category。比例 > 1% 蓝色防误填；> 5% 标红不可发布；门槛从 ₱0 递增，比例逐档不降。</div>
   <div style="font-weight:600;margin:12px 0 4px">返水档位（T1–T10，须连续配置）</div><table class="at"><tr><th>档位</th><th>门槛（≥ ₱）</th>${C.map(c=>`<th>${c.n}</th>`).join('')}<th></th></tr>`;
   S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td><input class="rin" style="width:90px" value="${t.th}" onchange="S.tiers[${i}].th=+this.value;mark();arender()"></td>${C.map(c=>`<td><input class="rin ${rateCls(t.r[c.k])}" value="${t.r[c.k]}" onchange="S.tiers[${i}].r['${c.k}']=+this.value;mark();arender()"> %</td>`).join('')}<td>${i===S.tiers.length-1&&i>0?`<button class="ab r" onclick="S.tiers.pop();mark();arender()">删除</button>`:''}</td></tr>`);
-  h+=`</table><div class="foot">${S.tiers.length<10?`<button class="ab" onclick="const l=S.tiers.at(-1);S.tiers.push({th:l.th*2,r:{...l.r}});mark();arender()">+ 添加档位</button>`:''}</div>${errs.length?`<div class="tip warn" style="margin-top:10px">不可发布：${errs.join('；')}</div>`:''}`;
+  h+=`</table><div class="foot">${S.tiers.length<10?`<button class="ab" onclick="const l=S.tiers.at(-1);S.tiers.push({th:l.th*2,r:{...l.r}});mark();arender()">+ 添加档位</button>`:''}</div>${errs.length?`<div class="tip warn" style="margin-top:10px">不可发布：${errs.join('；')}</div>`:''}<div style="font-weight:600;margin:16px 0 6px">单人单日返水上限</div><div class="rq"><input style="width:120px" placeholder="不填 = 不设上限" value="${S.cfg.cap===Infinity?'':S.cfg.cap}" onchange="S.cfg.cap=this.value===''?Infinity:Math.max(1,Math.floor(+this.value));mark();log('活动配置','单人单日返水上限',this.value||'不设');arender()"> ₱<span class="note">选填，整数。每人每个结算日的 Cashback 合计（含 Selected Games）取整后超过此金额时，按此金额发放；每日结算时重置。不影响 Bet Bonus。</span></div>`;
   return h;
 }
 function aOverride(){
@@ -756,7 +764,7 @@ function aRules(){
   <div id="rteEd" class="rte-ed" contenteditable="true" oninput="rteSync()" onblur="rteSync(true)">${safeHtml(S.rulesHtml)}</div>
   <div class="rte-ft" id="rteWc">${rteWords(S.rulesHtml)} WORDS · 富文本（沿用 Promo「活动内容」编辑器）</div></div>
   <div class="note">即前台活动页右上「?」打开的 Rules 页，与右侧预览一一对应、实时同步。沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。</div></div>
-  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：领取时间（结算 ${S.cfg.settle}${S.cfg.expireH?`，${S.cfg.expireH} 小时内可领`:'，不过期'}）、取整规则、流水 ${S.cfg.turnover}×、最低投注 ${pesoI(S.cfg.minBet)} 与上限 ${pesoI(S.cfg.cap)}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成。':''}</div></div></div>
+  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：发放时间（次日 ${S.cfg.settle} 结算后自动发放）、取整规则、流水 ${S.cfg.turnover}×${S.cfg.cap===Infinity?'':`、单人单日上限 ${pesoI(S.cfg.cap)}`}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成。':''}</div></div></div>
   <div style="width:300px;flex-shrink:0"><div class="note" style="margin-bottom:4px">前台 Rules 页预览（与玩家看到的一致）</div><div class="pvphone" style="height:640px"><div class="scr" id="rulesPv">${rulesPv()}</div></div></div></div>`;
 }
 let rteRange=null;
@@ -788,10 +796,11 @@ function pvPaint(){const pv=document.getElementById('pvscr'); if(pv){const keep=
 function pvRefresh(){const pv=document.getElementById('pvscr');if(pv&&typeof pvPaint==='function')pvPaint()}
 function openPub(){
   const tierErr=(window.__tierErr||[]).length, selLow=S.sel.on&&S.featured.some(f=>f.rate<=Math.max(...S.tiers.map(t=>t.r[f.cat]||0)));
+  {const t=cfgMode==='new'?NEWT:curAct();if(!t.s||!t.e)return alert('请填写活动开始和结束时间。');if(t.e<t.s)return alert('结束时间不能早于开始时间。');const o=overlapOf(t.s,t.e,cfgMode==='new'?'':curId);if(o)return alert(`活动时间与「${o.name}」（${o.s} ~ ${o.e}）重叠，不可发布。同一时间只能有 1 个活动生效，请调整时间。`)}
   if(tierErr||selLow) return alert('存在不可发布项：'+(tierErr?'返水等级校验未通过；':'')+(selLow?'Selected Games 比例须高于所选类型最高档。':''));
   document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox"><h3>提交发布</h3><p class="note">活动配置发布后次日 00:00 生效（Selected Games / Category 前台实时生效）。</p><label>谷歌验证码 <input id="gcode" placeholder="6 位验证码" maxlength="6" style="width:120px;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"></label><div class="note">原型默认 000000</div><div class="foot" style="justify-content:flex-end"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="doPub()">确认发布</button></div></div></div>`;
 }
-function doPub(){if(document.getElementById('gcode').value!=='000000')return alert('谷歌验证码错误');document.getElementById('modal').innerHTML='';pubDirty=false;if(cfgMode==='new'){ACTS.forEach(a=>{if(a.live){a.live=0;a.b=[S.budget.used,S.budget.cap]}});const id='DCB-'+String(ACTS.length+1).padStart(3,'0');ACTS.unshift({id,name:'新建活动（原型）',st:S.cfg.on?'on':'off',created:'2026-11-19 '+now(),ed:'koi',period:'2026-11-20 ~ 长期',bet:'₱0.00',rw:'₱0',users:'0',live:1});curId=id;cfgMode='edit';SNAP=structuredClone(S);log('活动列表','新建活动',id);pg='list'}else{SNAP=structuredClone(S);log('活动配置','提交发布','活动配置')}arender();const t=document.getElementById('atoast');t.textContent='设置成功';t.style.display='block';setTimeout(()=>t.style.display='none',5000)}
+function doPub(){if(document.getElementById('gcode').value!=='000000')return alert('谷歌验证码错误');document.getElementById('modal').innerHTML='';pubDirty=false;if(cfgMode==='new'){if(NEWT.s<=TODAY)ACTS.forEach(a=>{if(a.live){a.live=0;a.b=[S.budget.used,S.budget.cap]}});const id='DCB-'+String(ACTS.length+1).padStart(3,'0');ACTS.unshift({id,name:'新建活动（原型）',st:NEWT.s>TODAY?'wait':'on',s:NEWT.s,e:NEWT.e,created:'2026-11-18 '+now(),ed:'koi',bet:'₱0.00',rw:'₱0',users:'0',live:NEWT.s>TODAY?0:1,b:[0,S.budget.cap]});curId=id;cfgMode='edit';SNAP=structuredClone(S);log('活动列表','新建活动',id);pg='list'}else{SNAP=structuredClone(S);log('活动配置','提交发布','活动配置')}arender();const t=document.getElementById('atoast');t.textContent='设置成功';t.style.display='block';setTimeout(()=>t.style.display='none',5000)}
 function aBudget(){const b=S.budget,p=b.used/b.cap,rest=b.cap-b.used;
   return `<div class="sec"><div class="sec-h"><span class="no">1</span>活动费用使用情况</div>
   <div class="kpis"><div>活动预算<b>${pesoI(b.cap)}</b><small>在活动配置设置</small></div><div>已用<b>${pesoI(b.used)}</b></div><div>剩余<b>${pesoI(rest)}</b></div><div>使用进度<b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div></div>
@@ -801,10 +810,10 @@ function aBudget(){const b=S.budget,p=b.used/b.cap,rest=b.cap-b.used;
 }
 function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}
 function aList(){
-  const ops=a=>`${a.st==='on'?`<a class="lk" onclick="startEdit('${a.id}')">编辑</a>`:`<a class="lk" onclick="startEdit('${a.id}')">查看设置</a>`}<a class="lk" onclick="goPg('budget','${a.id}')">费用使用情况</a><a class="lk" onclick="goPg('records','${a.id}')">返水记录</a>`;
-  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" style="white-space:nowrap" onclick="startNew()">+ 新建活动</button><span class="note">同一时间只能有 1 个返水活动进行中；有进行中的活动时点「新建」会提示先停用。状态开关与活动配置「活动状态」为同一功能。活动配置、费用使用情况、返水记录均从「操作」进入。</span></div>
+  const ops=a=>`${['on','wait'].includes(a.st)?`<a class="lk" onclick="startEdit('${a.id}')">编辑</a>`:`<a class="lk" onclick="startEdit('${a.id}')">查看设置</a>`}<a class="lk" onclick="goPg('budget','${a.id}')">费用使用情况</a><a class="lk" onclick="goPg('records','${a.id}')">返水记录</a>`;
+  return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" style="white-space:nowrap" onclick="startNew()">+ 新建活动</button><span class="note">可同时存在多个活动，但活动时间不能重叠（同一时间只有 1 个活动生效）。状态开关与活动配置「活动状态」为同一功能。活动配置、费用使用情况、返水记录均从「操作」进入。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>创建时间</th><th>修改人</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
-  ${ACTS.map(a=>`<tr class="${a.st==='on'?'hl':'gray'}"><td>${a.id}</td><td>${a.name}${a.live?` <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div>`:''}</td><td style="white-space:nowrap"><span class="sw ${a.st==='on'?'':'off'}" onclick="listToggle('${a.id}')"></span> <b style="color:${a.st==='on'?'#17914A':'#E8253A'}">${a.st==='on'?'进行中':'已停用'}</b></td><td>${a.created}</td><td>${a.ed}</td><td>${a.period}</td><td>${a.bet}</td><td>${a.rw}</td><td>${a.live?bud(S.budget.used,S.budget.cap):bud(a.b[0],a.b[1])}</td><td>${a.users}</td><td class="ops">${ops(a)}</td></tr>`).join('')}</table></div>`;
+  ${ACTS.map(a=>`<tr class="${a.st==='on'?'hl':a.st==='wait'?'':'gray'}"><td>${a.id}</td><td>${a.name}${a.live?` <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div>`:''}</td><td style="white-space:nowrap">${a.st==='end'?'':`<span class="sw ${a.st==='on'||a.st==='wait'?'':'off'}" onclick="listToggle('${a.id}')"></span> `}<b style="color:${STC[a.st]}">${STN[a.st]}</b></td><td>${a.created}</td><td>${a.ed}</td><td style="white-space:nowrap">${a.s}<br>~ ${a.e}</td><td>${a.bet}</td><td>${a.rw}</td><td>${a.live?bud(S.budget.used,S.budget.cap):bud(a.b[0],a.b[1])}</td><td>${a.users}</td><td class="ops">${ops(a)}</td></tr>`).join('')}</table></div>`;
 }
 let RQ={d:'2026-11-17',q:'',s:'',p:0,ps:30},RQin={d:'2026-11-17',q:'',s:''};
 const REC_DAYS=['2026-11-17','2026-11-16','2026-11-15','2026-11-14','2026-11-13'];
@@ -837,7 +846,7 @@ function recDetail(i){const r=recData()[i];const cb=r.act==='cb';
   document.getElementById('modal').innerHTML=`<div class="mbg" onclick="if(event.target===this)this.parentNode.innerHTML=''"><div class="mbox" style="width:720px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">${cb?'Cashback':'Bet Bonus'} 明细 · ${r.d} · 会员 ID ${r.id}（${r.acc}${r.vip?' · VIP':''}）</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="document.getElementById('modal').innerHTML=''">×</span></div>
   ${cb?`<table class="at" style="margin-top:10px"><tr><th>分类</th><th>有效投注</th><th>档位</th><th>比例</th><th>返水（2 位小数）</th></tr>${r.det.map(x=>`<tr><td>${x.n}</td><td>${peso(x.bet)}</td><td>${x.ti===null?'Selected':r.vip?'VIP':x.ti<0?'未达 T1':'T'+(x.ti+1)}</td><td>${x.rate}%</td><td>${peso(x.rw)}</td></tr>`).join('')}
   <tr style="font-weight:700"><td>合计</td><td>${peso(r.allBet)}</td><td></td><td></td><td>${peso(r.det.reduce((a,x)=>a+x.rw,0))}</td></tr></table>
-  <div class="note" style="margin-top:8px;line-height:1.8">核对：分类返水合计 ${peso(r.det.reduce((a,x)=>a+x.rw,0))} → 向下取整 → <b>发放 ${pesoI(r.amt)}</b>；发放时间 ${r.t}</div>`
+  <div class="note" style="margin-top:8px;line-height:1.8">核对：分类返水合计 ${peso(r.det.reduce((a,x)=>a+x.rw,0))} → 向下取整 → <b>发放 ${pesoI(r.amt)}</b>；发放时间 ${r.t}</div><div style="font-weight:600;margin:16px 0 6px">单人单日返水上限</div><div class="rq"><input style="width:120px" placeholder="不填 = 不设上限" value="${S.cfg.cap===Infinity?'':S.cfg.cap}" onchange="S.cfg.cap=this.value===''?Infinity:Math.max(1,Math.floor(+this.value));mark();log('活动配置','单人单日返水上限',this.value||'不设');arender()"> ₱<span class="note">选填，整数。每人每个结算日的 Cashback 合计（含 Selected Games）取整后超过此金额时，按此金额发放；每日结算时重置。不影响 Bet Bonus。</span></div>`
   :`<table class="at" style="margin-top:10px"><tr><th>参与活动游戏有效投注</th><th>达到档位</th><th>奖励（只取最高一档）</th></tr><tr><td>${peso(r.allBet)}</td><td>第 ${r.lv} 档（≥ ${pesoI(S.bb.tiers.at(r.lv-1)[0])}）</td><td><b>${pesoI(r.amt)}</b></td></tr></table><div class="note" style="margin-top:8px">发放时间 ${r.t}</div>`}
   <div class="foot" style="justify-content:flex-end;margin-top:12px"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">关闭</button></div></div></div>`}
 function aRecords(){
@@ -862,6 +871,10 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v1.8',d:'2026-11-20',sum:'允许多个活动但时间不能重叠；一直在线的玩家奖励弹窗只在 Home 页和活动页弹出；Category 与 Selected Games 不再重叠；新增单人单日返水上限',
+   sec:[['用户侧',['玩家在结算前后一直在线（没有重新登录）时：只在进入或刷新 Home 页、活动页时判断，有新发放的奖励就在该页弹出奖励弹窗；在游戏中或其他页面不弹，避免打断游戏，等回到 Home 页或活动页时再弹。']],
+        ['计算规则',['一个游戏只按一个比例计算，去掉「重叠时取较高比例」：Selected Games 里的 Slot 游戏自动从 Category 的 Slot 中剔除，只按组比例返水；关闭 Selected Games 时回到 Slot 按档位计算。','每个游戏类型只出现一次，不允许重复配置。']],
+        ['后台',['活动可以同时存在多个，但活动时间不能重叠：活动时间的开始、结束都改为必填；提交发布、重新开启时检查，与其他活动重叠则不可操作并提示冲突的活动。','活动状态新增「未开始」「已结束」：开始时间未到为未开始，到时自动进行中；结束时间已过为已结束；手动关闭为已停用。新建活动不再要求先停用当前活动。','④ 返水等级：新增「单人单日返水上限」（选填，金额）。每人每个结算日的 Cashback 合计取整后超过上限，按上限发放；不填不设上限；每日结算时重置；不影响 Bet Bonus。规则页同步显示上限。','② Category 的 Slot：不再显示已在 Selected Games 里的游戏，选游戏弹窗也不列出这些游戏，并提示「N 个游戏在 Selected Games 中按组比例计算」。','③ Selected Games 选游戏：从全部 Slot 游戏中选，选入后自动从 Category 的 Slot 中剔除。']]]},
   {v:'v1.7',d:'2026-11-20',sum:'只保留当前需求：去掉 Push · 短信、操作日志、同 IP / 同设备可领账号数、VIP 固定比例；适用平台改为 789bingo',
    sec:[['后台',['活动列表「操作」只保留：编辑 / 查看设置、费用使用情况、返水记录；去掉 Push · 短信、操作日志两个页面。','活动配置 ① 基本信息：去掉「同 IP / 同设备可领账号数」。','④ 返水等级：去掉 VIP 固定返水比例的说明。','返水记录：去掉「玩家类型」列（所有玩家都按档位计算）。']],
         ['通用',['原型中的平台名称、首页 Logo、跑马灯文案由 789Games 改为 789bingo。']]],

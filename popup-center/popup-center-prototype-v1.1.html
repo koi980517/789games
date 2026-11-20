@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>弹窗中心 原型 v1.1（活动弹窗整合 · 跳转配置 · Home 登录弹窗队列）</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.5 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;color:#1a1a1a;background:#eef2f5}
+.topbar{display:flex;align-items:center;gap:16px;padding:10px 20px;background:#16352d;color:#fff}
+.topbar h1{font-size:15px;margin:0;font-weight:600}
+.ver{background:#ffe3a3;color:#7a4a00;border-radius:10px;padding:1px 8px;font-size:12px;font-weight:600}
+.maintabs{display:flex;gap:4px;margin-left:auto}
+.maintabs button{background:transparent;border:1px solid #5b7d73;color:#d8efe6;border-radius:6px;padding:5px 14px;cursor:pointer}
+.maintabs button.on{background:#2fa36d;border-color:#2fa36d;color:#fff}
+.site{display:flex;gap:6px;align-items:center;font-size:12px}
+.site select{padding:3px 6px;border-radius:4px}
+.view{display:none}.view.on{display:block}
+.note{font-size:12px;color:#6b7f78}
+.sample{display:inline-block;background:#fff4d6;color:#7a4a00;border-radius:4px;padding:0 6px;font-size:11px}
+/* ---------- player ---------- */
+.pwrap{display:flex;gap:24px;padding:20px;align-items:flex-start;flex-wrap:wrap}
+.phone{width:390px;height:780px;border-radius:36px;border:10px solid #111;background:#f4faf7;position:relative;overflow:hidden;flex:none}
+.p-top{height:92px;background:linear-gradient(90deg,#1c8f70,#124a79);padding:40px 14px 0;display:flex;align-items:center;gap:8px;color:#fff}
+.bal{background:#fff;color:#16352d;border-radius:16px;padding:3px 10px;font-weight:700;display:flex;align-items:center;gap:6px}
+.bal i{display:inline-block;width:18px;height:18px;border-radius:50%;background:#2fa36d;color:#fff;font-style:normal;text-align:center;line-height:18px}
+.rw{margin-left:auto;background:#ff6a3d;border-radius:14px;padding:3px 10px;font-weight:700;font-size:12px}
+.p-body{padding:12px;background:linear-gradient(#bfe9dc,#e9f6f1 40%,#f4faf7);height:calc(100% - 92px - 58px);overflow:hidden}
+.banner{height:120px;border-radius:14px;background:linear-gradient(120deg,#632f81,#8c59b6);color:#fff;padding:14px;font-family:"Baloo 2";font-size:22px;font-weight:800}
+.cats{display:flex;gap:6px;margin:10px 0}.cats span{flex:1;background:#fff;border-radius:10px;text-align:center;padding:8px 0;font-size:11px;color:#16352d}.cats span.on{background:#2fa36d;color:#fff}
+.games{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.games div{height:96px;border-radius:12px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:58px;background:#fff;display:flex;justify-content:space-around;align-items:center;font-size:11px;color:#6b7f78;border-top:1px solid #e3ece8}
+.tabbar b{color:#17804f}
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.62);display:none;align-items:center;justify-content:center;flex-direction:column}
+.mask.on{display:flex}
+.pop{width:320px;border-radius:18px;background:#fff;padding:18px 16px 16px;position:relative;text-align:center}
+.pop .x{position:absolute;right:-6px;top:-40px;width:30px;height:30px;border-radius:50%;background:#fff;border:0;font-size:16px;cursor:pointer}
+.pop .art{height:150px;border-radius:12px;margin:6px 0 12px;display:flex;align-items:center;justify-content:center;color:#fff;font-family:"Baloo 2";font-size:24px;font-weight:800;padding:8px}
+.pop h3{margin:0;font-family:"Baloo 2";font-size:20px;color:#16352d}
+.pop .btns{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.btn-main{background:linear-gradient(#2fa36d,#17804f);color:#fff;border:0;border-radius:22px;padding:10px;font-weight:700;cursor:pointer}
+.btn-sub{background:#ffe3a3;color:#7a4a00;border:0;border-radius:22px;padding:9px;font-weight:700;cursor:pointer}
+.btn-sys{background:#eef2f5;color:#333;border:0;border-radius:22px;padding:9px;cursor:pointer}
+.qidx{color:#fff;font-size:12px;margin-top:12px;opacity:.85}
+.toast{position:absolute;left:16px;right:16px;bottom:72px;background:#16352d;color:#fff;border-radius:10px;padding:10px 12px;font-size:12px;display:none;z-index:5}
+.toast.on{display:block}
+.sim{flex:1;min-width:380px;display:flex;flex-direction:column;gap:14px}
+.card{background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card h4{margin:0 0 10px;font-size:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.row label{display:flex;gap:4px;align-items:center}
+.qlist{margin:0;padding:0;list-style:none}
+.qlist li{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px dashed #e3ece8}
+.qlist .n{width:26px;height:22px;border-radius:6px;background:#2fa36d;color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center;flex:none}
+.qlist .n.fix{background:#6b7f78}
+.qlist .n.no{background:#ccc}
+.why{color:#b4441a;font-size:12px;margin-left:auto}
+.go{background:#3d8fd8;color:#fff;border:0;border-radius:4px;padding:6px 14px;cursor:pointer}
+/* ---------- admin ---------- */
+.adm{display:flex;flex-direction:column;min-height:calc(100vh - 46px)}
+.a-top{background:#1d6cae;color:#fff;display:flex;padding:6px 14px;font-size:12px;gap:16px}
+.a-top .t{color:#ffd24d}
+.a-main{display:flex;flex:1}
+.a-menu{width:180px;background:#fff;border-right:1px solid #dde3e8;flex:none}
+.a-menu .h{background:#4198ca;color:#fff;padding:8px 12px}
+.a-menu .m{padding:8px 12px;background:#d4e6f0;border-bottom:1px solid #fff;color:#333}
+.a-menu .s{padding:7px 12px 7px 26px;color:#555;border-bottom:1px solid #f0f0f0}
+.a-menu .s.on{color:#3d8fd8;font-weight:600;background:#eef6fc}
+.new{background:#de1818;color:#fff;font-size:10px;border-radius:3px;padding:0 4px;margin-left:4px}
+.a-content{flex:1;background:#f0f0f0;padding:0 0 30px;min-width:0}
+.crumb{background:#fff;padding:8px 14px;border-bottom:1px solid #e3e3e3;color:#666}
+.subtabs{display:flex;gap:2px;padding:10px 14px 0}
+.subtabs button{border:1px solid #ccd;border-bottom:0;background:#f7f7f7;padding:6px 14px;cursor:pointer;border-radius:4px 4px 0 0}
+.subtabs button.on{background:#fff;border-color:#3d8fd8;color:#3d8fd8;font-weight:600}
+.panel{background:#fff;margin:0 14px;padding:14px;border:1px solid #dde3e8}
+table.t{width:100%;border-collapse:collapse;font-size:12px}
+table.t th{background:#f5f7fa;text-align:left;padding:7px 8px;border-bottom:1px solid #e3e6ea;font-weight:600;white-space:nowrap}
+table.t td{padding:7px 8px;border-bottom:1px solid #eef0f2;vertical-align:top}
+table.t tr.fixed td{background:#fafafa;color:#888}
+table.t tr.dragover td{border-top:2px solid #3d8fd8}
+.tag{display:inline-block;border-radius:3px;padding:0 6px;font-size:11px;margin:1px 2px 1px 0}
+.tag.g{background:#e3f5ec;color:#17804f}.tag.b{background:#e6f0fb;color:#1d6cae}.tag.o{background:#fff1e0;color:#b25d00}.tag.r{background:#fde8e8;color:#c62828}.tag.gr{background:#eee;color:#777}
+.jl{white-space:nowrap}
+.lnk{color:#3d8fd8;cursor:pointer;margin-right:8px;background:none;border:0;padding:0;font-size:12px}
+.sw{position:relative;display:inline-block;width:36px;height:20px;background:#ccc;border-radius:10px;cursor:pointer;vertical-align:middle}
+.sw::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.15s}
+.sw.on{background:#3d8fd8}.sw.on::after{left:18px}.sw.dis{opacity:.4;cursor:not-allowed}
+.filters{display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap}
+select,input[type=text],input[type=number]{border:1px solid #ccd;border-radius:4px;padding:4px 6px;font-size:12px}
+.btnp{background:#3d8fd8;color:#fff;border:0;border-radius:4px;padding:6px 14px;cursor:pointer}
+.btnd{background:#fff;color:#333;border:1px solid #ccd;border-radius:4px;padding:6px 14px;cursor:pointer}
+.qwrap{display:flex;gap:14px;align-items:flex-start}
+.qwrap .left{flex:1;min-width:0}
+.qwrap .right{width:300px;flex:none}
+.handle{cursor:grab;color:#999;user-select:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:640px;background:#fff;box-shadow:-4px 0 16px rgba(0,0,0,.18);transform:translateX(100%);transition:.2s;z-index:20;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer .hd{padding:12px 16px;border-bottom:1px solid #eee;display:flex;align-items:center}
+.drawer .hd b{font-size:14px}
+.drawer .bd{flex:1;overflow:auto;padding:14px 16px}
+.drawer .ft{padding:10px 16px;border-top:1px solid #eee;display:flex;gap:8px;align-items:center}
+.bgroup{border:1px solid #e3e6ea;border-radius:6px;padding:10px 12px;margin-bottom:12px}
+.bgroup.ro{background:#fafafa;color:#888}
+.f{display:grid;grid-template-columns:100px 1fr;gap:6px 10px;align-items:center;margin-top:8px}
+.f .lb{color:#555;text-align:right}
+.result{background:#f3f9f6;border-radius:4px;padding:6px 8px;color:#17804f;font-size:12px;grid-column:2}
+.err{color:#c62828;font-size:12px;grid-column:2}
+.sticky-note{border-radius:6px;padding:10px 12px;font-size:12px;margin-bottom:10px}
+.sn-blue{background:#e6f0fb;border-left:4px solid #1d6cae}
+.sn-org{background:#fff1e0;border-left:4px solid #e08a00}
+.sn-pink{background:#fde8ef;border-left:4px solid #d14b7a}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:30}
+.modal.on{display:flex}
+.modal .box{background:#fff;border-radius:8px;width:460px;padding:16px}
+.cmp{padding:20px}
+.cmp table.t td:first-child{font-weight:600;white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <h1>弹窗中心 · 活动弹窗整合 + 按钮跳转配置 + Home 登录弹窗队列</h1><span class="ver">PRD / 原型 v1.1 · 2026-11-20</span>
+  <div class="site">站点 <select id="site"><option>789games</option><option>789bingo</option></select></div>
+  <div class="maintabs"><button data-v="player" class="on">玩家端</button><button data-v="admin">运营后台</button><button data-v="cmp">改动对照</button></div>
+</div>
+
+<!-- ================= PLAYER ================= -->
+<div class="view on" id="v-player">
+ <div class="pwrap">
+  <div class="phone" id="phone">
+    <div class="p-top"><div class="bal">₱ 1,250.00 <i>+</i></div><div class="rw">Rewards</div></div>
+    <div class="p-body"><div class="banner" id="banner">789games</div><div class="cats"><span class="on">Hot</span><span>Slots</span><span>Casino</span><span>Fishing</span></div><div class="games"><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+    <div class="tabbar"><b>Home</b><span>Chat</span><span>Promo</span><span>Wallet</span><span>Account</span></div>
+    <div class="mask" id="mask"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+  <div class="sim">
+   <div class="card">
+    <h4>H1 / H2 模拟条件 <span class="sample">示例数据，非线上配置</span></h4>
+    <div class="row">用户类型
+      <select id="u-type"><option value="new">新用户（未充值，有转盘次数）</option><option value="old">老用户</option><option value="wl">白名单用户（老用户）</option><option value="guest">游客（未登录）</option></select>
+      端 <select id="u-end"><option>H5</option><option>App</option></select>
+    </div>
+    <div class="row">
+      <label><input type="checkbox" id="u-egg" checked>有待领取金蛋</label>
+      <label><input type="checkbox" id="u-loss">昨日亏损达标</label>
+      <label><input type="checkbox" id="u-seenToday">今天已登录过一次（GMT+8）</label>
+      <label><input type="checkbox" id="u-seenEver" checked>曾经看过通知引导</label>
+    </div>
+    <div class="row"><button class="go" id="run">模拟登录后进入 Home</button><span class="note">按「运营后台 → 登录弹窗队列」的当前配置计算；改后台后回来重新点。</span></div>
+   </div>
+   <div class="card"><h4>本次会出现的队列</h4><ul class="qlist" id="q-yes"></ul></div>
+   <div class="card"><h4>不出现的及原因</h4><ul class="qlist" id="q-no"></ul></div>
+   <div class="sticky-note sn-org"><b>前台规则</b>：合规弹窗（强更 &gt; 协议 &gt; 21+）固定置顶、不计上限；其余按队列序号逐个判断 开关 → 频率 → 活动资格 → 上限，串行弹出；点 × 弹下一个；点按钮按配置跳转，剩余队列按全局设置「回 Home 继续 / 不再弹」。按钮行为随后台 B2 配置实时变化。</div>
+  </div>
+ </div>
+</div>
+
+<!-- ================= ADMIN ================= -->
+<div class="view" id="v-admin">
+ <div class="adm">
+  <div class="a-top"><span class="t">当前时间: 2026/11/20 15:30:00 GMT+8</span><span>QA 环境</span><span style="margin-left:auto">简体中文 · koi</span></div>
+  <div class="a-main">
+   <div class="a-menu"><div class="h">菜单 ☰</div><div class="m">用户管理</div><div class="m">财务管理</div><div class="m">数据报表</div><div class="m">公告管理</div><div class="m">活动配置 ▾</div><div class="s">首页小框广告位</div><div class="s">Home 页轮播弹窗</div><div class="s on">弹窗中心<span class="new">新增</span></div><div class="m">活动中心</div><div class="m">日志管理</div></div>
+   <div class="a-content">
+    <div class="crumb">位置 › 活动配置 › 弹窗中心 <span style="float:right" class="note">当前站点：<b id="siteLbl">789games</b>（配置按站点隔离）</span></div>
+    <div class="subtabs" id="subtabs"><button data-s="b1" class="on">B1 弹窗列表</button><button data-s="b3">B3 登录弹窗队列</button><button data-s="b4">B4 跳转目标库</button><button data-s="b5">B5 操作日志</button></div>
+    <div class="panel sv" id="s-b1"></div>
+    <div class="panel sv" id="s-b3" style="display:none"></div>
+    <div class="panel sv" id="s-b4" style="display:none"></div>
+    <div class="panel sv" id="s-b5" style="display:none"></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- B2 drawer -->
+<div class="drawer" id="drawer"><div class="hd"><b id="dr-title">B2 配置按钮跳转</b><button class="lnk" style="margin-left:auto" id="dr-close">关闭 ✕</button></div><div class="bd" id="dr-body"></div><div class="ft"><span>Google 验证码</span><input type="text" id="dr-otp" placeholder="6 位" maxlength="6" style="width:90px"><button class="btnp" id="dr-save">保存</button><button class="btnd" id="dr-reset">恢复默认</button><span class="err" id="dr-err"></span></div></div>
+
+<!-- confirm modal -->
+<div class="modal" id="modal"><div class="box"><b id="m-title">确认保存队列</b><div id="m-body" style="margin:10px 0;font-size:12px;max-height:260px;overflow:auto"></div><div style="display:flex;gap:8px;align-items:center"><span>Google 验证码</span><input type="text" id="m-otp" maxlength="6" style="width:90px"><button class="btnp" id="m-ok">确认保存</button><button class="btnd" id="m-cancel">取消</button><span class="err" id="m-err"></span></div></div></div>
+
+<!-- ================= COMPARE ================= -->
+<div class="view" id="v-cmp">
+ <div class="cmp">
+  <div class="sticky-note sn-blue"><b>现网读取</b>（2026-11-10 记录）：789games 弹窗顺序写死在 <code>src/components/GlobalModal/index.tsx</code> 的 <code>fullModalList</code>，数组顺序 = 优先级；按钮跳转写死在各弹窗组件。789bingo H5：molly 2026-11-20 按前端代码梳理，已登录 12 个、游客 4 个、即时弹窗 7 个；活动图弹窗跳转不生效、旧版砸金蛋有金额时插到最前、公告无跳转。站点切到 789bingo 可看。</div>
+  <div class="sticky-note sn-org"><b>本原型的取舍</b>：弹窗中心只管「展示与跳转」，活动规则仍在各活动菜单；动作按钮（GO / Claim）不改动作，只配「成功后跳转」；站内页面一律从目标库下拉选，不能手填；默认上限「不限」以保证上线零变化。</div>
+  <div class="sticky-note sn-pink"><b>待确认</b>：①789games 两端、789bingo App 清单；⑬圣诞 vs 次日返水谁先；⑭两个都弹还是只弹一个；⑮旧版砸金蛋插队是否在 21+ 前；⑯即时弹窗与队列是否叠加；②强更 / 协议 / 签到是否在队列外；③跳转后剩余队列现网行为；④上限默认值；⑤是否加 Don't show again today；⑥充值页是否支持预填金额；⑦20 项 target 待 App 确认。</div>
+  <div class="panel" style="margin:0">
+  <table class="t"><thead><tr><th>项目</th><th>现网</th><th>本方案</th></tr></thead><tbody>
+   <tr><td>弹出顺序</td><td>代码数组顺序，改要发版</td><td>B3 拖拽排序，保存后 5 分钟内生效</td></tr>
+   <tr><td>停弹某个弹窗</td><td>关活动或发版</td><td>B3「自动弹出」开关，只停登录自动弹，活动入口照常</td></tr>
+   <tr><td>频率</td><td>各弹窗自行实现（金蛋每天首次、通知引导一次）</td><td>每个弹窗选：每次登录 / 每天首次 / 活动期间一次 / 永久一次；服务端计次</td></tr>
+   <tr><td>单次上限</td><td>无</td><td>全局 不限 / 1–10，合规弹窗不计</td></tr>
+   <tr><td>按钮跳转</td><td>写死（Play Now、Claim 等）</td><td>B2 逐按钮配：关闭 / 站内页面 / 指定游戏 / 活动详情 / 外部链接；H5、App 可分开</td></tr>
+   <tr><td>按钮文案</td><td>写死</td><td>可覆盖（≤20 字符，保留 {amount}）</td></tr>
+   <tr><td>站内页面</td><td>小框、轮播各写一套</td><td>B4 统一目标库，三处共用；停用自动兜底</td></tr>
+   <tr><td>总览</td><td>无</td><td>B1 一张表 + B3 队列预览</td></tr>
+   <tr><td>两站</td><td>各自代码</td><td>同一后台，按站点切换、配置隔离</td></tr>
+  </tbody></table></div>
+ </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+// ---------- target library ----------
+const targets=[
+ {g:'首页与游戏',name:'首页',t:'home',h5:'/',param:'',login:false,st:'on'},
+ {g:'首页与游戏',name:'游戏大厅 Games',t:'games',h5:'/games',param:'category',login:false,st:'app'},
+ {g:'钱包',name:'钱包：充值页',t:'wallet_deposit',h5:'/wallet/deposit',param:'',login:true,st:'on'},
+ {g:'钱包',name:'钱包：提现页',t:'wallet_withdraw',h5:'/wallet/withdraw',param:'',login:true,st:'on'},
+ {g:'钱包',name:'交易记录',t:'tx_history',h5:'/wallet/history',param:'',login:true,st:'on'},
+ {g:'活动与奖励',name:'促销页 Promo',t:'promo_list',h5:'/promo',param:'',login:false,st:'app'},
+ {g:'活动与奖励',name:'我的奖励',t:'rewards',h5:'/rewards',param:'',login:true,st:'app'},
+ {g:'活动与奖励',name:'Lucky Spin 转盘',t:'lucky_spin',h5:'/lucky-spin',param:'',login:true,st:'app'},
+ {g:'活动与奖励',name:'每日打卡',t:'checkin',h5:'/checkin',param:'',login:true,st:'app'},
+ {g:'活动与奖励',name:'邀请好友',t:'invite',h5:'/invite',param:'',login:true,st:'app'},
+ {g:'会员',name:'VIP 俱乐部',t:'vip',h5:'/vip',param:'',login:true,st:'app'},
+ {g:'账户',name:'身份认证 KYC',t:'kyc',h5:'/account/kyc',param:'',login:true,st:'app'},
+ {g:'其他',name:'聊天室 Chat',t:'chat',h5:'/chat',param:'',login:true,st:'stop'},
+ {g:'其他',name:'联系客服',t:'support',h5:'/support',param:'',login:false,st:'app'},
+ {g:'账户',name:'账号设置',t:'account',h5:'/account',param:'',login:true,st:'app'},
+ {g:'账户',name:'注册页',t:'register',h5:'/register',param:'',login:false,st:'app'},
+ {g:'其他',name:'下载 App 页',t:'app_download',h5:'/download',param:'',login:false,st:'app'},
+ {g:'钱包',name:'奖励记录',t:'rewards_history',h5:'/rewards/history',param:'',login:true,st:'app'},
+];
+const games=[{v:'JDB',g:[['10021','Magic Ace'],['10022','Fortune Gems']]},{v:'JILI',g:[['20011','Super Ace'],['20012','Money Coming']]},{v:'PG',g:[['30001','Mahjong Ways']]}];
+const acts=[['10086','Daily First Deposit 10%'],['10090','Christmas Lucky Spin'],['10095','Crown Rush 圣诞活动'],['10096','次日返水 Daily Cashback']];
+const tByT=t=>targets.find(x=>x.t===t);
+// ---------- popups ----------
+const J=(type,o={})=>Object.assign({type},o);
+const P_GAMES=[
+ {key:'force-update',name:'强制更新',fixed:1,scene:'登录 / 游客 Home',src:'系统',buttons:[{id:'upd',label:'Update',kind:'sys'}]},
+ {key:'agreement',name:'协议弹框',fixed:1,scene:'登录 / 游客 Home',src:'系统',buttons:[{id:'agree',label:'Agree',kind:'sys'}]},
+ {key:'over21',name:'21+ 确认',fixed:1,scene:'登录 / 游客 Home',src:'系统（合规）',buttons:[{id:'yes',label:"I'm over 21",kind:'sys'}]},
+ {key:'turntable',name:'新用户转盘',scene:'登录 Home',src:'活动中心 › 新用户转盘',elig:'有剩余转盘次数（新用户）',art:'linear-gradient(135deg,#632f81,#8c59b6)',title:'Welcome Bonus Spin',
+  buttons:[{id:'go',label:'GO',kind:'action',def:J('close')},{id:'play',label:'Play Now',kind:'jump',where:'结果弹窗',def:J('page',{t:'games'})},{id:'invite',label:'Invite',kind:'jump',where:'结果弹窗',def:J('page',{t:'invite'})}]},
+ {key:'olduser-turntable',name:'老用户转盘 Deposit & Spin',scene:'登录 Home',src:'活动中心 › 老用户转盘',elig:'老用户且活动进行中',art:'linear-gradient(135deg,#b3261e,#e8a317)',title:'Deposit & Spin Every Time',
+  buttons:[{id:'go',label:'GO',kind:'action',def:J('close')},{id:'dep',label:'Deposit',kind:'jump',where:'无次数时',def:J('page',{t:'wallet_deposit'})},{id:'play',label:'Play Now',kind:'jump',where:'结果弹窗',def:J('page',{t:'games'})}]},
+ {key:'golden-egg',name:'砸金蛋',scene:'登录 Home',src:'活动中心 › 砸金蛋',elig:'有待领取金蛋',freqDef:'daily',art:'linear-gradient(135deg,#e8a317,#ffd24d)',title:'Smash The Golden Egg!',
+  buttons:[{id:'claim',label:'Confirm & Claim ₱{amount}',kind:'action',def:J('close')}]},
+ {key:'promo-login-whitelist',name:'登录送彩金（白名单）',scene:'登录 Home',src:'活动中心 › 登录送彩金活动（白名单）',elig:'命中白名单且未领取',art:'linear-gradient(135deg,#1c8f70,#124a79)',title:'Welcome Back Bonus',
+  buttons:[{id:'claim',label:'Claim',kind:'action',def:J('close')}]},
+ {key:'promo-login',name:'登录促销',scene:'登录 Home',src:'活动中心 › 登录促销',elig:'活动进行中且未领取',art:'linear-gradient(135deg,#1c8f70,#2fa36d)',title:'Login Reward',
+  buttons:[{id:'claim',label:'Claim Now',kind:'action',def:J('close')}]},
+ {key:'loss-promo',name:'亏损促销',scene:'登录 Home',src:'活动中心 › 亏损促销',elig:'昨日亏损达标',art:'linear-gradient(135deg,#124a79,#3d8fd8)',title:'Loss Rebate',
+  buttons:[{id:'claim',label:'Claim',kind:'action',def:J('close')}]},
+ {key:'gold',name:'黄金蛋',scene:'登录 Home',src:'活动中心 › 黄金蛋',elig:'待前端提供',noElig:1,buttons:[{id:'tbd',label:'（按钮待前端提供）',kind:'sys'}]},
+ {key:'ok-game',name:'游客专属',scene:'游客 Home',guest:1,src:'待核对',elig:'游客',art:'linear-gradient(135deg,#2fa36d,#17804f)',title:'Register & Get 2 Free Spins',
+  buttons:[{id:'reg',label:'Register Now',kind:'jump',def:J('page',{t:'home'})}]},
+ {key:'activity',name:'活动弹窗（Home 轮播）',scene:'登录 Home',src:'活动配置 › Home 页轮播弹窗',elig:'有展示中的轮播素材',art:'linear-gradient(135deg,#ff6a3d,#e8a317)',title:'Christmas Lucky Spin',
+  buttons:[{id:'img',label:'点击图片',kind:'jump',def:J('detail',{a:'10090'}),note:'每条素材的跳转在「Home 页轮播弹窗」配置，此处为默认'}]},
+ {key:'notify-guide',name:'通知引导',scene:'登录 Home',src:'系统',elig:'未授权推送',freqDef:'once',art:'linear-gradient(135deg,#6b7f78,#16352d)',title:'Turn On Notifications',
+  buttons:[{id:'allow',label:'Allow',kind:'sys'},{id:'later',label:'Later',kind:'sys'}]},
+ {key:'announcements',name:'公告',scene:'登录 / 游客 Home',guest:1,both:1,src:'公告管理',elig:'有生效公告',art:'linear-gradient(135deg,#3d8fd8,#124a79)',title:'Announcement',
+  buttons:[{id:'more',label:'View Details',kind:'jump',def:J('close')}]},
+];
+const BG='linear-gradient(135deg,#632f81,#8c59b6)';
+const P_BINGO=[
+ {key:'over21',name:'21+ 年龄确认',fixed:1,both:1,guest:1,scene:'登录 / 游客 Home',src:'系统（合规）',buttons:[{id:'yes',label:'Agree（× → 退出页）',kind:'sys'}]},
+ {key:'old-golden-egg',name:'旧版砸金蛋',scene:'登录 Home',src:'活动中心 › 砸金蛋（旧）',elig:'有可领金额（现网插到最前，本方案取消插队）',art:'linear-gradient(135deg,#e8a317,#ffd24d)',title:'Golden Egg',buttons:[{id:'smash',label:'Smash & Claim',kind:'action',def:J('close')}]},
+ {key:'crown-rush',name:'圣诞活动弹窗 Crown Rush（待上线）',both:1,guest:1,scene:'登录 / 游客 Home',src:'活动中心 › 圣诞活动',elig:'预热中或进行中（游客含已结束未下线）',freqDef:'daily',pending:1,art:'linear-gradient(135deg,#b3261e,#1c8f70)',title:'Crown Rush',buttons:[{id:'go',label:"Let's Go!",kind:'jump',def:J('detail',{a:'10095'})}]},
+ {key:'daily-cashback',name:'次日返水（海报 / 到账提示，待上线）',scene:'登录 Home',src:'活动中心 › 次日返水',elig:'展示海报，或有奖励到账（二选一）',pending:1,art:'linear-gradient(135deg,#124a79,#3d8fd8)',title:'Daily Cashback',buttons:[{id:'poster',label:'点击海报',kind:'jump',where:'海报',def:J('detail',{a:'10096'})},{id:'ok',label:'OK',kind:'jump',where:'到账提示',def:J('close')},{id:'detail',label:'Details',kind:'jump',where:'到账提示',def:J('page',{t:'rewards_history'})}]},
+ {key:'turntable',name:'新用户转盘 / 首充转盘',scene:'登录 Home',src:'活动中心 › 新用户转盘',elig:'新用户有次数；首充到账',art:BG,title:'Welcome Bonus Spin',buttons:[{id:'go',label:'GO',kind:'action',def:J('close')},{id:'dep',label:'Deposit',kind:'jump',def:J('page',{t:'wallet_deposit'})},{id:'invite',label:'Invite',kind:'jump',def:J('page',{t:'invite'})}]},
+ {key:'olduser-turntable',name:'老用户充值转盘',scene:'登录 Home',src:'活动中心 › 老用户转盘',elig:'充值后获得转盘次数',art:'linear-gradient(135deg,#b3261e,#e8a317)',title:'Deposit & Spin',buttons:[{id:'go',label:'GO',kind:'action',def:J('close')},{id:'dep',label:'Deposit Now',kind:'jump',def:J('page',{t:'wallet_deposit'})},{id:'invite',label:'Invite',kind:'jump',def:J('page',{t:'invite'})}]},
+ {key:'task-golden-egg',name:'任务砸金蛋',scene:'登录 Home',src:'活动中心 › 任务砸金蛋',elig:'有可砸的金蛋',freqDef:'daily',art:'linear-gradient(135deg,#e8a317,#ffd24d)',title:'Smash The Golden Egg!',buttons:[{id:'kyc',label:'Go',where:'任务：实名认证',kind:'jump',def:J('page',{t:'kyc'})},{id:'dep',label:'Go',where:'任务：充值',kind:'jump',def:J('page',{t:'wallet_deposit'})},{id:'home',label:'Go',where:'任务：首页',kind:'jump',def:J('page',{t:'home'})},{id:'acc',label:'Go',where:'任务：账号设置',kind:'jump',def:J('page',{t:'account'})},{id:'app',label:'Go',where:'任务：下载 App',kind:'jump',def:J('page',{t:'app_download'})}]},
+ {key:'promo-login-whitelist',name:'白名单登录彩金',scene:'登录 Home',src:'活动中心 › 登录送彩金活动（白名单）',elig:'有可领的白名单彩金',art:'linear-gradient(135deg,#1c8f70,#124a79)',title:'Welcome Back Bonus',buttons:[{id:'claim',label:'Claim',kind:'action',def:J('close')}]},
+ {key:'promo-login',name:'登录彩金',scene:'登录 Home',src:'活动中心 › 登录彩金',elig:'有可领的登录彩金',art:'linear-gradient(135deg,#1c8f70,#2fa36d)',title:'Login Reward',buttons:[{id:'claim',label:'Claim',kind:'action',def:J('close')}]},
+ {key:'loss-promo',name:'亏损返利',scene:'登录 Home',src:'活动中心 › 亏损返利',elig:'有亏损返利到账',art:'linear-gradient(135deg,#124a79,#3d8fd8)',title:'Loss Rebate',buttons:[{id:'ok',label:'Confirm',kind:'action',def:J('close')}]},
+ {key:'activity',name:'活动图弹窗',scene:'登录 Home',src:'活动配置 › 活动图素材管理',elig:'后台配了活动图',art:'linear-gradient(135deg,#ff6a3d,#e8a317)',title:'Promo Banner',buttons:[{id:'img',label:'点击图片',kind:'jump',def:J('page',{t:'promo_list'}),note:'现网：配置的跳转地址不生效，一律去活动列表页（P10）；上线按现网初始化'}]},
+ {key:'notify-guide',name:'开启通知引导图',scene:'登录 Home',src:'系统',elig:'每台设备一次',freqDef:'once',art:'linear-gradient(135deg,#6b7f78,#16352d)',title:'Turn On Notifications',buttons:[{id:'close',label:'Close',kind:'sys'}]},
+ {key:'announcements',name:'登录公告',scene:'登录 Home',src:'公告管理',elig:'刚登录且有公告',art:'linear-gradient(135deg,#3d8fd8,#124a79)',title:'Announcement',buttons:[{id:'close',label:'Close（现网无跳转）',kind:'sys'}]},
+ {key:'guest-turntable',name:'游客转盘 Login To Win Big Rewards',guest:1,scene:'游客 Home',src:'活动中心 › 新用户转盘',elig:'游客',art:BG,title:'Login To Win Big Rewards',buttons:[{id:'go',label:'GO',kind:'jump',def:J('page',{t:'register'})},{id:'reg',label:'Register Now',kind:'jump',def:J('page',{t:'register'})}]},
+ {key:'guest-announcement',name:'游客公告',guest:1,scene:'游客 Home',src:'公告管理',elig:'后台有游客公告',art:'linear-gradient(135deg,#3d8fd8,#124a79)',title:'Notice',buttons:[{id:'close',label:'Close（现网无跳转）',kind:'sys'}]},
+ {key:'invite-bar',name:'顶部邀请好友提示条',instant:1,scene:'即时弹窗',src:'系统',elig:'登录后约 10 秒，6 秒自动收起（非遮罩）',buttons:[{id:'inv',label:'Invite now',kind:'jump',def:J('page',{t:'invite'})}]},
+ {key:'app-guide',name:'下载 App 引导',instant:1,scene:'即时弹窗',src:'系统设置',elig:'后台开启且非桌面图标打开',buttons:[{id:'dl',label:'Download Now',kind:'jump',def:J('page',{t:'app_download'})}]},
+ {key:'invite-rewards',name:'邀请奖励到账 Invite Rewards',instant:1,scene:'即时弹窗',src:'邀请活动',elig:'有邀请奖励到账',buttons:[{id:'more',label:'Invite More',kind:'jump',def:J('page',{t:'invite'})}]},
+ {key:'exclusive-reward',name:'专属奖励提示 Exclusive Reward',instant:1,scene:'即时弹窗',src:'后台下发',elig:'后台下发',buttons:[{id:'ok',label:'Confirm',kind:'jump',def:J('close')}]},
+ {key:'vip-birthday',name:'VIP 升级 / 生日奖励',instant:1,scene:'即时弹窗',src:'VIP',elig:'升级或生日奖励到账',buttons:[{id:'auto',label:'几秒后自动关闭',kind:'sys'}]},
+ {key:'kyc-result',name:'实名认证结果',instant:1,scene:'即时弹窗',src:'KYC',elig:'认证通过或需补充资料',buttons:[{id:'pass',label:'Deposit',where:'通过',kind:'jump',def:J('page',{t:'wallet_deposit'})},{id:'more',label:'Complete',where:'需补充',kind:'jump',def:J('page',{t:'kyc'})}]},
+ {key:'pay-fail',name:'充值失败 / 提款失败',instant:1,scene:'即时弹窗',src:'钱包',elig:'订单失败',buttons:[{id:'ok',label:'OK',kind:'jump',def:J('close')},{id:'cs',label:'Contact Support',kind:'jump',def:J('page',{t:'support'})}]},
+];
+function initSite(arr){arr.forEach((p,i)=>{p.order=i+1;p.on=true;p.freq=p.fixed?'always':(p.freqDef||'login');(p.buttons||[]).forEach(b=>{b.cfg={text:'',split:false,h5:clone(b.def||J('close')),app:clone(b.def||J('close'))}})});return arr}
+function clone(o){return JSON.parse(JSON.stringify(o))}
+const SITES={'789games':{P:initSite(P_GAMES),G:{cap:0,afterJump:'resume'}},'789bingo':{P:initSite(P_BINGO),G:{cap:0,afterJump:'resume'}}};
+let P=SITES['789games'].P, G=SITES['789games'].G;
+let logs=[{t:'2026-11-20 10:02:11',who:'system',type:'初始化',obj:'全部',chg:'按现网 fullModalList 顺序与默认跳转初始化；上限=不限'}];
+const FREQ={login:'每次登录',daily:'每天首次登录',period:'活动期间一次',once:'永久一次',always:'每次（合规）'};
+const now=()=>{const d=new Date(Date.now()+8*3600e3);return d.toISOString().slice(0,19).replace('T',' ')};
+// ---------- jump describe ----------
+function jdesc(j){
+ if(!j)return '关闭弹窗';
+ if(j.type==='close')return '关闭弹窗';
+ if(j.type==='page'){const t=tByT(j.t);if(!t)return '<span class="tag r">目标不存在</span>';let s=t.name;if(t.st==='stop')s+=' <span class="tag r">目标已停用→按关闭处理</span>';return s}
+ if(j.type==='game'){const g=findGame(j.gid);return '指定游戏 · '+(g?g[1]+'（'+g[0]+'）':'未选')}
+ if(j.type==='detail'){const a=acts.find(x=>x[0]===j.a);return '活动详情 · '+(a?a[1]:'未选')}
+ if(j.type==='ext')return '外部链接 · '+(j.url||'未填');
+}
+function findGame(id){for(const v of games)for(const g of v.g)if(g[0]===id)return[v.v,g[1]];return null}
+function jfront(j,end,guest){
+ if(!j||j.type==='close')return null;
+ if(j.type==='page'){const t=tByT(j.t);if(!t||t.st==='stop')return '目标已停用 → 只关闭弹窗';if(end==='App'&&t.st==='app')return 'App：target 待 App 确认 → 只关闭弹窗';const lg=guest&&t.login?'游客：先拉起登录，登录后 ':'';return lg+(end==='H5'?'H5 打开 '+t.h5:'App 收到 target='+t.t)}
+ if(j.type==='game'){const g=findGame(j.gid);return (guest?'游客：先登录，登录后回到游戏 · ':'')+(end==='H5'?'H5 直接进入 '+(g?g[1]:''):'App 收到 target=game_play&game_id='+j.gid)}
+ if(j.type==='detail')return end==='H5'?'H5 打开 /promo/detail/'+j.a:'App 收到 target=promo_detail&activity_id='+j.a;
+ if(j.type==='ext')return (end==='H5'?'新窗口打开 ':'外部浏览器打开 ')+j.url;
+}
+// ---------- tabs ----------
+$$('.maintabs button').forEach(b=>b.onclick=()=>{$$('.maintabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+b.dataset.v));if(b.dataset.v==='player')simulate(false)});
+$$('#subtabs button').forEach(b=>b.onclick=()=>{$$('#subtabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.sv').forEach(v=>v.style.display=v.id==='s-'+b.dataset.s?'block':'none');render()});
+$('#site').onchange=e=>{const v=e.target.value;$("#siteLbl").textContent=v;$("#banner").textContent=v;P=SITES[v].P;G=SITES[v].G;qDraft=null;$('#drawer').classList.remove('on');render();simulate(false)};
+// ---------- B1 ----------
+function renderB1(){
+ const sc=$('#f-scene')?$('#f-scene').value:'',kw=$('#f-kw')?$('#f-kw').value:'';
+ let h=`<div class="filters">触发场景 <select id="f-scene"><option value="">全部</option><option>登录 Home</option><option>游客 Home</option><option>即时弹窗</option></select> 关键字 <input type="text" id="f-kw" placeholder="名称 / key" value="${kw}"><span class="note">${$('#site').value==='789bingo'?'789bingo：molly 2026-11-20 前端代码梳理（H5），未逐个触发验证':'789games：fullModalList 2026-11-10 记录'}</span><span class="note" style="margin-left:auto">弹窗由开发接入时注册，运营不能在此新增 / 删除</span></div>
+ <table class="t"><thead><tr><th>弹窗</th><th>来源活动（配置入口）</th><th>触发场景</th><th>队列位置</th><th>按钮跳转（H5 / App）</th><th>更新</th><th>操作</th></tr></thead><tbody>`;
+ const qs=queueSorted();
+ P.filter(p=>(!sc||p.scene.includes(sc.replace(' Home','')))&&(!kw||(p.name+p.key).includes(kw))).forEach(p=>{
+  const lq=qs.filter(x=>!x.fixed&&!x.instant&&(!x.guest||x.both));
+  const pos=p.fixed?'<span class="tag gr">固定置顶</span>':p.instant?'<span class="tag o">即时弹窗·不入队</span>':!p.on?'<span class="tag gr">自动弹出已关</span>':(p.guest&&!p.both)?'<span class="tag b">游客队列</span>':'<span class="tag g">#'+(lq.indexOf(p)+1)+'</span>';
+  const bs=(p.buttons||[]).map(b=>{if(b.kind==='sys')return `<div class="jl">${b.label} · <span class="note">不可配</span></div>`;const txt=(b.where?b.where+' · ':'')+(b.cfg.text||b.label);const pre=b.kind==='action'?'成功后 → ':'→ ';
+   return b.cfg.split?`<div class="jl">${txt} ${pre}H5 ${jdesc(b.cfg.h5)}</div><div class="jl" style="padding-left:12px">App ${jdesc(b.cfg.app)}</div>`:`<div class="jl">${txt} ${pre}${jdesc(b.cfg.h5)}</div>`}).join('');
+  h+=`<tr><td><b>${p.name}</b>${p.pending?' <span class="tag r">顺序待定</span>':''}<br><span class="note">${p.key}</span></td><td><a class="lnk">${p.src}</a></td><td>${p.scene}</td><td>${pos}</td><td>${bs}</td><td class="note">${p.upd||'system<br>2026-11-20'}</td><td>${p.fixed||p.buttons.every(b=>b.kind==='sys')?'<span class="note">只读</span>':`<button class="lnk" onclick="openDrawer('${p.key}')">配置跳转</button>`}</td></tr>`;
+ });
+ $('#s-b1').innerHTML=h+'</tbody></table>';
+ $('#f-scene').value=sc;$('#f-scene').onchange=renderB1;$('#f-kw').oninput=()=>{renderB1();const k=$('#f-kw');k.focus();k.setSelectionRange(k.value.length,k.value.length)};
+}
+// ---------- B2 drawer ----------
+let cur=null,draft=null;
+function openDrawer(key){cur=P.find(p=>p.key===key);draft=clone(cur.buttons.map(b=>b.cfg));$('#dr-title').textContent='B2 配置按钮跳转 · '+cur.name+'（'+cur.key+'）';$('#dr-err').textContent='';$('#dr-otp').value='';drawBody();$('#drawer').classList.add('on')}
+$('#dr-close').onclick=()=>$('#drawer').classList.remove('on');
+function jumpEditor(i,end,j){
+ const nm=`${i}-${end}`;
+ let s=`<div class="lb">跳转方式</div><div><select data-k="type" data-i="${i}" data-e="${end}">${[['close','关闭弹窗（默认）'],['page','站内页面'],['game','指定游戏'],['detail','活动详情'],['ext','外部链接']].map(o=>`<option value="${o[0]}" ${j.type===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select></div>`;
+ if(j.type==='page'){const groups=[...new Set(targets.map(t=>t.g))];
+  s+=`<div class="lb">站内页面</div><div><select data-k="t" data-i="${i}" data-e="${end}"><option value="">请选择（来自 B4 目标库）</option>${groups.map(g=>`<optgroup label="${g}">${targets.filter(t=>t.g===g&&t.st!=='stop').map(t=>`<option value="${t.t}" ${j.t===t.t?'selected':''}>${t.name}${t.st==='app'?'（App 待确认）':''}</option>`).join('')}</optgroup>`).join('')}</select></div>`;
+  const t=tByT(j.t);if(t&&t.param==='category')s+=`<div class="lb">category</div><div><select data-k="cat" data-i="${i}" data-e="${end}">${['all','slot','casino','arcade','poker','fishing'].map(c=>`<option ${j.cat===c?'selected':''}>${c}</option>`).join('')}</select> <span class="note">可选</span></div>`;}
+ if(j.type==='game'){const vend=j.v||(j.gid?findGame(j.gid)[0]:'');
+  s+=`<div class="lb">厂商 / 游戏</div><div><select data-k="v" data-i="${i}" data-e="${end}"><option value="">选厂商</option>${games.map(v=>`<option ${vend===v.v?'selected':''}>${v.v}</option>`).join('')}</select> <select data-k="gid" data-i="${i}" data-e="${end}"><option value="">选游戏（只列已开启）</option>${(games.find(v=>v.v===vend)||{g:[]}).g.map(g=>`<option value="${g[0]}" ${j.gid===g[0]?'selected':''}>${g[1]}</option>`).join('')}</select></div>`;}
+ if(j.type==='detail')s+=`<div class="lb">活动</div><div><select data-k="a" data-i="${i}" data-e="${end}"><option value="">选活动（只列展示中）</option>${acts.map(a=>`<option value="${a[0]}" ${j.a===a[0]?'selected':''}>${a[1]}</option>`).join('')}</select></div>`;
+ if(j.type==='ext')s+=`<div class="lb">链接</div><div><input type="text" style="width:100%" data-k="url" data-i="${i}" data-e="${end}" value="${j.url||''}" placeholder="https://"></div>`;
+ const r=[];['H5','App'].forEach(e=>{if(end==='both'||end===e){const x=jfront(j,e,false);r.push(x||e+' 只关闭弹窗')}});
+ const t=j.type==='page'?tByT(j.t):null;if(t&&t.login)r.push('游客先登录');
+ s+=`<div class="result">${r.join(' · ')}</div>`;return s;
+}
+function drawBody(){
+ let h=`<div class="sticky-note sn-blue">动作按钮（GO / Claim）的动作不变，只配「成功后跳转」；站内页面只能从目标库下拉选。右侧示例数据，非线上配置。</div>`;
+ cur.buttons.forEach((b,i)=>{const c=draft[i];
+  if(b.kind==='sys'){h+=`<div class="bgroup ro"><b>${b.label}</b> · 合规 / 系统按钮，不可配置</div>`;return}
+  h+=`<div class="bgroup"><b>${b.label}</b> <span class="tag ${b.kind==='action'?'o':'b'}">${b.kind==='action'?'动作按钮':'跳转按钮'}</span>${b.where?` <span class="note">${b.where}</span>`:''}${b.note?`<div class="note">${b.note}</div>`:''}
+  <div class="f"><div class="lb">按钮文案</div><div><input type="text" maxlength="40" style="width:240px" data-k="text" data-i="${i}" value="${c.text}" placeholder="留空 = ${b.label}"> <span class="note">≤20 字符</span></div>
+  <div class="lb">${b.kind==='action'?'成功后跳转':'跳转'}</div><div><label><input type="checkbox" data-k="split" data-i="${i}" ${c.split?'checked':''}> 分端配置（H5 / App 分开）</label></div>
+  ${c.split?`<div class="lb"><b>H5</b></div><div></div>${jumpEditor(i,'H5',c.h5)}<div class="lb"><b>App</b></div><div></div>${jumpEditor(i,'App',c.app)}`:jumpEditor(i,'both',c.h5)}
+  <div class="err" id="e-${i}"></div></div></div>`});
+ $('#dr-body').innerHTML=h;
+ $$('#dr-body [data-k]').forEach(el=>{el.onchange=el.oninput=ev=>{const i=+el.dataset.i,k=el.dataset.k,e=el.dataset.e,c=draft[i];
+  if(k==='text'){c.text=el.value;if(ev.type==='input')return}
+  else if(k==='split'){c.split=el.checked;if(!c.split)c.app=clone(c.h5)}
+  else{const tgt=e==='App'?c.app:c.h5;if(k==='type'){for(const x in tgt)delete tgt[x];tgt.type=el.value}else{tgt[k]=el.value;if(k==='v')tgt.gid=''}if(e==='both')c.app=clone(c.h5);if(k==='url'&&ev.type==='input')return}
+  drawBody()}});
+}
+function validate(){let ok=true;cur.buttons.forEach((b,i)=>{if(b.kind==='sys')return;const c=draft[i],msg=[];
+ if(c.text.length>20)msg.push('文案超过 20 字符');if(b.label.includes('{amount}')&&c.text&&!c.text.includes('{amount}'))msg.push('必须保留 {amount}');
+ [c.h5,c.split?c.app:null].filter(Boolean).forEach(j=>{if(j.type==='page'&&!j.t)msg.push('未选站内页面');if(j.type==='game'&&!j.gid)msg.push('未选游戏');if(j.type==='detail'&&!j.a)msg.push('未选活动');if(j.type==='ext'&&!/^https?:\/\//.test(j.url||''))msg.push('外部链接须 http(s):// 开头')});
+ const el=$('#e-'+i);if(el)el.textContent=msg.join('；');if(msg.length)ok=false});return ok}
+$('#dr-save').onclick=()=>{if(!validate()){$('#dr-err').textContent='请修正标红项';return}if(!/^\d{6}$/.test($('#dr-otp').value)){$('#dr-err').textContent='请输入 6 位验证码';return}
+ const chg=[];cur.buttons.forEach((b,i)=>{if(b.kind==='sys')return;const o=b.cfg,n=draft[i];const os=(o.text||b.label)+' → '+jdesc(o.h5).replace(/<[^>]+>/g,'')+(o.split?' / App '+jdesc(o.app).replace(/<[^>]+>/g,''):''),ns=(n.text||b.label)+' → '+jdesc(n.h5).replace(/<[^>]+>/g,'')+(n.split?' / App '+jdesc(n.app).replace(/<[^>]+>/g,''):'');if(os!==ns)chg.push(os+'  ⇒  '+ns);b.cfg=n});
+ cur.upd='koi<br>'+now().slice(0,10);if(chg.length)logs.unshift({t:now(),who:'koi',type:'修改按钮跳转',obj:cur.key,chg:chg.join('<br>')});$('#drawer').classList.remove('on');render()};
+$('#dr-reset').onclick=()=>{draft=cur.buttons.map(b=>({text:'',split:false,h5:clone(b.def||J('close')),app:clone(b.def||J('close'))}));drawBody()};
+// ---------- B3 ----------
+let qDraft=null;
+function queueSorted(){return [...P].sort((a,b)=>a.order-b.order)}
+function renderB3(){
+ if(!qDraft)qDraft={items:queueSorted().map(p=>({key:p.key,on:p.on,freq:p.freq})),cap:G.cap,afterJump:G.afterJump};
+ const tab=$('#qtab')?$('#qtab').dataset.v:'login';
+ const items=qDraft.items.filter(it=>{const p=P.find(x=>x.key===it.key);if(p.instant)return false;return tab==='login'?!p.guest||p.both:(p.guest||p.fixed)});
+ let h=`<div class="qwrap"><div class="left">
+ <div class="card" style="box-shadow:none;border:1px solid #e3e6ea;margin-bottom:12px"><h4>全局设置</h4><div class="row">单次登录最多自动弹 <select id="g-cap"><option value="0">不限（现网）</option>${[1,2,3,4,5,6,7,8,9,10].map(n=>`<option value="${n}" ${qDraft.cap==n?'selected':''}>${n} 个</option>`).join('')}</select><span class="note">不含合规弹窗</span></div>
+ <div class="row">点按钮跳走后 <select id="g-after"><option value="resume" ${qDraft.afterJump==='resume'?'selected':''}>回 Home 继续弹剩余</option><option value="stop" ${qDraft.afterJump==='stop'?'selected':''}>本次剩余不再弹</option></select></div></div>
+ <div class="subtabs" style="padding:0" id="qtab" data-v="${tab}"><button data-q="login" class="${tab==='login'?'on':''}">登录用户队列</button><button data-q="guest" class="${tab==='guest'?'on':''}">游客队列</button></div>
+ <table class="t" style="border:1px solid #e3e6ea"><thead><tr><th></th><th>序号</th><th>弹窗</th><th>自动弹出</th><th>频率</th><th>资格说明（只读）</th><th>活动状态</th></tr></thead><tbody id="qbody">`;
+ let n=0;items.forEach(it=>{const p=P.find(x=>x.key===it.key);if(p.fixed){h+=`<tr class="fixed"><td>🔒</td><td>—</td><td><b>${p.name}</b><br><span class="note">${p.key}</span></td><td><span class="sw on dis"></span></td><td>每次（合规）</td><td>固定置顶，不计上限</td><td>—</td></tr>`;return}
+  n++;const st=p.key==='olduser-turntable'?'<span class="tag gr">已结束 · 不会弹</span>':'<span class="tag g">进行中</span>';
+  h+=`<tr draggable="true" data-k="${p.key}"><td class="handle">⋮⋮</td><td><input type="number" value="${n}" min="1" style="width:46px" data-num="${p.key}"></td><td><b>${p.name}</b>${p.pending?' <span class="tag r">顺序待定</span>':''}<br><span class="note">${p.key}</span></td><td><span class="sw ${it.on?'on':''}" data-sw="${p.key}"></span></td><td><select data-fq="${p.key}">${Object.entries(FREQ).filter(e=>e[0]!=='always').map(e=>`<option value="${e[0]}" ${it.freq===e[0]?'selected':''}>${e[1]}</option>`).join('')}</select></td><td class="note">${p.elig}</td><td>${p.noElig?'<span class="tag gr">待核对</span>':st}</td></tr>`});
+ h+=`</tbody></table><div style="margin-top:10px;display:flex;gap:8px;align-items:center"><button class="btnp" id="q-save">保存队列</button><button class="btnd" id="q-reset">放弃修改</button><span class="note" id="q-dirty"></span></div>
+ ${$('#site').value==='789bingo'?'<div class="sticky-note sn-pink" style="margin-top:10px">待确认 13 / 14：圣诞活动弹窗与次日返水在两个分支都写在第 2 位。原型暂按「圣诞 → 次日返水」排列；建议到账提示在圣诞之前、海报在圣诞之后（需把海报 / 到账提示拆成两个位置）。两个都满足时都弹，由单次上限控制总数。即时弹窗（7 个）不在此表，见 B1。</div>':''}<div class="note" style="margin-top:6px">拖动 ⋮⋮ 或改序号排序；改动先停在页面上，点「保存队列」一次性提交（Google 验证码 + 二次确认）。新注册的弹窗默认加在末尾、自动弹出关闭。</div></div>
+ <div class="right"><div class="card" style="box-shadow:none;border:1px solid #e3e6ea"><h4>队列预览 <span class="sample">按当前页面未保存配置</span></h4><div class="row">用户类型 <select id="pv-u"><option value="new">新用户未充值</option><option value="old">老用户</option><option value="wl">白名单用户</option><option value="guest">游客</option></select></div><ul class="qlist" id="pv-yes"></ul><div class="note" style="margin:8px 0 4px">不弹及原因</div><ul class="qlist" id="pv-no"></ul><div class="note" style="margin-top:8px">二期：输入 userId 按真实资格模拟。</div></div></div></div>`;
+ $('#s-b3').innerHTML=h;
+ const dirty=JSON.stringify(qDraft)!==JSON.stringify({items:queueSorted().map(p=>({key:p.key,on:p.on,freq:p.freq})),cap:G.cap,afterJump:G.afterJump});$('#q-dirty').textContent=dirty?'● 有未保存的修改':'';
+ $$('#qtab button').forEach(b=>b.onclick=()=>{$('#qtab').dataset.v=b.dataset.q;renderB3()});
+ $('#g-cap').onchange=e=>{qDraft.cap=+e.target.value;renderB3()};$('#g-after').onchange=e=>{qDraft.afterJump=e.target.value;renderB3()};
+ $$('[data-sw]').forEach(s=>s.onclick=()=>{const it=qDraft.items.find(x=>x.key===s.dataset.sw);it.on=!it.on;renderB3()});
+ $$('[data-fq]').forEach(s=>s.onchange=()=>{qDraft.items.find(x=>x.key===s.dataset.fq).freq=s.value;renderB3()});
+ $$("[data-num]").forEach(s=>s.onchange=()=>{const k=s.dataset.num,v=+s.value;setTimeout(()=>{moveTo(k,v);renderB3()},0)});
+ let drag=null;$$('#qbody tr[draggable]').forEach(tr=>{tr.ondragstart=()=>drag=tr.dataset.k;tr.ondragover=e=>{e.preventDefault();tr.classList.add('dragover')};tr.ondragleave=()=>tr.classList.remove('dragover');tr.ondrop=e=>{e.preventDefault();const vis=$$('#qbody tr[data-k]').map(t=>t.dataset.k).filter(k=>k!==drag);moveTo(drag,vis.indexOf(tr.dataset.k)+1);renderB3()}});
+ $('#q-reset').onclick=()=>{qDraft=null;renderB3()};
+ $('#q-save').onclick=openConfirm;
+ $('#pv-u').onchange=()=>preview();preview();
+}
+function moveTo(key,pos){const vis=$$('#qbody tr[data-k]').map(tr=>tr.dataset.k).filter(k=>k!==key);pos=Math.max(1,Math.min(vis.length+1,pos||1));const items=qDraft.items;const i=items.findIndex(x=>x.key===key);const [it]=items.splice(i,1);if(pos>vis.length){const last=items.findIndex(x=>x.key===vis.at(-1));items.splice(last+1,0,it)}else{const j=items.findIndex(x=>x.key===vis[pos-1]);items.splice(j,0,it)}}
+function openConfirm(){const before=queueSorted(),chg=[];
+ qDraft.items.forEach((it,i)=>{const p=P.find(x=>x.key===it.key);const oi=before.indexOf(p);if(oi!==i)chg.push(`${p.name}：#${oi+1} → #${i+1}`);if(p.on!==it.on)chg.push(`${p.name}：自动弹出 ${p.on?'开':'关'} → ${it.on?'开':'关'}`);if(p.freq!==it.freq)chg.push(`${p.name}：频率 ${FREQ[p.freq]} → ${FREQ[it.freq]}`)});
+ if(G.cap!==qDraft.cap)chg.push(`单次上限：${G.cap||'不限'} → ${qDraft.cap||'不限'}`);if(G.afterJump!==qDraft.afterJump)chg.push(`跳走后：${G.afterJump==='resume'?'回 Home 继续':'不再弹'} → ${qDraft.afterJump==='resume'?'回 Home 继续':'不再弹'}`);
+ if(!chg.length){$('#q-dirty').textContent='没有改动';return}
+ $('#m-body').innerHTML='以下改动保存后 5 分钟内对 <b>'+$('#site').value+'</b> 全量生效：<ul>'+chg.map(c=>'<li>'+c+'</li>').join('')+'</ul>';$('#m-err').textContent='';$('#m-otp').value='';$('#modal').classList.add('on');$('#m-ok').onclick=()=>{if(!/^\d{6}$/.test($('#m-otp').value)){$('#m-err').textContent='请输入 6 位验证码';return}
+  qDraft.items.forEach((it,i)=>{const p=P.find(x=>x.key===it.key);p.order=i+1;p.on=it.on;p.freq=it.freq});G.cap=qDraft.cap;G.afterJump=qDraft.afterJump;logs.unshift({t:now(),who:'koi',type:'保存队列',obj:'登录弹窗队列',chg:chg.join('<br>')});qDraft=null;$('#modal').classList.remove('on');renderB3()}}
+$('#m-cancel').onclick=()=>$('#modal').classList.remove('on');
+// ---------- queue engine ----------
+function eligible(p,u){
+ const t=u.type,g=t==='guest';
+ if(g&&!(p.guest||p.fixed))return [false,'游客不弹'];if(!g&&p.guest&&!p.both)return [false,'只对游客'];
+ switch(p.key){case 'force-update':return [false,'当前已是最新版本'];case 'agreement':return [u.firstLogin!==false&&t==='new',t==='new'?'':'已同意过协议'];
+  case 'turntable':return [t==='new','非新用户 / 无转盘次数'];case 'olduser-turntable':return [false,'活动已结束'];
+  case 'golden-egg':return [!g&&u.egg,'无待领取金蛋'];case 'promo-login-whitelist':return [t==='wl','未命中白名单'];
+  case 'promo-login':return [t==='old'||t==='wl','活动仅老用户'];case 'loss-promo':return [!g&&u.loss,'昨日亏损未达标'];
+  case 'gold':return [false,'资格待前端提供'];case 'notify-guide':return [!g,''];
+  case 'old-golden-egg':return [false,'无可领金额'];case 'task-golden-egg':return [!g&&u.egg,'无可砸的金蛋'];case 'crown-rush':return [true,''];
+  case 'daily-cashback':return [!g,''];case 'guest-turntable':case 'guest-announcement':return [g,'只对游客'];
+  default:return [true,'']}
+}
+function runQueue(u,items,cap){
+ const yes=[],no=[];let shown=0;
+ items.forEach(it=>{const p=P.find(x=>x.key===it.key);if(p.instant)return;const [ok,why]=eligible(p,u);
+  if(p.fixed){if(ok)yes.push({p,fix:1});else no.push({p,why});return}
+  if(!it.on){no.push({p,why:'自动弹出已关'});return}
+  if((u.type==='guest')!==(!!p.guest)&&!p.both){no.push({p,why:u.type==='guest'?'游客不弹':'只对游客'});return}
+  const f=it.freq;if(f==='daily'&&u.seenToday){no.push({p,why:'频率：今天已弹过'});return}if(f==='once'&&u.seenEver){no.push({p,why:'频率：已弹过一次'});return}if(f==='period'&&u.seenToday){no.push({p,why:'频率：活动期间已弹过'});return}
+  if(!ok){no.push({p,why:'资格：'+why});return}
+  if(cap&&shown>=cap){no.push({p,why:'超出单次上限 '+cap});return}
+  shown++;yes.push({p})});return {yes,no};
+}
+function preview(){const u={type:$('#pv-u').value,egg:true,loss:false,seenToday:false,seenEver:true};const r=runQueue(u,qDraft.items,qDraft.cap);
+ $('#pv-yes').innerHTML=r.yes.map((x,i)=>`<li><span class="n ${x.fix?'fix':''}">${x.fix?'合':'#'+(r.yes.filter(y=>!y.fix).indexOf(x)+1)}</span>${x.p.name}</li>`).join('')||'<li class="note">无</li>';
+ $('#pv-no').innerHTML=r.no.map(x=>`<li><span class="n no">—</span>${x.p.name}<span class="why">${x.why}</span></li>`).join('')}
+// ---------- B4 ----------
+function renderB4(){
+ const refs=t=>P.reduce((n,p)=>n+(p.buttons||[]).filter(b=>b.cfg&&(b.cfg.h5.t===t||b.cfg.app.t===t)).length,0);
+ let h=`<div class="filters"><span class="note">弹窗中心、首页小框广告位、Home 页轮播弹窗共用；初始 = 首页小框 PRD v1.7 的 24 项（原型列 14 项）。不允许删除，只能停用。</span><button class="btnp" style="margin-left:auto">+ 新增目标</button></div>
+ <table class="t"><thead><tr><th>分组</th><th>名称</th><th>App target</th><th>H5 路径</th><th>附加参数</th><th>需登录</th><th>站点</th><th>最低 App 版本</th><th>引用数</th><th>状态</th></tr></thead><tbody>`;
+ targets.forEach((t,i)=>{h+=`<tr><td>${t.g}</td><td>${t.name}</td><td><code>${t.t}</code></td><td><code>${t.h5}</code></td><td>${t.param||'—'}</td><td>${t.login?'是':'否'}</td><td>games · bingo</td><td class="note">—</td><td>${refs(t.t)}</td><td><select data-st="${i}"><option value="on" ${t.st==='on'?'selected':''}>启用</option><option value="app" ${t.st==='app'?'selected':''}>待 App 确认</option><option value="stop" ${t.st==='stop'?'selected':''}>停用</option></select></td></tr>`});
+ $('#s-b4').innerHTML=h+'</tbody></table><div class="note" style="margin-top:8px">「待 App 确认」只对 H5 生效，App 端按关闭弹窗处理；停用有引用的目标时二次确认并列出引用处，引用处标红、前台按关闭弹窗处理。</div>';
+ $$('[data-st]').forEach(s=>s.onchange=()=>{const t=targets[+s.dataset.st],o=t.st;const r=refs(t.t);if(s.value==='stop'&&r&&!window.__ok){s.value=o;$('#m-body').innerHTML=`「${t.name}」被 ${r} 个弹窗按钮引用，停用后这些按钮前台按「关闭弹窗」处理，B1 标红。`;$('#m-title').textContent='确认停用目标';$('#m-err').textContent='';$('#modal').classList.add('on');$('#m-ok').onclick=()=>{if(!/^\d{6}$/.test($('#m-otp').value)){$('#m-err').textContent='请输入 6 位验证码';return}t.st='stop';logs.unshift({t:now(),who:'koi',type:'停用目标',obj:t.t,chg:'启用 → 停用'});$('#modal').classList.remove('on');$('#m-title').textContent='确认保存队列';renderB4()};return}
+  t.st=s.value;logs.unshift({t:now(),who:'koi',type:'修改目标状态',obj:t.t,chg:o+' → '+s.value});renderB4()});
+}
+// ---------- B5 ----------
+function renderB5(){$('#s-b5').innerHTML=`<div class="filters">操作类型 <select><option>全部</option><option>修改按钮跳转</option><option>保存队列</option><option>修改目标状态</option></select><span class="note">时间倒序 · 每页 20 条 · 只读 · 保留 365 天</span></div><table class="t"><thead><tr><th>时间 (GMT+8)</th><th>站点</th><th>操作人</th><th>操作类型</th><th>对象</th><th>变更内容（旧值 → 新值）</th></tr></thead><tbody>${logs.map(l=>`<tr><td class="jl">${l.t}</td><td>${$('#site').value}</td><td>${l.who}</td><td>${l.type}</td><td><code>${l.obj}</code></td><td>${l.chg}</td></tr>`).join('')}</tbody></table>`}
+function render(){renderB1();if($('#s-b3').style.display!=='none')renderB3();if($('#s-b4').style.display!=='none')renderB4();if($('#s-b5').style.display!=='none')renderB5()}
+// ---------- player sim ----------
+let run=null;
+function user(){return{type:$('#u-type').value,egg:$('#u-egg').checked,loss:$('#u-loss').checked,seenToday:$('#u-seenToday').checked,seenEver:$('#u-seenEver').checked}}
+function simulate(play){const u=user();const r=runQueue(u,queueSorted().map(p=>({key:p.key,on:p.on,freq:p.freq})),G.cap);
+ $('#q-yes').innerHTML=r.yes.map(x=>`<li><span class="n ${x.fix?'fix':''}">${x.fix?'合':'#'+(r.yes.filter(y=>!y.fix).indexOf(x)+1)}</span>${x.p.name} <span class="note">${x.fix?'固定置顶':FREQ[x.p.freq]}</span></li>`).join('')||'<li class="note">无</li>';
+ $('#q-no').innerHTML=r.no.map(x=>`<li><span class="n no">—</span>${x.p.name}<span class="why">${x.why}</span></li>`).join('');
+ if(play){run={list:r.yes,i:0,u};showPop()}}
+function btext(b){let t=b.cfg&&b.cfg.text||b.label;return t.replace('{amount}','8.88')}
+function showPop(){const m=$('#mask');if(!run||run.i>=run.list.length){m.classList.remove('on');m.innerHTML='';if(run)toast('队列结束：本次共弹 '+run.list.length+' 个');run=null;return}
+ const x=run.list[run.i],p=x.p;const end=$('#u-end').value;
+ let btns=(p.buttons||[]).filter(b=>!(b.where==='无次数时'&&p.key==='olduser-turntable')&&!(p.key==='daily-cashback'&&b.where==='到账提示')).map((b,bi)=>`<button class="${b.kind==='sys'?'btn-sys':bi===0||b.id==='img'?'btn-main':'btn-sub'}" data-b="${bi}">${b.id==='img'?'（点击图片）':b.id==='poster'?'（点击海报）':(b.where&&b.label==='Go'?b.where.replace('任务：','')+' · Go':btext(b))}</button>`).join('');
+ const nonfix=run.list.filter(y=>!y.fix);
+ m.innerHTML=`<div class="pop">${x.fix?'':'<button class="x" id="px">✕</button>'}<h3>${p.title||p.name}</h3><div class="art" style="background:${p.art||'linear-gradient(135deg,#6b7f78,#16352d)'}">${p.title||p.name}</div><div class="btns">${btns}</div></div><div class="qidx">${x.fix?'合规弹窗 · 固定置顶':'队列 '+(nonfix.indexOf(x)+1)+' / '+nonfix.length+' · '+p.key}</div>`;m.classList.add('on');
+ const px=$('#px');if(px)px.onclick=()=>{run.i++;setTimeout(showPop,300)};
+ $$('#mask [data-b]').forEach(el=>el.onclick=()=>{const b=p.buttons[+el.dataset.b];
+  if(b.kind==='sys'){run.i++;setTimeout(showPop,300);return}
+  const j=end==='App'&&b.cfg.split?b.cfg.app:b.cfg.h5;const d=jfront(j,end,run.u.type==='guest');
+  const pre=b.kind==='action'?'✓ '+(b.id==='go'?'抽奖完成':'领取成功')+'。':'';
+  if(!d){toast(pre+'按配置：关闭弹窗，弹下一个');run.i++;setTimeout(showPop,300);return}
+  toast(pre+'跳转：'+d+'<br>剩余队列：'+(G.afterJump==='resume'?'回到 Home 后继续弹':'本次不再弹'));
+  if(G.afterJump==='resume'){run.i++;m.classList.remove('on');m.innerHTML=`<div style="color:#fff;text-align:center">（已跳走）<br><button class="go" id="back" style="margin-top:12px">返回 Home</button></div>`;m.classList.add('on');$('#back').onclick=showPop}else{run.i=run.list.length;m.classList.remove('on')}});
+}
+function toast(t){const e=$('#toast');e.innerHTML=t;e.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove('on'),3500)}
+$('#run').onclick=()=>simulate(true);
+['#u-type','#u-egg','#u-loss','#u-seenToday','#u-seenEver'].forEach(s=>$(s).onchange=()=>simulate(false));
+window.openDrawer=openDrawer;
+renderB1();simulate(false);
+</script>
+</body>
+</html>

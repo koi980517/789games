@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789Games 次日返水与投注奖励活动（1.5%+2%）原型 v1.6</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.6</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789Games · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.6</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.6</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -317,7 +317,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 </div>
 
 <div id="admin">
-  <div class="abar"><b>789games 运营后台</b><span class="qa">QA</span><span class="note" style="color:#c6d4f0">2026-11-18 GMT+8</span><span id="alarm" class="alarm" onclick="goPg('budget')">预算告警 1</span><span style="margin-left:auto">koi</span></div>
+  <div class="abar"><b>789bingo 运营后台</b><span class="qa">QA</span><span class="note" style="color:#c6d4f0">2026-11-18 GMT+8</span><span id="alarm" class="alarm" onclick="goPg('budget')">预算告警 1</span><span style="margin-left:auto">koi</span></div>
   <div class="shell">
     <div class="menu">
       <div class="g">首页</div><div class="g">数据统计</div><div class="g">用户相关</div><div class="g">财务管理</div>
@@ -365,7 +365,7 @@ function defaults(){return{
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
   bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'04:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
-  push:{quiet:{on:true,from:'21:00',to:'07:00'},cb:{push:true,title:'Daily Cashback Arrived 🎉',body:'Hi {UserName}, your ₱{Amount} cashback for {Date} is ready. Tap to check!',link:'活动页',sms:true,smart:'789Games: P{Amount} daily cashback for {Date} is ready. Open the app to check!',globe:'789Games: Your P{Amount} daily cashback is ready. Open the app now!'},bb:{push:true,title:'Bet Bonus Credited 🎁',body:'Hi {UserName}, ₱{Amount} Bet Bonus for {Date} has been added to your balance.',link:'活动页',sms:false,smart:'789Games: P{Amount} Bet Bonus has been added to your balance.',globe:'789Games: P{Amount} Bet Bonus credited. Play now!'}},
+  push:{quiet:{on:true,from:'21:00',to:'07:00'},cb:{push:true,title:'Daily Cashback Arrived 🎉',body:'Hi {UserName}, your ₱{Amount} cashback for {Date} is ready. Tap to check!',link:'活动页',sms:true,smart:'789bingo: P{Amount} daily cashback for {Date} is ready. Open the app to check!',globe:'789bingo: Your P{Amount} daily cashback is ready. Open the app now!'},bb:{push:true,title:'Bet Bonus Credited 🎁',body:'Hi {UserName}, ₱{Amount} Bet Bonus for {Date} has been added to your balance.',link:'活动页',sms:false,smart:'789bingo: P{Amount} Bet Bonus has been added to your balance.',globe:'789bingo: P{Amount} Bet Bonus credited. Play now!'}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
@@ -432,12 +432,12 @@ function home(){
   const a=avail(user);
   const tiles=[[A().wid.label,'CASHBACK','#2A6FDB','#5B9BFF',"go('act')"],['2%','INSTANT RETURN','#D21740','#F2486A',''],['RANK','CUP','#17914A','#35C46E',''],['BAG','','#4A12B8','#7B2CF0','']];
   const games=[['Super Ace','JILI','#B45309','#F59E0B'],['Fortune Gems','JILI','#047857','#10B981'],['Money Coming','JILI','#1D4ED8','#60A5FA'],['Mahjong Ways','PG','#9D174D','#F472B6'],['Fortune Tiger','PG','#B91C1C','#F87171'],['Crazy Time','EVO','#6D28D9','#A78BFA']];
-  return `<div class="hhdr"><div class="hlogo"><b>7</b><b>8</b><b>9</b><span>GAMES</span></div><div class="hbal"><i>₱</i>${peso(S.balance[user]).slice(1)}<em>+</em></div><div class="hrew">Rewards</div><div class="hsrch"></div></div>
+  return `<div class="hhdr"><div class="hlogo"><b>7</b><b>8</b><b>9</b><span>BINGO</span></div><div class="hbal"><i>₱</i>${peso(S.balance[user]).slice(1)}<em>+</em></div><div class="hrew">Rewards</div><div class="hsrch"></div></div>
   <div class="body hbody">
   <div class="hban"><div class="hban-track" style="transform:translateX(-${hb*100}%)"><img src="${A().banner.img}" alt="Daily Cashback" onclick="go('act')"><div class="hban-ph" style="background:linear-gradient(120deg,#0F766E,#34D399)">SMASH THE GOLDEN EGG<small>（现网其他 Banner 示意）</small></div><div class="hban-ph" style="background:linear-gradient(120deg,#1E3A8A,#60A5FA)">DEPOSIT &amp; SPIN<small>（现网其他 Banner 示意）</small></div></div></div><div class="hdots">${[0,1,2].map((x,i)=>`<i class="${i===hb?'on':''}" onclick="hb=${i};render()"></i>`).join('')}</div>
   <div class="htabs">${[['Hot','#F97316'],...ACATS().map(c=>[c.n,c.c])].map((t,i)=>`<div class="${i===0?'on':''}"><span style="background:${t[1]}">${t[0][0]}</span>${t[0]}</div>`).join('')}</div>
   <div class="htiles">${tiles.map(t=>`<div style="background:linear-gradient(135deg,${t[2]},${t[3]})" ${t[4]?`onclick="${t[4]}"`:''}><b>${t[0]}</b><small>${t[1]}</small></div>`).join('')}</div>
-  <div class="hmarq"><span>Welcome to 789Games.com! Daily Cashback up to 1.5% on Slots — claim it every day.</span></div>
+  <div class="hmarq"><span>Welcome to 789bingo.com! Daily Cashback up to 1.5% on Slots — claim it every day.</span></div>
   <div class="hsec">Recent Games</div><div class="hrecent">${games.map(g=>`<div style="background:linear-gradient(135deg,${g[2]},${g[3]})">${g[0].split(' ').map(x=>x[0]).join('')}</div>`).join('')}</div>
   <div class="hsec">Hot Games<a>More ›</a></div><div class="hgames">${games.map(g=>`<div><div class="hg-img" style="background:linear-gradient(135deg,${g[2]},${g[3]})"><span class="hg-tag">${A().wid.label}<br>Cashback</span>${g[0]}</div><p>${g[0]}</p></div>`).join('')}</div>
   </div>
@@ -851,7 +851,7 @@ function aPushOld(){
   <tr><td>第 1 轮</td><td>09:00</td><td>Your ₱{CashbackAmount} cashback is ready!</td><td><span class="sw"></span></td><td>12,480</td><td>0</td><td>10,942</td><td>1,538</td><td>3,610</td><td>33.0%</td></tr>
   <tr><td>第 2 轮</td><td>14:00</td><td>{UserName}, don't miss ₱{CashbackAmount}</td><td><span class="sw"></span></td><td>12,480</td><td>4,215</td><td>7,190</td><td>1,075</td><td>1,882</td><td>26.2%</td></tr>
   <tr><td>第 3 轮</td><td>20:00</td><td>Last call! Cashback expires soon</td><td><span class="sw off"></span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table><div class="foot"><button class="ab">发送测试 Push</button><button class="ab p">保存并发布 Push</button></div></div>
-  <div class="panel"><h3>短信</h3><div class="form"><label>开关 / 发送时间</label><div><span class="sw"></span> 次日 <input value="18:00" style="width:70px"> <label><input type="checkbox" checked> 个性化发送（按近 7 日最常活跃时段）</label></div><label>Smart 文案</label><div><input style="width:100%" value="789Games: P{CashbackAmount} cashback waiting for you. Claim before it expires!"><span class="h">≤ 160 字符</span></div><label>Globe 文案</label><div><input style="width:100%" value="789Games: Your P{CashbackAmount} daily cashback is ready. Claim now!"></div></div>
+  <div class="panel"><h3>短信</h3><div class="form"><label>开关 / 发送时间</label><div><span class="sw"></span> 次日 <input value="18:00" style="width:70px"> <label><input type="checkbox" checked> 个性化发送（按近 7 日最常活跃时段）</label></div><label>Smart 文案</label><div><input style="width:100%" value="789bingo: P{CashbackAmount} cashback waiting for you. Claim before it expires!"><span class="h">≤ 160 字符</span></div><label>Globe 文案</label><div><input style="width:100%" value="789bingo: Your P{CashbackAmount} daily cashback is ready. Claim now!"></div></div>
   <div class="kpis" style="margin-top:12px"><div>发送名单<b>8,240</b></div><div>已领取剔除<b>5,112</b></div><div>已送达<b>2,980</b></div><div>失败<b>148</b></div></div>
   <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div></div>`;
 }

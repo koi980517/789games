@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.6</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.7</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.6</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.7</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -311,7 +311,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.6</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.7</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -365,12 +365,11 @@ function defaults(){return{
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
   bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'04:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
-  push:{quiet:{on:true,from:'21:00',to:'07:00'},cb:{push:true,title:'Daily Cashback Arrived 🎉',body:'Hi {UserName}, your ₱{Amount} cashback for {Date} is ready. Tap to check!',link:'活动页',sms:true,smart:'789bingo: P{Amount} daily cashback for {Date} is ready. Open the app to check!',globe:'789bingo: Your P{Amount} daily cashback is ready. Open the app now!'},bb:{push:true,title:'Bet Bonus Credited 🎁',body:'Hi {UserName}, ₱{Amount} Bet Bonus for {Date} has been added to your balance.',link:'活动页',sms:false,smart:'789bingo: P{Amount} Bet Bonus has been added to your balance.',globe:'789bingo: P{Amount} Bet Bonus credited. Play now!'}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
-  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
+  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
         new:{slot:0,casino:0,arcade:0,poker:0,fishing:0,bingo:0,feat0:0,feat1:0}},
@@ -575,7 +574,7 @@ function syncMods(){const k=M().cb&&M().bb?'both':M().cb?'cb':'bb';document.quer
 document.querySelectorAll('#segMods button').forEach(b=>b.onclick=()=>{const m=b.dataset.m;S.mods.cb=m!=='bb';S.mods.bb=m!=='cb';syncMods();view='act';fv='today';render()});
 document.getElementById('reset').onclick=()=>{popShown=0;popDay='';S=defaults();setTimeout(syncMods);CATS=S.cats;pubDirty=false;hShown=20;openApp();arender()};
 
-const PGS={list:['活动列表',()=>aList()],config:['活动配置',()=>aConfig()],budget:['费用使用情况',()=>aBudget()],records:['返水记录',()=>aRecords()],push:['Push · 短信',()=>aPush()],logs:['操作日志',()=>aLogs()]};
+const PGS={list:['活动列表',()=>aList()],config:['活动配置',()=>aConfig()],budget:['费用使用情况',()=>aBudget()],records:['返水记录',()=>aRecords()]};
 let pg='list', cfgMode='edit', SNAP=null, curId='DCB-003', pubDirty=false, selCat=0, gq='', selG=0;
 let ACTS=[{id:'DCB-003',name:'次日返水与投注奖励活动 11月',st:'on',created:'2026-10-29 14:02',ed:'cs_kei',period:'2026-11-01 ~ 长期',bet:'₱84,226,410.00',rw:'₱512,880',users:'18,402',live:1},
   {id:'DCB-002',name:'Daily Cashback 10月',st:'off',created:'2026-10-18 10:30',ed:'90556663',period:'10-01 ~ 10-31',bet:'₱71,005,220.00',rw:'₱430,118',users:'16,930',b:[430118,500000]},
@@ -734,7 +733,6 @@ function bTiers(){
   S.tiers.forEach((t,i)=>{if(i===0&&t.th!==0)errs.push('T1 门槛须为 ₱0');if(i>0&&t.th<=S.tiers[i-1].th)errs.push(`T${i+1} 门槛须大于 T${i}`);C.forEach(c=>{if(t.r[c.k]>5)errs.push(`T${i+1} ${c.n} > 5%`);if(i>0&&t.r[c.k]<S.tiers[i-1].r[c.k])errs.push(`T${i+1} ${c.n} 低于上一档`)})});
   window.__tierErr=errs;
   let h=`<div class="note" style="margin-bottom:8px">列 = 启用的 Category。比例 > 1% 蓝色防误填；> 5% 标红不可发布；门槛从 ₱0 递增，比例逐档不降。</div>
-  <div class="tip" style="margin-bottom:8px">VIP 固定返水比例：<b>二期</b>。一期 VIP 与普通玩家一样按下方档位计算，受最高返水上限限制。</div>
   <div style="font-weight:600;margin:12px 0 4px">返水档位（T1–T10，须连续配置）</div><table class="at"><tr><th>档位</th><th>门槛（≥ ₱）</th>${C.map(c=>`<th>${c.n}</th>`).join('')}<th></th></tr>`;
   S.tiers.forEach((t,i)=>h+=`<tr><td>T${i+1}</td><td><input class="rin" style="width:90px" value="${t.th}" onchange="S.tiers[${i}].th=+this.value;mark();arender()"></td>${C.map(c=>`<td><input class="rin ${rateCls(t.r[c.k])}" value="${t.r[c.k]}" onchange="S.tiers[${i}].r['${c.k}']=+this.value;mark();arender()"> %</td>`).join('')}<td>${i===S.tiers.length-1&&i>0?`<button class="ab r" onclick="S.tiers.pop();mark();arender()">删除</button>`:''}</td></tr>`);
   h+=`</table><div class="foot">${S.tiers.length<10?`<button class="ab" onclick="const l=S.tiers.at(-1);S.tiers.push({th:l.th*2,r:{...l.r}});mark();arender()">+ 添加档位</button>`:''}</div>${errs.length?`<div class="tip warn" style="margin-top:10px">不可发布：${errs.join('；')}</div>`:''}`;
@@ -801,11 +799,6 @@ function aBudget(){const b=S.budget,p=b.used/b.cap,rest=b.cap-b.used;
   ${p>=0.7?`<div class="tip warn">已达 70% 预警阈值：计入顶部「预算告警」（沿用运营后台现有预警提醒）。预算用完后停止生成返水，已生成的仍可领取。</div>`:''}
   <div class="note">预算在「活动配置 › ① 基本信息 › 活动预算」设置，本页只看使用情况。</div></div>`;
 }
-let logM='全部';
-function aLogs(){const L=S.logs.filter(l=>logM==='全部'||l.m===logM);
-  return `<div class="sec"><div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;font-size:13px">模块 <select onchange="logM=this.value;arender()">${['全部','活动列表','活动配置','费用使用情况','Push · 短信'].map(m=>`<option ${m===logM?'selected':''}>${m}</option>`).join('')}</select><button class="ab" style="margin-left:auto">导出</button></div>
-  <table class="at"><tr><th>时间</th><th>操作人</th><th>模块</th><th>操作类型</th><th>变更内容</th></tr>${L.map(l=>`<tr><td>${l.t}</td><td>${l.op}</td><td>${l.m}</td><td>${l.a}</td><td>${l.d}</td></tr>`).join('')||'<tr><td colspan="5" class="note">暂无</td></tr>'}</table><div class="note" style="margin-top:6px">记录时间、操作人、模块、操作类型、变更前后内容；权限修改记入系统管理日志。</div></div>`;
-}
 function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}
 function aList(){
   const ops=a=>`${a.st==='on'?`<a class="lk" onclick="startEdit('${a.id}')">编辑</a>`:`<a class="lk" onclick="startEdit('${a.id}')">查看设置</a>`}<a class="lk" onclick="goPg('budget','${a.id}')">费用使用情况</a><a class="lk" onclick="goPg('records','${a.id}')">返水记录</a>`;
@@ -813,58 +806,17 @@ function aList(){
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>创建时间</th><th>修改人</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
   ${ACTS.map(a=>`<tr class="${a.st==='on'?'hl':'gray'}"><td>${a.id}</td><td>${a.name}${a.live?` <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div>`:''}</td><td style="white-space:nowrap"><span class="sw ${a.st==='on'?'':'off'}" onclick="listToggle('${a.id}')"></span> <b style="color:${a.st==='on'?'#17914A':'#E8253A'}">${a.st==='on'?'进行中':'已停用'}</b></td><td>${a.created}</td><td>${a.ed}</td><td>${a.period}</td><td>${a.bet}</td><td>${a.rw}</td><td>${a.live?bud(S.budget.used,S.budget.cap):bud(a.b[0],a.b[1])}</td><td>${a.users}</td><td class="ops">${ops(a)}</td></tr>`).join('')}</table></div>`;
 }
-function pset(p,v){const [a,b]=p.split('.');S.push[a][b]=v;mark();log('Push · 短信',{'cb.push':'Cashback Push','cb.sms':'Cashback 短信','bb.push':'Bet Bonus Push','bb.sms':'Bet Bonus 短信','quiet.on':'免打扰时段'}[p],v?'开启':'关闭');arender()}
-function qT(s){const [h,m]=s.split(':').map(Number);return h*60+m}
-function pushAt(at){const q=S.push.quiet;if(!q.on)return {t:at,d:false};const a=qT(at),f=qT(q.from),e=qT(q.to);const inQ=f>e?(a>=f||a<e):(a>=f&&a<e);return inQ?{t:q.to,d:true}:{t:at,d:false}}
-function pushEv(){return [
-  {k:'cb',on:M().cb,n:'活动 1 · Cashback 派奖',at:S.cfg.settle,trig:S.cfg.claim==='auto'?'结算后自动入账时':'结算完成、返水可领时',who:S.cfg.claim==='auto'?'当日有返水入账（≥ ₱1）的玩家':'有可领返水（≥ ₱1）且未领取的玩家；发送前实时剔除已领取'},
-  {k:'bb',on:M().bb,n:'活动 2 · Bet Bonus 派奖',at:S.bb.autoAt,trig:'每日自动发放到账时',who:'昨日达到任一档位、奖励已到账（≥ ₱1）的玩家'}]}
-function aPush(){const q=S.push.quiet;
-  const vars='<span class="h">变量：{UserName} {Amount} {Date}</span>';
-  const evp=e=>{const c=S.push[e.k],r=pushAt(e.at);
-    return `<div class="panel" style="${e.on?'':'opacity:.5'}"><h3>${e.n}${e.on?'':'<span class="chip n" style="margin-left:6px">活动组合未开启</span>'}</h3>
-    <div class="form"><label>触发时机</label><div><b>派奖时发送</b>：${e.trig}（派奖时间 ${e.at}）→ 实际发送 <b style="color:${r.d?'#C2410C':'#17914A'}">${r.t}</b>${r.d?`<span class="chip r" style="margin-left:6px">落在免打扰时段，顺延到 ${q.to}</span>`:''}<span class="h">发送对象：${e.who}；同一玩家同一天每个活动只发 1 条，多笔合并金额</span></div>
-    <label>极光推送（JPush）</label><div>${tg(c.push,`pset.bind(null,'${e.k}.push')`)}</div>
-    <label>Push 标题</label><div><input style="width:100%" maxlength="40" value="${c.title}" onchange="S.push.${e.k}.title=this.value;mark()"><span class="h">≤ 40 字符</span></div>
-    <label>Push 内容</label><div><input style="width:100%" maxlength="120" value="${c.body}" onchange="S.push.${e.k}.body=this.value;mark()">${vars}</div>
-    <label>点击跳转</label><div><select onchange="S.push.${e.k}.link=this.value;mark()">${['活动页','Reward History','首页'].map(o=>`<option ${c.link===o?'selected':''}>${o}</option>`).join('')}</select></div>
-    <label>短信</label><div>${tg(c.sms,`pset.bind(null,'${e.k}.sms')`)}</div>
-    <label>Smart 文案</label><div><input style="width:100%" maxlength="160" value="${c.smart}" onchange="S.push.${e.k}.smart=this.value;mark()"><span class="h">≤ 160 字符；${vars.replace(/<[^>]+>/g,'')}</span></div>
-    <label>Globe 文案</label><div><input style="width:100%" maxlength="160" value="${c.globe}" onchange="S.push.${e.k}.globe=this.value;mark()"></div></div>
-    <div class="foot"><button class="ab">发送测试 Push</button><button class="ab">发送测试短信</button></div></div>`};
-  return `<div><div class="tip">Push 走<b>极光推送（JPush）</b>，短信走 Smart / Globe 通道。<b>在派奖时发送</b>，每个活动单独配置内容；<b>免打扰时段内不发送</b>，落在时段内的推送和短信统一顺延到时段结束时发出，避免打扰客户。</div>
-  <div class="panel"><h3>免打扰时段</h3><div class="form"><label>开关</label><div>${tg(q.on,`pset.bind(null,'quiet.on')`)}</div>
-  <label>时段</label><div><input type="time" value="${q.from}" onchange="S.push.quiet.from=this.value;mark();arender()"> 至 次日 <input type="time" value="${q.to}" onchange="S.push.quiet.to=this.value;mark();arender()"><span class="h">默认 21:00 – 07:00（PHT）。派奖时间落在时段内 → 顺延到 ${q.to} 发送；批量发送跑到 ${q.from} 仍未发完的部分，也停下顺延到 ${q.to}</span></div></div></div>
-  ${pushEv().map(evp).join('')}
-  <div class="panel"><h3>发送效果（11-18）</h3><table class="at"><tr><th>活动</th><th>渠道</th><th>派奖时间</th><th>实际发送</th><th>应发送</th><th>送达</th><th>失败 / 推送不到</th><th>打开客户端</th><th>打开率</th></tr>
-  <tr><td>Cashback</td><td>Push</td><td>${S.cfg.settle}</td><td>${pushAt(S.cfg.settle).t}</td><td>12,480</td><td>10,942</td><td>502</td><td>3,610</td><td>33.0%</td></tr>
-  <tr><td>Cashback</td><td>短信</td><td>${S.cfg.settle}</td><td>${pushAt(S.cfg.settle).t}</td><td>8,240</td><td>7,480</td><td>148</td><td>—</td><td>—</td></tr>
-  <tr><td>Bet Bonus</td><td>Push</td><td>${S.bb.autoAt}</td><td>${pushAt(S.bb.autoAt).t}</td><td>5,210</td><td>4,630</td><td>580</td><td>1,402</td><td>30.3%</td></tr></table>
-  <div class="note" style="margin-top:6px">推送不到 = 未开通知 / 卸载 / Token 失效；打开客户端 = 点击 Push 或推送后 2 小时内打开。</div></div>
-  <div class="panel"><h3>短信回调明细</h3><table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>活动</th><th>金额</th><th>发送时间</th><th>回调状态</th><th>说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>Cashback</td><td>₱134</td><td>11-18 07:00:12</td><td><span class="chip g">DELIVRD</span></td><td>—</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>Cashback</td><td>₱52</td><td>11-18 07:00:15</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>Bet Bonus</td><td>₱10</td><td>11-18 09:00:08</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table>
-  <div class="foot"><button class="ab p" onclick="log('Push · 短信','保存配置','Push / 短信 / 免打扰');arender()">保存</button></div></div></div>`;
-}
-function aPushOld(){
-  return `<div><div class="tip">只发给已结算、Available Cashback > 0、仍有未领取且未过期记录的玩家；<b>已领取的不推 Push、不发短信，每轮发送前实时判定</b>；同一批次每人 1 条，多笔合并。</div>
-  <div class="panel"><h3>Push（最多 3 轮，时间须晚于结算时间 ${S.cfg.settle} 且递增）</h3><table class="at"><tr><th>轮次</th><th>次日发送时间</th><th>推送内容</th><th>启用</th><th>应推送</th><th>已领取剔除</th><th>送达</th><th>推送不到</th><th>打开客户端</th><th>打开率</th></tr>
-  <tr><td>第 1 轮</td><td>09:00</td><td>Your ₱{CashbackAmount} cashback is ready!</td><td><span class="sw"></span></td><td>12,480</td><td>0</td><td>10,942</td><td>1,538</td><td>3,610</td><td>33.0%</td></tr>
-  <tr><td>第 2 轮</td><td>14:00</td><td>{UserName}, don't miss ₱{CashbackAmount}</td><td><span class="sw"></span></td><td>12,480</td><td>4,215</td><td>7,190</td><td>1,075</td><td>1,882</td><td>26.2%</td></tr>
-  <tr><td>第 3 轮</td><td>20:00</td><td>Last call! Cashback expires soon</td><td><span class="sw off"></span></td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr></table><div class="foot"><button class="ab">发送测试 Push</button><button class="ab p">保存并发布 Push</button></div></div>
-  <div class="panel"><h3>短信</h3><div class="form"><label>开关 / 发送时间</label><div><span class="sw"></span> 次日 <input value="18:00" style="width:70px"> <label><input type="checkbox" checked> 个性化发送（按近 7 日最常活跃时段）</label></div><label>Smart 文案</label><div><input style="width:100%" value="789bingo: P{CashbackAmount} cashback waiting for you. Claim before it expires!"><span class="h">≤ 160 字符</span></div><label>Globe 文案</label><div><input style="width:100%" value="789bingo: Your P{CashbackAmount} daily cashback is ready. Claim now!"></div></div>
-  <div class="kpis" style="margin-top:12px"><div>发送名单<b>8,240</b></div><div>已领取剔除<b>5,112</b></div><div>已送达<b>2,980</b></div><div>失败<b>148</b></div></div>
-  <table class="at"><tr><th>账号</th><th>手机号</th><th>运营商</th><th>可领金额</th><th>回调状态</th><th>回调时间 / 说明</th></tr><tr><td>juan88</td><td>0917****321</td><td>Globe</td><td>₱134.57</td><td><span class="chip g">DELIVRD</span></td><td>11-18 18:00:12</td></tr><tr><td>maria_77</td><td>0920****880</td><td>Smart</td><td>₱52.10</td><td><span class="chip r">UNDELIV</span></td><td>空号 / 停机</td></tr><tr><td>pedro_c</td><td>0998****104</td><td>Smart</td><td>₱18.00</td><td><span class="chip n">REJECTD</span></td><td>黑名单 / 退订</td></tr></table><div class="foot"><button class="ab p" onclick="confirm('确认立即发送短信？（原型）')">立即发送短信</button></div></div></div>`;
-}
 let RQ={d:'2026-11-17',q:'',s:'',p:0,ps:30},RQin={d:'2026-11-17',q:'',s:''};
 const REC_DAYS=['2026-11-17','2026-11-16','2026-11-15','2026-11-14','2026-11-13'];
 let __REC=null;
 function recData(){
   if(__REC)return __REC;
   let seed=20261118;const rnd=()=>{seed=(seed*1103515245+12345)%2147483648;return seed/2147483648};
-  const names=['juan88','maria_c','pedro_c','ana_lim','vip_ana','mark23','joy_dc','ken_ph','liza09','rico77','bea_r','carlo_s','dina88','eli_pg','fe_mnl','gabby1','hans_ce','ivy_qc','jojo55','kat_tg','leo_bc','mia_cv','nico_d','ola_77','paolo','quin_r','rose_b','sam_ph','tess_m','uly_88','vic_cb','wen_dv','xander','yna_q','zed_99','aiko_m','benj_s','cora_l','dan_ii','emy_t','ferdz','gino_8'];
+  const names=['juan88','maria_c','pedro_c','ana_lim','ana_v','mark23','joy_dc','ken_ph','liza09','rico77','bea_r','carlo_s','dina88','eli_pg','fe_mnl','gabby1','hans_ce','ivy_qc','jojo55','kat_tg','leo_bc','mia_cv','nico_d','ola_77','paolo','quin_r','rose_b','sam_ph','tess_m','uly_88','vic_cb','wen_dv','xander','yna_q','zed_99','aiko_m','benj_s','cora_l','dan_ii','emy_t','ferdz','gino_8'];
   const C=ACATS();const out=[];
   REC_DAYS.forEach((d,di)=>names.forEach((n,ni)=>{
     if(rnd()<.12)return;
-    const vip=n.startsWith('vip');const det=[];let tot=0,allBet=0;
+    const vip=false;const det=[];let tot=0,allBet=0;
     C.forEach(c=>{if(rnd()<.45)return;const bet=r2(Math.pow(rnd(),2.2)*(c.k==='slot'?60000:25000));if(bet<1)return;let ti=-1,rate;
       if(vip)rate=S.vip[c.k];else{ti=tierIdx(bet);rate=ti<0?0:S.tiers[ti].r[c.k]}
       const rw=r2(bet*rate/100);tot+=rw;allBet+=bet;det.push({n:c.n,bet,ti,rate,rw})});
@@ -902,17 +854,21 @@ function aRecords(){
     <button class="ab p" onclick="recSearch()">查询</button><button class="ab" onclick="recReset()">重置</button><button class="ab" style="margin-left:auto" onclick="alert('导出当前筛选结果 ${rows.length} 条（原型）')">导出 Excel</button>
   </div></div>
   <div class="kpis"><div>发放人数<b>${new Set(rows.map(r=>r.id)).size}</b></div><div>记录数<b>${rows.length}</b></div>${M().cb?`<div>Cashback 发放合计<b>${pesoI(sum(r=>r.act==='cb'?r.amt:0))}</b></div>`:''}${M().bb?`<div>Bet Bonus 发放合计<b>${pesoI(sum(r=>r.act==='bb'?r.amt:0))}</b></div>`:''}</div>
-  <div class="panel"><table class="at"><tr><th>结算日期</th><th>会员 ID</th><th>账号</th><th>玩家类型</th><th>活动</th><th>有效投注</th><th>计算金额（2 位小数）</th><th>发放金额</th><th>发放时间</th><th>操作</th></tr>
-  ${pg.map(r=>`<tr><td>${r.d}</td><td>${r.id}</td><td>${r.acc}</td><td>${r.vip?'VIP':'普通'}</td><td><span class="chip ${r.act==='cb'?'b':'g'}">${AL[r.act]}</span></td><td>${peso(r.allBet)}</td><td>${r.act==='cb'?peso(r.raw):'—'}</td><td><b>${pesoI(r.amt)}</b></td><td>${r.t}</td><td><a class="lk" onclick="recDetail(${r.i})">明细</a></td></tr>`).join('')||`<tr><td colspan="10" class="note" style="text-align:center;padding:18px">没有符合条件的记录</td></tr>`}</table>
+  <div class="panel"><table class="at"><tr><th>结算日期</th><th>会员 ID</th><th>账号</th><th>活动</th><th>有效投注</th><th>计算金额（2 位小数）</th><th>发放金额</th><th>发放时间</th><th>操作</th></tr>
+  ${pg.map(r=>`<tr><td>${r.d}</td><td>${r.id}</td><td>${r.acc}</td><td><span class="chip ${r.act==='cb'?'b':'g'}">${AL[r.act]}</span></td><td>${peso(r.allBet)}</td><td>${r.act==='cb'?peso(r.raw):'—'}</td><td><b>${pesoI(r.amt)}</b></td><td>${r.t}</td><td><a class="lk" onclick="recDetail(${r.i})">明细</a></td></tr>`).join('')||`<tr><td colspan="9" class="note" style="text-align:center;padding:18px">没有符合条件的记录</td></tr>`}</table>
   <div class="foot"><span class="note">共 ${rows.length} 条 · 第 ${RQ.p+1} / ${pages} 页</span><select style="margin-left:8px" onchange="RQ.ps=+this.value;RQ.p=0;arender()">${[15,30,50].map(n=>`<option value="${n}" ${RQ.ps===n?'selected':''}>${n} 条/页</option>`).join('')}</select><button class="ab" ${RQ.p?'':'disabled'} onclick="RQ.p--;arender()">上一页</button><button class="ab" ${RQ.p<pages-1?'':'disabled'} onclick="RQ.p++;arender()">下一页</button></div></div>`;
 }
 
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v1.7',d:'2026-11-20',sum:'只保留当前需求：去掉 Push · 短信、操作日志、同 IP / 同设备可领账号数、VIP 固定比例；适用平台改为 789bingo',
+   sec:[['后台',['活动列表「操作」只保留：编辑 / 查看设置、费用使用情况、返水记录；去掉 Push · 短信、操作日志两个页面。','活动配置 ① 基本信息：去掉「同 IP / 同设备可领账号数」。','④ 返水等级：去掉 VIP 固定返水比例的说明。','返水记录：去掉「玩家类型」列（所有玩家都按档位计算）。']],
+        ['通用',['原型中的平台名称、首页 Logo、跑马灯文案由 789Games 改为 789bingo。']]],
+   ft:'Push · 短信、VIP 固定比例等后续功能不在本期需求中，需要时再单独补充。'},
   {v:'v1.6',d:'2026-11-20',sum:'奖励弹窗只是到账提示，补充一直在线时的弹出规则；关闭活动后次日照常发放；活动弹窗开关只管弹窗；新增 Promotion 字段规则',
    sec:[['用户侧',['奖励弹窗：奖励在结算时已自动到账，弹窗只是到账提示，玩家怎么点都不影响到账。','新增例外场景：玩家在结算前后一直在线（没有重新登录）时，页面刷新检测到新发放的奖励，就在当前页弹出奖励弹窗；不弹活动弹窗。','活动弹窗开关关闭时：关掉 21 岁弹窗后直接在首页弹奖励弹窗；活动照常进行，可从首页 Banner、小猫挂件进入活动页。','Transaction History 的 Check Details 弹窗、Overview 的 Details 弹窗：本活动发放的 Promotion 字段显示 Cashback / Bet Bonus，与 Reward History 一致。']],
-        ['后台',['活动状态：关闭活动后，当天投注照常统计，次日照常结算并发放奖励（含奖励弹窗、Reward History、Push / 短信），之后不再统计。活动列表的状态开关同样适用。','页面素材「活动弹窗」开关：只控制活动弹窗弹不弹，不影响活动状态；奖励弹窗不受此开关影响。','Push 点击跳转选项「Cashback History」改为「Reward History」。','发放方式说明改为：结算后自动发放到余额，奖励弹窗只是到账提示。','活动列表「操作」去掉「Push · 短信」「操作日志」两个入口。','活动配置去掉「同 IP / 同设备可领账号数」。']]],
+        ['后台',['活动状态：关闭活动后，当天投注照常统计，次日照常结算并发放奖励（含奖励弹窗、Reward History、Push / 短信），之后不再统计。活动列表的状态开关同样适用。','页面素材「活动弹窗」开关：只控制活动弹窗弹不弹，不影响活动状态；奖励弹窗不受此开关影响。','Push 点击跳转选项「Cashback History」改为「Reward History」。','发放方式说明改为：结算后自动发放到余额，奖励弹窗只是到账提示。']]],
    ft:'原型侧栏的「本页规则要点」已移除，相关规则以 PRD 为准。'},
   {v:'v1.5',d:'2026-11-19',sum:'两个活动改为自动发放；奖励记录页精简 + 分批加载；弹窗层级；后台精简与新建 / 取消流程；Category 与 Selected Games 重叠取高',
    sec:[['用户侧',['奖励记录页（Rules › View all，更名为 Reward History）：只显示记录，去掉可领金额、Claimed / Expired 汇总和筛选页签；Cashback 与 Bet Bonus 记录都显示，没有 Expired；默认 20 条，滚动到底自动加载下一批 20 条。','两个活动都改为自动发放：Cashback 结算与 Bet Bonus 发放时间系统写死（默认次日 04:00，仅为示例；后台不可配置，需调整时由技术侧修改）；去掉 Claim 按钮、可领（Available）状态、手动领取弹窗；Yesterday 卡只显示已发放金额（Credited）。','弹窗：活动弹窗在每次登录时判断（账号有缓存未掉登录则不弹），排在 21 岁提示弹窗之后；点活动弹窗进活动页后弹奖励弹窗，点关闭则在首页弹；奖励弹窗按发放时间先后弹出，未发奖的不弹。']],

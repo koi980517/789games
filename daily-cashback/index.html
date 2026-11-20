@@ -370,7 +370,7 @@ function defaults(){return{
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
-  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
+  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,ipLimit:3,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
         new:{slot:0,casino:0,arcade:0,poker:0,fishing:0,bingo:0,feat0:0,feat1:0}},
@@ -646,6 +646,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
   <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，奖励弹窗只是到账提示；不设领取有效期</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
+  <label>同 IP / 同设备可领账号数</label><div><input value="${c.ipLimit}" style="width:80px" onchange="mark()"> 个</div>
   <label><i>*</i> 活动状态</label><div>${tg(c.on,'setOn')}<span class="h">与「活动列表」的状态开关为同一功能；关闭当天的投注照常统计，次日照常结算并发放奖励，之后不再统计</span></div>
   </div>`;
 }
@@ -910,9 +911,9 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
-  {v:'v1.6',d:'2026-11-20',sum:'奖励弹窗只是到账提示，补充一直在线时的弹出规则；关闭活动后次日照常发放；活动弹窗开关只管弹窗；去掉同 IP / 同设备限制；新增 Promotion 字段规则',
+  {v:'v1.6',d:'2026-11-20',sum:'奖励弹窗只是到账提示，补充一直在线时的弹出规则；关闭活动后次日照常发放；活动弹窗开关只管弹窗；新增 Promotion 字段规则',
    sec:[['用户侧',['奖励弹窗：奖励在结算时已自动到账，弹窗只是到账提示，玩家怎么点都不影响到账。','新增例外场景：玩家在结算前后一直在线（没有重新登录）时，页面刷新检测到新发放的奖励，就在当前页弹出奖励弹窗；不弹活动弹窗。','活动弹窗开关关闭时：关掉 21 岁弹窗后直接在首页弹奖励弹窗；活动照常进行，可从首页 Banner、小猫挂件进入活动页。','Transaction History 的 Check Details 弹窗、Overview 的 Details 弹窗：本活动发放的 Promotion 字段显示 Cashback / Bet Bonus，与 Reward History 一致。']],
-        ['后台',['活动状态：关闭活动后，当天投注照常统计，次日照常结算并发放奖励（含奖励弹窗、Reward History、Push / 短信），之后不再统计。活动列表的状态开关同样适用。','页面素材「活动弹窗」开关：只控制活动弹窗弹不弹，不影响活动状态；奖励弹窗不受此开关影响。','活动配置 ① 去掉「同 IP / 同设备可领账号数」。','Push 点击跳转选项「Cashback History」改为「Reward History」。','发放方式说明改为：结算后自动发放到余额，奖励弹窗只是到账提示。']]],
+        ['后台',['活动状态：关闭活动后，当天投注照常统计，次日照常结算并发放奖励（含奖励弹窗、Reward History、Push / 短信），之后不再统计。活动列表的状态开关同样适用。','页面素材「活动弹窗」开关：只控制活动弹窗弹不弹，不影响活动状态；奖励弹窗不受此开关影响。','Push 点击跳转选项「Cashback History」改为「Reward History」。','发放方式说明改为：结算后自动发放到余额，奖励弹窗只是到账提示。']]],
    ft:'原型侧栏的「本页规则要点」已移除，相关规则以 PRD 为准。'},
   {v:'v1.5',d:'2026-11-19',sum:'两个活动改为自动发放；奖励记录页精简 + 分批加载；弹窗层级；后台精简与新建 / 取消流程；Category 与 Selected Games 重叠取高',
    sec:[['用户侧',['奖励记录页（Rules › View all，更名为 Reward History）：只显示记录，去掉可领金额、Claimed / Expired 汇总和筛选页签；Cashback 与 Bet Bonus 记录都显示，没有 Expired；默认 20 条，滚动到底自动加载下一批 20 条。','两个活动都改为自动发放：Cashback 结算与 Bet Bonus 发放时间系统写死（默认次日 04:00，仅为示例；后台不可配置，需调整时由技术侧修改）；去掉 Claim 按钮、可领（Available）状态、手动领取弹窗；Yesterday 卡只显示已发放金额（Credited）。','弹窗：活动弹窗在每次登录时判断（账号有缓存未掉登录则不弹），排在 21 岁提示弹窗之后；点活动弹窗进活动页后弹奖励弹窗，点关闭则在首页弹；奖励弹窗按发放时间先后弹出，未发奖的不弹。']],

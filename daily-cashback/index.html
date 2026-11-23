@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.8</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.9</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.8</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.9</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -311,7 +311,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.8</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.9</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -364,16 +364,16 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
-  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'04:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
+  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'12:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
-  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'04:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
+  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'10:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
         new:{slot:0,casino:0,arcade:0,poker:0,fishing:0,bingo:0,feat0:0,feat1:0}},
-  history:{std:[{d:'11-17',bet:19800,amt:96,s:'a',left:31.5},{d:'11-16',bet:8420,amt:38,s:'c',t:'11-17 04:00'},{d:'11-15',bet:15600,amt:72,s:'c',t:'11-16 04:00'},{d:'11-14',bet:2100,amt:6,s:'c',t:'11-15 04:00'},{d:'11-13',bet:22400,amt:120,s:'c',t:'11-14 06:30'}],
+  history:{std:[{d:'11-17',bet:19800,amt:96,s:'a',left:31.5},{d:'11-16',bet:8420,amt:38,s:'c',t:'11-17 10:00'},{d:'11-15',bet:15600,amt:72,s:'c',t:'11-16 10:00'},{d:'11-14',bet:2100,amt:6,s:'c',t:'11-15 10:00'},{d:'11-13',bet:22400,amt:120,s:'c',t:'11-14 06:30'}],
            vip:[{d:'11-17',bet:268000,amt:3166,s:'a',left:31.5},{d:'11-16',bet:241500,amt:2862,s:'c',t:'11-17 07:02'},{d:'11-15',bet:198000,amt:2310,s:'c',t:'11-16 08:40'}],
            new:[]},
   balance:{std:1520.35,vip:48210.6,new:200},
@@ -623,11 +623,11 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">本活动�
   <label><i>*</i> 参与活动游戏</label><div><button class="ab" onclick="openBBPick()">选择参与活动游戏</button><span style="margin-left:10px">${bbScope().txt}</span><span class="h">只有被勾选的游戏产生的有效投注，才计入本活动</span></div>
   <label style="align-self:start;padding-top:8px"><i>*</i> 返奖档位</label><div><table class="at bbt" style="max-width:560px"><tr><th style="width:56px">档位</th><th>每日有效投注额</th><th>奖励金额</th><th style="width:70px">操作</th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>投注额 ≥ <input class="rin" style="width:100px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td>返 <input class="rin" style="width:100px" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<a class="lk" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</a>`:'<span class="note">—</span>'}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均需从低到高递增；投注额为 ≥（大于等于）</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
   <label>计算方式</label><div><span class="dis">只取达到的最高一档（不累加）</span><span class="h">玩家只拿当日有效投注对应档位的奖励，例：投注 ₱6,000 → 只拿 ₱5,000 档的奖励</span></div>
-  <label>结算</label><div><span class="dis">每天 01:00 结算前一天 00:00—23:59 的有效投注</span><span class="h">每人每天最多 1 笔奖励</span></div>
+  <label>结算</label><div><span class="dis">每天 ${b.autoAt} 结算前一天 00:00—23:59 的有效投注并发放</span><span class="h">每人每天最多 1 笔奖励</span></div>
   <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
 </div><div class="subt">发放与预算</div><div class="form" style="grid-template-columns:150px 1fr">
   <label>发放方式</label><div><span class="dis">自动发放</span></div>
-  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；自动发放到玩家余额（晚于 01:00 结算完成）；前台进度卡、规则页、到账 Push 读取此时间</span></div>
+  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">系统写死（每日 12:00，中午），后台只作显示、不可配置，需调整时由技术侧修改；与结算同时，自动发放到玩家余额；前台进度卡、规则页读取此时间</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div></div>`;}
 function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
@@ -647,7 +647,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
   <label>活动关系</label><div class="note">可同时存在多个活动，但活动时间不能重叠：同一时间只有 1 个活动生效。提交发布时检查，重叠则不可发布并提示冲突的活动</div>
-  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（默认 04:00 为示例），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
+  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（每日 10:00），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
   <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，奖励弹窗只是到账提示；不设领取有效期</span></div>
@@ -871,6 +871,10 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v1.9',d:'2026-11-23',sum:'调整结算时间：Cashback 每日 10:00，Bet Bonus 每日 12:00（中午）',
+   sec:[['计算规则',['Cashback：每日 10:00 结算前一天的返水并自动发放（原 04:00）。','Bet Bonus：每日 12:00（中午）结算前一天参与活动游戏的有效投注并自动发放（原 01:00 结算、04:00 发放）；结算与发放同时。','时间仍写死在系统中，后台只作显示、不可配置。']],
+        ['后台',['① 基本信息「结算时间」显示 10:00；⑦ 活动 2「结算」「发放时间」显示 12:00。']],
+        ['用户侧',['Daily Bet Bonus 进度卡「Credited tomorrow」、规则页的发放时间同步为新时间。']]]},
   {v:'v1.8',d:'2026-11-20',sum:'允许多个活动但时间不能重叠；一直在线的玩家奖励弹窗只在 Home 页和活动页弹出；Category 与 Selected Games 不再重叠；新增单人单日返水上限',
    sec:[['用户侧',['玩家在结算前后一直在线（没有重新登录）时：只在进入或刷新 Home 页、活动页时判断，有新发放的奖励就在该页弹出奖励弹窗；在游戏中或其他页面不弹，避免打断游戏，等回到 Home 页或活动页时再弹。']],
         ['计算规则',['一个游戏只按一个比例计算，去掉「重叠时取较高比例」：Selected Games 里的 Slot 游戏，自动从 Category 的 Slot 中剔除，不参与 Slot 档位计算。','Category 中每个游戏类型只出现一次，不允许重复配置。']],

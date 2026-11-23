@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v1.9</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v2.0</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v1.9</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v2.0</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -311,7 +311,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v1.9</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v2.0</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -364,12 +364,12 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
-  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',autoAt:'12:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
+  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',settleAt:'03:00',autoAt:'11:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
   featured:[{name:'Hot Slots',cat:'slot',rate:1.5,games:['Super Ace','Fortune Gems','Money Coming','Boxing King'],w:[1,5,10,10]}],
-  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'10:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
+  cfg:{minBet:0,cap:Infinity,expireH:null,turnover:1,settle:'03:00',pay:'10:00',claim:'auto',kyc:'无需 KYC',budget:2000000,on:true},
   bets:{std:{slot:12850,casino:3200,arcade:980,poker:0,fishing:2400,bingo:650,feat0:4200,feat1:1800},
         vip:{slot:186000,casino:52000,arcade:6400,poker:12000,fishing:8800,bingo:3100,feat0:42000,feat1:16000},
         new:{slot:0,casino:0,arcade:0,poker:0,fishing:0,bingo:0,feat0:0,feat1:0}},
@@ -392,7 +392,7 @@ let bbUpPop=false;
 function bbAdd(x){const b0=bbBet(user),r0=bbReward(b0);S.bb.tBet[user]=x?b0+x:0;bbUpPop=x>0&&bbReward(bbBet(user))>r0;popup=null;rq=[];view='act';fv='today';render();bbUpPop=false}
 function bbSection(){const b=bbBet(user),r=bbReward(b),T=S.bb.tiers,done=T.filter(t=>b>=t[0]).length,max=T.at(-1)[0];
   const nx=T[done],tgt=nx?nx[0]:max,p=Math.min(100,b/tgt*100);
-  return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-coin"><i>₱</i><i>₱</i><b>₱${(+(nx||T.at(-1))[1]).toLocaleString('en-US')}</b><em class="bbp-up ${bbUpPop?'upa':''}">${nx?'▲UP':'MAX'}</em></span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} ${nx?`<span>/ ${pesoI(tgt)}</span>`:''}</b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b><small class="bbp-when">Credited tomorrow ${S.bb.autoAt}</small></div></div>
+  return `<div class="h3">Daily Bet Bonus</div><div class="bbp"><div class="bbp-top"><span class="bbp-coin"><i>₱</i><i>₱</i><b>₱${(+(nx||T.at(-1))[1]).toLocaleString('en-US')}</b><em class="bbp-up ${bbUpPop?'upa':''}">${nx?'▲UP':'MAX'}</em></span><div class="bbp-l"><small>Today's Bet</small><b>${pesoI(Math.floor(b))} ${nx?`<span>/ ${pesoI(tgt)}</span>`:''}</b></div><div class="bbp-rw"><small>Today's reward</small><b>${pesoI(r)}</b><small class="bbp-when">Credited from ${S.bb.autoAt} tomorrow</small></div></div>
   <div class="bbp-bar"><i style="width:${p}%"></i><span class="bbp-tip" style="left:${Math.max(8,Math.min(92,p))}%">${pesoI(Math.floor(b))}</span></div>
   <div class="bbp-next">${nx?`Bet <b>${pesoI(Math.ceil(nx[0]-b))}</b> more to reach Level ${done+1} and get <b>${pesoI(nx[1])}</b>`:`All levels completed! <b>${pesoI(r)}</b> will be credited tomorrow.`}</div></div>
   `}
@@ -524,10 +524,10 @@ function featPage(){
   <div class="fp-grid">${order.map(o=>{const p=pal[hs(o.g)%pal.length];return `<div class="fp-g"><div class="fp-img" style="background:linear-gradient(150deg,${p[0]},${p[1]})"><span class="fp-tag">${f.rate}% Cashback</span><b>${o.g}</b></div><p>${o.g}</p><button onclick="toast='Opening ${o.g.replace(/'/g,"\\'")}…';render();setTimeout(()=>{toast='';render()},1500)">Play</button></div>`}).join('')||'<div class="note" style="grid-column:1/-1;text-align:center">No games yet</div>'}</div></div>`;
 }
 function rules(){
-  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>You only get the reward of the highest tier you reach (not added up).</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>Rewards are sent to your balance automatically at ${S.bb.autoAt} the next day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
+  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>You only get the reward of the highest tier you reach (not added up).</li><li>One reward per day. Results are ready after 1:00 AM the next day.</li><li>Rewards are calculated at ${S.bb.settleAt} (PHT) and sent to your balance starting from ${S.bb.autoAt} the next day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
   if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="h3" style="margin-top:0">Reward History<a onclick="hShown=20;go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;margin-bottom:10px;font-size:12px;cursor:pointer" onclick="hShown=20;go('hist')">${hrec().length} records · Cashback &amp; Bet Bonus</div><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
-  <li><b>Credit time</b>: cashback is settled and credited to your balance automatically at ${S.cfg.settle} (PHT) the next day.</li>
+  <li><b>Credit time</b>: cashback is calculated at ${S.cfg.settle} (PHT) and credited to your balance starting from ${S.cfg.pay} the next day.</li>
   <li>Daily cashback is rounded down to the whole peso (e.g. ₱123.99 → ₱123). Cashback below ₱1 is not credited.</li>${S.cfg.cap===Infinity?'':`<li>Maximum cashback per player per day: ${pesoI(S.cfg.cap)}.</li>`}
   <li>Cashback requires ${S.cfg.turnover}× turnover before withdrawal.</li>
   <li>Eligible games by category: ${ACATS().map(c=>`${c.n} (${c.games.length} games)`).join(', ')}. Games outside these lists earn no cashback.</li></ol></div>${ratesTable()}${bbR}</div>`;
@@ -600,7 +600,7 @@ function arender(){const a=curAct();
   document.getElementById('apage').innerHTML=PGS[pg][1]();
   pvPaint();
   const bar=document.getElementById('pubbar'); if(bar) bar.className='pubbar'+(pubDirty?' dirty':'');
-  document.getElementById('alarm').textContent=S.budget.used/S.budget.cap>=0.7?'预算告警 1':'预算告警 0';
+  document.getElementById('alarm').textContent='预算告警 '+((M().cb&&S.budget.used/S.budget.cap>=0.7?1:0)+(M().bb&&S.bb.used/S.bb.budget>=0.7?1:0));
 }
 function sec(n,title,body,extra){return `<div class="sec"><div class="sec-h"><span class="no">${n}</span>${title}${extra||''}</div>${body}</div>`}
 function aConfig(){
@@ -623,11 +623,11 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">本活动�
   <label><i>*</i> 参与活动游戏</label><div><button class="ab" onclick="openBBPick()">选择参与活动游戏</button><span style="margin-left:10px">${bbScope().txt}</span><span class="h">只有被勾选的游戏产生的有效投注，才计入本活动</span></div>
   <label style="align-self:start;padding-top:8px"><i>*</i> 返奖档位</label><div><table class="at bbt" style="max-width:560px"><tr><th style="width:56px">档位</th><th>每日有效投注额</th><th>奖励金额</th><th style="width:70px">操作</th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>投注额 ≥ <input class="rin" style="width:100px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td>返 <input class="rin" style="width:100px" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<a class="lk" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</a>`:'<span class="note">—</span>'}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均需从低到高递增；投注额为 ≥（大于等于）</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
   <label>计算方式</label><div><span class="dis">只取达到的最高一档（不累加）</span><span class="h">玩家只拿当日有效投注对应档位的奖励，例：投注 ₱6,000 → 只拿 ₱5,000 档的奖励</span></div>
-  <label>结算</label><div><span class="dis">每天 ${b.autoAt} 结算前一天 00:00—23:59 的有效投注并发放</span><span class="h">每人每天最多 1 笔奖励</span></div>
+  <label>结算</label><div><span class="dis">每天 ${b.settleAt} 结算前一天 00:00—23:59 的有效投注（只算不发）</span><span class="h">每人每天最多 1 笔奖励</span></div>
   <label></label><div>${(()=>{const y=S.bb.yBet.std||0,h=b.tiers.filter(t=>y>=t[0]),r=bbReward(y);return `<div class="trial"><b>试算</b>　昨日参与游戏的有效投注 ${peso(y)} → ${h.length?`达到 ${h.length} 档`:'未达到第 1 档'} → ${b.calc==='sum'?'累加':'不累加'} → 奖励 <b>${peso(r)}</b></div>`})()}</div>
 </div><div class="subt">发放与预算</div><div class="form" style="grid-template-columns:150px 1fr">
   <label>发放方式</label><div><span class="dis">自动发放</span></div>
-  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">系统写死（每日 12:00，中午），后台只作显示、不可配置，需调整时由技术侧修改；与结算同时，自动发放到玩家余额；前台进度卡、规则页读取此时间</span></div>
+  <label>发放时间</label><div><span class="dis">次日 ${b.autoAt}</span><span class="h">系统写死（每日 11:00），后台只作显示、不可配置，需调整时由技术侧修改；从此时开始发放，逐个用户陆续到账；前台进度卡、规则页读取此时间</span></div>
   <label><i>*</i> 活动预算</label><div><input value="${b.budget}" style="width:140px" onchange="S.bb.budget=Math.max(S.bb.used,+this.value||0);mark();arender()"> ₱<span class="h">与 Cashback 预算分开计算；已用 ${pesoI(b.used)}（${(b.used/b.budget*100).toFixed(1)}%），≥ 70% 预算告警</span></div></div>`;}
 function rd(on,fn,a,b){return `<span class="rdo"><label onclick="${fn}(true)"><span class="${on?'on':''}"></span>${a}</label><label onclick="${fn}(false)"><span class="${on?'':'on'}"></span>${b}</label></span>`}
 function setBBCalc(v){S.bb.calc=v?'single':'sum';mark();arender()}
@@ -647,10 +647,11 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 参与人群</label><div>全部会员</div>
   <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与</span></div>
   <label>活动关系</label><div class="note">可同时存在多个活动，但活动时间不能重叠：同一时间只有 1 个活动生效。提交发布时检查，重叠则不可发布并提示冲突的活动</div>
-  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（每日 10:00），后台只作显示、不可配置，需调整时由技术侧修改；结算后自动发放；前台只在规则页展示</span></div>
+  <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（每日 03:00），统计前一天 00:00—23:59:59 的数据，算出发给谁、发多少，只算不发；后台只作显示、不可配置</span></div>
+  <label>发放时间</label><div><span class="dis">次日 ${c.pay}</span><span class="h">系统写死（每日 10:00），从此时开始发放，逐个用户陆续到账；后台只作显示、不可配置，需调整时由技术侧修改；前台只在规则页展示</span></div>
   <label>发放金额规则</label><div>当日返水<b>向下取整到 ₱1</b>（₱123.99 发 ₱123）；<b>低于 ₱1 不发放</b><span class="h">固定，不可配置</span></div>
-  <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成返水（已生成的仍可领）；修改后「费用使用情况」与活动列表同步</span></div>
-  <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：结算后自动发放到玩家余额，奖励弹窗只是到账提示；不设领取有效期</span></div>
+  <label><i>*</i> 活动预算</label><div><input value="${S.budget.cap}" style="width:140px" onchange="const v=Math.max(0,+this.value||0);if(v<S.budget.used){alert('预算不能低于已用金额 '+pesoI(S.budget.used));arender();return}log('活动配置','活动预算',pesoI(S.budget.cap)+' → '+pesoI(v));S.budget.cap=v;mark();arender()"> ₱<span class="h">本活动返水发放总额上限；已用 ${pesoI(S.budget.used)}（${(S.budget.used/S.budget.cap*100).toFixed(1)}%），≥ 70% 进顶部「预算告警」，用完停止生成 Cashback（已生成的照常发放）；与 ⑦ Bet Bonus 预算分开计算；修改后「费用使用情况」与活动列表同步</span></div>
+  <label>发放方式</label><div><span class="dis">自动发放</span><span class="h">固定：到发放时间后自动发放到玩家余额，奖励弹窗只是到账提示；不设领取有效期</span></div>
   <label><i>*</i> 返水提现流水倍数</label><div><input value="${c.turnover}" style="width:80px" onchange="S.cfg.turnover=+this.value;mark();arender()"> 倍<span class="h">0–50，1 位小数</span></div>
   <label><i>*</i> 活动状态</label><div>${tg(c.on,'setOn')}<span class="h">与「活动列表」的状态开关为同一功能；关闭当天的投注照常统计，次日照常结算并发放奖励，之后不再统计</span></div>
   </div>`;
@@ -746,11 +747,6 @@ function bTiers(){
   h+=`</table><div class="foot">${S.tiers.length<10?`<button class="ab" onclick="const l=S.tiers.at(-1);S.tiers.push({th:l.th*2,r:{...l.r}});mark();arender()">+ 添加档位</button>`:''}</div>${errs.length?`<div class="tip warn" style="margin-top:10px">不可发布：${errs.join('；')}</div>`:''}<div style="font-weight:600;margin:16px 0 6px">单人单日返水上限</div><div class="rq"><input style="width:120px" placeholder="不填 = 不设上限" value="${S.cfg.cap===Infinity?'':S.cfg.cap}" onchange="S.cfg.cap=this.value===''?Infinity:Math.max(1,Math.floor(+this.value));mark();log('活动配置','单人单日返水上限',this.value||'不设');arender()"> ₱<span class="note">选填，整数。每人每个结算日的 Cashback 合计（含 Selected Games）取整后超过此金额时，按此金额发放；每日结算时重置。不影响 Bet Bonus。</span></div>`;
   return h;
 }
-function aOverride(){
-  return `<div class="note" style="margin-bottom:8px">仅普通玩家；当日实际投注达到更高档时按更高档。仅当前活动期间有效，活动结束或关闭后全部作废。添加 / 删除即时生效（不走提交发布）。</div><div class="form" style="grid-template-columns:70px 130px 70px 60px 70px 110px 40px 1fr;max-width:none;margin-bottom:10px"><label>会员账号</label><input id="ovA"><label>档位</label><select id="ovT">${S.tiers.map((t,i)=>`<option value="${i}">T${i+1}</option>`).join('')}</select><label>有效期至</label><input id="ovU" value="2026-11-30"><label>原因</label><div style="display:flex;gap:6px"><input id="ovW" style="flex:1"><button class="ab p" onclick="addOv()">新增</button></div></div>
-  <table class="at"><tr><th>账号</th><th>档位</th><th>有效期</th><th>原因</th><th>操作人 / 时间</th><th></th></tr>${S.overrides.map((o,i)=>`<tr><td>${o.acc}</td><td>T${o.tier+1}</td><td>${o.until}</td><td>${o.why}</td><td>${o.op}</td><td><button class="ab r" onclick="log('活动配置','删除指定档位',S.overrides[${i}].acc);S.overrides.splice(${i},1);arender()">删除</button></td></tr>`).join('')}</table>`;
-}
-function addOv(){const a=document.getElementById('ovA').value.trim();if(!a)return alert('请输入会员账号');S.overrides.unshift({acc:a,tier:+document.getElementById('ovT').value,until:document.getElementById('ovU').value,why:document.getElementById('ovW').value||'—',op:'koi · 11-18 '+now()});log('活动配置','新增指定档位',a);arender()}
 function aRules(){
   const B=(c,t,v)=>`<button title="${t}" onmousedown="event.preventDefault();rteCmd('${c}'${v?`,'${v}'`:''})">${t.length<3?t:'<span style=\'font-size:11px\'>'+t+'</span>'}</button>`;
   return `<div style="display:flex;gap:16px;align-items:flex-start"><div style="flex:1;min-width:0"><div class="form" style="grid-template-columns:110px 1fr"><label style="align-self:start;padding-top:6px"><i>*</i> 活动规则页</label><div><div class="rte">
@@ -764,7 +760,7 @@ function aRules(){
   <div id="rteEd" class="rte-ed" contenteditable="true" oninput="rteSync()" onblur="rteSync(true)">${safeHtml(S.rulesHtml)}</div>
   <div class="rte-ft" id="rteWc">${rteWords(S.rulesHtml)} WORDS · 富文本（沿用 Promo「活动内容」编辑器）</div></div>
   <div class="note">即前台活动页右上「?」打开的 Rules 页，与右侧预览一一对应、实时同步。沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。</div></div>
-  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：发放时间（次日 ${S.cfg.settle} 结算后自动发放）、取整规则、流水 ${S.cfg.turnover}×${S.cfg.cap===Infinity?'':`、单人单日上限 ${pesoI(S.cfg.cap)}`}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成。':''}</div></div></div>
+  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：结算与发放时间（次日 ${S.cfg.settle} 结算、${S.cfg.pay} 起陆续发放）、取整规则、流水 ${S.cfg.turnover}×${S.cfg.cap===Infinity?'':`、单人单日上限 ${pesoI(S.cfg.cap)}`}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成。':''}</div></div></div>
   <div style="width:300px;flex-shrink:0"><div class="note" style="margin-bottom:4px">前台 Rules 页预览（与玩家看到的一致）</div><div class="pvphone" style="height:640px"><div class="scr" id="rulesPv">${rulesPv()}</div></div></div></div>`;
 }
 let rteRange=null;
@@ -798,22 +794,24 @@ function openPub(){
   const tierErr=(window.__tierErr||[]).length, selLow=S.sel.on&&S.featured.some(f=>f.rate<=Math.max(...S.tiers.map(t=>t.r[f.cat]||0)));
   {const t=cfgMode==='new'?NEWT:curAct();if(!t.s||!t.e)return alert('请填写活动开始和结束时间。');if(t.e<t.s)return alert('结束时间不能早于开始时间。');const o=overlapOf(t.s,t.e,cfgMode==='new'?'':curId);if(o)return alert(`活动时间与「${o.name}」（${o.s} ~ ${o.e}）重叠，不可发布。同一时间只能有 1 个活动生效，请调整时间。`)}
   if(tierErr||selLow) return alert('存在不可发布项：'+(tierErr?'返水等级校验未通过；':'')+(selLow?'Selected Games 比例须高于所选类型最高档。':''));
-  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox"><h3>提交发布</h3><p class="note">活动配置发布后次日 00:00 生效（Selected Games / Category 前台实时生效）。</p><label>谷歌验证码 <input id="gcode" placeholder="6 位验证码" maxlength="6" style="width:120px;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"></label><div class="note">原型默认 000000</div><div class="foot" style="justify-content:flex-end"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="doPub()">确认发布</button></div></div></div>`;
+  document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox"><h3>提交发布</h3><p class="note">所有修改在发布后次日 00:00 生效，当天仍按原配置。</p><label>谷歌验证码 <input id="gcode" placeholder="6 位验证码" maxlength="6" style="width:120px;border:1px solid #CBD1DA;border-radius:4px;padding:4px 8px"></label><div class="note">原型默认 000000</div><div class="foot" style="justify-content:flex-end"><button class="ab" onclick="document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="doPub()">确认发布</button></div></div></div>`;
 }
 function doPub(){if(document.getElementById('gcode').value!=='000000')return alert('谷歌验证码错误');document.getElementById('modal').innerHTML='';pubDirty=false;if(cfgMode==='new'){if(NEWT.s<=TODAY)ACTS.forEach(a=>{if(a.live){a.live=0;a.b=[S.budget.used,S.budget.cap]}});const id='DCB-'+String(ACTS.length+1).padStart(3,'0');ACTS.unshift({id,name:'新建活动（原型）',st:NEWT.s>TODAY?'wait':'on',s:NEWT.s,e:NEWT.e,created:'2026-11-18 '+now(),ed:'koi',bet:'₱0.00',rw:'₱0',users:'0',live:NEWT.s>TODAY?0:1,b:[0,S.budget.cap]});curId=id;cfgMode='edit';SNAP=structuredClone(S);log('活动列表','新建活动',id);pg='list'}else{SNAP=structuredClone(S);log('活动配置','提交发布','活动配置')}arender();const t=document.getElementById('atoast');t.textContent='设置成功';t.style.display='block';setTimeout(()=>t.style.display='none',5000)}
-function aBudget(){const b=S.budget,p=b.used/b.cap,rest=b.cap-b.used;
-  return `<div class="sec"><div class="sec-h"><span class="no">1</span>活动费用使用情况</div>
-  <div class="kpis"><div>活动预算<b>${pesoI(b.cap)}</b><small>在活动配置设置</small></div><div>已用<b>${pesoI(b.used)}</b></div><div>剩余<b>${pesoI(rest)}</b></div><div>使用进度<b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div></div>
+function aBudget(){
+  const one=(nm,used,cap,where)=>{const p=used/cap,rest=cap-used;return `<div class="subt">${nm}</div>
+  <div class="kpis"><div>活动预算<b>${pesoI(cap)}</b><small>在活动配置 ${where} 设置</small></div><div>已用<b>${pesoI(used)}</b></div><div>剩余<b>${pesoI(rest)}</b></div><div>使用进度<b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div></div>
   <div class="prog" style="height:10px;margin:0 0 6px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>
-  ${p>=0.7?`<div class="tip warn">已达 70% 预警阈值：计入顶部「预算告警」（沿用运营后台现有预警提醒）。预算用完后停止生成返水，已生成的仍可领取。</div>`:''}
-  <div class="note">预算在「活动配置 › ① 基本信息 › 活动预算」设置，本页只看使用情况。</div></div>`;
+  ${p>=0.7?`<div class="tip warn">已达 70% 预警阈值：计入顶部「预算告警」（沿用运营后台现有预警提醒）。预算用完后停止生成 ${nm}，已生成的照常发放。</div>`:''}`};
+  return `<div class="sec"><div class="sec-h"><span class="no">1</span>活动费用使用情况</div>
+  ${M().cb?one('Cashback',S.budget.used,S.budget.cap,'① 基本信息'):''}${M().bb?one('Bet Bonus',S.bb.used,S.bb.budget,'⑦ 活动 2 · Bet Bonus'):''}
+  <div class="note">两个活动的预算分开计算，分别在「活动配置 › ① 基本信息」「⑦ 活动 2 · Bet Bonus」设置，本页只看使用情况。</div></div>`;
 }
 function bud(u,c){const p=u/c;return `<div style="font-size:12px;white-space:nowrap">${pesoI(u)} / ${pesoI(c)} <b style="color:${p>=0.7?'#D93025':'#17914A'}">${(p*100).toFixed(1)}%</b></div><div class="prog" style="height:5px;margin:3px 0 0;min-width:120px"><i style="width:${Math.min(100,p*100)}%;background:${p>=0.7?'#F59E0B':'#34D399'}"></i></div>`}
 function aList(){
   const ops=a=>`${['on','wait'].includes(a.st)?`<a class="lk" onclick="startEdit('${a.id}')">编辑</a>`:`<a class="lk" onclick="startEdit('${a.id}')">查看设置</a>`}<a class="lk" onclick="goPg('budget','${a.id}')">费用使用情况</a><a class="lk" onclick="goPg('records','${a.id}')">返水记录</a>`;
   return `<div class="sec"><div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><button class="ab p" style="white-space:nowrap" onclick="startNew()">+ 新建活动</button><span class="note">可同时存在多个活动，但活动时间不能重叠（同一时间只有 1 个活动生效）。状态开关与活动配置「活动状态」为同一功能。活动配置、费用使用情况、返水记录均从「操作」进入。</span></div>
   <table class="at"><tr><th>活动ID</th><th>名称</th><th>状态</th><th>创建时间</th><th>修改人</th><th>周期</th><th>累计有效投注</th><th>累计返水</th><th>活动预算使用情况</th><th>参与人数</th><th>操作</th></tr>
-  ${ACTS.map(a=>`<tr class="${a.st==='on'?'hl':a.st==='wait'?'':'gray'}"><td>${a.id}</td><td>${a.name}${a.live?` <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div>`:''}</td><td style="white-space:nowrap">${a.st==='end'?'':`<span class="sw ${a.st==='on'||a.st==='wait'?'':'off'}" onclick="listToggle('${a.id}')"></span> `}<b style="color:${STC[a.st]}">${STN[a.st]}</b></td><td>${a.created}</td><td>${a.ed}</td><td style="white-space:nowrap">${a.s}<br>~ ${a.e}</td><td>${a.bet}</td><td>${a.rw}</td><td>${a.live?bud(S.budget.used,S.budget.cap):bud(a.b[0],a.b[1])}</td><td>${a.users}</td><td class="ops">${ops(a)}</td></tr>`).join('')}</table></div>`;
+  ${ACTS.map(a=>`<tr class="${a.st==='on'?'hl':a.st==='wait'?'':'gray'}"><td>${a.id}</td><td>${a.name}${a.live?` <span class="chip o">${S.assets.wid.label}</span><div style="margin-top:3px">${M().cb?'<span class="chip b">Cashback</span> ':''}${M().bb?'<span class="chip g">Bet Bonus</span>':''}</div>`:''}</td><td style="white-space:nowrap">${a.st==='end'?'':`<span class="sw ${a.st==='on'||a.st==='wait'?'':'off'}" onclick="listToggle('${a.id}')"></span> `}<b style="color:${STC[a.st]}">${STN[a.st]}</b></td><td>${a.created}</td><td>${a.ed}</td><td style="white-space:nowrap">${a.s}<br>~ ${a.e}</td><td>${a.bet}</td><td>${a.rw}</td><td>${a.live?`${M().cb?'<div class="note">Cashback</div>'+bud(S.budget.used,S.budget.cap):''}${M().bb?'<div class="note" style="margin-top:4px">Bet Bonus</div>'+bud(S.bb.used,S.bb.budget):''}`:'<div class="note">Cashback</div>'+bud(a.b[0],a.b[1])}</td><td>${a.users}</td><td class="ops">${ops(a)}</td></tr>`).join('')}</table></div>`;
 }
 let RQ={d:'2026-11-17',q:'',s:'',p:0,ps:30},RQin={d:'2026-11-17',q:'',s:''};
 const REC_DAYS=['2026-11-17','2026-11-16','2026-11-15','2026-11-14','2026-11-13'];
@@ -833,10 +831,10 @@ function recData(){
     if(!det.length)return;
     let raw=r2(tot);if(allBet<S.cfg.minBet)raw=0;let capped=false;if(!vip&&raw>S.cfg.cap){raw=S.cfg.cap;capped=true}
     const amt=Math.floor(raw+1e-9);
-    const id=String(10230000+ni*37+7), t=`11-${String(+d.slice(8)+1).padStart(2,'0')} ${S.cfg.settle}`;
+    const id=String(10230000+ni*37+7), t=`11-${String(+d.slice(8)+1).padStart(2,'0')} ${S.cfg.pay}`,tb=`11-${String(+d.slice(8)+1).padStart(2,'0')} ${S.bb.autoAt}`;
     if(M().cb&&amt>=1)out.push({act:'cb',d,id,acc:n,vip,det,allBet:r2(allBet),raw,amt,capped,t});
     const bbB=r2(allBet*(.6+rnd()*.35)),bbAmt=M().bb?bbReward(bbB):0;
-    if(bbAmt>=1)out.push({act:'bb',d,id,acc:n,vip,det:[],allBet:bbB,raw:bbAmt,amt:bbAmt,lv:S.bb.tiers.filter(x=>bbB>=x[0]).length,t});
+    if(bbAmt>=1)out.push({act:'bb',d,id,acc:n,vip,det:[],allBet:bbB,raw:bbAmt,amt:bbAmt,lv:S.bb.tiers.filter(x=>bbB>=x[0]).length,t:tb});
   }));
   return __REC=out;
 }
@@ -855,7 +853,7 @@ function aRecords(){
   const rows=all.map((r,i)=>({...r,i})).filter(r=>(!RQ.d||r.d===RQ.d)&&(!q||r.id.includes(q)||r.acc.toLowerCase().includes(q))&&(!RQ.s||r.act===RQ.s));
   const sum=f=>rows.reduce((a,r)=>a+f(r),0);
   const pages=Math.max(1,Math.ceil(rows.length/RQ.ps));if(RQ.p>=pages)RQ.p=pages-1;const pg=rows.slice(RQ.p*RQ.ps,RQ.p*RQ.ps+RQ.ps);
-  return `<div class="tip">两个活动独立发放、独立记录：每天 ${S.cfg.settle} 结算后自动发放，哪个活动发了奖励就生成一条记录（一行 = 一个会员 · 一个结算日 · 一个活动）；没有发放的不生成记录。可按结算日期、会员 ID / 账号、活动查询；点「明细」看计算过程，用于核对。</div>
+  return `<div class="tip">两个活动独立发放、独立记录：每天 ${S.cfg.settle} 结算、到发放时间（Cashback ${S.cfg.pay}，Bet Bonus ${S.bb.autoAt}）起陆续发放，哪个活动发了奖励就生成一条记录（一行 = 一个会员 · 一个结算日 · 一个活动）；没有发放的不生成记录。可按结算日期、会员 ID / 账号、活动查询；点「明细」看计算过程，用于核对。</div>
   <div class="panel"><div class="rq">
     <label>结算日期 <select onchange="RQin.d=this.value"><option value="" ${RQin.d===''?'selected':''}>全部日期</option>${REC_DAYS.map(d=>`<option ${RQin.d===d?'selected':''}>${d}</option>`).join('')}</select></label>
     <label>会员 ID / 账号 <input placeholder="输入会员 ID 或账号" value="${RQin.q}" oninput="RQin.q=this.value" onkeydown="if(event.key==='Enter')recSearch()" style="width:180px"></label>
@@ -871,6 +869,10 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v2.0',d:'2026-11-23',sum:'新增发放时间；配置修改次日生效',
+   sec:[['计算规则',['新增【发放时间】，结算时间只统计发放数据，到发放时间后才发放奖励。','有效投注按注单结算时间计入当天。']],
+        ['后台',['活动配置的修改改为提交发布后次日 00:00 生效。']],
+        ['说明修正',['修正 PRD 中前后矛盾的描述，规则不变。']]]},
   {v:'v1.9',d:'2026-11-23',sum:'调整结算时间：Cashback 每日 10:00，Bet Bonus 每日 12:00（中午）',
    sec:[['计算规则',['Cashback：每日 10:00 结算前一天的返水并自动发放（原 04:00）。','Bet Bonus：每日 12:00（中午）结算前一天参与活动游戏的有效投注并自动发放（原 01:00 结算、04:00 发放）；结算与发放同时。','时间仍写死在系统中，后台只作显示、不可配置。']],
         ['后台',['① 基本信息「结算时间」显示 10:00；⑦ 活动 2「结算」「发放时间」显示 12:00。']],
@@ -902,5 +904,8 @@ function clogRender(){const L=[...CLOG].sort((a,b)=>b.d.localeCompare(a.d));
 clogRender();
 openApp();arender();
 </script>
+
+
+
 </body>
 </html>

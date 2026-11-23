@@ -364,7 +364,7 @@ function defaults(){return{
   vip:{slot:1.2,casino:1,arcade:1.2,poker:1,fishing:1.2,bingo:1.2},
   sel:{on:true}, catMod:{on:true},
   mods:{cb:true,bb:true},
-  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',settleAt:'03:00',autoAt:'11:00',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
+  bb:{tiers:[[1000,1],[5000,5],[10000,10]],games:'DEF',calc:'single',mode:'auto',settleAt:'03:00',autoAt:'11:00',kyc:'无需 KYC',budget:300000,used:216400,yBet:{std:12350,new:0},claimed:{std:false,new:false},notified:{std:false,new:false},tBet:{std:0,new:0}},
   assets:{pop:{on:true,freq:'daily',img:'assets/popup.webp'},rw:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY CASHBACK BONUS!'},rb:{img:'assets/model.webp',ribbon:'Congratulations !',title:'DAILY BET BONUS!'},wid:{on:true,label:'1.5%+2%',img:'assets/gift.webp'},banner:{img:'assets/banner.webp'}},
   rulesHtml:'<p><strong style="color:#7B2CF0">Get cashback on your daily bets — every day.</strong> Play your favourite Slot, Casino, Arcade, Poker, Fishing and Bingo games and receive part of your valid bets back the next day.</p><ul><li>Cashback is calculated on your valid bets for each category from 00:00 to 23:59:59 (PHT).</li><li><b>Standard players</b>: the tier you reach in a category applies to that whole day\'s bets in that category.</li><li>Selected Games use their own rate instead of the Category rate.</li></ul>', logs:[{t:'11-17 10:12',op:'ops_kim',m:'活动配置',a:'修改返水等级',d:'T4 Slot 0.55% → 0.6%'}],
   budget:{cap:2000000,used:1512880.36,adds:[]},
@@ -453,7 +453,7 @@ function act(){
   const c=calc(user), a=avail(user), isNew=user==='new';
   const cbOn=M().cb, bbOn=M().bb;
   let h=barT(cbOn?'Daily Cashback':'Daily Bet Bonus','home',true)+`<div class="body">
-  ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Rewards already generated will still be credited.</div>'}${S.cfg.kyc==='需要 KYC'&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join Daily Cashback and Daily Bet Bonus.</div>':''}
+  ${S.cfg.on?'':'<div class="card" style="background:#FFF4E5;color:#9A5B00;font-size:12px;margin-top:0;margin-bottom:8px">This event has ended. Rewards already generated will still be credited.</div>'}${(()=>{const k=[M().cb&&S.cfg.kyc==='需要 KYC'?'Daily Cashback':'',M().bb&&S.bb.kyc==='需要 KYC'?'Daily Bet Bonus':''].filter(Boolean);return k.length&&user==='new'?'<div class="card" style="background:#EAF2FF;color:#1D4ED8;font-size:12px;margin-top:0;margin-bottom:8px">Complete KYC verification to join '+k.join(' and ')+'.</div>':''})()}
   <div class="seg2" style="margin-top:0"><button class="${fv==='today'?'on':''}" onclick="fv='today';render()">Today</button><button class="${fv==='yday'?'on':''}" onclick="fv='yday';render()">Yesterday</button></div>`;
   if(fv==='today'){
     const bbr=bbReward(bbBet(user));
@@ -524,7 +524,7 @@ function featPage(){
   <div class="fp-grid">${order.map(o=>{const p=pal[hs(o.g)%pal.length];return `<div class="fp-g"><div class="fp-img" style="background:linear-gradient(150deg,${p[0]},${p[1]})"><span class="fp-tag">${f.rate}% Cashback</span><b>${o.g}</b></div><p>${o.g}</p><button onclick="toast='Opening ${o.g.replace(/'/g,"\\'")}…';render();setTimeout(()=>{toast='';render()},1500)">Play</button></div>`}).join('')||'<div class="note" style="grid-column:1/-1;text-align:center">No games yet</div>'}</div></div>`;
 }
 function rules(){
-  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>You only get the reward of the highest tier you reach (not added up).</li><li>One reward per day.</li>${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}<li>Rewards are calculated at ${S.bb.settleAt} (PHT) and sent to your balance starting from ${S.bb.autoAt} the next day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
+  const bbR=M().bb?`<div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px;color:#0E7C6B">Daily Bet Bonus rules</div><ol style="margin-top:0"><li>Your valid bets on eligible games from 00:00 to 23:59 each day are added up. Bets on other games don't count.</li><li>Reach a tier to get its reward: ${S.bb.tiers.map(t=>'≥ '+pesoI(t[0])+' → '+pesoI(t[1])).join(', ')}.</li><li>You only get the reward of the highest tier you reach (not added up).</li><li>One reward per day.</li>${S.bb.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}<li>Rewards are calculated at ${S.bb.settleAt} (PHT) and sent to your balance starting from ${S.bb.autoAt} the next day.</li><li>Rewards need 1x wagering before withdrawal.</li></ol></div>`:'';
   if(!M().cb) return barT('Rules','act')+`<div class="body rules"><div class="card rich">${safeHtml(S.rulesHtml)}</div>${bbR}</div>`;
   return barT('Rules','act')+`<div class="body rules"><div class="h3" style="margin-top:0">Reward History<a onclick="hShown=20;go('hist')">View all ›</a></div><div class="card" style="margin-top:6px;margin-bottom:10px;font-size:12px;cursor:pointer" onclick="hShown=20;go('hist')">${hrec().length} records · Cashback &amp; Bet Bonus</div><div class="card rich">${safeHtml(S.rulesHtml)}</div><div class="card"><div style="font-weight:800;font-size:13px;margin-bottom:4px">Cashback rules</div><ol style="margin-top:0">${S.cfg.kyc==='需要 KYC'?'<li>Only KYC-verified players are eligible.</li>':''}
   <li><b>Credit time</b>: cashback is calculated at ${S.cfg.settle} (PHT) and credited to your balance starting from ${S.cfg.pay} the next day.</li>
@@ -621,7 +621,7 @@ function cBB(){const b=S.bb;if(!M().bb)return `<div class="tip warn">本活动�
   return `<div class="note" style="margin-bottom:8px">按玩家自然日在「参与活动游戏」上的有效投注总额给固定奖励。与 Cashback 同时包含时，前台顶部右侧显示 Bet Bonus，进度卡与奖励表排在 Cashback 内容下面。</div><div class="form" style="grid-template-columns:150px 1fr">
 </div><div class="subt">档位配置</div><div class="form" style="grid-template-columns:150px 1fr">
   <label><i>*</i> 参与活动游戏</label><div><button class="ab" onclick="openBBPick()">选择参与活动游戏</button><span style="margin-left:10px">${bbScope().txt}</span><span class="h">只有被勾选的游戏产生的有效投注，才计入本活动</span></div>
-  <label>参与人群</label><div><span class="dis">同 ① 参与人群（${S.cfg.kyc}）</span><span class="h">不单独配置；需要 KYC 时，未 KYC 的玩家不统计、不参与</span></div>
+  <label>是否需要 KYC</label><div>${tg(S.bb.kyc==='需要 KYC','setBbKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与 Bet Bonus，未 KYC 的玩家不统计、不参与；与 ① Cashback 的 KYC 设置相互独立</span></div>
   <label style="align-self:start;padding-top:8px"><i>*</i> 返奖档位</label><div><table class="at bbt" style="max-width:560px"><tr><th style="width:56px">档位</th><th>每日有效投注额</th><th>奖励金额</th><th style="width:70px">操作</th></tr>${b.tiers.map((t,i)=>`<tr><td>${i+1}</td><td>投注额 ≥ <input class="rin" style="width:100px" value="${t[0]}" onchange="S.bb.tiers[${i}][0]=+this.value;mark();arender()"> ₱</td><td>返 <input class="rin" style="width:100px" value="${t[1]}" onchange="S.bb.tiers[${i}][1]=+this.value;mark();arender()"> ₱</td><td>${b.tiers.length>1?`<a class="lk" onclick="S.bb.tiers.splice(${i},1);mark();arender()">删除</a>`:'<span class="note">—</span>'}</td></tr>`).join('')}</table><div class="foot"><button class="ab" onclick="const l=S.bb.tiers.at(-1);S.bb.tiers.push([l[0]*2,l[1]*2]);mark();arender()">+ 添加档位</button><span class="h">投注额与奖励均需从低到高递增；投注额为 ≥（大于等于）</span></div>${b.tiers.some((t,i)=>i>0&&!(t[0]>b.tiers[i-1][0]&&t[1]>b.tiers[i-1][1]))?'<div class="tip warn">档位需从低到高递增，不可发布</div>':''}</div>
   <label>计算方式</label><div><span class="dis">只取达到的最高一档（不累加）</span><span class="h">玩家只拿当日有效投注对应档位的奖励，例：投注 ₱6,000 → 只拿 ₱5,000 档的奖励</span></div>
   <label>结算</label><div><span class="dis">每天 ${b.settleAt} 结算前一天 00:00—23:59 的有效投注（只算不发）</span><span class="h">每人每天最多 1 笔奖励</span></div>
@@ -637,6 +637,7 @@ function setSel(v){S.sel.on=v;mark();log('活动配置','Selected Games',v?'开�
 function setOn(v){if(cfgMode!=='new'){const a=curAct();if(v&&a.st==='off'){const o=overlapOf(a.s,a.e,a.id);if(o)return alert(`与「${o.name}」（${o.s} ~ ${o.e}）时间重叠，不能开启。`)}a.st=v?(a.s>TODAY?'wait':'on'):'off';if(!v)a.offAt=TODAY;else delete a.offAt}S.cfg.on=v;mark();log('活动配置','活动状态',v?'开启':'关闭');arender()}
 function setModCk(k,v){const o=k==='cb'?'bb':'cb';if(!v&&!M()[o]){alert('至少勾选 1 个活动');return arender()}M()[k]=v;mark();syncMods();arender()}
 function setKyc(v){S.cfg.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
+function setBbKyc(v){S.bb.kyc=v?'需要 KYC':'无需 KYC';mark();arender()}
 function log(m,a,d){S.logs.unshift({t:'11-18 '+now(),op:'koi',m,a,d})}
 function cBasic(){const c=S.cfg;
   return `<div class="form">
@@ -646,7 +647,7 @@ function cBasic(){const c=S.cfg;
   <label><i>*</i> 活动别名</label><div><input value="${S.assets.wid.label}" maxlength="12" style="width:120px" onchange="S.assets.wid.label=this.value||'1.5%+2%';mark();log('活动配置','活动别名',S.assets.wid.label);arender()"><span class="h">≤ 12 字；前台首页快捷入口、小猫挂件内活动入口角标、Hot Games 游戏角标统一显示此别名</span></div>
   <label><i>*</i> 活动时间</label><div><input type="date" value="${cfgMode==='new'?NEWT.s:curAct().s}" onchange="${cfgMode==='new'?'NEWT.s':'curAct().s'}=this.value;mark()"> 00:00 ~ <input type="date" value="${cfgMode==='new'?NEWT.e:curAct().e}" onchange="${cfgMode==='new'?'NEWT.e':'curAct().e'}=this.value;mark()"> 23:59:59<span class="h">开始、结束都必填；与其他活动时间不能重叠</span></div>
   <label><i>*</i> 参与人群</label><div>全部会员</div>
-  <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与；Cashback、Bet Bonus 都生效，未 KYC 的玩家不统计、不参与</span></div>
+  <label>是否需要 KYC</label><div>${tg(c.kyc==='需要 KYC','setKyc','是','否')}<span class="h">是 = 仅已 KYC 用户参与 Cashback，未 KYC 的玩家不统计、不参与；Bet Bonus 在 ⑦ 单独设置</span></div>
   <label>活动关系</label><div class="note">可同时存在多个活动，但活动时间不能重叠：同一时间只有 1 个活动生效。提交发布时检查，重叠则不可发布并提示冲突的活动</div>
   <label>结算时间</label><div><span class="dis">次日 ${c.settle}</span><span class="h">系统写死（每日 03:00），统计前一天 00:00—23:59:59 的数据，算出发给谁、发多少，只算不发；后台只作显示、不可配置</span></div>
   <label>发放时间</label><div><span class="dis">次日 ${c.pay}</span><span class="h">系统写死（每日 10:00），从此时开始发放，逐个用户陆续到账；后台只作显示、不可配置，需调整时由技术侧修改；前台只在规则页展示</span></div>
@@ -761,7 +762,7 @@ function aRules(){
   <div id="rteEd" class="rte-ed" contenteditable="true" oninput="rteSync()" onblur="rteSync(true)">${safeHtml(S.rulesHtml)}</div>
   <div class="rte-ft" id="rteWc">${rteWords(S.rulesHtml)} WORDS · 富文本（沿用 Promo「活动内容」编辑器）</div></div>
   <div class="note">即前台活动页右上「?」打开的 Rules 页，与右侧预览一一对应、实时同步。沿用现有后台富文本编辑器与图片上传逻辑（同 Promo 活动详情「活动内容」）；保存时过滤 script / iframe。</div></div>
-  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：结算与发放时间（次日 ${S.cfg.settle} 结算、${S.cfg.pay} 起陆续发放）、取整规则、流水 ${S.cfg.turnover}×${S.cfg.cap===Infinity?'':`、单人单日上限 ${pesoI(S.cfg.cap)}`}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成'+(S.cfg.kyc==='需要 KYC'?'，并追加 KYC 要求':'')+'。':''}</div></div></div>
+  <label style="align-self:start">系统追加（只读）</label><div class="note" style="line-height:1.8">富文本下方由系统按当前配置自动生成，不在此编辑：<br>① <b>Cashback rules</b>：结算与发放时间（次日 ${S.cfg.settle} 结算、${S.cfg.pay} 起陆续发放）、取整规则、流水 ${S.cfg.turnover}×${S.cfg.cap===Infinity?'':`、单人单日上限 ${pesoI(S.cfg.cap)}`}、各 Category 游戏数${S.cfg.kyc==='需要 KYC'?'、KYC 要求':''}；<br>② <b>Cashback Rates</b> 表：由「④ 返水等级」+「③ Selected Games」生成；${M().bb?'<br>③ <b>Daily Bet Bonus rules</b>：由「⑦ 活动 2」档位、计算方式、发放时间生成'+(S.bb.kyc==='需要 KYC'?'，并追加 KYC 要求':'')+'。':''}</div></div></div>
   <div style="width:300px;flex-shrink:0"><div class="note" style="margin-bottom:4px">前台 Rules 页预览（与玩家看到的一致）</div><div class="pvphone" style="height:640px"><div class="scr" id="rulesPv">${rulesPv()}</div></div></div></div>`;
 }
 let rteRange=null;

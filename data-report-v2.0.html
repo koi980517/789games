@@ -77,9 +77,12 @@ tr.last td{background:#f0f8f6}
 .v2note{border:1px dashed var(--new);background:#fff6f0;border-radius:4px;padding:8px 12px;margin-bottom:10px;font-size:12px;line-height:1.7}
 .v2note b{color:var(--new)}
 .empty{color:var(--muted);text-align:center!important;padding:24px}
+tr.cmp td{background:#fafafa;color:var(--muted);font-size:11px;padding:3px 10px}
+.up{color:#1f8a4c}.dn{color:#d93636}
+.cmpchk{flex-direction:row!important;align-items:center;gap:4px!important;color:var(--fg)!important;align-self:center}
 @media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
 </style></head><body>
-<div class="proto"><span><b>数据报表中心原型 · v2.0</b>：新增「每小时数据（累计）」「每小时彩金（累计）」（菜单里加粗显示），其余 5 页同 v1.0 上线版</span><span>示例数据逐笔模拟，0-24 行 = 日表；模拟“现在”= 2026-11-16 14:20</span><span>v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
+<div class="proto"><span><b>数据报表中心原型 · v2.0</b>：新增「每小时数据（累计）」「每小时彩金（累计）」（菜单里加粗显示），其余 5 页同 v1.0 上线版；累计表每行下方灰色小行 = 较昨日同时段（v2.1）</span><span>示例数据逐笔模拟，0-24 行 = 日表；模拟“现在”= 2026-11-16 14:20</span><span>v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
 <header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
 <div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
@@ -279,7 +282,7 @@ function dayRow(d){
  r._acts=o.acts;return r;}
 /* ---------- 页面状态 ---------- */
 const $=s=>document.querySelector(s);
-let cur=REPORTS[0], range=[TODAY,TODAY], quick="", hidden=new Set(), topDate=dstr(NDAYS-2), board="deposit", opened=[REPORTS[0].key];
+let cur=REPORTS[0], range=[TODAY,TODAY], quick="", hidden=new Set(), topDate=dstr(NDAYS-2), board="deposit", opened=[REPORTS[0].key], cmpOn=true;
 const updInfo=r=>r.kind==="top"?["2026-11-16 06:40:00","2026-11-15"]:r.daily?["2026-11-16 06:40:00","2026-11-15"]:["2026-11-16 14:06:00","2026-11-16 13:00-14:00"];
 function weekStart(i){return i-((new Date(D0+i*864e5).getUTCDay()+6)%7)}
 function quickRange(q){const t=NDAYS-1,w=weekStart(t);
@@ -314,6 +317,15 @@ function cell(r,k){
  if(k==="bDep")return r._empty?"":fmt(r.depAmount,"bDep");
  if(r._empty&&k!=="time")return"";
  return fmt(r[k],k);}
+function cmpVal(r,k){const m=k.match(/^a(\d+)(Users|Amount)$/);if(m){const x=r._acts&&r._acts[m[1]];return x?(m[2]==="Users"?x.users:x.amount):0}
+ if(k==="totalTimes")return Object.values(r._acts||{}).reduce((s,x)=>s+x.users,0);
+ if(k==="totalAmount")return Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0);
+ if(k==="bDep")return r.depAmount;return r[k];}
+function cmpCell(t,y,k){ // v2.1：较昨日同时段。比率列给百分点差，其余给变化率
+ if(k==="time")return "较昨日";if(!y||y._empty)return "—";const a=cmpVal(t,k),b=cmpVal(y,k);if(a==null||b==null)return "";
+ const arrow=(d,s)=>`<span class="${d>0?"up":"dn"}">${d>0?"▲":"▼"} ${s}</span>`;
+ if(/Rate|Ratio/.test(k)){const d=(a-b)*100;return Math.abs(d)<0.005?"持平":arrow(d,Math.abs(d).toFixed(2)+"pp")}
+ if(b===0)return a===0?"持平":"—";const p=(a-b)/Math.abs(b)*100;return Math.abs(p)<0.005?"持平":arrow(p,Math.abs(p).toFixed(2)+"%");}
 function totalRow(list){ // 日表合计（现网：金额相加，人数也逐天相加，比率按合计重算）
  const t={time:"合计",weekday:""};const sum=k=>list.reduce((s,r)=>s+(r[k]||0),0);
  ["online","bettors","registers","fdUsers","fdAmount","fdAgent","fdOfficial","fdtUsers","fdtAmount","depUsers","depAmount","wdCount","wdAmount","net","fissionUsers","commUsers","commAmount","retUsers","retAmount","depCount","wdCountB","validBet","ggr","promoAmount"].forEach(k=>t[k]=sum(k));
@@ -334,7 +346,7 @@ function renderBar(){
  const qs=cur.daily?[["tw","本周报表"],["lw","上周"],["tm","本月报表"],["lm","上月报表"]]:[["tw","本周报表"],["lw","上周"]];
  $("#bar").innerHTML=`<label class="fld">查询日期<span class="dr">📅<input type="date" id="d1" value="${range[0]}" max="${TODAY}"> ~ <input type="date" id="d2" value="${range[1]}" max="${TODAY}"></span></label>
   <span class="grp">${qs.map(([k,l])=>`<button class="btn ${quick===k?"on":""}" data-q="${k}">${l}</button>`).join("")}</span>
-  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>`;}
+  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>${cur.cum?`<label class="fld cmpchk"><input type="checkbox" id="cmp" ${cmpOn?"checked":""}> 显示较昨日</label>`:""}`;}
 function renderUpd(){const [u,t]=updInfo(cur);$("#upd").innerHTML=`<span>数据更新时间：${u}</span><span>已更新到：${t}</span><span>${cur.sync}</span><span class="m">点「刷新」重新查询最新数据</span>`}
 function th(k,label,g,stk,rs){const tip=`<button class="i" type="button" data-k="${k}" aria-label="${g}${label}说明">ⓘ</button>`;return`<th class="${stk?"stk":""}"${rs?' rowspan="2"':""}>${label||g}${tip}</th>`}
 function renderTable(){
@@ -347,7 +359,8 @@ function renderTable(){
  let body="";
  if(!list.length)body=`<tr><td class="empty" colspan="${keys.length}">No Data</td></tr>`;
  list.forEach((r,i)=>{const cls=[];if(cur.cum&&r._h===0&&i>0)cls.push("day0");if(cur.cum&&r._h===23&&!r._empty)cls.push("last");
-  body+=`<tr class="${cls.join(" ")}">`+keys.map(k=>`<td class="${k==="time"||k==="weekday"?"l":""}">${cell(r,k)}</td>`).join("")+"</tr>"});
+  body+=`<tr class="${cls.join(" ")}">`+keys.map(k=>`<td class="${k==="time"||k==="weekday"?"l":""}">${cell(r,k)}</td>`).join("")+"</tr>";
+  if(cur.cum&&cmpOn&&!r._empty){const y=r._d>0?hourRow(r._d-1,r._h,true):null;body+=`<tr class="cmp">`+keys.map(k=>`<td class="${k==="time"?"l":""}">${cmpCell(r,y,k)}</td>`).join("")+"</tr>"}});
  if(cur.daily&&list.length){const t=totalRow(list);body+=`<tr class="tot">`+keys.map(k=>`<td class="${k==="time"?"l":""}">${k==="time"?"合计":cell(t,k)}</td>`).join("")+"</tr>"}
  $("#tbl").innerHTML=`<thead>${h1}</tr>${h2}</tr></thead><tbody>${body}</tbody>`;}
 function renderTop(){
@@ -381,6 +394,7 @@ document.addEventListener("click",e=>{
  if(e.target.closest("#b-refresh")){render();toast("已刷新");return}
  if(e.target.closest("#b-export")){toast("已导出 "+cur.title+"（原型不下载文件）");return}
 });
+document.addEventListener("change",e=>{if(e.target.id==="cmp"){cmpOn=e.target.checked;renderTable()}});
 const pop=$("#pop");
 document.addEventListener("mouseover",e=>{const b=e.target.closest(".i");if(!b){pop.hidden=true;return}
  let t;if(b.dataset.top){const x=TOPCOLS.find(c=>c[0]===b.dataset.top);t=[x[1],x[2],""]}else t=infoOf(b.dataset.k);

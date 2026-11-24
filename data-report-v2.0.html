@@ -214,22 +214,25 @@ const CHG={
   "g:盈亏金额":["ren","原「存提差」"],"g:杀率":["ren","原「存提差/充值」"],"g:裂变":["new","裂变：人数 / 比率"],"g:佣金明细":["new","佣金明细：人数 / 金额 / 占比"],
   validBet:["ren","原「总投注」"],betMultiple:["ren","原「倍数（投注/充值）」"],killRate:["ren","原「杀率（1-rtp）」"],ggr:["ren","原「ggr」"],
   "g:优惠":["ren","原「活动奖金」"],promoRatio:["ren","原「比例（奖金/充值）」"],retAmount:["chg","公式按在线表格：充值 − 当日首充总额"]},
-  page:[["chg","列结构改为和「每日数据」一样（在线表格 44 列）"],["keep","保留每小时一行（在线表格每 2 小时一行）"],["keep","保留「较昨日」对比行（v2.1）"],["new","新增「按时间点比对」：选一个时段，每天一行（对应在线表格「数据表横向日期比对」）"]]},
+  page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序；按时间点比对默认倒序"],["chg","列结构改为和「每日数据」一样（在线表格 44 列）"],["keep","保留每小时一行（在线表格每 2 小时一行）"],["keep","保留「较昨日」对比行（v2.1）"],["new","新增「按时间点比对」：选一个时段，每天一行（对应在线表格「数据表横向日期比对」）"]]},
  daily:{vs:"v1.0 现网「每日数据」",cols:{
   "g:时间":["chg","原「日期」「星期」两个单独表头，合并到「时间」下"],online:["chg","原 = 平台报表活跃用户；在线表格取次日 00:00 在线快照（待确认）"],
   "g:三充":["new","三充：人数 / 金额 / 人均（原需求表隐藏、现网未做）"],wdUsers:["chg","原「笔数」，改为人数"],wdAvg:["chg","原「平均」= 金额 ÷ 笔数，改为「人均」= 金额 ÷ 人数"],
   "g:佣金明细":["ren","原「裂变佣金明细」"],"g:留存明细":["ren","原「充值留存明细」"],killRate:["ren","原「盈利率（杀率）」"],ggr:["ren","原「金额（ggr）」"],retAmount:["chg","公式按在线表格：充值 − 当日首充总额"]},
-  page:[["chg","排序改为最新日期在上"],["del","删除最后一行「合计」（在线表格没有）"],["chg","0-24 行 = 每日数据：日表取「每小时数据（累计）」当天 0-24 行"]]},
+  page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"],["del","删除最后一行「合计」（在线表格没有）"],["chg","0-24 行 = 每日数据：日表取「每小时数据（累计）」当天 0-24 行"]]},
  hourlyBonusCum:{vs:"v2.0 原型（列同现网「每小时彩金」）",cols:{
   "g:时间":["chg","原一列，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["chg","时段 0-1 … 0-24"],
   ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],totalRatio:["new","汇总 · 占充值"]},
-  page:[["chg","活动列固定 10 个，按在线表格顺序（原按接口返回的活动生成）"],["keep","保留每小时一行、较昨日对比行"],["new","新增「按时间点比对」（对应在线表格「彩金数据表横向日期比对」）"]]},
+  page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序；按时间点比对默认倒序"],["chg","活动列固定 10 个，按在线表格顺序（原按接口返回的活动生成）"],["keep","保留每小时一行、较昨日对比行"],["new","新增「按时间点比对」（对应在线表格「彩金数据表横向日期比对」）"]]},
  dailyBonus:{vs:"v1.0 现网「每日彩金」",cols:{
   "g:时间":["chg","日期 + 星期"],weekday:["new","星期"],"g:汇总":["new","汇总：人数 / 金额 / 占充值"]},
-  page:[["chg","活动列固定 10 个，按在线表格顺序（原按接口返回生成，含测试活动）"],["chg","排序改为最新日期在上"]]}
+  page:[["chg","活动列固定 10 个，按在线表格顺序（原按接口返回生成，含测试活动）"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"]]},
+ hourly:{vs:"v1.0 现网「每小时数据」",cols:{},page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]},
+ hourlyBonus:{vs:"v1.0 现网「每小时彩金」",cols:{},page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]}
 };
 const CHGTXT={new:"新增",ren:"改名",chg:"调整",del:"删除",keep:"保留"};
-let showChg=true, viewMode="day", pointH=15;
+let showChg=true, viewMode="day", pointH=15, sortDesc=false;
+const sortDefault=()=>!!(cur.daily||(cur.cum&&viewMode==="point")); // 日表、按时间点比对默认倒序（同在线表格），其余默认正序
 const TOPCOLS=[["acct","会员账号","会员账号。"],["attr","用户归因","注册来源：1 短信 / 2 自然流量 / 3 邀请好友 / 4 广告来源（需求表批注）。"],["dep","会员存款","当日成功存款合计。"],["wd","会员取款","当日成功取款合计。"],["mult","打码倍数","打码量 ÷ 会员存款；存款为 0 时空白。"],["vb","打码量","当日有效投注合计。"],["net","充提差额","会员存款 − 会员取款。"],["bal","会员余额","日终（23:59:59）账户余额。"],["plat","当日用户游戏系统","当日用过的端：ios、安卓、h5、pwa（浏览器），可多个（需求表批注）。"],["games","投注前 3 游戏","会员当日累计投注额排名前 3 的游戏（需求表批注）。"]];
 const REPORTS=[
  {key:"hourly",title:"每小时数据",kind:"tbl",daily:false,maxDays:7,desc:"每小时一行。HH:06 统计上一完整小时；「当日首充总额」和转换率从 00:00 累计。",sync:"每小时 :06 出上一小时的数据；当前小时和未到 :06 的上一小时为空行。"},
@@ -342,10 +345,10 @@ function fmt(v,k){if(v==null)return"";if(typeof v==="string")return v;
  return String(v);}
 function rows(){
  const a=Math.max(0,didx(range[0])),b=Math.min(NDAYS-1,didx(range[1]));const out=[];if(a>b)return out;
- if(cur.daily){for(let d=Math.min(b,NDAYS-1);d>=a;d--)out.push(dayRow(d));} // 在线表格：最新在上
- else if(cur.cum&&viewMode==="point"){for(let d=b;d>=a;d--)if(pointH<=lastDone(d))out.push(hourRow(d,pointH,true));}
+ if(cur.daily){for(let d=a;d<=Math.min(b,NDAYS-1);d++)out.push(dayRow(d));}
+ else if(cur.cum&&viewMode==="point"){for(let d=a;d<=b;d++)if(pointH<=lastDone(d))out.push(hourRow(d,pointH,true));}
  else for(let d=a;d<=b;d++)for(let h=0;h<24;h++)out.push(hourRow(d,h,!!cur.cum));
- return out;}
+ return sortDesc?out.reverse():out;} // 时间排序：正序 01→30 / 倒序 30→01
 function groups(list){
  if(!cur.bonus)return (cur.daily||cur.cum)?G_SHEET(cur.cum):G_H;
  if(cur.daily||cur.cum){const g=[["时间",[["time","日期"],["weekday","星期"]].concat(cur.cum?[["slot","时段"]]:[])]];ACTS.forEach((n,a)=>g.push([n,[["a"+a+"Users","人数"],["a"+a+"Amount","金额"],["a"+a+"Ratio","占充值"]]]));g.push(["汇总",[["totalTimes","人数"],["totalAmount","金额"],["totalRatio","占充值"]]]);g.push(["充值金额",[["bDep",""]]]);return g;}
@@ -404,7 +407,8 @@ function renderBar(){
  const qs=cur.daily?[["tw","本周报表"],["lw","上周"],["tm","本月报表"],["lm","上月报表"]]:[["tw","本周报表"],["lw","上周"]];
  $("#bar").innerHTML=`<label class="fld">查询日期<span class="dr">📅<input type="date" id="d1" value="${range[0]}" max="${TODAY}"> ~ <input type="date" id="d2" value="${range[1]}" max="${TODAY}"></span></label>
   <span class="grp">${qs.map(([k,l])=>`<button class="btn ${quick===k?"on":""}" data-q="${k}">${l}</button>`).join("")}</span>
-  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>${cur.cum?`<label class="fld cmpchk"><input type="checkbox" id="cmp" ${cmpOn?"checked":""}> 显示较昨日</label>
+  <button class="btn pri" id="b-search">⌕ 搜索</button><button class="btn" id="b-refresh">↻ 刷新</button><button class="btn" id="b-export">⇩ 导出</button>
+  <span class="vm">时间排序 <span class="grp"><button class="btn ${sortDesc?"":"on"}" data-sort="asc">正序 01→30</button><button class="btn ${sortDesc?"on":""}" data-sort="desc">倒序 30→01</button></span><span class="bd new" title="新增：按时间正序或倒序显示">新增</span></span>${cur.cum?`<label class="fld cmpchk"><input type="checkbox" id="cmp" ${cmpOn?"checked":""}> 显示较昨日</label>
   <span class="vm">查看方式 <span class="grp"><button class="btn ${viewMode==="day"?"on":""}" data-vm="day">按天（每天 24 行）</button><button class="btn ${viewMode==="point"?"on":""}" data-vm="point">按时间点比对</button></span>
   ${viewMode==="point"?`<select class="s" id="pt">${Array.from({length:24},(_,h)=>`<option value="${h}" ${h===pointH?"selected":""}>0-${h+1}（截至 ${pad(h+1)}:00）</option>`).join("")}</select>`:""}<span class="bd new" title="对应在线表格「横向日期比对」页签">新增</span></span>`:""}`;}
 function renderUpd(){const [u,t]=updInfo(cur);$("#upd").innerHTML=`<span>数据更新时间：${u}</span><span>已更新到：${t}</span><span>${cur.sync}</span><span class="m">点「刷新」重新查询最新数据</span>`}
@@ -420,7 +424,7 @@ function renderTable(){
  const keys=G.flatMap(x=>x[1].map(y=>y[0]));
  let body="";
  if(!list.length)body=`<tr><td class="empty" colspan="${keys.length}">No Data</td></tr>`;
- list.forEach((r,i)=>{const cls=[];if(cur.cum&&viewMode==="day"&&r._h===0&&i>0)cls.push("day0");if(cur.cum&&viewMode==="day"&&r._h===23&&!r._empty)cls.push("last");
+ list.forEach((r,i)=>{const cls=[];if(cur.cum&&viewMode==="day"&&i>0&&list[i-1]._d!==r._d)cls.push("day0");if(cur.cum&&viewMode==="day"&&r._h===23&&!r._empty)cls.push("last");
   body+=`<tr class="${cls.join(" ")}">`+keys.map(k=>`<td class="${["time","weekday","slot"].includes(k)?"l":""}">${cell(r,k)}</td>`).join("")+"</tr>";
   if(cur.cum&&cmpOn&&!r._empty){const y=r._d>0?hourRow(r._d-1,r._h,true):null;body+=`<tr class="cmp">`+keys.map((k,i)=>`<td class="${i===0?"l":""}">${i===0?"较昨日":(k==="weekday"||k==="slot")?"":cmpCell(r,y,k)}</td>`).join("")+"</tr>"}});
  if(false&&cur.daily&&list.length){const t=totalRow(list);body+=`<tr class="tot">`+keys.map(k=>`<td class="${k==="time"?"l":""}">${k==="time"?"合计":cell(t,k)}</td>`).join("")+"</tr>"}
@@ -449,14 +453,15 @@ function render(){
  renderSide();renderTabs();renderBar();renderUpd();renderV2Note();renderChg();renderTable();}
 function open(k){cur=REPORTS.find(r=>r.key===k)||REPORTS[0];if(!opened.includes(cur.key))opened.push(cur.key);
  if(cur.kind!=="top"){if(cur.daily){range=quickRange("tm");quick="tm"}else{range=[TODAY,TODAY];quick=""}}
- hidden=new Set();viewMode="day";render();}
+ hidden=new Set();viewMode="day";sortDesc=sortDefault();render();}
 let tt;function toast(s){const e=$("#toast");e.textContent=s;e.hidden=false;clearTimeout(tt);tt=setTimeout(()=>e.hidden=true,2400)}
 function checkRange(){let[a,b]=range;if(a>b){[a,b]=[b,a]}const n=didx(b)-didx(a)+1;const mx=(cur.cum&&viewMode==="point")?31:cur.maxDays;
  if(n>mx){a=dstr(didx(b)-mx+1);quick="";toast((cur.daily?"日表":cur.cum&&viewMode==="point"?"按时间点比对":"小时表")+"一次最多 "+mx+" 天，已按结束日期往前取")}range=[a,b];}
 document.addEventListener("click",e=>{
  const s=e.target.closest("#side a,#tabs span");if(s){e.preventDefault();location.hash=s.dataset.k;return}
  const q=e.target.closest("[data-q]");if(q){quick=q.dataset.q;range=quickRange(quick);checkRange();render();return}
- const vm=e.target.closest("[data-vm]");if(vm){viewMode=vm.dataset.vm;if(viewMode==="day"){range=[range[1],range[1]];}else{range=[dstr(Math.max(0,didx(range[1])-6)),range[1]]}render();return}
+ const so=e.target.closest("[data-sort]");if(so){sortDesc=so.dataset.sort==="desc";renderBar();renderTable();return}
+ const vm=e.target.closest("[data-vm]");if(vm){viewMode=vm.dataset.vm;sortDesc=sortDefault();if(viewMode==="day"){range=[range[1],range[1]];}else{range=[dstr(Math.max(0,didx(range[1])-6)),range[1]]}render();return}
  const c=e.target.closest("[data-g]");if(c){const g=c.dataset.g;hidden.has(g)?hidden.delete(g):hidden.add(g);renderTable();return}
  if(e.target.closest("#b-search")){if(cur.kind==="top"){topDate=$("#td").value;board=$("#board").value}else{range=[$("#d1").value,$("#d2").value];quick="";checkRange()}render();return}
  if(e.target.closest("#b-refresh")){render();toast("已刷新");return}

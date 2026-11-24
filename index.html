@@ -325,7 +325,7 @@ function totalRow(list){ // 日表合计（现网：金额相加，人数也逐�
 /* ---------- 渲染 ---------- */
 function renderSide(){
  const items=REPORTS.map(r=>`<a href="#${r.key}" class="${r.key===cur.key?"act":""}" data-k="${r.key}">${r.v2?"<b>"+r.title+"</b>":r.title}</a>`).join("");
- $("#side").innerHTML=`<div class="g1">用户管理<span>▸</span></div><div class="g1">财务管理<span>▸</span></div><div class="g1">提现管理<span>▸</span></div><div class="g1">数据报表<span>▸</span></div><div class="g1 on">数据报表中心<span>▾</span></div>${items}<div class="g1">活动配置<span>▸</span></div>`;}
+ $("#side").innerHTML=`<div class="g1">用户管理<span>▸</span></div><div class="g1">财务管理<span>▸</span></div><div class="g1">提现管理<span>▸</span></div><div class="g1">数据报表<span>▸</span></div><div class="g1 on">数据报表中心<span>▾</span></div>${items}`;}
 function renderTabs(){$("#tabs").innerHTML=opened.map(k=>{const r=REPORTS.find(x=>x.key===k);return`<span class="${k===cur.key?"on":""}" data-k="${k}">✥ ${r.title} ×</span>`}).join("")}
 function renderBar(){
  if(cur.kind==="top"){$("#bar").innerHTML=`<label class="fld">查询日期<span class="dr">📅<input type="date" id="td" value="${topDate}" max="${dstr(NDAYS-2)}"></span></label>

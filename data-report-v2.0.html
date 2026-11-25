@@ -93,7 +93,7 @@ tr.cmp.cmp7 td{background:#f4f7fb}tr.cmp td{background:#fafafa;color:var(--muted
 .cmpchk{flex-direction:row!important;align-items:center;gap:4px!important;color:var(--fg)!important;align-self:center}
 @media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
 </style></head><body>
-<div class="proto"><span><b>数据报表中心原型 · v2.5</b>：「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
+<div class="proto"><span><b>数据报表中心原型 · v2.6</b>：前50名「当日用户游戏系统」h5 拆成 ios h5 / 安卓 h5；v2.5 「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
 <header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
 <div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
@@ -228,6 +228,8 @@ const CHG={
  dailyBonus:{vs:"v1.0 现网「每日彩金」",cols:{
   "g:时间":["chg","日期 + 星期"],weekday:["new","星期"],"g:汇总":["new","汇总：人数 / 金额 / 占充值"]},
   page:[["chg","活动列固定 10 个，按在线表格顺序（原按接口返回生成，含测试活动）"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"]]},
+ top50:{vs:"v1.0 现网「前50名」",cols:{plat:["chg","h5 拆成 ios h5 / 安卓 h5（按浏览器 UA 区分）；取值 ios、安卓、ios h5、安卓 h5、pwa，可多个"]},
+  page:[["chg","「当日用户游戏系统」h5 扩展为 ios h5 或 安卓 h5"]]},
  hourly:{vs:"v1.0 现网「每小时数据」",cols:{
   "g:时间":["chg","原一列「11-16 00:00」，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["new","时段 00:00-01:00 … 23:00-24:00（仍每小时一行）"],
   fdAgent:["new","首笔 · 代理"],fdOfficial:["new","首笔 · 官网"],"g:当日首充总额":["ren","原「当日充总额」"],"g:三充":["new","三充：人数 / 金额 / 人均"],
@@ -243,7 +245,7 @@ const CHG={
 const CHGTXT={new:"新增",ren:"改名",chg:"调整",del:"删除",keep:"保留"};
 let showChg=true, viewMode="day", pointH=15, sortDesc=false;
 const sortDefault=()=>!!(cur.daily||(cur.cum&&viewMode==="point")); // 日表、按时间点比对默认倒序（同在线表格），其余默认正序
-const TOPCOLS=[["acct","会员账号","会员账号。"],["attr","用户归因","注册来源：1 短信 / 2 自然流量 / 3 邀请好友 / 4 广告来源（需求表批注）。"],["dep","会员存款","当日成功存款合计。"],["wd","会员取款","当日成功取款合计。"],["mult","打码倍数","打码量 ÷ 会员存款；存款为 0 时空白。"],["vb","打码量","当日有效投注合计。"],["net","充提差额","会员存款 − 会员取款。"],["bal","会员余额","日终（23:59:59）账户余额。"],["plat","当日用户游戏系统","当日用过的端：ios、安卓、h5、pwa（浏览器），可多个（需求表批注）。"],["games","投注前 3 游戏","会员当日累计投注额排名前 3 的游戏（需求表批注）。"]];
+const TOPCOLS=[["acct","会员账号","会员账号。"],["attr","用户归因","注册来源：1 短信 / 2 自然流量 / 3 邀请好友 / 4 广告来源（需求表批注）。"],["dep","会员存款","当日成功存款合计。"],["wd","会员取款","当日成功取款合计。"],["mult","打码倍数","打码量 ÷ 会员存款；存款为 0 时空白。"],["vb","打码量","当日有效投注合计。"],["net","充提差额","会员存款 − 会员取款。"],["bal","会员余额","日终（23:59:59）账户余额。"],["plat","当日用户游戏系统","当日用过的端：ios、安卓、ios h5、安卓 h5、pwa，可多个，逗号分隔。h5 按登录 / 下注时浏览器 UA 区分 iOS 还是安卓（原只显示 h5）。"],["games","投注前 3 游戏","会员当日累计投注额排名前 3 的游戏（需求表批注）。"]];
 const REPORTS=[
  {key:"hourly",title:"每小时数据",kind:"tbl",daily:false,maxDays:7,desc:"每小时一行。HH:06 统计上一完整小时；「当日首充总额」和转换率从 00:00 累计。",sync:"每小时 :06 出上一小时的数据；当前小时和未到 :06 的上一小时为空行。"},
  {key:"hourlyCum",v2:true,title:"每小时数据（累计）",kind:"tbl",daily:false,cum:true,maxDays:7,desc:"每 2 小时一行，每天 12 行：0-2、0-4 … 0-24，每行是当天 00:00 到该整点的累计；列和「每日数据」相同（按在线表格）。人数在这段时间内去重，金额和笔数相加，比率和人均用累计值重算；0-24 行 = 每日数据。",sync:"每 2 小时出数：偶数整点 :06 统计到该整点（02:06 出 0-2 … 次日 00:06 出 0-24）；每天 06:40 日任务跑完后，用日表同一批数据重算昨天的 0-24 行。"},
@@ -456,10 +458,10 @@ function renderTop(){
  const d=didx(topDate),agg2={};
  if(d>=0&&d<NDAYS-1)for(let h=0;h<24;h++){const e=EV[d][h];e.dep.forEach(x=>{const a=agg2[x.u]=agg2[x.u]||{dep:0,wd:0,vb:0};a.dep+=x.amt});e.wd.forEach(x=>{const a=agg2[x.u]=agg2[x.u]||{dep:0,wd:0,vb:0};a.wd+=x.amt});Object.keys(e.bet).forEach(u=>{const a=agg2[u]=agg2[u]||{dep:0,wd:0,vb:0};a.vb+=e.bet[u]})}
  const acct=u=>"u"+(Number(u)*7919%100000).toString(36).padStart(5,"0");
- const list=Object.entries(agg2).filter(([u,a])=>board==="deposit"?a.dep>0:a.wd>0).map(([u,a])=>({acct:acct(u),attr:1+Number(u)%4,dep:a.dep,wd:a.wd,vb:a.vb,mult:div(a.vb,a.dep),net:a.dep-a.wd,bal:Math.round((Number(u)*37%5000)*100)/100,plat:["h5","ios","安卓","h5,pwa"][Number(u)%4],games:"Super Ace, Fortune Gems, Lucky Coming"}))
+ const list=Object.entries(agg2).filter(([u,a])=>board==="deposit"?a.dep>0:a.wd>0).map(([u,a])=>({acct:acct(u),attr:1+Number(u)%4,dep:a.dep,wd:a.wd,vb:a.vb,mult:div(a.vb,a.dep),net:a.dep-a.wd,bal:Math.round((Number(u)*37%5000)*100)/100,plat:["ios h5","ios","安卓","安卓 h5,pwa","安卓 h5","ios,ios h5"][Number(u)%6],games:"Super Ace, Fortune Gems, Lucky Coming"}))
   .sort((x,y)=>(board==="deposit"?y.dep-x.dep:y.wd-x.wd)||x.acct.localeCompare(y.acct)).slice(0,50);
  const ATTR={1:"短信",2:"自然流量",3:"邀请好友",4:"广告来源"};
- const head="<tr><th class='stk'>排名</th>"+TOPCOLS.map(([k,l])=>`<th>${l}<button class="i" type="button" data-top="${k}">ⓘ</button></th>`).join("")+"</tr>";
+ const head="<tr><th class='stk'>排名</th>"+TOPCOLS.map(([k,l])=>`<th class="${(chgOf(k)||[])[0]==="chg"?"cchg":""}">${l}<button class="i" type="button" data-top="${k}">ⓘ</button>${bd(chgOf(k))}</th>`).join("")+"</tr>";
  const f=(v,k)=>k==="attr"?v+" "+ATTR[v]:(["dep","wd","vb","net","bal"].includes(k)?fmt(v,"amount"):k==="mult"?fmt(v,"Multiple"):v);
  const body=list.length?list.map((r,i)=>"<tr><td>"+(i+1)+"</td>"+TOPCOLS.map(([k])=>`<td class="${["acct","plat","games","attr"].includes(k)?"l":""}">${r[k]==null?"":f(r[k],k)}</td>`).join("")+"</tr>").join(""):`<tr><td class="empty" colspan="11">No Data</td></tr>`;
  $("#tbl").innerHTML=`<thead>${head}</thead><tbody>${body}</tbody>`;}

@@ -93,7 +93,7 @@ tr.cmp.cmp7 td{background:#f4f7fb}tr.cmp td{background:#fafafa;color:var(--muted
 .cmpchk{flex-direction:row!important;align-items:center;gap:4px!important;color:var(--fg)!important;align-self:center}
 @media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
 </style></head><body>
-<div class="proto"><span><b>数据报表中心原型 · v2.5</b>：「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页顶部有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
+<div class="proto"><span><b>数据报表中心原型 · v2.5</b>：「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
 <header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
 <div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
@@ -103,12 +103,13 @@ tr.cmp.cmp7 td{background:#f4f7fb}tr.cmp td{background:#fafafa;color:var(--muted
   <div class="tabs" id="tabs"></div>
   <div class="content">
     <h1 id="ttl"></h1><p class="desc" id="desc"></p>
-    <div id="v2note"></div><div id="chg"></div>
+    <div id="v2note"></div>
     <div class="bar" id="bar"></div>
     <div class="chips" id="chips"></div>
     <div class="upd" id="upd"></div>
     <div class="tw"><table id="tbl"></table></div>
     <p class="foot">时间均为北京时间（GMT+8）。鼠标悬浮表头的 ⓘ 查看字段说明；真实分母为 0 时比率和人均显示空白。</p>
+    <div id="chg" style="margin-top:12px"></div>
   </div>
 </main></div>
 <div class="pop" id="pop" hidden></div><div class="toast" id="toast" hidden></div>
@@ -465,7 +466,7 @@ function renderTop(){
 function renderChg(){const c=CHG[cur.key];if(!c){$("#chg").innerHTML="";return}
  const LBL={};groups([]).forEach(([g,ks])=>ks.forEach(([k,l])=>LBL[k]=l?g+" · "+l:g));
  const items=c.page.map(p=>`<li><span class="bd ${p[0]}">${CHGTXT[p[0]]}</span> ${p[1]}</li>`).concat(Object.entries(c.cols).map(([k,v])=>`<li><span class="bd ${v[0]}">${CHGTXT[v[0]]}</span> ${k.startsWith("g:")?"「"+k.slice(2)+"」分组":k==="ratio"?"各活动 · 占充值":"「"+(LBL[k]||k)+"」"}：${v[1]}</li>`));
- $("#chg").innerHTML=`<div class="chgp ${showChg?"":"min"}"><div class="hd"><b>本页调整（对照：${c.vs}）</b><span>共 ${items.length} 处</span><span><span class="bd new">新增</span><span class="bd ren">改名</span><span class="bd chg">调整</span><span class="bd del">删除</span><span class="bd keep">保留</span> 表头上同色标签，鼠标停留看原名</span><label><input type="checkbox" id="showchg" ${showChg?"checked":""}> 显示改动标注</label></div><ul>${items.join("")}</ul></div>`;
+ $("#chg").innerHTML=`<div class="chgp ${showChg?"":"min"}"><div class="hd"><b>更新日志（对照：${c.vs}）</b><span>共 ${items.length} 处</span><span><span class="bd new">新增</span><span class="bd ren">改名</span><span class="bd chg">调整</span><span class="bd del">删除</span><span class="bd keep">保留</span> 表头上同色标签，鼠标停留看原名</span><label><input type="checkbox" id="showchg" ${showChg?"checked":""}> 显示改动标注</label></div><ul>${items.join("")}</ul></div>`;
  document.body.classList.toggle("nochg",!showChg);}
 function renderV2Note(){
  $("#v2note").innerHTML=false?`<b>v2.0 新增</b>　0-24 行和「${cur.bonus?"每日彩金":"每日数据"}」同名字段一致；当天只显示已完成的小时，未出数的小时为空行。人数在 00:00 到该小时末去重（同一人多个小时只算 1 次），金额 / 笔数相加，比率和人均用累计值重算。`:"";}

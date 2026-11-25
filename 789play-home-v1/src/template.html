@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>789Play V1 · 首页原型（1:1 Figma）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:#0b0a09;font-family:Inter,system-ui,sans-serif;color:#fff}
+body{min-height:100vh;display:flex;justify-content:center}
+.stage{position:relative;width:390px;zoom:var(--z,1)}
+.phone{position:relative;width:390px;height:844px;overflow:hidden;background:#17140f}
+@media (min-width:600px){
+  body{align-items:flex-start;padding:32px 0 48px;background:radial-gradient(circle at 50% 0,#2a2418,#0b0a09 60%)}
+  .phone{border-radius:46px;box-shadow:0 0 0 10px #1b1b1d,0 0 0 11px #3a3a3c,0 30px 80px rgba(0,0,0,.7)}
+  .meta{display:block!important}
+}
+@media (max-width:599px){.phone{height:calc(100vh / var(--z,1))}.statusbar{display:none}.scroller{top:0!important}}
+.meta{display:none;position:absolute;left:-250px;top:0;width:220px;font-size:12px;line-height:1.6;color:#a89f8a}
+.meta b{color:#ffca38;font-size:14px;display:block;margin-bottom:6px}
+.meta .sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-3px;margin-right:6px;border:1px solid #555}
+.statusbar{position:absolute;top:0;left:0;width:390px;height:43px;z-index:30}
+.scroller{position:absolute;top:43px;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.scroller::-webkit-scrollbar{display:none}
+/* header */
+.header{position:sticky;top:0;z-index:20;height:54px;background:#141115;box-shadow:0 12px 13.55px rgba(121,81,0,.76)}
+.header .logo{position:absolute;left:22px;top:18px;width:58px;height:25px}
+.btn-login,.btn-reg{position:absolute;top:18px;height:25px;border:1px solid #fffad9;border-radius:9.459px;font-weight:600;font-size:11.351px;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;font-family:inherit;transition:transform .12s,filter .12s}
+.btn-login{left:115px;width:76.4px;background:linear-gradient(to top,#0f0f0f 18%,#261e10 98.5%);text-shadow:0 0 3px #a39603}
+.btn-reg{left:201px;width:140px;background:linear-gradient(to top,#ff6200 18%,#ffca38 98.5%);text-shadow:0 0 3px #ff4d4d}
+.btn-login:active,.btn-reg:active,.press:active{transform:scale(.95);filter:brightness(1.15)}
+.search{position:absolute;left:355px;top:18px;width:24px;height:25px;cursor:pointer}
+/* page */
+.page{position:relative;height:3430px;background:
+ radial-gradient(120px 260px at 330px 40px,rgba(255,190,60,.18),transparent 70%),
+ radial-gradient(160px 420px at 360px 1500px,rgba(200,150,60,.10),transparent 70%),
+ radial-gradient(200px 380px at 40px 2100px,rgba(200,150,60,.08),transparent 70%),
+ radial-gradient(220px 500px at 300px 2600px,rgba(220,170,80,.10),transparent 70%),
+ radial-gradient(180px 400px at 330px 3200px,rgba(220,170,80,.10),transparent 70%),
+ linear-gradient(#1c1915,#14120f 30%,#1a1713 60%,#211d18)}
+.abs{position:absolute}
+.page img{display:block}
+.y{--o:97px}
+.banner{left:0;top:calc(97px - var(--o));width:390px;height:380px}
+.card{top:calc(437px - var(--o));width:121px;height:168px;cursor:pointer}
+.card .hit{position:absolute;left:8px;bottom:12px;width:104px;height:28px;border-radius:30px}
+.card:active img{filter:brightness(1.12)}
+.sec{display:flex;align-items:center;gap:8px;height:36px;font-weight:600;font-size:15px;color:#fff}
+.sec img{width:28px;height:28px}
+.tile{cursor:pointer;border-radius:10px;transition:transform .12s}
+.tile:active{transform:scale(.96)}
+.fav{position:absolute;right:5px;top:5px;width:17px;height:17px;border-radius:50%;cursor:pointer}
+.fav.on{background:rgba(0,0,0,.55) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23ff4d6a' d='M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 5 6.4 5c2 0 3.6 1.1 4.6 2.6l1 1.3 1-1.3C14 6.1 15.6 5 17.6 5 21 5 23.1 8.4 21.6 11.8 19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E") center/11px no-repeat}
+.tabs{display:flex;gap:4px;left:14px;top:calc(916px - var(--o));width:376px;overflow-x:auto;scrollbar-width:none}
+.tab{flex:0 0 89px;height:31px;border-radius:9px;border:1px solid #6e6e6e;background:#100f0f;display:flex;align-items:center;justify-content:center;gap:5px;font-weight:600;font-size:14px;color:#c9c3b0;cursor:pointer;text-shadow:0 0 6px rgba(255,214,110,.45);font-family:inherit}
+.tab img{height:19px}
+.tab.on{border-color:#f8fdaf;color:#ffd257;box-shadow:0 0 6px rgba(248,253,175,.25)}
+.grid{display:grid;grid-template-columns:repeat(3,114px);gap:8px;width:358px}
+.prov-h{left:18px;top:calc(2491.7px - var(--o));width:354px;justify-content:space-between}
+.btn-all{width:52px;height:20px;border-radius:5px;border:1px solid #f0c24b;background:#062639;color:#fff;font:600 13px Inter;cursor:pointer}
+.prov{top:calc(2535px - var(--o));left:14px;display:flex;gap:6px;width:376px;overflow:hidden}
+.prov img{flex:0 0 auto;cursor:pointer}
+.box{left:12px;width:366px;border:1px solid #6a6b47;border-radius:12px;background:linear-gradient(#15130fcc,#15130fee)}
+.about{top:calc(2611px - var(--o));padding:12px;min-height:150px}
+.about .row{display:flex;gap:16px;align-items:center;height:60px}
+.about h3{font-size:13px;font-weight:700;line-height:18px;color:#fff;width:244px;letter-spacing:-.1px}
+.about p{margin-top:8px;font-size:12.6px;line-height:18px;color:#d7d3c8;text-align:justify;text-align-last:left;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.about.open p{-webkit-line-clamp:unset}.todo{display:none;color:#8d887c}.about.open .todo{display:inline}
+.more{margin-top:4px;font-size:12.6px;font-weight:500;color:#f5a623;cursor:pointer;display:inline-flex;align-items:center;gap:4px;background:none;border:0;font-family:inherit}
+.more svg{transition:transform .2s}.about.open .more svg{transform:rotate(180deg)}
+.info{top:calc(2773px - var(--o));height:154px;text-align:center}
+.info h4{margin-top:12px;font-size:13px;font-weight:600;color:#f5a623;line-height:18px}
+.links{display:flex;justify-content:space-between;align-items:center;padding:0 12px;margin-top:12px;height:18px;font-size:12px;font-weight:500;color:#e6e2d8}
+.links a{color:inherit;text-decoration:none}.links i{width:1px;height:8px;background:#6b6555}
+.hr{margin:14px 12px 0;height:1px;background:#5d5a51}
+.follow{margin-top:4px;font-size:12px;color:#8d887c;line-height:18px}
+.social{margin:10px auto 0;width:237px;height:35px;display:block}
+.help{top:calc(2939px - var(--o));height:92px;text-align:center;padding-top:12px}
+.help .q{font-size:11px;color:#8d887c;line-height:18px}
+.help a{display:block;font-size:12px;font-weight:600;color:#ffbf2a;text-decoration:underline;line-height:22px}
+.foot{left:17px;top:calc(3035px - var(--o));-webkit-mask:linear-gradient(90deg,transparent,#000 8px,#000 calc(100% - 8px),transparent),linear-gradient(transparent,#000 6px,#000 calc(100% - 6px),transparent);-webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 8px,#000 calc(100% - 8px),transparent),linear-gradient(transparent,#000 6px,#000 calc(100% - 6px),transparent);mask-composite:intersect}
+.copy{left:0;width:390px;top:calc(3145px - var(--o));text-align:center;font-size:12px;color:#77726a;line-height:18px}
+/* nav */
+.nav{position:absolute;left:0;bottom:0;width:390px;height:118px;z-index:25;pointer-events:none}
+.nav .bar{position:absolute;left:0;right:0;bottom:0;height:85px;background:#1f2025;border-radius:24px 24px 0 0;pointer-events:auto}
+.nav .ind{position:absolute;left:125px;bottom:8px;width:140px;height:5px;border-radius:3px;background:#5c5d61}
+.ni{position:absolute;bottom:25px;width:70px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:13px;color:#e6e6e6;cursor:pointer;pointer-events:auto;font-weight:500}
+.ni img{height:30px;opacity:.95}
+.ni.on{color:#f5b342}
+.ni:not(.on) img.home{filter:grayscale(1) brightness(2)}
+.dep{position:absolute;left:156px;bottom:48px;width:78px;height:76px;cursor:pointer;pointer-events:auto;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{filter:drop-shadow(0 0 8px rgba(255,190,60,.7))}}
+.deplbl{position:absolute;left:155px;width:80px;text-align:center;bottom:25px;font-size:13px;font-weight:700;color:#fff;pointer-events:auto;cursor:pointer}
+.toast{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%) scale(.9);background:rgba(20,17,21,.92);border:1px solid #ffca38;color:#fff;font-size:13px;padding:10px 16px;border-radius:10px;opacity:0;transition:.2s;z-index:50;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="meta">
+    <b>789P V1 · 首页</b>
+    来源：Figma「789Play 设计草稿」/ V1 + V2 Interface Comparison / 789P V1（390×3669）<br><br>
+    主色：<br>
+    <span class="sw" style="background:#141115"></span>#141115 底色<br>
+    <span class="sw" style="background:#FF6200"></span>#FF6200 主橙<br>
+    <span class="sw" style="background:#FFCA38"></span>#FFCA38 金黄<br>
+    <span class="sw" style="background:#fff"></span>#FFFFFF<br><br>
+    字体：Inter<br>画布：390 宽（iPhone 14）<br><br>
+    可交互：顶部按钮、分类 Tab、游戏卡收藏♥、Read more、底部导航。
+  </div>
+  <div class="phone">
+    <img class="statusbar" src="{{statusbar}}" alt="">
+    <div class="scroller" id="sc">
+      <header class="header">
+        <img class="logo" src="{{logo}}" alt="789PLAY">
+        <button class="btn-login" data-t="Login">Login</button>
+        <button class="btn-reg" data-t="Register &amp; Spin Now"><svg width="10" height="10" viewBox="0 0 10 10" fill="#fff"><rect x=".5" y="2.5" width="9" height="2.2" rx=".4"/><rect x="1.2" y="5.2" width="7.6" height="4.3" rx=".4"/><rect x="4.4" y="2.5" width="1.2" height="7" fill="#ff8a1c"/><path d="M5 2.4C4 0 2 .6 2.6 1.7 3 2.4 5 2.4 5 2.4zM5 2.4C6 0 8 .6 7.4 1.7 7 2.4 5 2.4 5 2.4z"/></svg>Register &amp; Spin Now</button>
+        <img class="search press" src="{{search}}" alt="搜索" data-t="搜索">
+      </header>
+      <main class="page y">
+        <img class="abs banner" src="{{banner}}" alt="10% First Deposit" data-t="Banner：10% First Deposit">
+        <div class="abs card" style="left:5px" data-t="Claim Now · New Member ₱50,000"><img src="{{card1}}" alt=""><span class="hit"></span></div>
+        <div class="abs card" style="left:131px" data-t="Deposit · Daily Deposit Bonus"><img src="{{card2}}" alt=""><span class="hit"></span></div>
+        <div class="abs card" style="left:257px" data-t="Refer Now · Refer and Earn"><img src="{{card3}}" alt=""><span class="hit"></span></div>
+
+        <div class="abs sec" style="left:16px;top:calc(595px - var(--o))"><img src="{{secicon}}" alt="">Popular Games</div>
+        <img class="abs tile" style="left:12px;top:calc(633px - var(--o))" src="{{popular}}" alt="" data-t="Popular Games">
+        <img class="abs tile" style="left:9px;top:calc(704px - var(--o))" src="{{spinwin}}" alt="" data-t="Spin &amp; Win">
+        <img class="abs tile" style="left:196px;top:calc(725px - var(--o))" src="{{cat_pusoy}}" alt="" data-t="Pusoy">
+        <img class="abs tile" style="left:293px;top:calc(725px - var(--o))" src="{{cat_poker}}" alt="" data-t="Poker">
+        <img class="abs tile" style="left:196px;top:calc(802px - var(--o))" src="{{cat_live}}" alt="" data-t="Live">
+        <img class="abs tile" style="left:294px;top:calc(802px - var(--o))" src="{{cat_slots}}" alt="" data-t="Slots">
+
+        <div class="abs tabs" id="tabs">
+          <button class="tab on"><img src="{{ic_hot}}" alt="">Hot</button>
+          <button class="tab"><img src="{{ic_slots}}" alt="">Slots</button>
+          <button class="tab"><img src="{{ic_casino}}" alt="">Casino</button>
+          <button class="tab"><img src="{{ic_arcade}}" alt="">Arcade</button>
+        </div>
+        <div class="abs grid" style="left:19px;top:calc(965px - var(--o))">{{hotgrid}}</div>
+
+        <div class="abs sec" style="left:16px;top:calc(1591px - var(--o))"><img src="{{secicon}}" alt="">Casino</div>
+        <div class="abs grid" style="left:16px;top:calc(1630px - var(--o))">{{casinogrid}}</div>
+
+        <img class="abs" style="left:14px;top:calc(2246px - var(--o))" src="{{bigwins}}" alt="Recent Big Wins">
+
+        <div class="abs sec prov-h"><span style="display:flex;align-items:center;gap:8px"><img src="{{secicon}}" alt="">Game Providers</span><button class="btn-all press" data-t="全部厂商">All</button></div>
+        <div class="abs prov">
+          <img class="press" src="{{prov_jili}}" alt="JILI" data-t="JILI"><img class="press" src="{{prov_fc}}" alt="FA CHAI" data-t="FA CHAI"><img class="press" src="{{prov_evo}}" alt="Evolution" data-t="Evolution"><img class="press" src="{{prov_sa}}" alt="SA Gaming" data-t="SA Gaming"><img src="{{prov_5}}" alt="">
+        </div>
+
+        <section class="abs box about" id="about">
+          <div class="row"><img src="{{aboutlogo}}" alt="789PLAY" style="width:72px;margin-left:10px"><h3>Your Premier PAGCOR-Regulated Online Casino Philippines</h3></div>
+          <p>Experience world-class online casino Philippines entertainment at a safe, secure, and PAGCOR-<span class="todo">（完整文案待产品补充）</span></p>
+          <button class="more" id="more"><span>Read more</span><svg width="9" height="6" viewBox="0 0 9 6"><path d="M1 1l3.5 3.5L8 1" stroke="#f5a623" stroke-width="1.6" fill="none"/></svg></button>
+        </section>
+
+        <section class="abs box info">
+          <h4>Information Center</h4>
+          <div class="links"><a href="#" data-t="Blog">Blog</a><i></i><a href="#" data-t="About &amp; Legal">About &amp; Legal</a><i></i><a href="#" data-t="Safety Center">Safety Center</a><i></i><a href="#" data-t="Betting Station">Betting Station</a></div>
+          <div class="hr"></div>
+          <div class="follow">Follow Us</div>
+          <img class="social" src="{{social}}" alt="Telegram / Instagram / YouTube / X / TikTok / Facebook">
+        </section>
+
+        <section class="abs box help">
+          <div class="q">Need Help? Contact PAGCOR at (02) 8527-9831 or visit</div>
+          <a href="https://www.pagcor.ph/regulatory/responsible-gaming.php" target="_blank" rel="noopener">www.pagcor.ph/regulatory/responsible-gaming.php</a>
+          <a href="https://OSEA.pagcor.ph" target="_blank" rel="noopener">https://OSEA.pagcor.ph</a>
+        </section>
+        <img class="abs foot" src="{{footlogos}}" alt="PAGCOR · 21+ · NPGH · 789PLAY">
+        <div class="abs copy">Copyright © 2026 789Play. All rights reserved.</div>
+      </main>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="bar"></div>
+      <div class="ni on" style="left:9px"><img class="home" src="{{nav_home}}" alt="">Home</div>
+      <div class="ni" style="left:73px"><img src="{{nav_invite}}" alt="">Invite</div>
+      <img class="dep" src="{{nav_deposit}}" alt="" data-t="Deposit 充值">
+      <div class="deplbl" data-t="Deposit 充值">Deposit</div>
+      <div class="ni" style="left:232px"><img src="{{nav_promo}}" alt="">Promo</div>
+      <div class="ni" style="left:304px"><img src="{{nav_account}}" alt="">Account</div>
+      <div class="ind"></div>
+    </nav>
+    <div class="toast" id="toast"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var st=document.getElementById('stage');
+  function fit(){var w=window.innerWidth;st.style.setProperty('--z',w<600?(w/390):1);}
+  fit();addEventListener('resize',fit);
+  var t=document.getElementById('toast'),tm;
+  function toast(m){t.textContent=m;t.classList.add('show');clearTimeout(tm);tm=setTimeout(function(){t.classList.remove('show')},1300);}
+  document.addEventListener('click',function(e){
+    var f=e.target.closest('.fav');
+    if(f){e.stopPropagation();f.classList.toggle('on');toast(f.classList.contains('on')?'已收藏':'已取消收藏');return;}
+    var el=e.target.closest('[data-t]');
+    if(el){e.preventDefault();toast('点击：'+el.getAttribute('data-t'));}
+  });
+  document.getElementById('tabs').addEventListener('click',function(e){
+    var b=e.target.closest('.tab');if(!b)return;
+    [].forEach.call(this.children,function(x){x.classList.toggle('on',x===b)});
+    toast('切换分类：'+b.textContent.trim());
+  });
+  document.getElementById('more').addEventListener('click',function(){
+    var a=document.getElementById('about');a.classList.toggle('open');
+    this.firstChild.textContent=a.classList.contains('open')?'Show less':'Read more';
+  });
+  [].forEach.call(document.querySelectorAll('.ni'),function(n){
+    n.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('.ni'),function(x){x.classList.toggle('on',x===n)});
+      toast('Tab：'+n.textContent.trim());
+    });
+  });
+})();
+</script>
+</body>
+</html>

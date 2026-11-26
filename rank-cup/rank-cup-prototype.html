@@ -370,7 +370,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="wrap">
   <div class="top">
     <h1>VIP 排行榜</h1>
-    <span class="ver">原型 v0.12 · 2026-10-29 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
+    <span class="ver">原型 v0.13 · 2026-11-26 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
     <div class="seg" role="tablist" id="viewSeg">
       <button data-v="h5" class="on">前台 H5</button>
       <button data-v="adm">运营后台</button>
@@ -419,14 +419,14 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
           </ul>
         </div>
         <div class="card">
-          <h3>排行榜页（对标 NuStar VIP Bet Royale）</h3>
+          <h3>排行榜页</h3>
           <ul>
             <li><b>顶部 Tab = 一个榜单</b>：VIP（综合榜：Slot + 真人，VIP 等级门槛）+ 各厂商榜 JILI / PG / FC / PP / OTG。Tab 名称和顺序在后台配置，横向滑动。</li>
             <li>主视觉：活动名、活动日期、<b>Ends in</b>（到本期结束的倒计时，GMT+8）。</li>
-            <li><b>Previous / Current</b>：Current 为本期实时（每 5 分钟刷新），Previous 为上一期最终结果，可在这里领奖。</li>
+            <li><b>Previous / Current</b>：Current 为本期实时（每 5 分钟刷新），Previous 为上一期最终结果（奖金已于 10:00 自动到账，无需领取）。</li>
             <li>领奖台 Top3：头像、脱敏昵称、Bet、<b>该玩家最近玩的游戏</b>（本榜计分范围内，带 ▶）、奖金。点游戏图标直接进入该游戏；游客先登录，游戏维护中提示维护。下面是 Rank / Player / Bet / Bonus 列表。</li>
             <li>底部紫色 <b>ME</b> 行常驻：我的名次（未上榜显示 --）、我的有效投注、预估奖金。上方一行提示与上一名 / 进入奖励区的差距。</li>
-            <li><b>底部悬浮游戏框</b>：复用活动详情页现有的「PLAY MORE! WIN MORE」模块（游戏卡 + PLAY，横向滑动），替代 NuStar 的 Eligible Games；展示本榜计分范围内的游戏，点 PLAY 直接进游戏。ME 行贴在它上方。</li>
+            <li><b>底部悬浮游戏框</b>：复用活动详情页现有的「PLAY MORE! WIN MORE」模块（游戏卡 + PLAY，横向滑动）；展示本榜计分范围内的游戏，点 PLAY 直接进游戏。ME 行贴在它上方。</li>
             <li>同一笔注单可以同时计入 VIP 榜和对应厂商榜。</li>
           </ul>
         </div>
@@ -434,9 +434,9 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
           <h3>发奖到账弹窗 + 通知</h3>
           <ul>
             <li><b>自动到账</b>：10:00 发奖时直接入账余额，不需要用户在线或领取；长期没登录的用户也照常到账。</li>
-            <li><b>到账弹窗</b>：发奖后用户第一次进入<b>首页</b>或<b>排行榜页</b>（含从推送 / 短信点进来）自动弹出，列出本次到账的奖励和合计。看过一次就不再弹（按用户 + 发奖批次记录）；离开期间累积的多期奖励合并在一个弹窗里。View Results 打开对应 Tab 的 Previous。</li>
+            <li><b>到账弹窗</b>：发奖后用户第一次进入<b>首页</b>或<b>排行榜页</b>自动弹出，列出本次到账的奖励和合计。看过一次就不再弹（按用户 + 发奖批次记录）；离开期间累积的多期奖励合并在一个弹窗里。View Results 打开对应 Tab 的 Previous。</li>
             <li>与首页其他弹窗同时出现时，到账弹窗优先。VIP 等级不足 / 没获奖的用户不弹。</li>
-            <li><b>通知链路</b>：10:00 推送 ① → +4 小时推送 ②（仍未唤起的）→ 再 +2 小时短信（两次推送都没唤起的）。配置在后台「推送管理 › 奖励发放推送」「营销短信 › 奖励发放提醒」。</li>
+            <li><b>推送 / 短信提醒</b>：二期，一期不做（见「规则与口径」末尾「二期」）。</li>
           </ul>
           <div class="filter" style="margin:6px 0 0">
             <label>场景 <select id="rwScene"><option value="today">今天 10:00 发奖</option><option value="away">长期未登录（累积 3 期）</option></select></label>
@@ -451,7 +451,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
               <select id="meMode">
                 <option value="in">已上榜（奖励区内）</option>
                 <option value="out">已上榜（奖励区外）</option>
-                <option value="vip">等级不足（VIP / 会员等级）</option>
+                <option value="vip">等级不足（VIP）</option>
                 <option value="below">已投注，未达上榜门槛</option>
                 <option value="none">本期还没有有效投注</option>
               </select>
@@ -466,7 +466,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
   <section id="v-adm" hidden>
     <div class="adm">
       <div class="bar1"><span class="t">当前时间: 2026/11/02 18:24:10 +08:00</span><span>⛶ &nbsp;简体中文 &nbsp;koi</span></div>
-      <div class="bar2"><span>🔔 在线人数 <b style="color:#ff8a8a">3,214</b></span><span>当日注册 <b style="color:#ffd24d">412</b></span><span>充值 <em>12</em></span><span>提款 <em style="background:#2e9c4f">5</em></span><span>风控审核 <em style="background:#2e9c4f">3</em></span><span>排行榜风控预警 <em id="pendBadge">3</em></span></div>
+      <div class="bar2"><span>🔔 在线人数 <b style="color:#ff8a8a">3,214</b></span><span>当日注册 <b style="color:#ffd24d">412</b></span><span>充值 <em>12</em></span><span>提款 <em style="background:#2e9c4f">5</em></span><span>风控审核 <em style="background:#2e9c4f">3</em></span><span>排行榜风控预警 <em id="pendBadge">2</em></span></div>
       <div class="body">
         <div class="side">
           <div class="hd">菜单 ☰</div>
@@ -477,9 +477,9 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
           <div class="m"><span>活动配置 <span class="badge">5</span></span><span>▴</span></div>
           <button class="sub on" data-ap="list">排行榜活动</button>
           <div class="m"><span>推送管理</span><span>▴</span></div>
-          <button class="sub" data-ap="push">奖励发放推送</button>
+          <button class="sub" data-ap="push">奖励发放推送（二期）</button>
           <div class="m"><span>营销短信</span><span>▴</span></div>
-          <button class="sub" data-ap="sms">奖励发放提醒</button>
+          <button class="sub" data-ap="sms">奖励发放提醒（二期）</button>
           <div class="m"><span>代理结算</span><span>▾</span></div>
         </div>
         <div class="main">
@@ -520,49 +520,56 @@ const TPL={
   top10:[[1,1,25],[2,2,18],[3,3,13],[4,4,10],[5,5,8],[6,6,7],[7,7,6],[8,8,5],[9,9,4.5],[10,10,3.5]]
 };
 const rowsOf=t=>TPL[t].map(r=>({s:r[0],e:r[1],p:r[2]}));
-const BASE={bot:{on:false,fill:0,growMin:1,growMax:5,cap:95,vipMin:1,vipMax:5},games:'all',start:'2026-11-02',end:'2026-12-27',show:'2026-11-01',settle:'10:00',poolMode:'fixed',rate:0.3,kyc:true,ip:3,claim:'auto',claimDays:3,audit:1,unfilled:'recycle',hedge:'net',roulette:70,status:'进行中'};
+const BASE={bot:{on:false,fill:0,growMin:1,growMax:5,cap:95,vipMin:1,vipMax:5},games:'all',start:'2026-11-02',end:'2026-12-27',show:'2026-11-01',settle:'10:00',kyc:true,ip:3,audit:1,unfilled:'recycle',roulette:70,status:'进行中'};
 const mk=o=>Object.assign(JSON.parse(JSON.stringify(BASE)),o);
 const S={
   view:'h5', admP:'list', edit:0, h5b:0, h5per:'cur', meMode:'in',
   boards:[
-    mk({id:'LB2611001',tab:'VIP',sort:1,name:'VIP Rank Cup',type:'mix',period:'week',prov:['JILI','PG','PP','FC','OTG'],pool:1000000,pmin:500000,pmax:1500000,estBet:150000000,rows:rowsOf('vip'),minBet:50000,vip:3,top:30079750,thumbs:[0,1,2,3,4]}),
-    mk({id:'LB2611002',tab:'JILI',sort:2,name:'JILI Daily Race',type:'slot',period:'day',prov:['JILI'],pool:50000,pmin:20000,pmax:80000,estBet:8000000,rows:rowsOf('head'),minBet:2000,vip:1,top:2410500,thumbs:[1,2,4]}),
-    mk({id:'LB2611003',tab:'PG',sort:3,name:'PG Daily Race',type:'slot',period:'day',prov:['PG'],pool:30000,pmin:15000,pmax:50000,estBet:5000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1620300,thumbs:[1,3],realN:18,bot:{on:true,fill:50,growMin:1,growMax:5,cap:95,vipMin:1,vipMax:5}}),
-    mk({id:'LB2611004',tab:'FC',sort:4,name:'FC Daily Race',type:'slot',period:'day',prov:['FC'],pool:20000,pmin:10000,pmax:30000,estBet:3000000,rows:rowsOf('top10'),minBet:2000,vip:1,top:980400,thumbs:[3,4]}),
-    mk({id:'LB2611005',tab:'PP',sort:5,name:'PP Daily Race',type:'slot',period:'day',prov:['PP'],pool:30000,pmin:15000,pmax:50000,estBet:5000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1510800,thumbs:[2,4]}),
-    mk({id:'LB2611006',tab:'OTG',sort:6,name:'OTG Live Weekly',type:'live',period:'week',prov:['OTG'],pool:300000,pmin:150000,pmax:500000,estBet:120000000,rows:rowsOf('flat'),minBet:20000,vip:3,top:12350000,thumbs:[0]}),
-    mk({id:'LB2611007',tab:'Weekend',sort:7,name:'Weekend Winners',type:'mix',period:'weekend',wkMode:'daily',metric:'win',start:'2026-10-30',end:'2026-12-27',prov:['JILI','PG','PP','FC','OTG'],pool:200000,pmin:100000,pmax:300000,estBet:60000000,rows:rowsOf('weekend'),minBet:0,vip:1,audit:3,top:1240000,thumbs:[0,1,2,3,4]}),
+    mk({id:'LB2611001',tab:'VIP',sort:1,name:'VIP Rank Cup',type:'mix',period:'week',prov:['JILI','PG','PP','FC','OTG'],pool:1000000,estBet:150000000,rows:rowsOf('vip'),minBet:50000,vip:3,top:30079750,thumbs:[0,1,2,3,4]}),
+    mk({id:'LB2611002',tab:'JILI',sort:2,name:'JILI Daily Race',type:'slot',period:'day',prov:['JILI'],pool:50000,estBet:8000000,rows:rowsOf('head'),minBet:2000,vip:1,top:2410500,thumbs:[1,2,4]}),
+    mk({id:'LB2611003',tab:'PG',sort:3,name:'PG Daily Race',type:'slot',period:'day',prov:['PG'],pool:30000,estBet:5000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1620300,thumbs:[1,3],realN:18,bot:{on:true,fill:50,growMin:1,growMax:5,cap:95,vipMin:1,vipMax:5}}),
+    mk({id:'LB2611004',tab:'FC',sort:4,name:'FC Daily Race',type:'slot',period:'day',prov:['FC'],pool:20000,estBet:3000000,rows:rowsOf('top10'),minBet:2000,vip:1,top:980400,thumbs:[3,4]}),
+    mk({id:'LB2611005',tab:'PP',sort:5,name:'PP Daily Race',type:'slot',period:'day',prov:['PP'],pool:30000,estBet:5000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1510800,thumbs:[2,4]}),
+    mk({id:'LB2611006',tab:'OTG',sort:6,name:'OTG Live Weekly',type:'live',period:'week',prov:['OTG'],pool:300000,estBet:120000000,rows:rowsOf('flat'),minBet:20000,vip:3,top:12350000,thumbs:[0]}),
+    mk({id:'LB2611007',tab:'Weekend',sort:7,name:'Weekend Winners',type:'mix',period:'weekend',wkDays:[5,6,0],metric:'win',start:'2026-10-30',end:'2026-12-27',prov:['JILI','PG','PP','FC','OTG'],pool:200000,estBet:60000000,rows:rowsOf('weekend'),minBet:0,vip:1,audit:3,top:1240000,thumbs:[0,1,2,3,4]}),
   ]
 };
 const GN=['Baccarat B03','Maya Golden City','Get the Gold','Fa Fa Babies 2','Tiki Fruits'];
 const G=['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'].map(x=>'data:image/jpeg;base64,'+x);
 /* ---------- 计算 ---------- */
-function poolOf(b){ if(b.poolMode==='fixed') return +b.pool||0; const v=(+b.estBet||0)*(+b.rate||0)/100; return Math.min(Math.max(v,+b.pmin||0),+b.pmax||Infinity); }
+function poolOf(b){ return +b.pool||0; }
 function lastRank(b){ return b.rows.reduce((m,r)=>Math.max(m,+r.e||0),0); }
 function pctOf(b,rank){ for(const r of b.rows){ if(rank>=+r.s&&rank<=+r.e) return +r.p; } return 0; }
 const br=b=>Object.assign({behind:true,report:true,disclose:false},(b.bot||{}).r);
-const qm=b=>(b.qMetric==='ggr'&&!isWin(b))?'ggr':'bet';
+const qm=b=>'bet';
 function prizeOf(b,rank){ return poolOf(b)*pctOf(b,rank)/100; }
 function sumPct(b){ return b.rows.reduce((t,r)=>t+((+r.e)-(+r.s)+1)*(+r.p),0); }
 function days(b){ const a=new Date(b.start+'T00:00:00'),z=new Date(b.end+'T00:00:00'); return Math.round((z-a)/864e5)+1; }
-function cycles(b){ const d=days(b); if(b.period==='weekend'){ let n=0; const a=new Date(b.start+'T00:00:00'); for(let i=0;i<d;i++){ const wd=new Date(a.getTime()+i*864e5).getDay(); if(b.wkMode==='merge'?wd===5:(wd===5||wd===6||wd===0)) n++; } return n; } return b.period==='day'?d:Math.floor(d/7); }
-const perLabel=b=>b.period==='day'?'日榜':b.period==='week'?'周榜':'周末榜'+(b.wkMode==='merge'?'（三天合并）':'（每日）');
+function cycles(b){ const d=days(b); if(b.period==='weekend'){ let n=0; const a=new Date(b.start+'T00:00:00'); for(let i=0;i<d;i++){ const wd=new Date(a.getTime()+i*864e5).getDay(); if(wkDaysOf(b).includes(wd)) n++; } return n; } return b.period==='day'?d:Math.floor(d/7); }
+const perLabel=b=>b.period==='day'?'日榜':b.period==='week'?'周榜':'周末榜（'+wkTxt(b)+'）';
 const perEN=b=>b.period==='day'?'DAILY':b.period==='week'?'WEEKLY':'WEEKEND';
-const perWord=b=>b.period==='day'?'day':b.period==='week'?'week':(b.wkMode==='merge'?'weekend':'day');
+const perWord=b=>b.period==='day'?'day':b.period==='week'?'week':'day';
 const isWin=b=>b.metric==='win';
+const WDN=['周日','周一','周二','周三','周四','周五','周六'], WDE=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const wkSort=a=>[...a].sort((x,y)=>((x+6)%7)-((y+6)%7));
+const wkDaysOf=b=>wkSort(b.wkDays&&b.wkDays.length?b.wkDays:[5,6,0]);
+const wkTxt=b=>wkDaysOf(b).map(d=>WDN[d]).join('、');
+const wkEN=b=>wkDaysOf(b).map(d=>WDE[d]).join(' · ');
+const ymd=x=>x.getFullYear()+'-'+String(x.getMonth()+1).padStart(2,'0')+'-'+String(x.getDate()).padStart(2,'0');
+function nextOpen(b){ const ds=wkDaysOf(b); for(let i=1;i<=7;i++){ const x=new Date(NOW.getTime()+i*864e5); if(ds.includes(x.getDay())) return ymd(x); } return ymd(NOW); }
+const wkOpenToday=b=>wkDaysOf(b).includes(NOW.getDay());
 function share(b,n){ let t=0; for(let i=1;i<=n;i++) t+=pctOf(b,i); return t; }
 function validate(b){
   const e=[]; const d=days(b);
   if(!b.name.trim()) e.push('请填写活动名称');
   if(d<1) e.push('结束日期须晚于开始日期');
-  if(b.period==='weekend'){ const ws=new Date(b.start+'T00:00:00').getDay(), we=new Date(b.end+'T00:00:00').getDay(); if(ws!==5) e.push('周末榜开始日须为周五'); if(we!==0) e.push('周末榜结束日须为周日'); }
+  if(b.period==='weekend'&&!(b.wkDays&&b.wkDays.length)) e.push('周末榜请至少勾选 1 个开放日');
   if(b.period==='week'){ const wd=new Date(b.start+'T00:00:00').getDay(); if(wd!==1) e.push('周榜开始日须为周一（周一 00:00 – 周日 23:59:59）'); if(d%7!==0) e.push('周榜活动天数须为 7 的整数倍，当前 '+d+' 天'); }
   ensureG(b); if(!b.gsel.length) e.push('请选择指定游戏（至少 1 款）');
   const rs=[...b.rows].sort((x,y)=>x.s-y.s); let exp=1;
   for(const r of rs){ if(+r.s!==exp){ e.push('名次须从 1 开始连续，第 '+exp+' 名缺失或重叠'); break;} if(+r.e<+r.s){e.push('名次区间填写有误');break;} exp=+r.e+1; }
   for(let i=1;i<rs.length;i++){ if(+rs[i].p>+rs[i-1].p){ e.push('后面名次的单人占比高于前面名次（第 '+rs[i].s+' 名起）'); break; } }
   const s=sumPct(b); if(Math.abs(s-100)>0.001) e.push('名次占比合计须为 100%，当前 '+pct(s));
-  if(b.poolMode==='dynamic' && +b.pmax< +b.pmin) e.push('奖池上限须 ≥ 下限');
   return e;
 }
 
@@ -601,7 +608,7 @@ function meRow(b,list){
 const NOW=new Date('2026-11-02T18:24:10');
 let tick=0;
 const dotDate=d=>{const x=new Date(d+'T00:00:00');return x.getFullYear()+'.'+(x.getMonth()+1)+'.'+x.getDate();};
-function periodEnd(b){ if(startsLater(b)) return new Date(b.start+'T00:00:00'); return b.period==='day'?new Date('2026-11-02T23:59:59'):b.period==='weekend'?new Date('2026-11-06T00:00:00'):new Date('2026-11-08T23:59:59'); }
+function periodEnd(b){ if(startsLater(b)) return new Date(b.start+'T00:00:00'); return b.period==='day'?new Date('2026-11-02T23:59:59'):b.period==='weekend'?(wkOpenToday(b)?new Date('2026-11-02T23:59:59'):new Date(nextOpen(b)+'T00:00:00')):new Date('2026-11-08T23:59:59'); }
 const cdLabel=b=>notStartedFor(b)?'Starts in: ':'Ends in: ';
 function cdText(b){ let s=Math.max(0,Math.floor((periodEnd(b)-NOW)/1000)-tick); const d=Math.floor(s/86400); s%=86400; const p=n=>String(n).padStart(2,'0'); return (d?d+'d ':'')+p(Math.floor(s/3600))+':'+p(Math.floor(s%3600/60))+':'+p(s%60); }
 const tabsSorted=()=>S.boards.map((b,i)=>({b,i})).sort((x,y)=>(+x.b.sort||0)-(+y.b.sort||0));
@@ -616,12 +623,12 @@ function renderH5(){
   tbx.scrollLeft=keep;
   const act=tbx.querySelector('.on'); if(act){ const l=act.offsetLeft-tbx.offsetLeft, r=l+act.offsetWidth; if(l<tbx.scrollLeft+8||r>tbx.scrollLeft+tbx.clientWidth-28) tbx.scrollTo({left:Math.max(0,l-(tbx.clientWidth-act.offsetWidth)/2),behavior:'smooth'}); }
   let h=`<div class="lhero"><div class="ttl">RANK CUP</div><div class="sub">${(b.tab||'').toUpperCase()===perEN(b)?'':esc(b.tab||'')+' · '}${perEN(b)}${isWin(b)?' · TOP WINNERS':''}</div>
-    <div class="dt">${b.period==='weekend'?'Every Fri · Sat · Sun':dotDate(b.start)+' - '+dotDate(b.end)}</div>
+    <div class="dt">${b.period==='weekend'?'Every '+wkEN(b):dotDate(b.start)+' - '+dotDate(b.end)}</div>
     <div class="cd" id="cdPill"><i>◷</i>${prev?'Final results':cdLabel(b)+cdText(b)}</div></div>
     <div class="pctl"><button data-per="prev" class="${prev?'on':''}">Previous</button><button data-per="cur" class="${!prev?'on':''}">Current</button></div>`;
   const pc=p=>`<div class="pcw r${p.rank}"><div class="medal">${p.rank}</div><div class="av" style="background:${p.c}">${p.name[0].toUpperCase()}</div><div class="pc r${p.rank}"><div class="nm">${p.name}</div><div class="bt">${isWin(b)?'Win':'Bet'}:${money(p.bet)}</div><button class="pgame" data-act="game" data-g="${p.th}" aria-label="Play ${esc(gName(p.th)[0])}">${gtile(p.th,'sm')}</button><div class="pz">${p.bot?'—':coinAmt(prizeOf(b,p.rank))}</div></div></div>`;
   const notStarted=notStartedFor(b)&&!prev;
-  if(notStarted){ const nd=startsLater(b)?b.start:'2026-11-06'; const dd=new Date(nd+'T00:00:00'); const lbl=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dd.getDay()]+' '+(dd.getMonth()+1)+'/'+dd.getDate(); h+=`<div style="padding:28px 18px;text-align:center;color:#4a1670;background:linear-gradient(180deg,#fff,#fbeff7)"><div style="font-family:var(--f-disp);font-size:20px">${startsLater(b)?'Starts':'Next round'}: ${lbl}</div><div style="font-size:12px;color:#7a6a88;margin-top:6px;line-height:1.6">${b.period==='weekend'?(b.wkMode==='merge'?'Friday 00:00 – Sunday 23:59:59 is one round.':'Friday, Saturday and Sunday are ranked separately, 00:00 – 23:59:59 each day.'):b.period==='day'?'Daily round 00:00 – 23:59:59.':'Weekly round Monday – Sunday.'} (GMT+8)<br>Ranked by ${isWin(b)?'total winnings (payout − bet)':'valid bet'}. Top ${lastRank(b)} win ${fmt(poolOf(b))} each round.${startsLater(b)?'':'<br>Tap Previous to see last results.'}</div></div>`; }
+  if(notStarted){ const nd=startsLater(b)?b.start:nextOpen(b); const dd=new Date(nd+'T00:00:00'); const lbl=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dd.getDay()]+' '+(dd.getMonth()+1)+'/'+dd.getDate(); h+=`<div style="padding:28px 18px;text-align:center;color:#4a1670;background:linear-gradient(180deg,#fff,#fbeff7)"><div style="font-family:var(--f-disp);font-size:20px">${startsLater(b)?'Starts':'Next round'}: ${lbl}</div><div style="font-size:12px;color:#7a6a88;margin-top:6px;line-height:1.6">${b.period==='weekend'?'Open on '+wkEN(b)+'; each open day is ranked separately, 00:00 – 23:59:59.':b.period==='day'?'Daily round 00:00 – 23:59:59.':'Weekly round Monday – Sunday.'} (GMT+8)<br>Ranked by ${isWin(b)?'total winnings (payout − bet)':'valid bet'}. Top ${lastRank(b)} win ${fmt(poolOf(b))} each round.${startsLater(b)?'':'<br>Tap Previous to see last results.'}</div></div>`; }
   else { h+=`<div class="pod">${pc(list[1])}${pc(list[0])}${pc(list[2])}</div>`;
   h+=`<div class="lhd"><span>Rank</span><span>Player</span><span>${isWin(b)?'Winnings':'Bet'}</span><span>Bonus</span></div>`; }
   const me=prev||notStarted?null:meRow(b,list);
@@ -664,22 +671,16 @@ function rulesSheet(){
   $('#sheet').innerHTML=`<div class="sheet" data-act="close"><div class="bd" role="dialog" aria-label="Rules">
     <h3>${esc(b.name)} · Rules <button data-act="close" aria-label="Close">✕</button></h3>
     <ol>
-      <li>Period: ${b.period==='day'?'every day 00:00:00 – 23:59:59':b.period==='week'?'Monday 00:00 – Sunday 23:59:59':(b.wkMode==='merge'?'every Friday 00:00 – Sunday 23:59:59 (one round)':'every Friday, Saturday and Sunday, 00:00:00 – 23:59:59; rankings reset daily')} (GMT+8), ${dotDate(b.start)} – ${dotDate(b.end)}.</li>
+      <li>Period: ${b.period==='day'?'every day 00:00:00 – 23:59:59':b.period==='week'?'Monday 00:00 – Sunday 23:59:59':'every '+wkEN(b)+', 00:00:00 – 23:59:59; rankings reset daily'} (GMT+8), ${dotDate(b.start)} – ${dotDate(b.end)}.</li>
       <li>Games: ${b.type==='slot'?'slot games':b.type==='live'?'live casino tables':'slot games and live casino tables'} from ${b.prov.join(', ')}.</li>
       <li>${isWin(b)?'Ranking is by <b>total winnings</b> = total payout − total bet of settled bets; players with winnings ≤ 0 are not ranked.':'Ranking is by <b>valid bet</b> of settled bets.'} Bets with a zero result (payout equals stake), tie / push results, cancelled or voided bets and hedged bets (e.g. Banker + Player in the same round) do not count at all.</li>
-      <li>Who can join: ${eligEN(b)}${b.kyc?', verified (KYC) account':''}, ${qm(b)==='ggr'?'players appear on the board after reaching the qualifying play level for the period':'at least '+fmt(b.minBet)+' valid bet in the period to appear on the board'}.</li>
+      <li>Who can join: ${eligEN(b)}${b.kyc?', verified (KYC) account':''}, at least ${fmt(b.minBet)} valid bet in the period to appear on the board.</li>
       <li>Same valid bet: the player who reached it first ranks higher.</li>
-      <li>Prizes are credited to your balance automatically at 10:00 (GMT+8) ${b.period==='day'?'the next day':'the following Monday'}, as bonus with ${b.audit}× wagering. No need to claim.</li>
+      <li>Prizes are credited to your balance automatically at 10:00 (GMT+8) ${b.period==='week'?'the following Monday':'the next day'}, as bonus with ${b.audit}× wagering. No need to claim.</li>
       <li>Abuse, multiple accounts or hedging between accounts will be disqualified.</li>${b.bot&&b.bot.on&&br(b).disclose?'<li>This leaderboard may include system display accounts, which do not receive prizes.</li>':''}
     </ol>
     <table><tr><th>Rank</th><th>Share each</th><th>Bonus each</th></tr>${rowsHtml}</table>
   </div></div>`;
-}
-function claimSheet(){
-  const b=S.boards[S.h5b], w=prizeOf(b,9);
-  $('#sheet').innerHTML=`<div class="sheet" data-act="close"><div class="bd"><h3>Bonus claimed <button data-act="close" aria-label="Close">✕</button></h3>
-  <div class="claim"><span>${esc(b.name)} · #9</span><b style="font-family:var(--f-disp);font-size:20px;color:#b4380e">${fmt(w)}</b></div>
-  <p>Added to your balance as bonus. Wagering required: ${fmt(w*b.audit)} (${b.audit}×).</p></div></div>`;
 }
 /* ---------- 首页右侧挂件 ---------- */
 S.pwOpen=true; S.pwOff=0; S.claimed=false; S.pwCfg={on:true,name:'排行榜活动',weight:1,tab:0};
@@ -738,7 +739,6 @@ document.addEventListener('click',e=>{
   else if(t.dataset.per){S.h5per=t.dataset.per;renderH5();}
   else if(a==='game'){ const g=t.dataset.g; $('#sheet').innerHTML=`<div class="toast">Opening ${esc(gName(g)[0])}…<br><small style="opacity:.75">原型：跳转到该游戏（同 game_play）</small></div>`; setTimeout(()=>{ if($('.toast')) $('#sheet').innerHTML=''; },1600); }
   else if(a==='rules'){rulesSheet();}
-  else if(a==='claim'){claimSheet();S.claimed=true;renderPW();}
   else if(a==='close' && (e.target===t || e.target.tagName==='BUTTON')){$('#sheet').innerHTML='';}
 });
 $('#meMode').onchange=e=>{S.meMode=e.target.value;S.h5per='cur';renderH5();renderPW();};
@@ -863,7 +863,7 @@ function maybeRewardPop(){
 
 /* ---------- 后台 ---------- */
 function admList(){
-  const rows=S.boards.map((b,i)=>b.status==='草稿'?'':`<tr><td>${b.id}</td><td>${esc(b.name)}</td><td>${esc(b.tab||'')} <small style="color:#888">#${b.sort}</small></td><td style="white-space:nowrap">${catText(b)}</td><td style="white-space:nowrap">${perLabel(b)}${isWin(b)?'<br><small style="color:#888">按总赢额</small>':''}</td><td>${b.prov.join('、')}</td><td style="white-space:nowrap">${b.start}<br>~ ${b.end}</td><td class="r">${fmt(poolOf(b))}${b.poolMode==='dynamic'?'<br><small>动态</small>':''}</td><td class="r">${cycles(b)}</td><td class="r">${fmt(poolOf(b)*cycles(b))}</td><td>Top ${lastRank(b)}</td><td>${b.on===false&&b.status!=='草稿'?'<span class="pill n">已关闭</span>':`<span class="pill ${b.status==='草稿'?'n':b.status==='未开始'?'w':'ok'}">${b.status}</span>`}</td><td><label class="sw" title="${b.status==='草稿'?'草稿需先保存并发布':''}"><input type="checkbox" data-on="${i}" ${b.on!==false&&b.status!=='草稿'?'checked':''} ${b.status==='草稿'?'disabled':''} aria-label="开启或关闭 ${esc(b.name)}"><i></i></label></td><td class="ops"><button class="btn lnk" data-edit="${i}">编辑</button><button class="btn lnk" data-data="${i}">榜单数据</button></td></tr>`).join('');
+  const rows=S.boards.map((b,i)=>b.status==='草稿'?'':`<tr><td>${b.id}</td><td>${esc(b.name)}</td><td>${esc(b.tab||'')} <small style="color:#888">#${b.sort}</small></td><td style="white-space:nowrap">${catText(b)}</td><td style="white-space:nowrap">${perLabel(b)}${isWin(b)?'<br><small style="color:#888">按总赢额</small>':''}</td><td>${b.prov.join('、')}</td><td style="white-space:nowrap">${b.start}<br>~ ${b.end}</td><td class="r">${fmt(poolOf(b))}</td><td class="r">${cycles(b)}</td><td class="r">${fmt(poolOf(b)*cycles(b))}</td><td>Top ${lastRank(b)}</td><td>${b.on===false&&b.status!=='草稿'?'<span class="pill n">已关闭</span>':`<span class="pill ${b.status==='草稿'?'n':b.status==='未开始'?'w':'ok'}">${b.status}</span>`}</td><td><label class="sw" title="${b.status==='草稿'?'草稿需先保存并发布':''}"><input type="checkbox" data-on="${i}" ${b.on!==false&&b.status!=='草稿'?'checked':''} ${b.status==='草稿'?'disabled':''} aria-label="开启或关闭 ${esc(b.name)}"><i></i></label></td><td class="ops"><button class="btn lnk" data-edit="${i}">编辑</button><button class="btn lnk" data-data="${i}">榜单数据</button></td></tr>`).join('');
   const pc=S.pwCfg;
   const entry=`<div class="box"><div class="bh"><span>入口设置</span><span style="font-weight:400;color:#888;font-size:12px">对所有榜单生效</span></div><div class="bb"><div class="frm">
     <div class="l">首页挂件（右侧）</div><div class="v"><label class="chk"><input type="checkbox" data-pw="on" id="pw-on" ${pc.on?'checked':''}> 开启</label><span class="pill ${pc.on?'ok':'n'}">${pc.on?'已开启':'已关闭'}</span><span class="hint">只能开启或关闭。图标、名称（默认「排行榜活动」）为前端默认，后台不可改；点击打开排序第 1 的榜单 Tab。开启后加入现有首页挂件（Lucky Spin / Daily Gift / Invite Now），最多同时显示 3 个，超过时每 3 秒自动轮播；排序按资格分档。关闭后挂件里不显示 Rank Cup，其他挂件不受影响。</span></div>
@@ -871,10 +871,10 @@ function admList(){
     <div class="l">首页三格</div><div class="v"><span class="hint" style="width:auto">位置二 Rank Cup 在「活动配置 › 首页小框广告位」配置。</span></div>
   </div></div></div>`;
   return entry+`<div class="box"><div class="bh"><span>排行榜活动列表</span><span><button class="btn pri" data-new="1">+ 新增排行榜</button></span></div><div class="bb">
-  <div class="filter"><label>活动名称 <input type="text" id="f1"></label><label>游戏类型 <select id="f2"><option>全部</option><option>Slot</option><option>Casino</option><option>Poker</option><option>Bingo</option><option>Arcade</option><option>Fishing</option></select></label><label>活动类型 <select id="f3"><option>全部</option><option>日榜</option><option>周榜</option><option>周末榜</option></select></label><label>状态 <select id="f4"><option>全部</option><option>未开始</option><option>预热中</option><option>进行中</option><option>已结束</option><option>已下架</option></select></label><button class="btn pri">查询</button></div>
+  <div class="filter"><label>活动名称 <input type="text" id="f1"></label><label>游戏类型 <select id="f2"><option>全部</option><option>Slot</option><option>Casino</option></select></label><label>活动类型 <select id="f3"><option>全部</option><option>日榜</option><option>周榜</option><option>周末榜</option></select></label><label>状态 <select id="f4"><option>全部</option><option>未开始</option><option>预热中</option><option>进行中</option><option>已结束</option><option>已下架</option></select></label><button class="btn pri">查询</button></div>
   <div class="tw"><table class="t"><tr><th>活动ID</th><th>活动名称</th><th>前台 Tab / 排序</th><th>游戏类型</th><th>活动类型</th><th>计入厂商</th><th>活动日期 (GMT+8)</th><th class="r">每期奖池</th><th class="r">期数</th><th class="r">预估总预算</th><th>获奖名次</th><th>状态</th><th>开启 / 关闭</th><th>操作</th></tr>${rows}
   <tr><td>LB2610003</td><td>Slot Weekly 测试</td><td>—</td><td>Slot</td><td>周榜</td><td>JILI</td><td style="white-space:nowrap">2026-10-05<br>~ 2026-10-25</td><td class="r">₱50,000</td><td class="r">3</td><td class="r">₱150,000</td><td>Top 30</td><td><span class="pill n">已结束</span></td><td><label class="sw"><input type="checkbox" disabled aria-label="已结束"><i></i></label></td><td class="ops"><button class="btn lnk">查看</button><button class="btn lnk">榜单数据</button></td></tr></table></div>
-  <div class="alert w">状态说明：未开始 → 预热中（前台可见，不计分）→ 进行中 → 已结束（最后一期发奖完成）。<b>进行中的活动只能改素材和文案</b>，时间、厂商、奖池、名次占比锁定，需要调整时先关闭再新建。<br>开启 / 关闭：在列表直接切换，即时生效。关闭后前台立即隐藏该榜单 Tab、停止计分，当期不结算；已结束期次的奖金仍可在有效期内领取。已结束的不可再开启。每次切换写操作日志。</div>
+  <div class="alert w">状态说明：未开始 → 预热中（前台可见，不计分）→ 进行中 → 已结束（最后一期发奖完成）。<b>进行中的活动只能改素材和文案</b>，时间、厂商、奖池、名次占比锁定，需要调整时先关闭再新建。<br>开启 / 关闭：在列表直接切换，即时生效。关闭后前台立即隐藏该榜单 Tab、停止计分，当期不结算；已结束期次的奖金已于 10:00 自动发放，不受影响。已结束的不可再开启。每次切换写操作日志。</div>
   </div></div>`;
 }
 
@@ -890,43 +890,39 @@ function admEdit(){
     ${b.status==='草稿'?'':`<div class="l">活动ID</div><div class="v"><b style="font-family:ui-monospace,Menlo,monospace;font-size:13px">${b.id}</b><span class="hint">发布时系统生成的唯一编号，不可修改；用于发奖唯一键、投注记录和操作日志。</span></div>`}
     <div class="l"><span class="req">*</span> 活动名称</div><div class="v"><input type="text" id="e-name" value="${esc(b.name)}" style="width:260px"><span class="hint">规则弹窗标题，支持多语言（EN / Filipino）</span></div>
     <div class="l"><span class="req">*</span> 前台 Tab</div><div class="v">名称 <input type="text" id="e-tab" value="${esc(b.tab||'')}" style="width:90px" maxlength="8"> 排序 <input type="number" id="e-sort" min="1" value="${b.sort||1}" style="width:56px"><span class="hint">排行榜页顶部 Tab，≤8 字符，数字小的在前；首页入口默认打开排序第 1 的 Tab。</span></div>
-    <div class="l">游戏类型</div><div class="v">${(ensureG(b),b.cats||[]).map(k=>`<span class="pill n">${catLabel(k)}</span>`).join(' ')||'<span class="hint" style="width:auto">选择指定游戏后自动识别</span>'}<span class="hint">读取后端存储的游戏分类（6 类：Slot / Casino / Poker / Bingo / Arcade / Fishing），按所选指定游戏自动识别，不手动选择。含 Casino 时显示对冲口径设置。</span></div>
+    <div class="l">游戏类型</div><div class="v">${(ensureG(b),b.cats||[]).map(k=>`<span class="pill n">${catLabel(k)}</span>`).join(' ')||'<span class="hint" style="width:auto">选择指定游戏后自动识别</span>'}<span class="hint">读取后端存储的游戏分类（仅 Slot / Casino 两类），按所选指定游戏自动识别，不手动选择。含 Casino 时显示对冲与轮盘口径。</span></div>
     <div class="l"><span class="req">*</span> 指定游戏</div><div class="v" style="display:block">${gameField(b)}</div>
     <div class="l">底部游戏框</div><div class="v"><label class="chk"><input type="checkbox" id="e-gbar" ${b.gbarOn!==false?'checked':''}> 显示</label><label class="radio"><input type="radio" name="e-gsrc" value="auto" ${b.gsrc!=='pick'?'checked':''}> 自动：计入范围内热度前 10</label><label class="radio"><input type="radio" name="e-gsrc" value="pick" ${b.gsrc==='pick'?'checked':''}> 手动选择</label>${b.gsrc==='pick'?'<button class="btn sm">选择游戏（复用 Promo 选游戏组件）</button>':''}<span class="hint">复用活动详情页现有的底部悬浮游戏框（PLAY MORE! WIN MORE），样式与交互不改。手动选择时只能选计入范围内的游戏，最多 20 个，可拖动排序。</span></div>
 
     <div class="sec">二、活动时间（GMT+8）</div>
-    <div class="l"><span class="req">*</span> 活动类型</div><div class="v"><label class="radio"><input type="radio" name="e-per" value="day" ${b.period==='day'?'checked':''}> 日榜（每天 00:00:00 – 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="week" ${b.period==='week'?'checked':''}> 周榜（周一 00:00 – 周日 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="weekend" ${b.period==='weekend'?'checked':''}> 周末榜（周五、周六、周日）</label>${b.period==='weekend'?`<span style="width:100%"></span>统计方式 <label class="radio"><input type="radio" name="e-wk" value="daily" ${b.wkMode!=='merge'?'checked':''}> 每天单独排名（周五 / 周六 / 周日各一期，每日重置）</label><label class="radio"><input type="radio" name="e-wk" value="merge" ${b.wkMode==='merge'?'checked':''}> 三天合并一期（周五 00:00 – 周日 23:59:59）</label><span class="hint">周末榜活动日期须从周五开始、到周日结束；周一至周四不计分，前台显示下一轮开始倒计时。</span>`:''}</div>
-    <div class="l"><span class="req">*</span> 排名指标</div><div class="v"><label class="radio"><input type="radio" name="e-metric" value="bet" ${!isWin(b)?'checked':''}> 有效投注（默认）</label><label class="radio"><input type="radio" name="e-metric" value="win" ${isWin(b)?'checked':''}> 总赢额（总派彩 − 总投注）</label><span class="hint">总赢额只统计指定游戏中计入的注单（结果为 0、和局、对冲、取消的注单不记录为有效投注）；总赢额 ≤ 0 不上榜；同额先达到者排前。参考 NuStar 周四–周五 Top Winners 榜。</span></div>
+    <div class="l"><span class="req">*</span> 活动类型</div><div class="v"><label class="radio"><input type="radio" name="e-per" value="day" ${b.period==='day'?'checked':''}> 日榜（每天 00:00:00 – 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="week" ${b.period==='week'?'checked':''}> 周榜（周一 00:00 – 周日 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="weekend" ${b.period==='weekend'?'checked':''}> 周末榜（开放日可选，每天单独排名）</label>${b.period==='weekend'?`<span style="width:100%"></span>开放日 ${[1,2,3,4,5,6,0].map(d=>`<label class="chk"><input type="checkbox" data-wkd="${d}" ${wkDaysOf(b).includes(d)&&(b.wkDays||[]).length?'checked':''}> ${WDN[d]}</label>`).join('')}<span class="hint">默认周五、周六、周日，可改（如周四 – 周六）。每个开放日 00:00:00 – 23:59:59 单独一期，每日重置；非开放日不计分，前台显示下一轮开始倒计时。</span>`:''}</div>
+    <div class="l"><span class="req">*</span> 排名指标</div><div class="v"><label class="radio"><input type="radio" name="e-metric" value="bet" ${!isWin(b)?'checked':''}> 有效投注（默认）</label><label class="radio"><input type="radio" name="e-metric" value="win" ${isWin(b)?'checked':''}> 总赢额（总派彩 − 总投注）</label><span class="hint">总赢额只统计指定游戏中计入的注单（结果为 0、和局、对冲、取消的注单不记录为有效投注）；总赢额 ≤ 0 不上榜；同额先达到者排前。</span></div>
     <div class="l"><span class="req">*</span> 活动日期</div><div class="v"><input type="date" id="e-start" value="${b.start}"> 00:00:00 至 <input type="date" id="e-end" value="${b.end}"> 23:59:59<span class="hint">共 ${days(b)} 天 → <b>${cy}</b> 期。</span></div>
     <div class="l">预热展示日</div><div class="v"><input type="date" id="e-show" value="${b.show}"><span class="hint">此日起前台可见，显示“即将开始”和奖池，不计分。</span></div>
-    <div class="l"><span class="req">*</span> 发奖时间</div><div class="v"><b>每期结束后 10:00:00（GMT+8）</b>　日榜 = 次日 10:00；周榜 = 下周一 10:00；周末榜 = 每日排名时周六 / 周日 / 周一 10:00 各发一次，三天合并时周一 10:00<span class="hint">固定，不可修改。00:00–10:00 之间补拉厂商迟到注单、处理撤销冲正、完成 Top3 和异常账号风控审核；期末前下注、10:00 前结算的注单仍计入上一期。</span></div>
+    <div class="l"><span class="req">*</span> 发奖时间</div><div class="v"><b>每期结束后 10:00:00（GMT+8）</b>　日榜 = 次日 10:00；周榜 = 下周一 10:00；周末榜 = 每个开放日的次日 10:00<span class="hint">固定，不可修改。00:00–10:00 之间补拉厂商迟到注单、处理撤销冲正、完成 Top3 和异常账号风控审核；期末前下注、10:00 前结算的注单仍计入上一期。</span></div>
 
     <div class="sec">三、奖励配置</div>
-    <div class="l"><span class="req">*</span> 奖池模式</div><div class="v"><label class="radio"><input type="radio" name="e-pm" value="fixed" ${b.poolMode==='fixed'?'checked':''}> 固定奖池</label><label class="radio"><input type="radio" name="e-pm" value="dynamic" ${b.poolMode==='dynamic'?'checked':''}> 动态奖池（本期全站有效投注 × 比例）</label></div>
-    ${b.poolMode==='fixed'
-      ?`<div class="l"><span class="req">*</span> 每期奖池</div><div class="v">₱ <input type="number" id="e-pool" min="0" step="1000" value="${b.pool}" style="width:130px"></div>`
-      :`<div class="l"><span class="req">*</span> 奖池比例</div><div class="v"><input type="number" id="e-rate" step="0.01" min="0" value="${b.rate}" style="width:80px"> % ，下限 ₱ <input type="number" id="e-pmin" value="${b.pmin}" style="width:110px"> 上限 ₱ <input type="number" id="e-pmax" value="${b.pmax}" style="width:110px"><span class="hint">前台每 5 分钟刷新奖池；期末按实际有效投注定额，封顶不超过上限。</span></div>`}
-    <div class="l">预估每期有效投注</div><div class="v">₱ <input type="number" id="e-est" step="100000" value="${b.estBet}" style="width:150px"><span class="hint">仅用于测算返还率和动态奖池，不影响发奖。可参考近 4 周同范围日均 / 周均有效投注。</span></div>
+    <div class="l"><span class="req">*</span> 每期奖池</div><div class="v">₱ <input type="number" id="e-pool" min="0" step="1000" value="${b.pool}" style="width:130px"><span class="hint">固定奖池，每期金额相同。</span></div>
+    <div class="l">预估每期有效投注</div><div class="v">₱ <input type="number" id="e-est" step="100000" value="${b.estBet}" style="width:150px"><span class="hint">仅用于测算返还率，不影响发奖。可参考近 4 周同范围日均 / 周均有效投注。</span></div>
     <div class="l"><span class="req">*</span> 名次与占比</div><div class="v" style="display:block">
       
       <div class="tw"><table class="rk"><tr><th>起始名次</th><th>结束名次</th><th>人数</th><th>每人占比</th><th>每人金额</th><th>区间占比</th><th>区间小计</th><th></th></tr>${rk}</table></div>
       <div class="sumline"><button class="btn sm" data-addrow="1">+ 添加名次区间</button><span>合计占比 <b style="color:${Math.abs(s-100)<0.001?'var(--ok)':'var(--bad)'}">${pct(s)}</b> · 获奖人数 ${lr} · 合计 ${fmt(pool*s/100)}</span></div>
     </div>
-    <div class="l">名次空缺处理</div><div class="v"><label class="radio"><input type="radio" name="e-unf" value="recycle" ${b.unfilled==='recycle'?'checked':''}> 不发放，回收预算</label><label class="radio"><input type="radio" name="e-unf" value="none" ${b.unfilled==='none'?'checked':''}> 按实际上榜人数重新分配</label><span class="hint">上榜人数少于获奖名次时（如凌晨低峰），默认空缺名次的奖金不发。</span></div>
+    <div class="l">名次空缺处理</div><div class="v"><label class="radio"><input type="radio" name="e-unf" value="recycle" ${b.unfilled==='recycle'?'checked':''}> 不发放，回收预算</label><label class="radio"><input type="radio" name="e-unf" value="none" ${b.unfilled==='none'?'checked':''}> 按实际上榜人数重新分配</label><span class="hint">上榜人数少于获奖名次时（如凌晨低峰），默认空缺名次的奖金不发。机器人补位占用的名次同样视为空缺，按此处理。</span></div>
     <div class="l"><span class="req">*</span> 发放方式</div><div class="v"><b>自动发奖</b><span class="hint">固定自动发放，无需玩家领取：10:00 直接入账平台余额，账变类型“活动金额”，按下方稽核倍数写入提现稽核；风控审核未通过的名次暂缓发放，人工处理。</span></div>
-    <div class="l">到账通知</div><div class="v"><span class="hint" style="margin:0">所有排行榜共用：用户进入首页 / 排行榜页弹「到账弹窗」；推送 ① 发奖时 → ② +${S.ntf.push.gap} 小时（未唤起）→ 短信兜底（仍未唤起）。在 <button type="button" class="btn lnk" data-ap2="push">推送管理 › 奖励发放推送</button> 和 <button type="button" class="btn lnk" data-ap2="sms">营销短信 › 奖励发放提醒</button> 配置。</span></div>
+    <div class="l">到账通知</div><div class="v"><span class="hint" style="margin:0">所有排行榜共用：用户进入首页 / 排行榜页弹「到账弹窗」。推送 / 短信提醒为二期，一期不发。</span></div>
     <div class="l"><span class="req">*</span> 稽核倍数</div><div class="v"><input type="number" id="e-audit" min="0" step="0.5" value="${b.audit}" style="width:60px"> 倍 <label class="chk"><input type="checkbox" checked disabled> 仅奖金</label><span class="hint">账变类型“活动金额”，入账写入提现稽核（1 倍 = 100%）。“彩金流水仅计 Slot”全局开关开启时，真人榜奖金的流水只能在 Slot 完成，需运营知悉。</span></div>
 
     <div class="sec">四、参与门槛</div>
     <div class="l">VIP 等级</div><div class="v">≥ VIP <input type="number" id="e-vip" min="0" value="${b.vip}" style="width:56px"><span class="hint">填 0 = 不限 VIP，所有用户都可参与。</span></div>
-    <div class="l">会员等级</div><div class="v">L <input type="number" id="e-lvmin" min="0" value="${b.lvMin||0}" style="width:56px"> ~ L <input type="number" id="e-lvmax" min="0" value="${b.lvMax||0}" style="width:56px"><span class="hint">按会员等级（L1–L60）限制，两项都填 0 = 不限；只填下限 = 该等级及以上。</span></div>
-    <div class="l">可参与用户</div><div class="v"><span class="pill ${eligOpen(b)?'ok':'w'}">${eligCN(b)}</span><span class="hint">VIP 等级和会员等级需同时满足。不满足的用户，投注不计分、不上榜；期内达到条件后，从达到时刻起的投注开始计分。</span></div>
+    <div class="l">可参与用户</div><div class="v"><span class="pill ${eligOpen(b)?'ok':'w'}">${eligCN(b)}</span><span class="hint">不满足 VIP 门槛的用户，投注不计分、不上榜；期内达到条件后，从达到时刻起的投注开始计分。</span></div>
     <div class="l">其他条件</div><div class="v"><label class="chk"><input type="checkbox" id="e-kyc" ${b.kyc?'checked':''}> 须完成 KYC</label><label class="chk"><input type="checkbox" checked disabled> 冻结 / 停用 / 禁止投注账号不上榜</label>同 IP 上榜账号 ≤ <input type="number" id="e-ip" value="${b.ip}" style="width:50px"> 个 <button class="btn sm">导入黑名单</button></div>
 
     <div class="sec">五、上榜门槛与机器人补位</div>
     <div class="l">机器人</div><div class="v"><label class="sw"><input type="checkbox" id="e-bot" ${b.bot&&b.bot.on?'checked':''} aria-label="启用机器人"><i></i></label><span class="pill ${b.bot&&b.bot.on?'ok':'n'}">${b.bot&&b.bot.on?'已开启':'已关闭'}</span><span class="hint">达到上榜门槛的真实用户不足时，用机器人补位，让榜单不显得空。默认关闭。</span></div>
-    <div class="l"><span class="req">*</span> 真实用户上榜门槛</div><div class="v">本期 <select id="e-qm" aria-label="门槛指标"><option value="bet" ${qm(b)==='bet'?'selected':''}>有效投注</option><option value="ggr" ${qm(b)==='ggr'?'selected':''} ${isWin(b)?'disabled':''}>GGR</option></select> ≥ ₱ <input type="number" id="e-minbet" min="0" value="${b.minBet}" style="width:110px"> 才上榜
-      <span class="hint">达到门槛的真实用户才显示在榜上、参与排名和发奖；没达到的不上榜（投注照常累计，达到后自动上榜）。空出的位置：机器人开启时由机器人补位，关闭时留空。填 0 = 有计分注单即上榜。<br><b>有效投注</b>：本榜计分口径的有效投注（剔除结果为 0 / 和局 / 对冲 / 取消）。<b>GGR</b> = 本榜计分范围内注单的投注 − 派彩（即用户净输额，赢钱的用户 GGR 为负）；GGR 不在前台展示。${isWin(b)?'<br><span style="color:var(--bad)">排名指标为总赢额时不能选 GGR（上榜的都是赢钱用户，GGR 为负）。</span>':''}</span></div>
+    <div class="l"><span class="req">*</span> 真实用户上榜门槛</div><div class="v">本期有效投注 ≥ ₱ <input type="number" id="e-minbet" min="0" value="${b.minBet}" style="width:110px"> 才上榜
+      <span class="hint">达到门槛的真实用户才显示在榜上、参与排名和发奖；没达到的不上榜（投注照常累计，达到后自动上榜）。空出的位置：机器人开启时由机器人补位，关闭时留空。填 0 = 有计分注单即上榜。<br><b>有效投注</b>：本榜计分口径的有效投注（剔除结果为 0 / 和局 / 对冲 / 取消）。</span></div>
     ${b.bot&&b.bot.on?`<div class="l">补足到</div><div class="v">达到门槛的真实用户 &lt; <input type="number" id="e-bfill" min="1" value="${b.bot.fill||lastRank(b)}" style="width:70px"> 人时补位，补足到该人数<span class="hint">建议 = 获奖名次数（本榜 ${lastRank(b)}）。真实人数达到后机器人自动退出。</span></div>
     <div class="l">数值增长</div><div class="v">每次刷新（5 分钟）增长 <input type="number" id="e-bgmin" value="${b.bot.growMin}" style="width:56px"> % ~ <input type="number" id="e-bgmax" value="${b.bot.growMax}" style="width:56px"> %，且不超过最后一名真实玩家的 <input type="number" id="e-bcap" value="${b.bot.cap}" style="width:56px"> %</div>
     <div class="l">机器人画像</div><div class="v">VIP 等级随机 <input type="number" id="e-bvmin" value="${b.bot.vipMin}" style="width:50px"> ~ <input type="number" id="e-bvmax" value="${b.bot.vipMax}" style="width:50px"><span class="hint">昵称从随机昵称库生成并走平台统一脱敏规则，头像随机，“最近玩的游戏”从本榜指定游戏中随机。</span></div>
@@ -934,7 +930,7 @@ function admEdit(){
       <label class="chk"><input type="checkbox" data-br="behind" ${br(b).behind?'checked':''}> 始终排在全部真实玩家之后</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：机器人只出现在最后一名真实玩家之后。不勾选：机器人按数值穿插在真实玩家之间，但<b>奖励区内的真实玩家位置不受影响</b>（只在奖励区之外穿插）。</span>
       <label class="chk"><input type="checkbox" data-br="report" ${br(b).report?'checked':''}> 不进后台投注记录和榜单明细</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：后台只看到机器人数量。不勾选：机器人出现在「榜单数据与发奖」明细里，标“机器人”，方便核对；任何时候都不进风控和财务对账。</span>
       <label class="chk"><input type="checkbox" data-br="disclose" ${br(b).disclose?'checked':''}> 在前台规则中说明榜单含系统展示账号</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：前台规则增加一句 “This leaderboard may include system display accounts, which do not receive prizes.”。是否必须勾选待合规确认。</span>
-      <div style="margin-top:6px;padding:6px 8px;background:#f7f9fb;border:1px solid #e3e8ec">系统固定（不可配置）：机器人不发奖、奖金显示“—”、不计入预算和返还率，不会让真实玩家掉出奖励区；使用系统机器人账号（is_robot = 1），不可登录 / 充值 / 提现。</div></div>`:''}
+      <div style="margin-top:6px;padding:6px 8px;background:#f7f9fb;border:1px solid #e3e8ec">系统固定（不可配置）：机器人不发奖、奖金显示“—”，所占名次的奖金按「名次空缺处理」执行（回收或重新分配）；不计入预算和返还率，不会让真实玩家掉出奖励区；使用系统机器人账号（is_robot = 1），不可登录 / 充值 / 提现。</div></div>`:''}
     <div class="sec">六、有效投注口径</div>
     <div class="l">计分规则</div><div class="v">
       <label class="chk"><input type="checkbox" checked disabled> 仅已结算注单，按结算时间归期</label>
@@ -969,7 +965,7 @@ const gAvail=k=>(GAMES[k]||[]).filter(g=>g[3]!=='excl');
 const TYPE_OF_PROV=k=>PROV.slot.some(p=>p.k===k)?'slot':'live';
 /* 指定游戏（复用当日返水活动的“选择指定游戏”弹窗） */
 const PNAME={FC:'FC Gaming',PP:'PRAGMATIC PLAY',EVO:'Evolution'};
-const CATS=[['slot','Slot','电子'],['casino','Casino','真人'],['poker','Poker','棋牌'],['bingo','Bingo','宾果'],['arcade','Arcade','街机'],['fishing','Fishing','捕鱼']];
+const CATS=[['slot','Slot','电子'],['casino','Casino','真人']];
 const gcat=g=>({Slot:'slot',Casino:'casino',Poker:'poker',Bingo:'bingo',Arcade:'arcade',Fishing:'fishing'})[g[2]]||'other';
 const catLabel=k=>{ const c=CATS.find(x=>x[0]===k); return c?c[1]+'（'+c[2]+'）':k; };
 const TLABEL={}; CATS.forEach(c=>TLABEL[c[0]]=catLabel(c[0]));
@@ -982,12 +978,12 @@ const GIMG={otg_b03:0};
 function gtile(id,sz){ if(GIMG[id]!=null) return `<img alt="" src="${G[GIMG[id]]}" ${sz==='lg'?'style="width:74px;height:74px;border-radius:8px;border:1.5px solid #c99a4a;object-fit:cover;display:block"':''}>`; const [nm,k]=gName(id); const c=(PCOL[k]||'#555,#888').split(','); const ab=sz==='sm'?nm.split(/\s+/).map(w=>w[0]).join('').slice(0,3):esc(nm); return `<span class="gt ${sz}" style="background:linear-gradient(135deg,${c[0]},${c[1]})">${ab}${sz==='lg'?`<small>${k}</small>`:''}</span>`; }
 function thumbsOf(b){ ensureG(b); return b.gsel.length?b.gsel:['otg_b03']; }
 const startsLater=b=>b.start>'2026-11-02';
-const notStartedFor=b=>b.period==='weekend'||startsLater(b);
+const notStartedFor=b=>(b.period==='weekend'&&!wkOpenToday(b))||startsLater(b);
 const gName=id=>{ for(const k in GAMES){ const g=GAMES[k].find(x=>x[0]===id); if(g) return [g[1],k]; } return [id,'']; };
 function gameField(b){
   ensureG(b); const n=b.gsel.length;
   const chips=b.gsel.slice(0,10).map(id=>{ const [nm,k]=gName(id); return `<span>${esc(nm)}（${k}）</span>`; }).join('')+(n>10?`<span>等 ${n} 款</span>`:'');
-  return `<div class="gfield"><button class="btn" data-gmopen="1">选择指定游戏</button><span>已选 <b>${n}</b> 款</span><span class="muted">可从 6 类游戏（Slot / Casino / Poker / Bingo / Arcade / Fishing）中选择；只有指定游戏的有效投注计入排行榜</span></div>${n?`<div class="gchips">${chips}</div>`:'<div class="gchips"><span style="background:#fde8e8;border-color:#f3c4c4;color:var(--bad)">未选择游戏</span></div>'}`;
+  return `<div class="gfield"><button class="btn" data-gmopen="1">选择指定游戏</button><span>已选 <b>${n}</b> 款</span><span class="muted">只能从 Slot / Casino 两类游戏中选择；只有指定游戏的有效投注计入排行榜</span></div>${n?`<div class="gchips">${chips}</div>`:'<div class="gchips"><span style="background:#fde8e8;border-color:#f3c4c4;color:var(--bad)">未选择游戏</span></div>'}`;
 }
 S.gm=null;
 function gmRender(){
@@ -1113,7 +1109,7 @@ function previewPanel(b){
     <div style="font-size:12px;color:#666">活动总预算（预估）</div><div class="big">${fmt(tot)}</div>
     <div class="kv" style="margin-top:8px">
       <span>每期奖池</span><b>${fmt(pool)}</b>
-      <span>期数（${b.period==='day'?'日':b.period==='week'?'周':b.wkMode==='merge'?'周末':'周末日'}）</span><b>${cy}</b>
+      <span>期数（${b.period==='day'?'日':b.period==='week'?'周':'开放日'}）</span><b>${cy}</b>
       <span>获奖人数 / 期</span><b>${lr}</b>
       <span>Top1 / Top3 / Top10 占比</span><b>${pct(share(b,1))} / ${pct(share(b,3))} / ${pct(share(b,10))}</b>
       <span>第 1 名 / 最后一名奖金</span><b>${fmt(prizeOf(b,1))} / ${fmt2(prizeOf(b,lr))}</b>
@@ -1142,7 +1138,7 @@ function admData(){
   const tr=rows.map((d,i)=>`<tr><td>${i+1}</td><td>${d.uid}</td><td>V${d.vip}</td><td class="r">${fmt(d.raw)}</td><td class="r">${live?fmt(d.tie):'—'}</td><td class="r">${live?fmt(d.hedge):'—'}</td><td class="r">${fmt(d.cx)}</td><td class="r"><b>${fmt(d.v)}</b></td><td class="r">${fmt(prizeOf(b,i+1))}</td><td>${flag(d)} ${i<2&&live&&d.hedge>0?'<span class="pill b">待审核</span>':'<span class="pill n">待结算</span>'}</td><td><button class="btn lnk" data-bets="${d.uid}">注单明细</button><button class="btn lnk" style="color:var(--bad)">取消资格</button></td></tr>`).join('');
   const sumRaw=rows.reduce((t,d)=>t+d.raw,0), sumV=rows.reduce((t,d)=>t+d.v,0);
   const ag=AGG.filter(x=>b.prov.includes(x[1])).reduce((t,x)=>{t.c+=x[3]-x[4]-x[5]-x[6]-x[7]-x[8]-x[9];t.tie+=x[7];t.hedge+=x[8];return t;},{c:0,tie:0,hedge:0});
-  return `<div class="box"><div class="bh"><span>榜单数据与发奖</span><span style="display:flex;gap:6px;flex-wrap:wrap"><select id="pickP"><option>${b.period==='day'?'2026-11-02（本期·进行中）':'11/02–11/08（本期·进行中）'}</option><option>${b.period==='day'?'2026-11-01（预热）':'—'}</option></select><button class="btn">导出</button></span></div><div class="bpills">${S.boards.filter(x=>x.status!=='草稿').map(x=>{const i=S.boards.indexOf(x);return `<button data-pb2="${i}" class="${i===S.edit?'on':''}">${esc(x.name)}<small>${esc(x.tab||'')} · ${x.period==='day'?'日榜':'周榜'}</small></button>`}).join('')}</div><div class="bb">
+  return `<div class="box"><div class="bh"><span>榜单数据与发奖</span><span style="display:flex;gap:6px;flex-wrap:wrap"><select id="pickP"><option>${b.period==='day'?'2026-11-02（本期·进行中）':'11/02–11/08（本期·进行中）'}</option><option>${b.period==='day'?'2026-11-01（预热）':'—'}</option></select><button class="btn">导出</button></span></div><div class="bpills">${S.boards.filter(x=>x.status!=='草稿').map(x=>{const i=S.boards.indexOf(x);return `<button data-pb2="${i}" class="${i===S.edit?'on':''}">${esc(x.name)}<small>${esc(x.tab||'')} · ${x.period==='day'?'日榜':x.period==='week'?'周榜':'周末榜'}</small></button>`}).join('')}</div><div class="bb">
   <div class="stats">
     <div class="stat"><span>上榜人数（真实）</span><b>${b.realN?b.realN:"1,284"}</b></div><div class="stat"><span>未达上榜门槛（不显示）</span><b>${b.realN?"46":"3,920"}</b></div><div class="stat"><span>机器人补位</span><b>${b.bot&&b.bot.on&&b.realN?Math.max(0,(b.bot.fill||0)-b.realN)+" 个 · 不发奖"+(br(b).report?"":" · 明细中标“机器人”"):"未启用"}</b></div>
     <div class="stat"><span>本期有效投注（计榜）</span><b>${fmt(ag.c)}</b></div>
@@ -1163,7 +1159,7 @@ function betsDrawer(uid){
     ['11/02 14:05:40','OTG','百家乐 B03 · 局 2611020342','庄 20,000 + 闲 18,000','闲赢',0,'对冲：同局反向，整局不计'],
     ['11/02 14:07:02','OTG','百家乐 B03 · 局 2611020343','闲 5,000','和（闲退本）',0,'和局退本不计'],
     ['11/02 14:07:02','OTG','百家乐 B03 · 局 2611020343','和 500','和赢',500,'押“和”中奖，结果不为 0，计入'],
-    ['11/02 15:20:18','OTG','龙虎 DT1 · 局 2611021502','龙 3,000 + 虎 3,000','龙赢',0,'对冲：差额为 0'],
+    ['11/02 15:20:18','OTG','龙虎 DT1 · 局 2611021502','龙 3,000 + 虎 3,000','龙赢',0,'对冲：同局反向，整局不计'],
     ['11/02 16:44:51','OTG','轮盘 R2 · 局 2611021644','26 个号码各 100','17',0,'覆盖 26/37=70.3% ≥ '+b.roulette+'%，整局不计'],
     ['11/02 17:01:09','OTG','百家乐 B05 · 局 2611021701','庄 8,000','—（厂商取消）',0,'取消注单不计'],
   ]:[
@@ -1190,7 +1186,7 @@ const BETS=[
  ['OTG-88120343A','10288731','live','OTG','百家乐 B03','2611020343','闲',5000,0,5000,'11/02 14:07:02','已结算',0,'和局退本','开和，闲注退回本金'],
  ['OTG-88120343B','10288731','live','OTG','百家乐 B03','2611020343','和',500,500,4500,'11/02 14:07:02','已结算',500,'','押“和”中奖，结果不为 0，计入'],
  ['PG-73320201','10077210','slot','PG','Lucky Neko','—','Spin',1000,1000,1000,'11/02 14:20:10','已结算',0,'结果为 0','派彩 = 下注，输赢为 0'],
- ['OTG-88121502A','10566318','live','OTG','龙虎 DT1','2611021502','龙',3000,3000,6000,'11/02 15:20:18','已结算',0,'对冲','同局 龙3,000 / 虎3,000，差额 0'],
+ ['OTG-88121502A','10566318','live','OTG','龙虎 DT1','2611021502','龙',3000,3000,6000,'11/02 15:20:18','已结算',0,'对冲','同局 龙3,000 / 虎3,000 反向，整局不计'],
  ['OTG-88121502B','10566318','live','OTG','龙虎 DT1','2611021502','虎',3000,3000,0,'11/02 15:20:18','已结算',0,'对冲','同局反向'],
  ['OTG-88121644A','10566318','live','OTG','轮盘 R2','2611021644','26 个号码',2600,2600,3600,'11/02 16:44:51','已结算',0,'对冲','覆盖 26/37 = 70.3% ≥ 70%'],
  ['OTG-88121701A','10301452','live','OTG','百家乐 B05','2611021701','庄',8000,0,8000,'11/02 17:01:09','已取消',0,'厂商取消','厂商作废该局，退回本金'],
@@ -1215,20 +1211,16 @@ const AGG=[
 ];
 /* ---------- 风控预警（防大额对冲） ---------- */
 S.rules=[
- {id:'R1',on:true,name:'单账号同局对冲',lv:'m',act:'mark',cond:[['单局对冲金额 ≥ ₱',10000],['或 本期对冲金额 ≥ ₱',50000],['或 对冲占本期原始投注 ≥',30,'%']],note:'同会员 + 同桌台 + 同局号押庄/闲、龙/虎、大/小、单/双、红/黑。计分已按差额剔除，预警用于发现刷流水 / 套返水。'},
- {id:'R2',on:true,name:'跨账号同局反向（有关联）',lv:'h',act:'hold',cond:[['同局反向且金额差 ≤',10,'%'],['单局金额 ≥ ₱',5000],['本期命中 ≥',3,' 局']],note:'两个账号在同桌同局下注相反选项，且满足任一关联：同 IP、同设备指纹、同代理上级、同提款账户、同注册手机号段。'},
- {id:'R3',on:true,name:'跨账号高频配对（无关联也查）',lv:'h',act:'hold',cond:[['同局反向配对 ≥',10,' 局'],['两账号合计盈亏 / 合计投注 ≤',2,'%'],['配对金额 ≥ ₱',200000]],note:'没有关联特征也触发：两个账号长期在同局反向下注、整体几乎不输不赢。'},
- {id:'R4',on:true,name:'低风险大额投注',lv:'m',act:'mark',cond:[['Casino 本期投注 ≥ ₱',200000],['且 |净盈亏| / 投注 ≤',1,'%']],note:'疑似用对冲、低赔率注项或多桌反向刷投注量。'},
- {id:'R5',on:true,name:'名次异常跳升',lv:'l',act:'log',cond:[['1 小时内计榜投注增长 ≥ ₱',100000],['且进入奖励区']],note:'仅提示，配合 R1–R4 判断。'}
+ {id:'R1',on:true,name:'跨账号同局反向（有关联）',lv:'h',act:'hold',cond:[['同局反向且金额差 ≤',10,'%'],['单局金额 ≥ ₱',5000],['本期命中 ≥',3,' 局']],note:'两个账号在同桌同局下注相反选项，且满足任一关联：同 IP、同设备指纹、同代理上级、同提款账户、同注册手机号段。'},
+ {id:'R2',on:true,name:'跨账号高频配对（无关联也查）',lv:'h',act:'hold',cond:[['同局反向配对 ≥',10,' 局'],['两账号合计盈亏 / 合计投注 ≤',2,'%'],['配对金额 ≥ ₱',200000]],note:'没有关联特征也触发：两个账号长期在同局反向下注、整体几乎不输不赢。'},
+ {id:'R3',on:true,name:'低风险大额投注',lv:'m',act:'mark',cond:[['Casino 本期投注 ≥ ₱',200000],['且 |净盈亏| / 投注 ≤',1,'%']],note:'疑似用对冲、低赔率注项或多桌反向刷投注量。'},
 ];
 const ACT={log:'仅记录',mark:'标记，奖励区内须人工审核后发奖',hold:'自动暂停计分 + 暂缓发奖，待审核'};
 const LVN={h:'高',m:'中',l:'低'};
 S.alerts=[
- {id:'RK-1102-0001',t:'11/02 15:42',r:'R2',lv:'h',board:'VIP Rank Cup / OTG Live Weekly',a:{uid:'10301452',vip:7,rank:'#2'},b:{uid:'10399871',vip:4,rank:'#5'},feat:['同 IP 112.198.***.41','同设备指纹','同代理上级 A-2031'],games:'OTG 百家乐 B03 / B05',hits:12,amt:1240000,pnl:-6200,act:'hold',st:'pend'},
- {id:'RK-1102-0002',t:'11/02 16:10',r:'R3',lv:'h',board:'VIP Rank Cup',a:{uid:'10566318',vip:6,rank:'#4'},b:{uid:'10611902',vip:5,rank:'#11'},feat:['无关联特征','18 局同局反向','合计盈亏率 0.8%'],games:'EVO Speed Baccarat A',hits:18,amt:860000,pnl:6880,act:'hold',st:'pend'},
- {id:'RK-1102-0003',t:'11/02 14:05',r:'R1',lv:'m',board:'VIP Rank Cup / OTG Live Weekly',a:{uid:'10288731',vip:8,rank:'#1'},b:null,feat:['本期对冲 ₱52,000','单局最大 庄20,000 / 闲18,000'],games:'OTG 百家乐 B03',hits:3,amt:52000,pnl:-1000,act:'mark',st:'pend'},
- {id:'RK-1102-0004',t:'11/02 13:20',r:'R4',lv:'m',board:'VIP Rank Cup',a:{uid:'10422906',vip:5,rank:'#5'},b:null,feat:['Casino 投注 ₱331,480','净盈亏率 0.6%'],games:'OTG / EVO 多桌',hits:0,amt:331480,pnl:-1990,act:'mark',st:'fp'},
- {id:'RK-1102-0005',t:'11/02 12:02',r:'R5',lv:'l',board:'JILI Daily Race',a:{uid:'10630077',vip:4,rank:'#7'},b:null,feat:['1 小时 +₱150,000','#57 → #7'],games:'JILI Super Ace',hits:0,amt:150000,pnl:-12400,act:'log',st:'done'}
+ {id:'RK-1102-0001',t:'11/02 15:42',r:'R1',lv:'h',board:'VIP Rank Cup / OTG Live Weekly',a:{uid:'10301452',vip:7,rank:'#2'},b:{uid:'10399871',vip:4,rank:'#5'},feat:['同 IP 112.198.***.41','同设备指纹','同代理上级 A-2031'],games:'OTG 百家乐 B03 / B05',hits:12,amt:1240000,pnl:-6200,act:'hold',st:'pend'},
+ {id:'RK-1102-0002',t:'11/02 16:10',r:'R2',lv:'h',board:'VIP Rank Cup',a:{uid:'10566318',vip:6,rank:'#4'},b:{uid:'10611902',vip:5,rank:'#11'},feat:['无关联特征','18 局同局反向','合计盈亏率 0.8%'],games:'EVO Speed Baccarat A',hits:18,amt:860000,pnl:6880,act:'hold',st:'pend'},
+ {id:'RK-1102-0004',t:'11/02 13:20',r:'R3',lv:'m',board:'VIP Rank Cup',a:{uid:'10422906',vip:5,rank:'#5'},b:null,feat:['Casino 投注 ₱331,480','净盈亏率 0.6%'],games:'OTG / EVO 多桌',hits:0,amt:331480,pnl:-1990,act:'mark',st:'fp'},
 ];
 S.rf={lv:'all',st:'all'};
 const STN={pend:'<span class="pill w">待处理</span>',vio:'<span class="pill b">已确认违规</span>',fp:'<span class="pill ok">误报 · 已恢复</span>',done:'<span class="pill n">已记录</span>'};
@@ -1256,7 +1248,7 @@ function admRisk(){
   </div>
   <div class="box"><div class="bh"><span>预警规则（对所有排行榜生效）</span><span style="font-weight:400;font-size:12px;color:#888">修改需 Google 验证码，写操作日志</span></div><div class="bb">
     <div class="tw"><table class="t" style="min-width:900px"><tr><th>启用</th><th>规则</th><th>触发条件（满足全部）</th><th>等级</th><th>自动动作</th></tr>${rulesHtml}</table></div>
-    <div class="alert w">执行方式：消费“结算有效投注变动”消息，同账号对冲（R1）每局结算后即时判定；跨账号配对（R2 / R3）按 桌台 + 局号 建索引，每 5 分钟跑一次，覆盖本期全部注单；R4 / R5 每 30 分钟。命中高等级立即在顶栏「排行榜风控预警」计数并推送风控群（Telegram）。<br>
+    <div class="alert w">执行方式：消费“结算有效投注变动”消息，同账号同局对冲已在计分时整局剔除，不再单独预警；跨账号配对（R1 / R2）按 桌台 + 局号 建索引，每 5 分钟跑一次，覆盖本期全部注单；R3 每 30 分钟。命中高等级立即在顶栏「排行榜风控预警」计数并推送风控群（Telegram）。<br>
     发奖联动：每期 10:00 发奖前，奖励区内账号有<b>未处理的中 / 高预警</b>的一律暂缓发放；处理为“误报”后补发，“确认违规”后取消资格、剔除全部对冲注单计分、名次顺延，可选加入活动黑名单 / 冻结账号。</div>
   </div></div>
   <div class="box"><div class="bh"><span>预警列表</span><span style="display:flex;gap:8px;flex-wrap:wrap;font-weight:400;font-size:12px">等级 ${sel('lv',[['all','全部'],['h','高'],['m','中'],['l','低']])} 状态 ${sel('st',[['all','全部'],['pend','待处理'],['vio','已确认违规'],['fp','误报'],['done','已记录']])}<button class="btn">导出</button></span></div><div class="bb">
@@ -1285,12 +1277,9 @@ let logSec=10;
 function nowStr(){ logSec++; const m=24+Math.floor(logSec/60), sec=logSec%60; return '2026/11/02 18:'+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0'); }
 S.logs=[
  ['2026/11/02 18:20:41','koi','风控处理','LB2611001 VIP Rank Cup','风控预警','RK-1102-0004 标记误报：状态 待处理 → 误报 · 已恢复'],
- ['2026/11/02 17:05:12','risk_amy','风控规则修改','—','风控预警','R2 单局金额 ≥ ₱3,000 → ₱5,000'],
+ ['2026/11/02 17:05:12','risk_amy','风控规则修改','—','风控预警','R1 单局金额 ≥ ₱3,000 → ₱5,000'],
  ['2026/11/02 16:48:03','koi','更新并发布','LB2611002 JILI Daily Race','新增 / 编辑','每期奖池 ₱40,000 → ₱50,000；名次占比 第 4 名 5% → 6%'],
- ['2026/11/02 16:00:06','system','发奖通知','排行榜奖励发放','营销短信','11/02 10:00 批次短信：仍未唤起 479 人，过滤后 361 人，成功 352，失败 9'],
- ['2026/11/02 14:00:04','system','发奖通知','排行榜奖励发放','推送管理','11/02 10:00 批次推送 ②：未唤起对象 412 人，送达 405'],
  ['2026/11/02 15:30:27','ops_jun','关闭','LB2610003 Slot Weekly 测试','活动列表','开启 → 关闭'],
- ['2026/11/02 10:00:09','system','发奖通知','排行榜奖励发放','推送管理','11/02 10:00 批次推送 ①：获奖 1,108 人，有推送 token 864 人，送达 851'],
  ['2026/11/02 10:00:04','system','自动发奖','LB2611002 JILI Daily Race','榜单数据与发奖','11/01 期 Top50 发放 ₱50,000（50 人），暂缓 0 人'],
  ['2026/11/02 10:00:03','system','自动发奖','LB2611007 Weekend Winners','榜单数据与发奖','11/01 期 Top500 发放 ₱200,000（500 人），暂缓 1 人（RK-1101-0007）'],
  ['2026/11/01 22:14:55','koi','入口设置','—','入口设置','首页挂件：关闭 → 开启'],
@@ -1305,9 +1294,9 @@ S.logs=[
 S.lf={type:'all',board:'all',page:1};
 function addLog(type,target,mod,detail){ S.logs.unshift([nowStr(),'koi',type,target,mod,detail]); }
 const bTarget=b=>(b.id||'—')+' '+b.name;
-const SNAP_KEYS=[['name','活动名称'],['tab','前台 Tab'],['sort','排序'],['period','活动类型'],['wkMode','周末统计方式'],['metric','排名指标'],['start','开始日期'],['end','结束日期'],['pool','每期奖池'],['qMetric','上榜门槛指标'],['minBet','上榜门槛金额'],['vip','VIP 门槛'],['lvMin','会员等级下限'],['lvMax','会员等级上限'],['audit','稽核倍数'],['gbarOn','底部游戏框']];
-function snap(b){ const o={}; SNAP_KEYS.forEach(([k])=>o[k]=b[k]); o.qMetric=qm(b); o.rows=JSON.stringify(b.rows); o.g=(b.gsel||[]).length; o.bot=b.bot&&b.bot.on?'开启（补足到 '+b.bot.fill+' 人'+(br(b).behind?'':'，奖励区外穿插')+(br(b).report?'':'，后台明细显示')+(br(b).disclose?'，前台披露':'')+'）':'关闭'; return o; }
-function diffText(a,b){ const out=[]; SNAP_KEYS.forEach(([k,n])=>{ if(String(a[k])!==String(b[k])){ const fv=v=>v==null?'—':(k==='pool'||k==='minBet')?fmt(v):k==='period'?({day:'日榜',week:'周榜',weekend:'周末榜'})[v]:k==='metric'?(v==='win'?'总赢额':'有效投注'):k==='qMetric'?(v==='ggr'?'GGR':'有效投注'):v; out.push(`${n} ${fv(a[k])} → ${fv(b[k])}`); } }); if(a.rows!==b.rows) out.push('名次与占比已修改'); if(a.g!==b.g) out.push(`指定游戏 ${a.g} 款 → ${b.g} 款`); if(a.bot!==b.bot) out.push(`机器人 ${a.bot} → ${b.bot}`); return out.join('；')||'无字段变化'; }
+const SNAP_KEYS=[['name','活动名称'],['tab','前台 Tab'],['sort','排序'],['period','活动类型'],['wkDays','周末开放日'],['metric','排名指标'],['start','开始日期'],['end','结束日期'],['pool','每期奖池'],['minBet','上榜门槛金额'],['vip','VIP 门槛'],['audit','稽核倍数'],['gbarOn','底部游戏框']];
+function snap(b){ const o={}; SNAP_KEYS.forEach(([k])=>o[k]=b[k]); o.wkDays=b.period==='weekend'?wkTxt(b):'—'; o.rows=JSON.stringify(b.rows); o.g=(b.gsel||[]).length; o.bot=b.bot&&b.bot.on?'开启（补足到 '+b.bot.fill+' 人'+(br(b).behind?'':'，奖励区外穿插')+(br(b).report?'':'，后台明细显示')+(br(b).disclose?'，前台披露':'')+'）':'关闭'; return o; }
+function diffText(a,b){ const out=[]; SNAP_KEYS.forEach(([k,n])=>{ if(String(a[k])!==String(b[k])){ const fv=v=>v==null?'—':(k==='pool'||k==='minBet')?fmt(v):k==='period'?({day:'日榜',week:'周榜',weekend:'周末榜'})[v]:k==='metric'?(v==='win'?'总赢额':'有效投注'):v; out.push(`${n} ${fv(a[k])} → ${fv(b[k])}`); } }); if(a.rows!==b.rows) out.push('名次与占比已修改'); if(a.g!==b.g) out.push(`指定游戏 ${a.g} 款 → ${b.g} 款`); if(a.bot!==b.bot) out.push(`机器人 ${a.bot} → ${b.bot}`); return out.join('；')||'无字段变化'; }
 function admLog(){
   const f=S.lf, types=[...new Set(S.logs.map(l=>l[2]))];
   const list=S.logs.filter(l=>(f.type==='all'||l[2]===f.type)&&(f.board==='all'||l[3].startsWith(f.board)));
@@ -1318,13 +1307,13 @@ function admLog(){
     <div class="filter"><label>操作类型 ${sel('type',[['all','全部'],...types.map(t=>[t,t])])}</label><label>活动 ${sel('board',[['all','全部'],...S.boards.filter(b=>b.id).map(b=>[b.id,b.id+' '+b.name])])}</label></div>
     <div class="tw"><table class="t" style="min-width:900px"><tr><th>时间</th><th>操作人</th><th>操作类型</th><th>活动</th><th>模块</th><th>变更内容（旧值 → 新值）</th></tr>${rows||'<tr><td colspan="6" style="text-align:center;color:#888;padding:16px">暂无日志</td></tr>'}</table></div>
     <div class="sumline"><span>共 ${list.length} 条</span><span style="display:flex;gap:4px;align-items:center">${Array.from({length:pages},(_,i)=>`<button class="btn sm ${i+1===f.page?'pri':''}" data-lpage="${i+1}">${i+1}</button>`).join('')}</span></div>
-    <div class="alert w" style="margin-top:10px">记录范围：新增并发布、更新并发布（逐字段旧值 → 新值）、开启 / 关闭、入口设置、风控规则修改、风控处理（确认违规 / 误报）、系统自动发奖与暂缓、发奖通知（推送 / 短信）的设置修改与发送结果。日志不可删除、不可编辑；不记录 IP（同首页小框广告位）。</div>
+    <div class="alert w" style="margin-top:10px">记录范围：新增并发布、更新并发布（逐字段旧值 → 新值）、开启 / 关闭、入口设置、风控规则修改、风控处理（确认违规 / 误报）、系统自动发奖与暂缓。日志不可删除、不可编辑；不记录 IP（同首页小框广告位）。</div>
   </div></div>`;
 }
 function alertMsg(m){ const el=document.createElement('div'); el.className='alert w'; el.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:40;box-shadow:0 4px 14px rgba(0,0,0,.15)'; el.textContent=m; document.body.appendChild(el); setTimeout(()=>el.remove(),2200); }
-function eligOpen(b){ return !(+b.vip>0)&&!(+b.lvMin>0)&&!(+b.lvMax>0); }
-function eligCN(b){ if(eligOpen(b)) return '所有用户'; const a=[]; if(+b.vip>0) a.push('VIP '+b.vip+' 及以上'); if(+b.lvMin>0||+b.lvMax>0) a.push('会员等级 L'+(+b.lvMin||1)+(+b.lvMax>0?' ~ L'+b.lvMax:' 及以上')); return a.join(' 且 '); }
-function eligEN(b){ if(eligOpen(b)) return 'All players'; const a=[]; if(+b.vip>0) a.push('VIP '+b.vip+'+'); if(+b.lvMin>0||+b.lvMax>0) a.push('Level L'+(+b.lvMin||1)+(+b.lvMax>0?'–L'+b.lvMax:'+')); return a.join(' & '); }
+function eligOpen(b){ return !(+b.vip>0); }
+function eligCN(b){ if(eligOpen(b)) return '所有用户'; const a=[]; if(+b.vip>0) a.push('VIP '+b.vip+' 及以上'); return a.join(' 且 '); }
+function eligEN(b){ if(eligOpen(b)) return 'All players'; const a=[]; if(+b.vip>0) a.push('VIP '+b.vip+'+'); return a.join(' & '); }
 function admBets(){
   const f=S.bf;
   const provOpts=(f.type==='all'?[...PROV.slot,...PROV.live]:PROV[f.type]).filter(x=>!x.dis);
@@ -1338,7 +1327,7 @@ function admBets(){
   const cPill=r=>r[12]===0?'<span class="pill b">剔除</span>':r[12]<r[8]?'<span class="pill w">部分计入</span>':'<span class="pill ok">计入</span>';
   const rows=list.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${TYPES[r[2]]}</td><td>${r[3]}</td><td>${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td class="r">${fmt(r[7])}</td><td class="r">${fmt(r[8])}</td><td class="r">${fmt(r[9])}</td><td>${r[10]}</td><td>${stPill(r)}</td><td class="r"><b>${fmt(r[12])}</b></td><td class="r">${fmt(r[13]?r[7]-r[12]:0)}</td><td>${cPill(r)} ${r[13]?esc(r[13]):''}</td><td style="min-width:180px">${esc(r[14])}</td></tr>`).join('');
   const sel=(k,opts)=>`<select data-bf="${k}" id="bf-${k}">${opts.map(o=>`<option value="${o[0]}" ${f[k]===o[0]?'selected':''}>${o[1]}</option>`).join('')}</select>`;
-  return `<div class="box"><div class="bh"><span>投注记录（排行榜计分明细）</span><span style="display:flex;gap:6px;flex-wrap:wrap"><select><option>2026-11-02（本期）</option><option>2026-11-01</option></select><button class="btn">导出 Excel</button></span></div><div class="bpills"><button data-pbf="all" class="${S.bf.board==='all'?'on':''}">全部排行榜</button>${S.boards.filter(x=>x.status!=='草稿').map(x=>{const i=S.boards.indexOf(x);return `<button data-pbf="${i}" class="${String(S.bf.board)===String(i)?'on':''}">${esc(x.name)}<small>${esc(x.tab||'')} · ${x.period==='day'?'日榜':'周榜'}</small></button>`}).join('')}</div><div class="bb">
+  return `<div class="box"><div class="bh"><span>投注记录（排行榜计分明细）</span><span style="display:flex;gap:6px;flex-wrap:wrap"><select><option>2026-11-02（本期）</option><option>2026-11-01</option></select><button class="btn">导出 Excel</button></span></div><div class="bpills"><button data-pbf="all" class="${S.bf.board==='all'?'on':''}">全部排行榜</button>${S.boards.filter(x=>x.status!=='草稿').map(x=>{const i=S.boards.indexOf(x);return `<button data-pbf="${i}" class="${String(S.bf.board)===String(i)?'on':''}">${esc(x.name)}<small>${esc(x.tab||'')} · ${x.period==='day'?'日榜':x.period==='week'?'周榜':'周末榜'}</small></button>`}).join('')}</div><div class="bb">
   <div class="filter">
     <label>游戏类型 ${sel('type',[['all','全部'],['slot','Slot 电子'],['live','真人视讯']])}</label>
     <label>游戏厂商 ${sel('prov',[['all','全部'],...provOpts.map(p=>[p.k,p.k])])}</label>
@@ -1362,7 +1351,7 @@ function admBets(){
 function renderAdm(){
   const p=S.admP;
   document.querySelectorAll('.adm .sub').forEach(x=>x.classList.toggle('on',(x.dataset.ap==='push'||x.dataset.ap==='sms')?x.dataset.ap===p:!(p==='push'||p==='sms')));
-  if(p==='push'||p==='sms'){ const nm=p==='push'?['推送管理','奖励发放推送']:['营销短信','奖励发放提醒']; $('#crumb').textContent='位置 › '+nm[0]+' › '+nm[1]; $('#ptab').textContent=nm[1]+' ×'; $('#admPage').innerHTML=p==='push'?admPush():admSms(); return; }
+  if(p==='push'||p==='sms'){ const nm=p==='push'?['推送管理','奖励发放推送']:['营销短信','奖励发放提醒']; $('#crumb').textContent='位置 › '+nm[0]+' › '+nm[1]; $('#ptab').textContent=nm[1]+' ×'; $('#admPage').innerHTML='<div class="alert w" style="margin-bottom:10px"><b>二期</b>：一期发奖后只通过「到账弹窗」触达，不发推送 / 短信。本页仅作二期设计参考，置灰不可操作。</div><div style="opacity:.45;pointer-events:none" aria-disabled="true">'+(p==='push'?admPush():admSms())+'</div>'; return; }
   const TABS=[['list','活动列表'],['edit',(p==='edit'&&S.boards[S.edit]&&S.boards[S.edit].status!=='草稿')?'编辑':'新增'],['data','榜单数据与发奖'],['bets','投注记录'],['risk','风控预警'],['log','操作日志']];
   const name=TABS.find(x=>x[0]===p)[1];
   $('#crumb').textContent='位置 › 活动配置 › 排行榜活动 › '+name; $('#ptab').textContent='排行榜活动 ×';
@@ -1373,7 +1362,7 @@ function renderAdm(){
 function genId(){ let id; do{ id='LB'+'261102'+String(Math.floor(Math.random()*9000)+1000); }while(S.boards.some(x=>x.id===id)); return id; }
 function openDraft(){
   let i=S.boards.findIndex(x=>x.status==='草稿');
-  if(i<0){ S.boards.push(mk({id:'',gsel:[],cats:[],tab:'NEW',sort:S.boards.length+1,name:'新排行榜',type:'slot',period:'day',prov:['JILI'],pool:50000,pmin:20000,pmax:80000,estBet:8000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1500000,thumbs:[1,2],status:'草稿'})); i=S.boards.length-1; }
+  if(i<0){ S.boards.push(mk({id:'',gsel:[],cats:[],tab:'NEW',sort:S.boards.length+1,name:'新排行榜',type:'slot',period:'day',prov:['JILI'],pool:50000,estBet:8000000,rows:rowsOf('head'),minBet:2000,vip:1,top:1500000,thumbs:[1,2],status:'草稿'})); i=S.boards.length-1; }
   S.edit=i;
 }
 function applyInd(){ document.querySelectorAll('#admPage [data-ind]').forEach(x=>x.indeterminate=true); }
@@ -1407,8 +1396,8 @@ admPage.addEventListener('click',e=>{
 });
 admPage.addEventListener('input',e=>{ const nf=e.target.dataset.nf; if(nf&&(e.target.tagName==='TEXTAREA'||e.target.type==='text')){ const [k,f]=nf.split('.'); S.ntf[k][f]=e.target.value; const pv=$('#ntfPv'); if(pv) pv.innerHTML=ntfPreview(k); const cc=$('#smsCnt'); if(cc&&k==='sms') cc.innerHTML=smsCount(); const dd=$('#ntfDirty'); if(dd) dd.innerHTML=ntfDirty(k); return; }
   if(e.target.id==='tq'){ S.tree.q=e.target.value; const pos=e.target.selectionStart; renderAdm(); const n=$('#tq'); if(n){ n.focus(); n.setSelectionRange(pos,pos); } } });
-const MAP={'e-name':'name','e-tab':'tab','e-sort':'sort','e-start':'start','e-end':'end','e-show':'show','e-settle':'settle','e-pool':'pool','e-rate':'rate','e-pmin':'pmin','e-pmax':'pmax','e-est':'estBet','e-cd':'claimDays','e-audit':'audit','e-vip':'vip','e-lvmin':'lvMin','e-lvmax':'lvMax','e-minbet':'minBet','e-ip':'ip','e-rou':'roulette'};
-const NUMF=new Set(['sort','pool','rate','pmin','pmax','estBet','claimDays','audit','vip','lvMin','lvMax','minBet','ip','roulette']);
+const MAP={'e-name':'name','e-tab':'tab','e-sort':'sort','e-start':'start','e-end':'end','e-show':'show','e-settle':'settle','e-pool':'pool','e-est':'estBet','e-audit':'audit','e-vip':'vip','e-minbet':'minBet','e-ip':'ip','e-rou':'roulette'};
+const NUMF=new Set(['sort','pool','estBet','audit','vip','minBet','ip','roulette']);
 admPage.addEventListener('change',e=>{
   const t=e.target, b=S.boards[S.edit];
   if(t.id==='pickB'||t.id==='pickB2'){S.edit=+t.value;renderAdm();return;}
@@ -1432,15 +1421,11 @@ admPage.addEventListener('change',e=>{
   else if(t.dataset.gm){ b.gmode=Object.assign({},b.gmode,{[t.dataset.gm]:t.value}); }
   else if(t.dataset.row!=null){ b.rows[+t.dataset.row][t.dataset.f]=+t.value; }
   else if(t.name==='e-type'){ b.type=t.value; ensureG(b); const ok=new Set(treeData(b).flatMap(x=>x.provs.flatMap(p=>p.games.map(g=>g[0])))); b.gsel=b.gsel.filter(id=>ok.has(id)); syncG(b); }
-  else if(t.name==='e-per'){ b.period=t.value; if(t.value==='weekend'&&!b.wkMode) b.wkMode='daily'; }
-  else if(t.name==='e-wk'){ b.wkMode=t.value; }
-  else if(t.name==='e-metric'){ b.metric=t.value; if(t.value==='win'&&b.qMetric==='ggr') b.qMetric='bet'; }
-  else if(t.id==='e-qm'){ b.qMetric=t.value; }
+  else if(t.name==='e-per'){ b.period=t.value; if(t.value==='weekend'&&!(b.wkDays&&b.wkDays.length)) b.wkDays=[5,6,0]; }
+  else if(t.dataset.wkd!=null){ const d=+t.dataset.wkd, s=new Set(b.wkDays||[]); if(t.checked) s.add(d); else s.delete(d); b.wkDays=wkSort([...s]); }
+  else if(t.name==='e-metric'){ b.metric=t.value; }
   else if(t.name==='e-games'){ b.games=t.value; }
-  else if(t.name==='e-pm'){ b.poolMode=t.value; }
   else if(t.name==='e-unf'){ b.unfilled=t.value; }
-  else if(t.name==='e-claim'){ b.claim=t.value; }
-  else if(t.name==='e-hedge'){ b.hedge=t.value; }
   else if(t.id==='e-kyc'){ b.kyc=t.checked; }
   else if(t.dataset.br){ b.bot.r=Object.assign(br(b),{[t.dataset.br]:t.checked}); }
   else if(t.id==='e-bot'){ b.bot=Object.assign({fill:lastRank(b),growMin:1,growMax:5,cap:95,vipMin:1,vipMax:5},b.bot,{on:t.checked}); }
@@ -1470,7 +1455,7 @@ function renderDoc(){
       <li><b>记录范围</b>：活动所选类型 + 厂商的全部结算注单都写入排行榜投注记录表，<b>被剔除的也保留</b>（计榜投注 = 0，并记剔除原因），方便对账和客诉，不物理删除。</li>
       <li><b>游戏类型</b>取平台游戏分类（不是厂商类目），按结算时刻快照写入；之后改分类不回溯（同“流水仅限 Slot”口径）。</li>
       <li><b>写入</b>：消费“结算有效投注变动”消息，唯一键 = 厂商 + 厂商注单号；重复消息只更新不新增，防重复计分。</li>
-      <li><b>无效投注</b>：validBetAmount = 0、Free Spin、不满足门槛、和局退本、对冲 → 计榜投注按规则记 0 或差额，原因写入。</li>
+      <li><b>无效投注</b>：validBetAmount = 0、Free Spin、不满足门槛、和局退本、对冲 → 计榜投注记 0，原因写入。</li>
       <li><b>厂商取消 / 撤销 / 回滚</b>：收到取消或撤销消息 → 原记录状态改“已撤销”，计榜投注归 0，另写一条冲正记录（负数），重算该会员本期总额和名次。</li>
       <li>撤销所属期<b>未发奖</b>：直接扣回、名次重算。<b>已发奖</b>：不自动追回奖金，进风控报表人工处理。</li>
       <li><b>重新结算</b>（厂商改派彩 / 改 validBet）：按新值覆盖，差额写冲正记录。</li>
@@ -1486,35 +1471,33 @@ function renderDoc(){
       <tr><td>count_amount / exclude_amount / exclude_reason</td><td>计榜投注、剔除金额、剔除原因</td></tr>
       <tr><td>settle_time / cancel_time / updated_at</td><td>GMT+8</td></tr>
     </table></div>
-  <div class="card"><h3>周末榜（周五 · 周六 · 周日）</h3>
+  <div class="card"><h3>周末榜（开放日后台可选）</h3>
     <ul>
-      <li>活动类型新增<b>周末榜</b>，只在周五、周六、周日开放；周一至周四前台显示“下一轮开始”倒计时，不计分。</li>
-      <li>统计方式二选一：<b>每天单独排名</b>（周五 / 周六 / 周日各一期，每日 00:00 重置，默认，同 NuStar “rankings reset daily”）；或<b>三天合并一期</b>（周五 00:00 – 周日 23:59:59）。</li>
-      <li>新增<b>排名指标</b>（所有榜可选）：有效投注（默认）/ <b>总赢额 = 总派彩 − 总投注</b>（参考 NuStar Top Winners）。总赢额只算计入的注单，结果为 0、和局、对冲、取消的注单不记录为有效投注；总赢额 ≤ 0 不上榜。</li>
-      <li>示例（Weekend Winners）：Slot + Casino，按总赢额，每日 Top 500，每期奖池 ₱200,000：#1 ₱50,000、#2 ₱20,000、#3 ₱10,000、#4–10 ₱5,000、#11–20 ₱1,000、#21–50 ₱500、#51–100 ₱300、#101–200 ₱200、#201–300 ₱100、#301–500 ₱75；稽核 3 倍（同 NuStar 3x turnover，可配）。</li>
-      <li>发奖：每日排名时周六 / 周日 / 周一 10:00 各自动发一次；合并时周一 10:00。</li>
+      <li>活动类型新增<b>周末榜</b>：只在后台勾选的开放日计分（默认周五、周六、周日，可改为如周四 – 周六）；非开放日前台显示“下一轮开始”倒计时，不计分。</li>
+      <li><b>每个开放日单独排名</b>：每天 00:00:00 – 23:59:59 为一期，每日 00:00 重置。</li>
+      <li>新增<b>排名指标</b>（所有榜可选）：有效投注（默认）/ <b>总赢额 = 总派彩 − 总投注</b>。总赢额只算计入的注单，结果为 0、和局、对冲、取消的注单不记录为有效投注；总赢额 ≤ 0 不上榜。</li>
+      <li>示例（Weekend Winners）：Slot + Casino，按总赢额，每日 Top 500，每期奖池 ₱200,000：#1 ₱50,000、#2 ₱20,000、#3 ₱10,000、#4–10 ₱5,000、#11–20 ₱1,000、#21–50 ₱500、#51–100 ₱300、#101–200 ₱200、#201–300 ₱100、#301–500 ₱75；稽核 3 倍（可配）。</li>
+      <li>发奖：每个开放日的次日 10:00 自动发放。</li>
       <li>风险：按赢额排名会奖励高赢家，返还率和预算波动大，需财务评估；对冲在赢额榜上影响较小，但跨账号对冲仍按风控预警处理。</li>
     </ul></div>
   <div class="card"><h3>机器人（补位展示）</h3>
     <ul>
-      <li>真实用户上榜门槛（每个榜单配置）：本期有效投注或 GGR（投注 − 派彩，用户净输额）达到设定金额才显示在榜上、参与排名和发奖；未达到的不上榜，投注照常累计。排名指标为总赢额时只能用有效投注门槛。GGR 不在前台展示。</li>
+      <li>真实用户上榜门槛（每个榜单配置）：本期有效投注达到设定金额才显示在榜上、参与排名和发奖；未达到的不上榜，投注照常累计。</li>
       <li>每个榜单可单独开启（默认关闭）：达到上榜门槛的真实用户少于“补足到”人数时，用机器人补位，避免冷启动或低峰时榜单空荡。真实人数达到后机器人自动退出。</li>
       <li><b>补位规则（勾选生效，不勾选不生效）</b>：① 始终排在全部真实玩家之后（默认勾选；不勾选时按数值穿插，但只在奖励区之外，奖励区内真实玩家位置不变）；② 不进后台投注记录和榜单明细（默认勾选；不勾选时在明细中标“机器人”显示）；③ 前台规则披露“榜单含系统展示账号”（默认不勾选，待合规确认）。</li>
-      <li><b>系统固定</b>：机器人不发奖、奖金显示“—”、不计入预算和返还率，不会让真实玩家掉出奖励区；系统机器人账号（is_robot = 1）不可登录、充值、提现；任何时候都不进风控和财务对账。</li>
+      <li><b>系统固定</b>：机器人不发奖、奖金显示“—”，所占名次的奖金按「名次空缺处理」执行（回收或重新分配）；不计入预算和返还率，不会让真实玩家掉出奖励区；系统机器人账号（is_robot = 1）不可登录、充值、提现；任何时候都不进风控和财务对账。</li>
       <li>可配：补足到人数、每次刷新的增长区间、上限比例、VIP 等级区间；昵称走统一脱敏，头像随机，最近玩的游戏从指定游戏随机。</li>
       <li>后台「榜单数据与发奖」单独显示真实上榜人数和机器人数量；开关和参数改动写操作日志。</li>
-      <li>不做“机器人占前排 / 占奖励名次”：那样会让玩家以为奖金被别人拿走、或真实名次被压低，容易引发客诉和合规风险（PAGCOR 活动公平性），如确有需要需合规书面确认。Crown Rush 的机器人“只扣前台名额”同样建议复核。</li>
+      <li>不做“机器人占前排 / 占奖励名次”：那样会让玩家以为奖金被别人拿走、或真实名次被压低，容易引发客诉和合规风险（PAGCOR 活动公平性），如确有需要需合规书面确认。</li>
     </ul></div>
   <div class="card"><h3>风控预警：防大额对冲</h3>
-    <p>计分口径已把<b>同账号</b>同局对冲按差额剔除；真正的风险是<b>多个账号互相对冲</b>（A 押庄、B 押闲），整体几乎不亏，却同时把两个账号刷上榜。后台「风控预警」页签做事中预警 + 发奖前拦截。</p>
+    <p>计分口径已把<b>同账号</b>同局对冲整局剔除（不计入排行榜）；真正的风险是<b>多个账号互相对冲</b>（A 押庄、B 押闲），整体几乎不亏，却同时把两个账号刷上榜。后台「风控预警」页签做事中预警 + 发奖前拦截。</p>
     <table><tr><th>规则</th><th>默认条件</th><th>等级 / 动作</th></tr>
-      <tr><td>R1 单账号同局对冲</td><td>单局对冲 ≥ ₱10,000，或本期对冲 ≥ ₱50,000，或占原始投注 ≥ 30%</td><td>中 · 标记，奖励区内人工审核</td></tr>
-      <tr><td>R2 跨账号同局反向（有关联）</td><td>同桌同局反向、金额差 ≤ 10%、单局 ≥ ₱5,000、本期 ≥ 3 局，且同 IP / 设备 / 代理上级 / 提款账户 / 手机号段任一</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
-      <tr><td>R3 跨账号高频配对</td><td>同局反向 ≥ 10 局，合计盈亏率 ≤ 2%，配对金额 ≥ ₱200,000（无关联也查）</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
-      <tr><td>R4 低风险大额投注</td><td>Casino 本期 ≥ ₱200,000 且净盈亏率 ≤ 1%</td><td>中 · 标记</td></tr>
-      <tr><td>R5 名次异常跳升</td><td>1 小时计榜投注 +₱100,000 且进入奖励区</td><td>低 · 仅记录</td></tr>
+      <tr><td>R1 跨账号同局反向（有关联）</td><td>同桌同局反向、金额差 ≤ 10%、单局 ≥ ₱5,000、本期 ≥ 3 局，且同 IP / 设备 / 代理上级 / 提款账户 / 手机号段任一</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
+      <tr><td>R2 跨账号高频配对</td><td>同局反向 ≥ 10 局，合计盈亏率 ≤ 2%，配对金额 ≥ ₱200,000（无关联也查）</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
+      <tr><td>R3 低风险大额投注</td><td>Casino 本期 ≥ ₱200,000 且净盈亏率 ≤ 1%</td><td>中 · 标记</td></tr>
     </table>
-    <ul><li>R1 每局结算即判；R2 / R3 按桌台 + 局号建索引每 5 分钟跑；R4 / R5 每 30 分钟。高等级即时推送风控群并在顶栏计数。</li>
+    <ul><li>R1 / R2 按桌台 + 局号建索引每 5 分钟跑；R3 每 30 分钟。高等级即时推送风控群并在顶栏计数。</li>
     <li>10:00 发奖前，奖励区账号有未处理中 / 高预警的暂缓发放；误报 → 恢复计分并补发；确认违规 → 取消资格、剔除对冲注单、名次顺延，可加黑名单 / 冻结。</li>
     <li>阈值、等级、动作后台可调（需 Google 验证码），条件需风控与运营按上线后 1–2 周数据校准。</li></ul></div>
   <div class="card"><h3>不计入的注单</h3>
@@ -1538,44 +1521,49 @@ function renderDoc(){
     <tr><td>庄 8,000 + 闲 3,000 + 和 1,000</td><td>庄赢</td><td class="r">12,000</td><td class="r">1,000</td></tr>
     <tr><td>Slot 下注 1,000，派彩 1,000</td><td>输赢 0</td><td class="r">1,000</td><td class="r">0</td></tr>
     </table>
-    <p style="font-size:12px;color:#666;margin-top:6px">同局庄闲（龙虎、大小、单双、红黑）反向下注即为对冲，双方整笔不计，不再按差额计。倒数第二行：庄闲对冲整局剔除，只计押“和”的 1,000。</p></div>
+    <p style="font-size:12px;color:#666;margin-top:6px">同局庄闲（龙虎、大小、单双、红黑）反向下注即为对冲，双方整笔不计。倒数第二行：庄闲对冲整局剔除，只计押“和”的 1,000。</p></div>
   <div class="card"><h3>排名与奖励</h3>
     <ul>
       <li>按计榜投注从高到低排名；同额时先达到该金额者（最后一笔计分注单结算时间更早）排前。</li>
       <li>每人奖金 = 本期奖池 × 该名次占比；保留 2 位小数，按 ₱ 向下取整到分，误差不补发。</li>
-      <li>动态奖池：本期奖池 = clamp(本期全站计榜投注 × 比例, 下限, 上限)，期末定额。</li>
-      <li>前台“预估奖励” = 本期奖池（动态时用当前值）× 我当前名次占比；页面注明“以期末结算为准”。</li>
+      <li>前台“预估奖励” = 本期奖池 × 我当前名次占比；页面注明“以期末结算为准”。</li>
       <li>名次占比要求：从第 1 名起连续、单人占比不递增、合计 100%，否则不能保存。</li>
-      <li>发奖：<b>自动发奖，固定每期结束后 10:00（GMT+8）</b>——日榜次日 10:00、周榜下周一 10:00。00:00–10:00 补拉迟到注单、处理撤销冲正、完成风控审核，10:00 直接入账余额，无需领取；奖金为彩金，账变类型“活动金额”，写入稽核倍数（默认 1 倍）；同时发站内信 / 推送。审核未通过的名次暂缓发放。</li>
+      <li>发奖：<b>自动发奖，固定每期结束后 10:00（GMT+8）</b>——日榜次日 10:00、周榜下周一 10:00、周末榜开放日次日 10:00。00:00–10:00 补拉迟到注单、处理撤销冲正、完成风控审核，10:00 直接入账余额，无需领取；奖金为彩金，账变类型“活动金额”，写入稽核倍数（默认 1 倍）。审核未通过的名次暂缓发放。推送 / 短信提醒为二期。</li>
     </ul></div>
   <div class="card"><h3>发奖到账提醒</h3>
     <ul>
       <li><b>到账</b>：10:00 自动入账（含长期未登录用户），不依赖用户登录或领取。</li>
       <li><b>到账弹窗</b>：发奖后首次进入首页或排行榜页弹出；按 用户 + 发奖批次 记录已展示，展示过不再弹；未看过的多期奖励合并展示。</li>
-      <li><b>唤起</b>：发奖后打开 App / 登录 H5（到账弹窗已展示），或点击推送 / 短信链接。已唤起的不再收到后续提醒。</li>
-      <li><b>推送</b>（推送管理 › 奖励发放推送，EngageLab）：① 发奖时（10:00）发给全部获奖用户；② 发奖后 +4 小时（14:00，可配 2–8 小时）发给仍未唤起的。同批次多榜合并为一条，每批次每人最多 2 条。</li>
-      <li><b>短信</b>（营销短信 › 奖励发放提醒，M360）：推送 ② 后再 +2 小时（16:00）仍未唤起的发 1 条；没有推送 token 的用户同一时间判断。过滤：已绑定手机号、未退订、非黑名单、奖金 ≥ 下限；发送时段 09:00–21:00，超出顺延；每人每天上限；文案带退订说明。</li>
-      <li>风控暂缓发奖的名次：不弹窗、不发提醒；人工放款后按新批次走同样流程。</li>
+      <li>风控暂缓发奖的名次：不弹窗；人工放款后按新批次弹窗。</li>
+      <li>推送 / 短信提醒为二期，见本页末「二期」。</li>
     </ul></div>
   <div class="card"><h3>后台配置项一览</h3>
     <table><tr><th>分组</th><th>配置项</th></tr>
-    <tr><td>基础</td><td>名称（多语言）、榜单类型 Slot / 真人、厂商 → 游戏范围</td></tr>
-    <tr><td>时间</td><td>日榜 / 周榜、活动起止日期、预热展示日、每期发奖时间（GMT+8）</td></tr>
-    <tr><td>奖励</td><td>固定 / 动态奖池、每期金额或比例与上下限、名次区间与每人占比、空缺处理、稽核倍数（发放方式固定为 10:00 自动发奖）</td></tr>
+    <tr><td>基础</td><td>名称（多语言）、前台 Tab 与排序、指定游戏（Slot / Casino，游戏类型按所选游戏自动识别）、底部游戏框</td></tr>
+    <tr><td>时间</td><td>日榜 / 周榜 / 周末榜（开放日可选）、排名指标（有效投注 / 总赢额）、活动起止日期、预热展示日、每期发奖时间（GMT+8）</td></tr>
+    <tr><td>奖励</td><td>每期奖池（固定）、名次区间与每人占比、空缺处理、稽核倍数（发放方式固定为 10:00 自动发奖）</td></tr>
     <tr><td>测算</td><td>预估每期有效投注 → 总预算、返还率、Top1/3/10 占比、每人金额分布</td></tr>
     <tr><td>门槛</td><td>VIP 等级、最低有效投注、KYC、同 IP 上限、黑名单</td></tr>
-    <tr><td>口径</td><td>对冲处理（差额 / 整局）、轮盘覆盖比例</td></tr>
+    <tr><td>口径</td><td>轮盘覆盖比例（对冲固定为整局不计，不可配置）</td></tr>
     </table></div>
   <div class="card"><h3>待确认 / 风险</h3>
     <ul>
       <li><span class="pill w">待确认</span> OTG 是单一钱包还是转账钱包：转账钱包无法实时计分，前台榜单只能 T+1。</li>
-      <li><span class="pill w">待确认</span> NuStar VIP 排行榜的公开规则没有查到可靠来源（搜索结果多为非官方站点），本版按行业通行做法 + 已调研的 Stadiobet 锦标赛设计。如有 NuStar 截图，可再对齐名次档位和文案。</li>
       <li><span class="pill w">待确认</span> 各厂商注单是否带“桌台 + 局号 + 下注项”字段，这是对冲判定的前提；OTG 需要对接文档确认。</li>
       <li><span class="pill b">资金</span> 发奖幂等（活动ID + 期号 + 会员ID 唯一键），防止重复派彩。</li>
       <li><span class="pill b">资金</span> 返还率与实时返水叠加后的总成本，需财务确认上限（参考 PAGCOR 返水 1.5%）。</li>
       <li><span class="pill w">合规</span> 前台活动期写法沿用 “Promo Period” 格式；奖金为彩金非现金。</li>
       <li><span class="pill n">稳定性</span> 榜单查询走缓存（每 5 分钟刷新），不在投注链路同步算名次；注意 Redis 容量问题。</li>
       <li><span class="pill n">多端</span> H5 / iOS / Android / Flutter 需逐端验收倒计时和名次刷新。</li>
+      <li><span class="pill w">待确认</span> 机器人补位规则（补足人数、数值增长、排位方式、前台是否披露）：11-28（周六）与运营确认。已定：机器人所占名次的奖金按「名次空缺处理」执行。</li>
+    </ul></div>
+  <div class="card" style="border-style:dashed;opacity:.85"><h3>二期（不在一期范围）· 推送 / 短信提醒</h3>
+    <p style="font-size:12px;color:#666">一期发奖后只通过「到账弹窗」触达，不发推送 / 短信。以下为二期设计参考，后台「推送管理 › 奖励发放推送」「营销短信 › 奖励发放提醒」页面置灰。</p>
+    <ul>
+      <li><b>唤起</b>：发奖后打开 App / 登录 H5（到账弹窗已展示），或点击推送 / 短信链接。已唤起的不再收到后续提醒。</li>
+      <li><b>推送</b>（推送管理 › 奖励发放推送，EngageLab）：① 发奖时（10:00）发给全部获奖用户；② 发奖后 +4 小时（14:00，可配 2–8 小时）发给仍未唤起的。同批次多榜合并为一条，每批次每人最多 2 条。</li>
+      <li><b>短信</b>（营销短信 › 奖励发放提醒，M360）：推送 ② 后再 +2 小时（16:00）仍未唤起的发 1 条；没有推送 token 的用户同一时间判断。过滤：已绑定手机号、未退订、非黑名单、奖金 ≥ 下限；发送时段 09:00–21:00，超出顺延；每人每天上限；文案带退订说明。</li>
+      <li>风控暂缓发奖的名次：不发提醒；人工放款后按新批次走同样流程。</li>
     </ul></div>`;
 }
 

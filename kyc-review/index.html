@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KYC 后台审核显示对齐 原型 v1.0</title>
+<title>KYC 后台审核显示对齐 原型 v1.1</title>
 <style>
 :root{--top:#17504c;--stat:#1d5f5a;--pri:#168078;--pri-soft:#e6f3f1;--bg:#f4f6f6;--line:#ebeef5;--line2:#dcdfe6;--fg:#303133;--muted:#909399;--sub:#606266;--warn:#c77a17;--warn-bg:#fdf3e6;--red:#d93636;--red-bg:#fdecec;--green:#1f8a4c;
 --font:"PingFang SC","Helvetica Neue",Helvetica,"Microsoft YaHei",Arial,sans-serif;color-scheme:light}
@@ -64,7 +64,7 @@ table{border-collapse:collapse;width:100%;background:#fff}
 th,td{border:1px solid var(--line2);padding:7px 10px;text-align:left;vertical-align:top}th{background:#f5f7fa}
 td.del{color:var(--red)}td.add{color:var(--green)}
 </style></head><body>
-<div class="proto"><b>KYC 后台审核显示对齐 · 原型 v1.0</b><span>2026-11-27 · Koi</span><a href="https://github.com/koi980517/789games/blob/main/kyc-review/docs/PRD.md" target="_blank">PRD v1.0</a><span>站点：789games / 789bingo</span><span>示意数据，非现网</span></div>
+<div class="proto"><b>KYC 后台审核显示对齐 · 原型 v1.1</b><span>2026-11-27 · Koi</span><a href="https://github.com/koi980517/789games/blob/main/kyc-review/docs/PRD.md" target="_blank">PRD v1.1</a><span>站点：789games / 789bingo</span><span>示意数据，非现网</span></div>
 <div class="tabs" role="tablist">
 <button class="on" data-t="admin">运营后台 · KYC 审核</button><button data-t="player">玩家端 · KYC 表单</button><button data-t="diff">改动对照</button></div>
 
@@ -86,7 +86,7 @@ td.del{color:var(--red)}td.add{color:var(--green)}
 <div class="phone"><div class="ph">KYC Verification</div><div class="pf" id="pform2"></div><div class="dim"></div>
 <div class="sheet"><div class="h">Nature of Work <span style="color:#999">✕</span></div><div class="ls" id="works"></div></div></div>
 <div class="note"><h4>前台规则</h4>
-① 字段顺序沿用 BB789BINGO-7671 定稿顺序。<br>② Nature of Work 下拉移除 <b>Youth Worker</b>、<b>Legal Clerk</b>（右图红色删除线仅示意，上线后不显示）。<br>③ 存量已选这两项的用户重新编辑 KYC 时需重新选择。<br>④ 完整选项以 works/queryAll 字典为准，图中为部分示意。</div>
+⓪ <b>所有可见字段均必填</b>；Middle Name 可勾 No middle name 视为已填；点 Confirm 有未填项时红框 + This field is required.（左图示意 Nature of Work 未选）。<br>① 字段顺序沿用 BB789BINGO-7671 定稿顺序。<br>② Nature of Work 下拉移除 <b>Youth Worker</b>、<b>Legal Clerk</b>（右图红色删除线仅示意，上线后不显示）。<br>③ 存量已选这两项的用户重新编辑 KYC 时需重新选择。<br>④ 完整选项以 works/queryAll 字典为准，图中为部分示意。</div>
 </div>
 </section>
 
@@ -100,12 +100,13 @@ td.del{color:var(--red)}td.add{color:var(--green)}
 <tr><td>No middle name / Same as current</td><td class="del">不体现</td><td class="add">显示「无 N/A」/「同当前地址」，不算缺失</td></tr>
 <tr><td>后台独有资料</td><td class="del">与用户资料混排</td><td class="add">移到「审核附加信息」区</td></tr>
 <tr><td>按钮</td><td class="del">save / Pass KYC / Reject KYC</td><td class="add">保存 / 通过 KYC / 拒绝 KYC</td></tr>
+<tr><td>前台必填</td><td class="del">部分字段非必填（如中间名），部分必填星号缺失</td><td class="add">所有可见字段必填；中间名可勾 No middle name；Confirm 校验 + 后端校验</td></tr>
 <tr><td>Nature of Work</td><td class="del">含 Youth Worker、Legal Clerk</td><td class="add">前台 + 后台移除；存量显示原值 +「已下线选项」</td></tr>
 </table></div></div></section>
 
 <script>
 const F=[ // key,label,required,sec
-['idType','证件类型 ID Type',1],['idNo','证件号码 ID Number',1],['first','名 First Name',1],['middle','中间名 Middle Name',0],['last','姓 Last Name',1],
+['idType','证件类型 ID Type',1],['idNo','证件号码 ID Number',1],['first','名 First Name',1],['middle','中间名 Middle Name',1],['last','姓 Last Name',1],
 ['birthday','生日 Birthday',1],['gender','性别 Gender',1,'new'],['venue','投注站 Game Venue',1],['pob','出生地 Place of Birth',1],
 ['cur','当前地址 Current Home Address',1],['perm','永久居住地 Permanent Home Address',1],['nat','国籍 Nationality',1],
 ['income','收入来源 Source of Income',1],['work','工作性质 Nature of Work',1],['photo','证件照 / eKYC 截屏',1]];
@@ -152,11 +153,12 @@ document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{cur=b.dataset.u;
 document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));['admin','player','diff'].forEach(t=>document.getElementById('t-'+t).hidden=t!==b.dataset.t)});
 render();
 // player form
-const P=[['ID Type',"Driver's License",1,1],['First Name','Juan',1],['Middle Name','Santos',0],['Last Name','Dela Cruz',1],['Birthday','1994-06-12',1,1],['Gender','● Male　○ Female　○ Others',1],
+const P=[['ID Type',"Driver's License",1,1],['First Name','Juan',1],['Middle Name','Santos',1,0,1],['Last Name','Dela Cruz',1],['Birthday','1994-06-12',1,1],['Gender','● Male　○ Female　○ Others',1],
 ['Game Venue','PASAY BUENDIA',1,1],['Place of Birth','Quezon City',1],['Current Home Address','123 Rizal St., Pasay City',1],['Permanent Home Address','☑ Same as current address',1],
 ['Nationality','Filipino',1,1],['Source of Income','Salary',1,1],['Nature of Work','Select',1,1]];
-const ph=P.map(([l,v,r,dd])=>`<label>${l}${r?'<i>*</i>':''}</label><div class="in${dd?' dd':''}${v==='Select'?' ph2':''}">${v}</div>`).join('');
-document.getElementById('pform').innerHTML=ph;document.getElementById('pform2').innerHTML=ph;
+const ph=P.map(([l,v,r,dd,mn])=>`<label>${l}${r?'<i>*</i>':''}</label><div class="in${dd?' dd':''}${v==='Select'?' ph2':''}">${v}</div>${mn?'<div style="font-size:12px;color:#666;margin-top:4px">☐ No middle name</div>':''}`).join('');
+const ph3=ph.replace(/<div class="in dd ph2">Select<\/div>/,'<div class="in dd ph2" style="border-color:#e5484d">Select</div><div style="color:#e5484d;font-size:12px;margin-top:4px">This field is required.</div>');
+document.getElementById('pform').innerHTML=ph3;document.getElementById('pform2').innerHTML=ph;
 document.getElementById('works').innerHTML=['Accountant','Architect','Assistant','Associate','Engineer','Government Employee','Lawyer','Legal Clerk','Nurse','Sales','Self-employed','Teacher','Youth Worker','Others']
  .map(w=>`<div class="${OFF.includes(w)?'gone':''}">${w}${OFF.includes(w)?'　<small>移除</small>':''}</div>`).join('');
 </script>

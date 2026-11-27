@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>【789games】玩家注册与登录调整 原型 v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--g1:#1c8f70;--g2:#124a79;--ink:#16352d;--sub:#6b7f78;--pri1:#2fa36d;--pri2:#17804f;--cream:#ffe3a3;--brown:#7a4a00;--line:#e3ece8;--red:#d93636;
+--adm:#1d6cae;--adm2:#3d8fd8;--admbg:#f0f0f0;--font:"Helvetica Neue",Helvetica,Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font:13px/1.5 var(--font);color:#303133;background:#eef2f1}
+button,input,select{font:inherit}button{cursor:pointer}
+.proto{background:#fff7e0;color:#7a5a00;border-bottom:1px solid #f0dca0;padding:6px 16px;font-size:12px;display:flex;flex-wrap:wrap;gap:4px 18px}
+.proto b{color:#5a3d00}
+.tabs{display:flex;gap:2px;background:#fff;border-bottom:1px solid #dde5e2;padding:0 16px}
+.tabs button{border:0;background:none;padding:11px 16px;font-size:14px;color:#55625e;border-bottom:3px solid transparent}
+.tabs button.on{color:var(--pri2);border-color:var(--pri1);font-weight:600}
+.pane{padding:18px}
+
+/* ---- player ---- */
+.play{display:grid;grid-template-columns:390px 1fr;gap:24px;align-items:start}
+.phone{width:390px;height:844px;border-radius:36px;background:#111;padding:10px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+.scr{width:100%;height:100%;border-radius:28px;overflow:hidden;background:linear-gradient(#bfe9dc,#e9f6f1 30%,#f4faf7);position:relative;display:flex;flex-direction:column;color:var(--ink)}
+.bar{background:linear-gradient(90deg,var(--g1),var(--g2));color:#fff;padding:34px 16px 12px;display:flex;align-items:center;gap:10px}
+.bar .bk{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;border:0;color:#fff;font-size:16px}
+.bar h1{font:700 18px "Baloo 2",var(--font);margin:0;flex:1}
+.body{flex:1;overflow:auto;padding:16px}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(22,53,45,.07);padding:16px;margin-bottom:12px}
+.h{font:700 20px "Baloo 2",var(--font);margin:4px 0 2px}
+.muted{color:var(--sub);font-size:12px}
+.seg{display:flex;background:#e8f2ee;border-radius:10px;padding:3px;margin:12px 0}
+.seg button{flex:1;border:0;background:none;padding:8px;border-radius:8px;color:var(--sub);font-weight:600}
+.seg button.on{background:#fff;color:var(--pri2);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+label.f{display:block;margin:10px 0 4px;font-size:12px;font-weight:600;color:#3c5a51}
+label.f i{color:var(--red);font-style:normal}
+.in{width:100%;border:1px solid #cfdcd7;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink);font-size:14px}
+.in[readonly]{background:#f1f5f3;color:#59706a}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.err{color:var(--red);font-size:11px;margin-top:3px}
+.btn{width:100%;border:0;border-radius:24px;padding:12px;font-weight:700;font-size:15px;color:#fff;background:linear-gradient(90deg,var(--pri1),var(--pri2));margin-top:14px}
+.btn2{width:100%;border:0;border-radius:24px;padding:11px;font-weight:700;color:var(--brown);background:var(--cream);margin-top:10px}
+.btn.ghost{background:none;color:var(--sub);font-weight:500;margin-top:6px}
+.or{display:flex;align-items:center;gap:8px;color:var(--sub);font-size:12px;margin:16px 0 10px}.or:before,.or:after{content:"";flex:1;height:1px;background:#d5e2dd}
+.soc{display:flex;justify-content:center;gap:16px}
+.soc button{width:48px;height:48px;border-radius:50%;border:1px solid #d5e2dd;background:#fff;font-weight:800;font-size:16px}
+.note{background:#e8f6f0;border-radius:10px;padding:8px 10px;font-size:12px;color:#2a6a55;margin-top:10px}
+.warn{background:#fff3e0;color:#8a5200}
+.steps{display:flex;gap:6px;margin-bottom:12px}.steps span{flex:1;height:5px;border-radius:3px;background:#d5e2dd}.steps span.on{background:var(--pri1)}
+.upl{border:1.5px dashed #9fc3b6;border-radius:12px;padding:18px;text-align:center;color:var(--sub);background:#f7fbf9;cursor:pointer}
+.upl.done{border-style:solid;border-color:var(--pri1);color:var(--pri2);background:#eaf7f0}
+.chk{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-top:10px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #eef3f1;font-size:13px}.kv:last-child{border:0}
+.kv span:first-child{color:var(--sub)}.kv span:last-child{font-weight:600;text-align:right}
+.mask{position:absolute;inset:0;background:rgba(10,30,25,.55);display:grid;place-items:center;padding:24px;z-index:5}
+.dlg{background:#fff;border-radius:16px;padding:20px;width:100%;text-align:center}
+.dlg h3{font:700 19px "Baloo 2",var(--font);margin:6px 0}
+.tag{display:inline-block;font-size:11px;border-radius:10px;padding:1px 8px;background:#e1f3ea;color:var(--pri2);font-weight:600}
+.tag.gray{background:#eef1f0;color:#7d8a86}
+.lk{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #eef3f1}
+.lk .ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800}
+.lk div{flex:1}.lk button{border:0;border-radius:14px;padding:5px 14px;background:var(--cream);color:var(--brown);font-weight:700}
+.ok{width:70px;height:70px;border-radius:50%;background:linear-gradient(var(--pri1),var(--pri2));color:#fff;font-size:36px;display:grid;place-items:center;margin:30px auto 10px}
+.lobby{display:grid;place-items:center;height:100%;text-align:center;color:var(--sub)}
+
+.side .card{padding:14px 16px}
+.side h4{margin:0 0 8px;font-size:14px;color:#1f3d35}
+.scn{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.scn button{text-align:left;border:1px solid #d5e2dd;background:#fff;border-radius:8px;padding:8px 10px;font-size:12px}
+.scn button.on{border-color:var(--pri1);background:#eaf7f0}
+.scn b{display:block;font-size:13px}
+.jump{display:flex;flex-wrap:wrap;gap:6px}
+.jump button{border:1px solid #cfdcd7;background:#fff;border-radius:14px;padding:4px 10px;font-size:12px}
+.jump button.on{background:var(--pri2);color:#fff;border-color:var(--pri2)}
+.rules{margin:0;padding-left:18px}.rules li{margin:3px 0}
+.log{font:12px/1.6 Menlo,monospace;background:#0f2a24;color:#b9f0d9;border-radius:8px;padding:10px;max-height:180px;overflow:auto;white-space:pre-wrap}
+
+/* ---- admin ---- */
+.adm{background:#fff;border:1px solid #cfd8dc;max-width:1280px}
+.atop{background:var(--adm);color:#fff;height:38px;display:flex;align-items:center;padding:0 14px;gap:16px;font-size:12px}
+.atop .clk{color:#ffd24d}.atop .sp{flex:1}.atop .qa{background:#f0a23b;border-radius:3px;padding:0 6px}
+.awrap{display:grid;grid-template-columns:190px 1fr;min-height:640px}
+.amenu{background:#fff;border-right:1px solid #dfe6ea}
+.amenu .mh{background:#4198ca;color:#fff;padding:8px 12px}
+.amenu .g{background:#d4e6f0;padding:8px 12px;border-bottom:1px solid #c5d9e4;font-weight:600}
+.amenu .i{padding:7px 12px 7px 26px;border-bottom:1px solid #eef2f4;cursor:pointer}
+.amenu .i.on{color:var(--adm2);background:#eef6fd;font-weight:600}
+.amenu .new{background:#e8590c;color:#fff;font-size:10px;border-radius:3px;padding:0 4px;margin-left:4px}
+.amain{background:var(--admbg);padding:0 0 16px}
+.crumb{background:#fff;padding:8px 14px;border-bottom:1px solid #e4e7ed;color:#606266}
+.abox{background:#fff;margin:12px;padding:14px 16px;border-radius:2px}
+.abox h3{margin:0 0 12px;font-size:15px}
+table.t{width:100%;border-collapse:collapse;font-size:12px}
+table.t th,table.t td{border:1px solid #ebeef5;padding:7px 8px;text-align:left}
+table.t th{background:#f5f7fa;color:#606266}
+.ab{border:1px solid var(--adm2);background:var(--adm2);color:#fff;border-radius:3px;padding:5px 12px;font-size:12px}
+.ab.l{background:#fff;color:var(--adm2)}
+.ab.s{padding:2px 8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 24px}
+.grid div span{color:#909399;display:inline-block;width:110px}
+.sw{display:inline-block;width:36px;height:18px;border-radius:9px;background:#dcdfe6;position:relative;vertical-align:middle;cursor:pointer}
+.sw:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;top:2px;left:2px;transition:.15s}
+.sw.on{background:#13ce66}.sw.on:after{left:20px}
+.frm{display:grid;grid-template-columns:180px 1fr;gap:12px 10px;align-items:center;max-width:760px}
+.frm label{text-align:right;color:#606266}
+.frm input,.frm select{border:1px solid #dcdfe6;border-radius:3px;padding:5px 8px;width:260px}
+.hint{color:#909399;font-size:12px;margin-left:8px}
+.sticky{background:#fdf6ec;border:1px solid #f5dab1;color:#8a5a14;padding:8px 12px;margin:12px;font-size:12px;border-radius:3px}
+.cmp td:first-child{width:160px;font-weight:600}
+.red{color:var(--red)}.grn{color:#1f8a4c}
+</style>
+</head>
+<body>
+<div class="proto">
+  <span><b>【789games】玩家注册与登录调整 原型 v1.0</b>（与 PRD v1.0 对应）</span>
+  <span>2026-11-27 · Koi</span>
+  <span>依据：合规条款第 3 条 Player registration and login</span>
+  <span>示例数据，非线上配置；时间均为 GMT+8</span>
+</div>
+<div class="tabs">
+  <button class="on" data-tab="player">玩家端</button>
+  <button data-tab="admin">运营后台</button>
+  <button data-tab="diff">改动对照</button>
+</div>
+
+<!-- ================= PLAYER ================= -->
+<div class="pane" id="tab-player">
+ <div class="play">
+  <div class="phone"><div class="scr" id="scr"></div></div>
+  <div class="side">
+   <div class="card">
+    <h4>模拟场景</h4>
+    <div class="scn" id="scn"></div>
+   </div>
+   <div class="card">
+    <h4>页面跳转（编号同 PRD §3.2）</h4>
+    <div class="jump" id="jump"></div>
+   </div>
+   <div class="card">
+    <h4>当前页规则</h4>
+    <ul class="rules" id="rules"></ul>
+   </div>
+   <div class="card">
+    <h4>后端调用示意</h4>
+    <div class="log" id="log"></div>
+   </div>
+  </div>
+ </div>
+</div>
+
+<!-- ================= ADMIN ================= -->
+<div class="pane" id="tab-admin" hidden>
+ <div class="adm">
+  <div class="atop"><span class="clk">当前时间: <span id="aclk"></span></span><span class="qa">QA</span><span class="sp"></span><span>简体中文</span><span>koi</span></div>
+  <div class="awrap">
+   <div class="amenu">
+    <div class="mh">菜单 ☰</div>
+    <div class="g">用户管理</div>
+    <div class="i on" data-a="user">用户详情 · 注册信息</div>
+    <div class="i" data-a="list">用户列表</div>
+    <div class="g">系统设置</div>
+    <div class="i" data-a="setting">注册设置<span class="new">新增</span></div>
+    <div class="i" data-a="venue">游戏场所清单<span class="new">新增</span></div>
+    <div class="g">数据报表</div>
+    <div class="i" data-a="stat">注册信息补全统计<span class="new">新增</span></div>
+   </div>
+   <div class="amain" id="amain"></div>
+  </div>
+ </div>
+</div>
+
+<!-- ================= DIFF ================= -->
+<div class="pane" id="tab-diff" hidden>
+ <div class="adm" style="padding:16px">
+  <h3 style="margin-top:0">条款要求 × 现网 × 本次改动</h3>
+  <table class="t cmp">
+   <tr><th>条款</th><th>现网</th><th>本次改动</th><th>落点</th></tr>
+   <tr><td>C1 只能手机号注册</td><td class="red">Google / FB / TG（iOS Apple）授权即建号</td><td>三方未绑定不建号，返回 2801 + 引导手机号注册</td><td>L1、L2；后端三方登录接口</td></tr>
+   <tr><td>C2 注册时提供全名、生日、最近场所、政府证件</td><td class="red">注册只要手机号 + OTP；姓名 / 生日 / 证件在 KYC；无场所字段</td><td>OTP 后 3 步：基本信息 → 证件 → 密码；全部提交后才建号；21+ / NDRP / 证件唯一校验</td><td>R2–R5；注册设置；游戏场所清单</td></tr>
+   <tr><td>C3 手机号与基本注册信息在账户页可见</td><td class="red">My Details 只有头像、昵称</td><td>My Details 新增 Registration Info 只读卡片</td><td>A1；/api/user/reg-profile</td></tr>
+   <tr><td>C4 后续登录 OTP / 密码 / FB / Google / TG</td><td>都有；另有 Apple，Viber 开发中</td><td>三方只登录已绑定账号；Account Security 绑定；Apple 隐藏、Viber 暂停（待确认 Q4）</td><td>L1、A2</td></tr>
+   <tr><td>存量账号</td><td class="red">三方注册无手机号账号、缺信息账号</td><td>登录后强制补全（可配宽限期，默认 0）；补全前不能进大厅 / 充提 / 下注</td><td>L3；注册设置；补全统计</td></tr>
+  </table>
+  <h3>待确认（详见 PRD §8）</h3>
+  <ol style="margin:0;padding-left:20px;line-height:1.8">
+   <li>Q1 注册是否必须上传证件照片（默认必须）</li>
+   <li>Q2 注册证件与 KYC 的关系（默认 KYC 独立，带出注册信息）</li>
+   <li>Q3 游戏场所清单来源与维护人</li>
+   <li>Q4 Apple 隐藏 / Viber 暂停</li>
+   <li>Q5 存量补全宽限期与范围</li>
+   <li>Q6 手机号是否允许脱敏显示</li>
+   <li>Q7 证件唯一规则；Q8 主站是否同步；Q9 埋点通道；Q10 代理归属参数</li>
+  </ol>
+ </div>
+</div>
+
+<script>
+// ---------- data ----------
+const VENUES=[["Okada Manila","Parañaque"],["Solaire Resort","Parañaque"],["City of Dreams Manila","Parañaque"],["Resorts World Manila","Pasay"],["Casino Filipino – Pavilion","Parañaque"],["Casino Filipino – Angeles","Pampanga"],["Casino Filipino – Tagaytay","Cavite"],["Casino Filipino – Cebu","Cebu City"],["Casino Filipino – Davao","Davao City"],["Nustar Resort","Cebu City"]];
+const IDS=["PhilSys National ID","Passport","Driver's License","UMID","SSS ID","PRC ID","Postal ID","Voter's ID","PhilHealth ID"];
+const SCN=[
+ {k:"new",t:"新用户注册",d:"新手机号 → OTP → 3 步注册",start:"L1"},
+ {k:"tp",t:"三方未绑定",d:"Google/FB/TG 授权，无绑定账号",start:"L1"},
+ {k:"old",t:"已注册登录",d:"信息完整，OTP / 密码 / 已绑三方",start:"L1"},
+ {k:"legacyTp",t:"存量：三方注册无手机号",d:"登录后先绑手机号再补全",start:"L1"},
+ {k:"legacyKyc",t:"存量：KYC 已过缺场所",d:"只需补最近场所",start:"L1"},
+ {k:"under21",t:"未满 21 岁",d:"生日不足 21 周岁，提交被拦",start:"L1"},
+];
+const PAGES=["L1","R1","R2","R3","R4","R5","L2","L3","A1","A2"];
+const RULES={
+ L1:["标题 Log in / Register；只有手机号能注册","页签 OTP Login / Password Login","continue with Google / Facebook / Telegram：只登录已绑定账号","Apple 隐藏、Viber 不上（待确认 Q4）"],
+ R1:["人机验证 → 4 位短信码，45s 重发","已注册：直接登录","未注册：返回 regTicket（30 分钟），不建号"],
+ R2:["手机号已验证不可改","First / Last 必填，Middle 可空；字母、空格、- . '，≤50 位","生日满 21 周岁（GMT+8 当天计）","最近场所：后台清单，可搜索，只显示启用"],
+ R3:["证件类型后台可配","证件号按类型校验，同站点唯一","照片 jpg/png/webp，≤5MB，校验真实类型，私有存储"],
+ R4:["密码 8–16 位，字母 + 数字","勾选 21+ 与条款","Submit：服务端重校验 21+ / NDRP / 证件唯一 → 建号；requestId 幂等"],
+ R5:["建号成功，reg_method = 1（手机号）","自动登录，之后进入弹窗队列"],
+ L2:["不建号、不发会话；返回 2801 + bindTicket（10 分钟）","Register with Mobile Number → L1","I have an account → 登录后提示绑定该三方"],
+ L3:["全屏页，排在 21+/条款弹窗之后、营销弹窗之前","补全前不能进大厅 / 充提 / 下注（后端也拦）","无手机号先绑手机号 + OTP；KYC 已过的带出姓名、生日、证件"],
+ A1:["My Details 新增 Registration Info，只读","手机号前 4 后 4（待确认 Q6）；证件号只显示后 4 位","修改走客服"],
+ A2:["Account Security 绑定 Google / FB / TG","一个三方账号只能绑一个平台账号","解绑沿用后台"],
+};
+const S={scn:"new",page:"L1",tab:"otp",f:{},bindTicket:null,lobby:false,linked:{Google:false,Facebook:true,Telegram:false},logs:[]};
+const $=s=>document.querySelector(s);
+function log(s){S.logs.unshift(s);$("#log").textContent=S.logs.slice(0,12).join("\n")}
+function defaults(){
+ const base={phone:"09171234567",first:"",middle:"",last:"",dob:"",venue:"",idType:"",idNo:"",photo:false,pw:"",pw2:"",agree:false};
+ if(S.scn==="legacyKyc")Object.assign(base,{first:"Juan",middle:"D.",last:"Dela Cruz",dob:"1995-03-15",idType:"UMID",idNo:"0111-2345-6789",photo:true});
+ if(S.scn==="legacyTp")base.phone="";
+ if(S.scn==="under21")Object.assign(base,{first:"Ana",last:"Reyes",dob:"2006-01-10",venue:"Okada Manila"});
+ S.f=base;
+}
+function go(p){S.page=p;render()}
+function v(id){return document.getElementById(id)}
+
+// ---------- screens ----------
+function bar(t,back){return `<div class="bar">${back?`<button class="bk" onclick="go('${back}')">‹</button>`:""}<h1>${t}</h1></div>`}
+function steps(n){return `<div class="steps">${[1,2,3].map(i=>`<span class="${i<=n?"on":""}"></span>`).join("")}</div><div class="muted">Step ${n} of 3</div>`}
+const legacy=()=>S.scn.startsWith("legacy");
+const SCR={
+L1(){return bar("Log in / Register")+`<div class="body"><div class="card">
+ <div class="h">Welcome to 789games</div><div class="muted">New players register with mobile number only.</div>
+ <div class="seg"><button class="${S.tab==="otp"?"on":""}" onclick="S.tab='otp';render()">OTP Login</button><button class="${S.tab==="pw"?"on":""}" onclick="S.tab='pw';render()">Password Login</button></div>
+ <label class="f">Mobile Number</label><input class="in" id="ph" value="${S.scn==="legacyTp"?"":"0917 123 4567"}" placeholder="09XX XXX XXXX">
+ ${S.tab==="pw"?`<label class="f">Password</label><input class="in" type="password" value="••••••••"><button class="btn" onclick="loginPw()">Log In</button>`:`<button class="btn" onclick="sendOtp()">Send Code</button>`}
+ <div class="or">or continue with</div>
+ <div class="soc"><button style="color:#ea4335" onclick="tp('Google')">G</button><button style="color:#1877f2" onclick="tp('Facebook')">f</button><button style="color:#2aa3dd" onclick="tp('Telegram')">✈</button></div>
+ <div class="note">Google, Facebook and Telegram are for login only. Link them in Account Security after you register.</div>
+ </div></div>`},
+R1(){return bar("Verify Mobile Number","L1")+`<div class="body"><div class="card">
+ <div class="muted">We sent a 4-digit code to</div><div class="h">0917 *** 4567</div>
+ <label class="f">Verification Code</label><input class="in" value="1234" maxlength="4">
+ <div class="muted" style="margin-top:6px">Resend in 45s</div>
+ <button class="btn" onclick="verifyOtp()">Verify</button></div></div>`},
+R2(){const f=S.f;return bar(legacy()?"Complete Registration":"Register",legacy()?null:"R1")+`<div class="body"><div class="card">
+ ${legacy()?`<div class="note warn" style="margin:0 0 10px">To comply with PAGCOR regulations, please complete your registration information.</div>`:""}
+ ${steps(1)}<div class="h">Basic Information</div>
+ <label class="f">Mobile Number</label><input class="in" readonly value="0917 *** 4567 ✓ Verified">
+ <div class="row2"><div><label class="f">First Name <i>*</i></label><input class="in" id="first" value="${f.first}"></div><div><label class="f">Last Name <i>*</i></label><input class="in" id="last" value="${f.last}"></div></div>
+ <label class="f">Middle Name</label><input class="in" id="middle" value="${f.middle}" placeholder="Optional">
+ <label class="f">Date of Birth <i>*</i></label><input class="in" type="date" id="dob" value="${f.dob}" max="2026-11-27">
+ <div class="err" id="e_dob"></div>
+ <label class="f">Nearest Gaming Venue <i>*</i></label>
+ <input class="in" list="vl" id="venue" value="${f.venue}" placeholder="Search venue or city">
+ <datalist id="vl">${VENUES.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("")}</datalist>
+ <div class="err" id="e_r2"></div>
+ <button class="btn" onclick="nextR2()">Next</button>
+ ${legacy()?`<button class="btn ghost" onclick="logout()">Log Out</button>`:""}
+ </div></div>`},
+R3(){const f=S.f;return bar(legacy()?"Complete Registration":"Register","R2")+`<div class="body"><div class="card">
+ ${steps(2)}<div class="h">Government-issued ID</div>
+ ${S.scn==="legacyKyc"?`<div class="note">Pre-filled from your verified KYC.</div>`:""}
+ <label class="f">ID Type <i>*</i></label><select class="in" id="idType"><option value="">Select ID type</option>${IDS.map(x=>`<option ${x===f.idType?"selected":""}>${x}</option>`).join("")}</select>
+ <label class="f">ID Number <i>*</i></label><input class="in" id="idNo" value="${f.idNo}">
+ <label class="f">ID Photo (front) <i>*</i></label>
+ <div class="upl ${f.photo?"done":""}" onclick="S.f.photo=true;keepR3();render()">${f.photo?"✓ id_front.jpg uploaded · tap to replace":"＋ Tap to upload<br><span class='muted'>JPG / PNG / WEBP, max 5 MB</span>"}</div>
+ <div class="err" id="e_r3"></div>
+ <button class="btn" onclick="nextR3()">Next</button></div></div>`},
+R4(){const f=S.f;return bar(legacy()?"Complete Registration":"Register","R3")+`<div class="body"><div class="card">
+ ${steps(3)}<div class="h">${S.scn==="legacyKyc"||S.scn==="legacyTp"&&S.f.pwSet?"Confirm":"Set Password"}</div>
+ ${S.scn==="legacyKyc"?`<div class="muted">You already have a password.</div>`:`
+ <label class="f">Password <i>*</i></label><input class="in" type="password" id="pw" value="${f.pw}" placeholder="8-16 characters, letters & numbers">
+ <label class="f">Confirm Password <i>*</i></label><input class="in" type="password" id="pw2" value="${f.pw2}">`}
+ <div class="card" style="background:#f7fbf9;box-shadow:none;margin:12px 0 0;padding:10px 12px">
+  <div class="kv"><span>Full Name</span><span>${[f.first,f.middle,f.last].filter(Boolean).join(" ")}</span></div>
+  <div class="kv"><span>Date of Birth</span><span>${fmtD(f.dob)}</span></div>
+  <div class="kv"><span>Nearest Venue</span><span>${f.venue}</span></div>
+  <div class="kv"><span>ID</span><span>${f.idType} · ****${f.idNo.slice(-4)}</span></div>
+ </div>
+ <label class="chk"><input type="checkbox" id="agree" ${f.agree?"checked":""}> I confirm I am at least 21 years old and agree to the Terms & Conditions and Privacy Policy.</label>
+ <div class="err" id="e_r4"></div>
+ <button class="btn" onclick="submitReg()">Submit</button></div></div>`},
+R5(){return bar(legacy()?"Completed":"Registered")+`<div class="body"><div class="card" style="text-align:center">
+ <div class="ok">✓</div><div class="h">${legacy()?"Information completed":"Welcome to 789games!"}</div>
+ <div class="muted">${legacy()?"Thank you. You can now continue playing.":"Your account has been created."}</div>
+ <button class="btn" onclick="S.lobby=true;go('A1')">Go to Lobby</button>
+ <button class="btn2" onclick="go('A1')">View My Details</button></div></div>`},
+L2(){return SCR.L1()+`<div class="mask"><div class="dlg">
+ <div style="font-size:34px">🔗</div><h3>No account linked</h3>
+ <div class="muted" style="font-size:13px">This ${S.tpP} account isn't linked to any 789games account. Please register with your mobile number first. You can link ${S.tpP} in Account Security after logging in.</div>
+ <button class="btn" onclick="S.tab='otp';S.scn='new';markScn();go('L1')">Register with Mobile Number</button>
+ <button class="btn2" onclick="haveAcc()">I have an account</button></div></div>`},
+L3(){return bar("Bind Mobile Number")+`<div class="body"><div class="card">
+ <div class="note warn" style="margin:0 0 10px">To comply with PAGCOR regulations, please bind your mobile number and complete your registration information.</div>
+ <label class="f">Mobile Number <i>*</i></label><input class="in" id="bph" placeholder="09XX XXX XXXX" value="0917 123 4567">
+ <label class="f">Verification Code <i>*</i></label><div class="row2"><input class="in" value="1234"><button class="btn2" style="margin:0" onclick="log('POST /api/v2/auth/otp/send  scene=bind')">Send Code</button></div>
+ <button class="btn" onclick="S.f.phone='09171234567';log('POST /api/user/bind/phone → ok');go('R2')">Next</button>
+ <button class="btn ghost" onclick="logout()">Log Out</button></div></div>`},
+A1(){const f=S.f;const full=[f.first,f.middle,f.last].filter(Boolean).join(" ")||"Juan D. Dela Cruz";return bar("My Details")+`<div class="body">
+ <div class="card" style="display:flex;gap:12px;align-items:center"><div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(var(--g1),var(--g2))"></div><div><b>Player8f2k1</b><div class="muted">ID 190912</div></div></div>
+ <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><b>Registration Info</b><span class="tag">Complete</span></div>
+  <div class="kv"><span>Mobile Number</span><span>0917 *** 4567</span></div>
+  <div class="kv"><span>Full Name</span><span>${full}</span></div>
+  <div class="kv"><span>Date of Birth</span><span>${fmtD(f.dob||"1995-03-15")}</span></div>
+  <div class="kv"><span>Nearest Gaming Venue</span><span>${f.venue||"Okada Manila"}<br><span class="muted">${(VENUES.find(x=>x[0]===(f.venue||"Okada Manila"))||["","—"])[1]}</span></span></div>
+  <div class="kv"><span>Government ID</span><span>${f.idType||"UMID"} · ****${(f.idNo||"6789").slice(-4)}</span></div>
+  <div class="kv"><span>Registered On</span><span>2026-11-27 14:05 (GMT+8)</span></div>
+  <div class="kv"><span>Registration Method</span><span>${S.scn==="legacyTp"?"Facebook":"Mobile Number"}</span></div>
+  <div class="muted" style="margin-top:8px">To update your information, please contact <a href="#" style="color:var(--pri2)">Customer Service</a>.</div>
+ </div>
+ <div class="card"><div class="kv"><span>Nickname</span><span>Player8f2k1 ›</span></div><div class="kv"><span>Check For Updates</span><span>v1.2.0 ›</span></div></div>
+ <button class="btn2" onclick="go('A2')">Account Security ›</button>
+ <button class="btn" onclick="logout()">Logout</button></div>`},
+A2(){const L=S.linked;const P=[["Google","G","#ea4335"],["Facebook","f","#1877f2"],["Telegram","✈","#2aa3dd"]];return bar("Account Security","A1")+`<div class="body">
+ <div class="card"><div class="kv"><span>Mobile Number</span><span>0917 *** 4567</span></div><div class="kv"><span>Login Password</span><span>Change ›</span></div></div>
+ <div class="card"><b>Linked Accounts</b><div class="muted">For faster login only. Registration requires a mobile number.</div>
+ ${P.map(p=>`<div class="lk"><span class="ic" style="background:${p[2]}">${p[1]}</span><div>${p[0]}<br>${L[p[0]]?`<span class="tag">Connected</span> <span class="muted">${p[0]==="Telegram"?"@juan_dc":"juan***@gmail.com"}</span>`:`<span class="tag gray">Not linked</span>`}</div>${L[p[0]]?"":`<button onclick="link('${p[0]}')">Link</button>`}</div>`).join("")}
+ <div class="muted" style="margin-top:8px">To unlink, please contact Customer Service.</div></div></div>`},
+};
+function fmtD(d){if(!d)return"—";const m=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];const[a,b,c]=d.split("-");return `${+c} ${m[+b-1]} ${a}`}
+function age(d){const t=new Date("2026-11-27"),b=new Date(d);let a=t.getFullYear()-b.getFullYear();if(t.getMonth()<b.getMonth()||t.getMonth()===b.getMonth()&&t.getDate()<b.getDate())a--;return a}
+
+// ---------- actions ----------
+function sendOtp(){log("POST /api/v2/auth/otp/send  → captcha ok, registered="+(S.scn==="old"||legacy()));go("R1")}
+function verifyOtp(){
+ if(S.scn==="old"){log("POST /api/v2/auth/otp/verify → login, profileComplete=true");S.f={first:"Juan",middle:"D.",last:"Dela Cruz",dob:"1995-03-15",venue:"Okada Manila",idType:"UMID",idNo:"0111-2345-6789"};afterLogin();return}
+ if(S.scn==="legacyKyc"){log("POST /api/v2/auth/otp/verify → login, profileComplete=false (missing venue)");go("R2");return}
+ log("POST /api/v2/auth/otp/verify → registered=false, regTicket=rt_8a1f (30min), NO account created");go("R2")}
+function loginPw(){
+ if(S.scn==="new"||S.scn==="under21"){log("POST /api/v2/auth/login → 账号不存在");alert("Account not found. Please register with OTP.");return}
+ log("POST /api/v2/auth/login → ok");verifyOtp()}
+function tp(p){S.tpP=p;
+ if(S.scn==="old"&&S.linked[p]){log(`POST /api/v2/auth/${p.toLowerCase()} → bound, login`);afterLogin();return}
+ if(S.scn==="legacyTp"){log(`POST /api/v2/auth/${p.toLowerCase()} → bound (legacy, regMethod=3), profileComplete=false, phone=null`);go("L3");return}
+ S.bindTicket=p;log(`POST /api/v2/auth/${p.toLowerCase()} → code 2801 NOT_LINKED, bindTicket=bt_77c2 (10min); no account, no session`);go("L2")}
+function haveAcc(){S.scn="old";markScn();S.tab="otp";go("L1")}
+function afterLogin(){
+ if(S.bindTicket){const p=S.bindTicket;S.bindTicket=null;if(confirm(`Link ${p} to this account?`)){S.linked[p]=true;log(`POST /api/user/bind/${p.toLowerCase()} (bindTicket) → ok`)}}
+ go("A1")}
+function keepR2(){["first","middle","last","dob","venue"].forEach(k=>{const e=v(k);if(e)S.f[k]=e.value.trim()})}
+function keepR3(){["idType","idNo"].forEach(k=>{const e=v(k);if(e)S.f[k]=e.value.trim()})}
+function nextR2(){keepR2();const f=S.f;
+ if(!f.first||!f.last||!f.dob||!f.venue){v("e_r2").textContent="This field is required";return}
+ if(!VENUES.some(x=>x[0]===f.venue)){v("e_r2").textContent="Please select a venue from the list.";return}
+ if(age(f.dob)<21){v("e_dob").textContent="You must be at least 21 years old to register.";log("前端校验：age="+age(f.dob)+" < 21，拦截");return}
+ go("R3")}
+function nextR3(){keepR3();const f=S.f;
+ if(!f.idType||!f.idNo||!f.photo){v("e_r3").textContent="This field is required";return}
+ log("POST /api/reg/id-photo → fileId=f_19ab");go("R4")}
+function submitReg(){const f=S.f;
+ if(S.scn!=="legacyKyc"){f.pw=v("pw").value;f.pw2=v("pw2").value;
+  if(!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/.test(f.pw)){v("e_r4").textContent="8-16 characters, must contain letters and numbers.";return}
+  if(f.pw!==f.pw2){v("e_r4").textContent="Passwords do not match.";return}}
+ f.agree=v("agree").checked;if(!f.agree){v("e_r4").textContent="Please confirm to continue.";return}
+ if(legacy()){log("POST /api/user/profile/complete → ok, profileComplete=true");}
+ else log("POST /api/reg/submit {regTicket,requestId} → 21+ ✓ NDRP ✓ ID unique ✓ → account created (reg_method=1)");
+ go("R5")}
+function link(p){if(confirm(`Continue with ${p} to link?`)){S.linked[p]=true;log(`POST /api/user/bind/${p.toLowerCase()} → ok`);render()}}
+function logout(){log("POST /api/v2/auth/logout");S.lobby=false;go("L1")}
+
+// ---------- render ----------
+function markScn(){document.querySelectorAll("#scn button").forEach(b=>b.classList.toggle("on",b.dataset.k===S.scn))}
+function render(){
+ $("#scr").innerHTML=SCR[S.page]();
+ $("#rules").innerHTML=(RULES[S.page]||[]).map(x=>`<li>${x}</li>`).join("");
+ document.querySelectorAll("#jump button").forEach(b=>b.classList.toggle("on",b.dataset.p===S.page));
+}
+$("#scn").innerHTML=SCN.map(s=>`<button data-k="${s.k}"><b>${s.t}</b><span class="muted">${s.d}</span></button>`).join("");
+$("#scn").onclick=e=>{const b=e.target.closest("button");if(!b)return;S.scn=b.dataset.k;S.bindTicket=null;S.logs=[];log("— 场景："+b.querySelector("b").textContent+" —");defaults();markScn();S.tab="otp";go("L1")};
+const PN={L1:"L1 登录/注册",R1:"R1 OTP",R2:"R2 基本信息",R3:"R3 证件",R4:"R4 密码",R5:"R5 成功",L2:"L2 三方未绑定",L3:"L3 绑手机号",A1:"A1 My Details",A2:"A2 绑定"};
+$("#jump").innerHTML=PAGES.map(p=>`<button data-p="${p}">${PN[p]}</button>`).join("");
+$("#jump").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.p==="L2")S.tpP=S.tpP||"Google";go(b.dataset.p)};
+defaults();markScn();log("— 场景：新用户注册 —");render();
+
+// ---------- tabs ----------
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));["player","admin","diff"].forEach(t=>v("tab-"+t).hidden=t!==b.dataset.tab)});
+
+// ---------- admin ----------
+$("#aclk").textContent="2026/11/27 14:05:08 GMT+8";
+const ADM={
+user:()=>`<div class="crumb">位置 › 用户管理 › 用户详情</div>
+ <div class="sticky">新增「注册信息」分组。证件号默认脱敏，「查看」需权限 user_reg_profile_view_sensitive 并写日志；「编辑注册信息」需权限 + 原因 + Google 验证码，写会员日志。</div>
+ <div class="abox"><h3>基本信息</h3><div class="grid"><div><span>会员 ID</span>190912</div><div><span>账号</span>Player8f2k1</div><div><span>状态</span>正常</div></div></div>
+ <div class="abox"><h3>注册信息 <span class="amenu"><span class="new">新增</span></span> <button class="ab l s" style="float:right" onclick="alert('弹窗：修改字段 + 修改原因（必填）+ Google 验证码')">编辑注册信息</button></h3>
+ <div class="grid">
+  <div><span>手机号</span>0917***4567</div><div><span>全名</span>Juan D. Dela Cruz</div><div><span>出生日期</span>1995-03-15（31 岁）</div>
+  <div><span>最近游戏场所</span>Okada Manila（Parañaque）</div><div><span>证件类型</span>UMID</div><div><span>证件号</span><span id="idn" style="width:auto;color:#303133">****6789</span> <button class="ab l s" onclick="v('idn').textContent='0111-2345-6789'">查看</button></div>
+  <div><span>证件照片</span><a href="#" onclick="alert('鉴权后查看私有图片');return false">id_front.jpg</a></div><div><span>注册时间</span>2026-11-27 14:05:02</div><div><span>注册方式</span>手机号</div>
+  <div><span>信息完整状态</span><b class="grn">完整</b></div><div><span>补全时间</span>—</div><div><span>NDRP 校验</span>通过（2026-11-27 14:05）</div>
+ </div></div>
+ <div class="abox"><h3>会员日志（注册信息）</h3><table class="t"><tr><th>时间</th><th>操作人</th><th>字段</th><th>旧值 → 新值</th><th>原因</th></tr><tr><td>2026-11-27 14:05:02</td><td>系统</td><td>注册</td><td>— → 创建</td><td>玩家注册</td></tr></table></div>`,
+list:()=>`<div class="crumb">位置 › 用户管理 › 用户列表</div>
+ <div class="abox"><div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+  手机号 <input style="border:1px solid #dcdfe6;padding:4px 6px"> 注册方式 <select><option>全部</option><option>手机号</option><option>Google</option><option>Facebook</option><option>Telegram</option><option>Apple</option></select>
+  信息完整状态 <span class="new" style="background:#e8590c;color:#fff;font-size:10px;padding:0 4px">新增</span> <select><option>全部</option><option>完整</option><option>待补全</option></select>
+  最近场所 <span class="new" style="background:#e8590c;color:#fff;font-size:10px;padding:0 4px">新增</span> <select><option>全部</option>${VENUES.map(x=>`<option>${x[0]}</option>`).join("")}</select>
+  <button class="ab">查询</button></div>
+ <table class="t"><tr><th>会员 ID</th><th>账号</th><th>手机号</th><th>注册方式</th><th>注册时间</th><th>信息完整 <span style="color:#e8590c">新增</span></th><th>最近场所 <span style="color:#e8590c">新增</span></th></tr>
+ <tr><td>190912</td><td>Player8f2k1</td><td>0917***4567</td><td>手机号</td><td>2026-11-27 14:05</td><td class="grn">完整</td><td>Okada Manila</td></tr>
+ <tr><td>190829</td><td>Player6708p8tep</td><td>—</td><td>Facebook</td><td>2026-11-06 15:22</td><td class="red">待补全（缺手机号）</td><td>—</td></tr>
+ <tr><td>188410</td><td>maria_88</td><td>0928***1102</td><td>手机号</td><td>2026-09-14 10:01</td><td class="red">待补全（缺场所）</td><td>—</td></tr></table></div>`,
+setting:()=>`<div class="crumb">位置 › 系统设置 › 注册设置</div>
+ <div class="sticky">按站点保存，新增开关默认关闭；保存需 Google 验证码，写操作日志（旧值 → 新值）。权限 reg_setting_view / reg_setting_edit。</div>
+ <div class="abox"><div class="frm">
+  <label>站点</label><select><option>789games</option><option disabled>789bingo（不受影响，待确认 Q8）</option></select>
+  <label>合规注册流程</label><div><span class="sw" onclick="this.classList.toggle('on')"></span><span class="hint">开启：注册走 OTP → 3 步信息；三方未绑定不建号</span></div>
+  <label>存量账号强制补全</label><div><span class="sw" onclick="this.classList.toggle('on')"></span><span class="hint">开启：缺手机号 / 注册信息的账号登录后必须补全</span></div>
+  <label>补全宽限期（天）</label><div><input value="0" style="width:80px"><span class="hint">0–30；0 = 直接强制</span></div>
+  <label>证件照片大小上限</label><div><input value="5" style="width:80px"> MB</div>
+  <label>证件类型清单</label><div><table class="t" style="width:520px"><tr><th>排序</th><th>名称</th><th>证件号规则</th><th>启用</th></tr>${IDS.map((x,i)=>`<tr><td>${i+1}</td><td>${x}</td><td>${["12 位数字","9 位字母数字","11 位字母数字","12 位数字","10 位数字","7 位数字","12 位字母数字","可变","12 位数字"][i]}</td><td><span class="sw on" onclick="this.classList.toggle('on')"></span></td></tr>`).join("")}</table></div>
+  <label>Google 验证码</label><input placeholder="6 位">
+  <label></label><div><button class="ab">保存</button></div>
+ </div></div>`,
+venue:()=>`<div class="crumb">位置 › 系统设置 › 游戏场所清单</div>
+ <div class="sticky">清单内容由合规 / 运营提供（待确认 Q3），下列为示例数据。停用不删除：已选该场所的用户照常显示（标已停用），新注册不可选。权限 venue_view / venue_edit。</div>
+ <div class="abox"><div style="display:flex;gap:8px;margin-bottom:10px"><input placeholder="名称 / 城市" style="border:1px solid #dcdfe6;padding:4px 6px"><button class="ab">查询</button><span style="flex:1"></span><button class="ab" onclick="alert('新增：名称（英文，必填）、城市（必填）、地址、排序')">新增场所</button><button class="ab l">CSV 导入</button><button class="ab l">模板下载</button></div>
+ <table class="t"><tr><th>排序</th><th>场所名称</th><th>城市 / 省</th><th>选择人数</th><th>状态</th><th>更新时间</th><th>操作</th></tr>
+ ${VENUES.map((x,i)=>`<tr><td>${i+1}</td><td>${x[0]}</td><td>${x[1]}</td><td>${[412,388,201,350,97,64,58,143,120,76][i]}</td><td><span class="sw ${i===9?"":"on"}" onclick="this.classList.toggle('on')"></span></td><td>2026-11-27 10:00</td><td><a href="#">编辑</a></td></tr>`).join("")}</table></div>`,
+stat:()=>`<div class="crumb">位置 › 数据报表 › 注册信息补全统计</div>
+ <div class="abox"><div style="display:flex;gap:24px;margin-bottom:12px">
+  <div><div class="hint" style="margin:0">存量待补全</div><b style="font-size:20px">18,420</b></div>
+  <div><div class="hint" style="margin:0">已补全</div><b style="font-size:20px" class="grn">6,135</b></div>
+  <div><div class="hint" style="margin:0">近 30 天活跃完整率</div><b style="font-size:20px">71.6%</b></div></div>
+ <table class="t"><tr><th>日期</th><th>补全人数</th><th>手机号注册</th><th>Google</th><th>Facebook</th><th>Telegram</th><th>Apple</th><th>新注册（合规流程）</th><th>三方未绑定拦截次数</th></tr>
+ <tr><td>2026-11-27</td><td>2,104</td><td>1,620</td><td>210</td><td>188</td><td>79</td><td>7</td><td>1,318</td><td>342</td></tr>
+ <tr><td>2026-11-26</td><td>4,031</td><td>3,155</td><td>402</td><td>311</td><td>150</td><td>13</td><td>1,402</td><td>517</td></tr></table>
+ <div class="hint" style="margin:8px 0 0">示例数据；按 GMT+8 自然日；补全人数按 userId 去重。</div></div>`,
+};
+function adm(k){document.querySelectorAll(".amenu .i").forEach(i=>i.classList.toggle("on",i.dataset.a===k));$("#amain").innerHTML=ADM[k]()}
+document.querySelectorAll(".amenu .i").forEach(i=>i.onclick=()=>adm(i.dataset.a));adm("user");
+</script>
+</body>
+</html>

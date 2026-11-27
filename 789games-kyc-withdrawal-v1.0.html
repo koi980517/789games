@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>【789games】提现前须通过 KYC · 原型 v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#eef2f1;color:#16352d;font-size:14px}
+header.top{background:#16352d;color:#fff;padding:10px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header.top h1{font-size:16px;font-weight:600}
+.ver{background:#ffe3a3;color:#7a4a00;border-radius:10px;padding:2px 10px;font-size:12px;font-weight:700}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tabs button{background:transparent;border:1px solid #4b6a61;color:#cfe;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:13px}
+.tabs button.on{background:#2fa36d;border-color:#2fa36d;color:#fff}
+.pane{display:none;padding:20px}.pane.on{display:block}
+.note{font-size:12px;color:#6b7f78;margin-bottom:10px}
+/* player */
+.player{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+.phone{width:390px;height:844px;background:linear-gradient(#bfe9dc,#e9f6f1 30%,#f4faf7);border-radius:36px;border:10px solid #1a1a1a;overflow:hidden;position:relative;flex:none}
+.nav{background:linear-gradient(90deg,#1c8f70,#124a79);color:#fff;height:56px;display:flex;align-items:center;padding:0 14px;font-weight:700;font-size:16px}
+.nav .back{margin-right:10px;font-size:20px}
+.body{padding:14px}
+.bar{background:#fff6dc;border:1px solid #f3cf72;color:#7a4a00;border-radius:10px;padding:10px 12px;font-size:12.5px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.bar a{color:#17804f;font-weight:700;cursor:pointer;white-space:nowrap;margin-left:8px}
+.card{background:#fff;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.06);padding:14px;margin-bottom:12px}
+.card h4{font-size:13px;color:#6b7f78;font-weight:500;margin-bottom:6px}
+.big{font-size:26px;font-weight:800}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px dashed #e3ece8}
+.row:last-child{border:0}
+.acct{display:flex;align-items:center;gap:10px;border:1.5px solid #2fa36d;border-radius:10px;padding:10px}
+.acct .ic{width:32px;height:32px;border-radius:8px;background:#0b6cff;color:#fff;font-weight:800;display:grid;place-items:center;font-size:12px}
+.add{border:1.5px dashed #9bb;border-radius:10px;padding:10px;text-align:center;color:#6b7f78;cursor:pointer;margin-top:8px}
+input.amt{width:100%;border:1px solid #cfe0da;border-radius:10px;padding:12px;font-size:16px}
+.btn{display:block;width:100%;border:0;border-radius:24px;padding:13px;font-size:15px;font-weight:700;color:#fff;background:linear-gradient(90deg,#2fa36d,#17804f);cursor:pointer}
+.btn.dis{background:#c7d3cf;color:#fff}
+.btn2{background:#ffe3a3;color:#7a4a00}
+.btn3{background:#fff;color:#17804f;border:1.5px solid #2fa36d}
+.kyc-tag{font-size:11px;padding:2px 8px;border-radius:9px;font-weight:700}
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:28px;z-index:5}
+.mask.on{display:flex}
+.dlg{background:#fff;border-radius:18px;padding:22px 18px 16px;text-align:center;width:100%;position:relative}
+.dlg .x{position:absolute;right:12px;top:8px;font-size:20px;color:#999;cursor:pointer}
+.dlg .ico{width:56px;height:56px;border-radius:50%;margin:0 auto 10px;display:grid;place-items:center;font-size:26px}
+.dlg h3{font-size:17px;margin-bottom:8px}
+.dlg p{font-size:13px;color:#4c5f58;line-height:1.5;margin-bottom:16px}
+.dlg .btns{display:flex;gap:10px}.dlg .btns .btn{padding:11px;font-size:14px}
+.code{position:absolute;left:8px;top:8px;background:#632f81;color:#fff;font-size:10px;padding:1px 6px;border-radius:4px}
+.toast{position:absolute;left:50%;bottom:110px;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;padding:9px 14px;border-radius:8px;font-size:12.5px;display:none;width:300px;text-align:center;z-index:6}
+.side{flex:1;min-width:340px;max-width:620px}
+.panel{background:#fff;border-radius:12px;padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.panel h3{font-size:14px;margin-bottom:10px}
+.opts label{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;font-size:13px}
+.opts label:hover{background:#f1f7f4}
+.log{font-family:Menlo,monospace;font-size:12px;background:#0f1f1a;color:#bfe9dc;border-radius:8px;padding:10px;min-height:120px;max-height:260px;overflow:auto;white-space:pre-wrap}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{border:1px solid #dfe6e3;padding:7px 8px;text-align:left;vertical-align:top}
+th{background:#f3f7f5}
+.ok{color:#17804f;font-weight:700}.no{color:#d23b3b;font-weight:700}
+/* admin */
+.adm{background:#f0f0f0;border:1px solid #ccc;min-width:1180px}
+.adm .tb{background:#1d6cae;color:#fff;font-size:12px;padding:7px 12px;display:flex;justify-content:space-between}
+.adm .tb .t{color:#ffd24d}
+.adm .sb{background:#1d6cae;color:#fff;font-size:12px;padding:4px 12px;border-top:1px solid #2d7cbe;display:flex;gap:14px}
+.adm .sb b{padding:0 6px;border-radius:2px}
+.adm .wrap{display:flex}
+.adm .menu{width:190px;background:#fff;border-right:1px solid #ddd;font-size:13px}
+.adm .menu .h{background:#4198ca;color:#fff;padding:8px 12px}
+.adm .menu .g{background:#d4e6f0;padding:8px 12px;border-bottom:1px solid #fff}
+.adm .menu .i{padding:7px 12px 7px 26px;cursor:pointer;border-bottom:1px solid #f0f0f0}
+.adm .menu .i.on{color:#3d8fd8;font-weight:700;background:#eef6fc}
+.new{background:#de1818;color:#fff;font-size:10px;padding:0 4px;border-radius:2px;margin-left:4px}
+.adm .main{flex:1;padding:0}
+.adm .crumb{background:#fff;padding:8px 14px;font-size:12px;color:#666;border-bottom:1px solid #e5e5e5}
+.adm .content{padding:14px}
+.adm .box{background:#fff;padding:16px;margin-bottom:12px}
+.adm .fr{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f2f2f2;font-size:13px}
+.adm .fr .l{width:220px;text-align:right;color:#333}
+.sw{width:42px;height:22px;border-radius:11px;background:#ccc;position:relative;cursor:pointer;flex:none}
+.sw::after{content:"";position:absolute;left:2px;top:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s}
+.sw.on{background:#3d8fd8}.sw.on::after{left:22px}
+.sw.lock{opacity:.5;cursor:not-allowed}
+.abtn{background:#3d8fd8;color:#fff;border:0;padding:5px 12px;border-radius:3px;font-size:12px;cursor:pointer}
+.abtn.g{background:#fff;color:#3d8fd8;border:1px solid #3d8fd8}
+.flt{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;font-size:12px;align-items:center}
+.flt select,.flt input{border:1px solid #ccc;padding:4px 6px;font-size:12px}
+.red{color:#d23b3b;font-weight:700}
+.sticky{background:#fffbe6;border:1px solid #f0d78c;padding:10px 12px;font-size:12px;line-height:1.6;margin-bottom:12px}
+.pill{display:inline-block;padding:1px 8px;border-radius:9px;font-size:11px;font-weight:700}
+</style>
+</head>
+<body>
+<header class="top">
+  <h1>【789games】提现前须通过 KYC 身份核验</h1><span class="ver">原型 v1.0 · 2026-11-27</span>
+  <span style="font-size:12px;opacity:.8">示例数据，非线上配置 · 时间 GMT+8</span>
+  <div class="tabs">
+    <button class="on" data-p="p1">玩家端</button>
+    <button data-p="p2">运营后台</button>
+    <button data-p="p3">改动对照</button>
+  </div>
+</header>
+
+<!-- 玩家端 -->
+<section class="pane on" id="p1">
+<div class="player">
+  <div class="phone" id="phone">
+    <div class="nav"><span class="back">‹</span>Withdraw</div>
+    <div class="body">
+      <div class="bar" id="bar">KYC verification is required before withdrawal.<a onclick="openK()">Verify ›</a></div>
+      <div class="card">
+        <h4>Withdrawable Balance</h4>
+        <div class="big">₱1,250.00</div>
+        <div style="margin-top:6px;font-size:12px">KYC: <span class="kyc-tag" id="tag"></span></div>
+      </div>
+      <div class="card">
+        <h4>Withdrawal Account</h4>
+        <div class="acct" id="acct"><div class="ic">G</div><div><b>GCash</b><div style="font-size:12px;color:#6b7f78">0917****822</div></div></div>
+        <div class="add" onclick="tryBind()">+ Add Account</div>
+      </div>
+      <div class="card">
+        <h4>Amount (₱100 – ₱50,000)</h4>
+        <input class="amt" value="500" id="amt">
+      </div>
+      <button class="btn" id="submit" onclick="trySubmit()">Submit</button>
+      <div style="font-size:11px;color:#6b7f78;text-align:center;margin-top:10px">Players must complete and pass KYC verification before they can withdraw funds.</div>
+    </div>
+    <div class="mask" id="mask"><div class="dlg" id="dlg"></div></div>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="side">
+    <div class="panel">
+      <h3>模拟条件：玩家 KYC 状态</h3>
+      <div class="opts" id="opts"></div>
+      <label style="display:flex;gap:8px;font-size:13px;margin-top:8px;padding:0 8px"><input type="checkbox" id="frz"> 同时命中「3 天未 KYC 临时冻结」</label>
+      <label style="display:flex;gap:8px;font-size:13px;margin-top:6px;padding:0 8px"><input type="checkbox" id="oldpkg"> 老包（前端无拦截，直接调接口）</label>
+      <div style="margin-top:10px;display:flex;gap:8px"><button class="abtn" onclick="enter()">重新进入提现页</button><button class="abtn g" onclick="clearLog()">清空日志</button></div>
+    </div>
+    <div class="panel">
+      <h3>本次会出现的 / 接口返回</h3>
+      <div class="log" id="log"></div>
+    </div>
+    <div class="panel">
+      <h3>放行规则（PRD 2.1）</h3>
+      <table>
+        <tr><th>状态</th><th>提现页</th><th>提交 / 绑卡</th><th>弹窗</th></tr>
+        <tr><td>Unverified</td><td>W2</td><td class="no">✗ 4101</td><td>K1</td></tr>
+        <tr><td>Pending</td><td>W2</td><td class="no">✗ 4102</td><td>K2</td></tr>
+        <tr><td>Rejected</td><td>W2</td><td class="no">✗ 4103</td><td>K3</td></tr>
+        <tr><td>Verified（部分认证）</td><td>W2</td><td class="no">✗ 4104</td><td>K4</td></tr>
+        <tr><td>Fully Verified</td><td>W1</td><td class="ok">✓</td><td>—</td></tr>
+      </table>
+      <div class="note" style="margin-top:8px">拦截顺序：账号受限 → KYC → 未绑手机号 → 未绑提款账户 → 打码 → 余额 → 限额 → 首提规则。错误码为占位。</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- 运营后台 -->
+<section class="pane" id="p2">
+<div style="overflow:auto">
+<div class="adm">
+  <div class="tb"><span>当前时间: <span class="t">2026/11/27 11:40:00 +08:00</span> <span style="background:#ffd24d;color:#333;padding:0 5px;margin-left:6px">QA</span></span><span>全屏　简体中文　koi</span></div>
+  <div class="sb"><span>🔔 在线人数 <b style="color:#ff8080">1,204</b></span><span>实名认证-待处理 <b style="color:#8f8">37</b></span><span>提款 <b style="background:#2fa36d">12</b></span><span>KYC 拦截待处理 <b style="background:#de1818">3</b><span class="new">新增</span></span></div>
+  <div class="wrap">
+    <div class="menu">
+      <div class="h">菜单 ☰</div>
+      <div class="g">用户管理 ▾</div><div class="g">财务管理 ▾</div>
+      <div class="g">提现管理 ▾</div>
+      <div class="i on" data-a="a1">提现设置</div>
+      <div class="i" data-a="a2">提现审核列表</div>
+      <div class="i" data-a="a3">KYC 拦截日志<span class="new">新增</span></div>
+      <div class="g">数据报表 ▾</div><div class="g">活动配置 ▾</div>
+    </div>
+    <div class="main">
+      <div class="crumb" id="crumb">位置 › 提现管理 › 提现设置</div>
+      <div class="content">
+        <!-- a1 -->
+        <div class="av" id="a1">
+          <div class="sticky"><b>本原型的取舍</b>：新增「提现前须通过 KYC」按站点开关（789games 上线即开，待确认 4）；开启后「部分认证用户可提款」强制关闭并置灰；「出款前 KYC 复核」随之开启，不能单独关。</div>
+          <div class="box">
+            <div class="flt">站点：<select><option>789games</option><option>789bingo</option></select></div>
+            <div class="fr"><span class="l">提现前须通过 KYC <span class="new">新增</span>：</span><div class="sw on" id="sw1" onclick="toggleMain()"></div><span style="color:#888;font-size:12px">开启后仅 KYC = 审核通过（Fully Verified）可绑卡 / 提交提现；修改需二次确认 + Google 验证码</span></div>
+            <div class="fr"><span class="l">部分认证用户可提款：</span><div class="sw lock" id="sw2"></div><span style="color:#d23b3b;font-size:12px" id="sw2t">已由「提现前须通过 KYC」接管</span></div>
+            <div class="fr"><span class="l">出款前 KYC 复核 <span class="new">新增</span>：</span><div class="sw on lock" id="sw3"></div><span style="color:#888;font-size:12px">审核通过 → 代付下单前再校验；未通过转「待人工处理」，不调三方</span></div>
+            <div class="fr"><span class="l">最低 / 最高提现金额：</span><span>₱100 / ₱50,000（现网字段，不改）</span></div>
+          </div>
+        </div>
+        <!-- a2 -->
+        <div class="av" id="a2" style="display:none">
+          <div class="box">
+            <div class="flt">时间(GMT+8) <input value="2026-11-27 00:00:00 ~ 23:59:59" size="30"> 会员ID <input size="10"> 订单状态 <select><option>全部</option><option>待审核</option><option>待人工处理（KYC 未通过）</option></select> KYC 状态 <span class="new">新增</span> <select><option>全部</option><option>Approved</option><option>Pending</option><option>Rejected</option><option>Partial</option><option>Unverified</option></select> <button class="abtn">查询</button></div>
+            <table>
+              <tr><th>订单号</th><th>会员ID</th><th>手机号</th><th>金额(₱)</th><th>渠道</th><th>申请时间(GMT+8)</th><th>KYC 状态 <span class="new">新增</span></th><th>订单状态</th><th>操作</th></tr>
+              <tr><td>W2611270001</td><td>10283311</td><td>091****4822</td><td>500.00</td><td>GCash</td><td>11:02:15</td><td><span class="pill" style="background:#e3f5ea;color:#17804f">Approved</span></td><td>待审核</td><td><button class="abtn">通过</button> <button class="abtn g">驳回</button></td></tr>
+              <tr id="tr2"><td>W2611260187</td><td>10277104</td><td>099****1203</td><td>2,000.00</td><td>Maya</td><td>11-26 23:41:02</td><td><span class="pill" style="background:#fde2e2;color:#d23b3b">Rejected</span></td><td class="red" id="st2">待人工处理（KYC 未通过）</td><td><button class="abtn" onclick="recheck()">重新校验</button> <button class="abtn g" onclick="refund()">驳回并退回余额</button></td></tr>
+              <tr><td>W2611260150</td><td>10265520</td><td>095****7710</td><td>300.00</td><td>GCash</td><td>11-26 20:13:44</td><td><span class="pill" style="background:#fff3d6;color:#a06a00">Pending</span></td><td class="red">待人工处理（KYC 未通过）</td><td><button class="abtn" onclick="alert0()">重新校验</button> <button class="abtn g" onclick="refund()">驳回并退回余额</button></td></tr>
+            </table>
+            <div class="note" style="margin-top:8px">「待人工处理」= 上线时的在途单，或审核中 KYC 被改为驳回的单；出款前复核拦下，不调三方代付。前台提现记录显示 Processing。</div>
+          </div>
+        </div>
+        <!-- a3 -->
+        <div class="av" id="a3" style="display:none">
+          <div class="box">
+            <div class="flt">时间(GMT+8) <input value="2026-11-27 00:00:00 ~ 23:59:59" size="30"> 会员ID <input size="10"> 手机后4位 <input size="5"> 拦截点 <select><option>全部</option><option>info</option><option>apply</option><option>bind</option><option>payout</option></select> KYC 状态 <select><option>全部</option></select> 端 <select><option>全部</option><option>H5</option><option>Android</option><option>iOS</option><option>PC</option></select> <button class="abtn">查询</button> <button class="abtn g">导出</button></div>
+            <table id="logtbl">
+              <tr><th>时间(GMT+8)</th><th>会员ID</th><th>手机号</th><th>KYC 状态</th><th>拦截点</th><th>端 / 版本</th><th>IP</th><th>订单号</th></tr>
+              <tr><td>2026-11-27 11:31:09</td><td>10290017</td><td>091****0031</td><td>Unverified</td><td>apply</td><td>Android 1.2.0</td><td>112.198.*.*</td><td>—</td></tr>
+              <tr><td>2026-11-27 10:58:47</td><td>10277104</td><td>099****1203</td><td>Rejected</td><td>payout</td><td>—</td><td>—</td><td>W2611260187</td></tr>
+              <tr><td>2026-11-27 10:12:30</td><td>10265520</td><td>095****7710</td><td>Pending</td><td>info</td><td>H5</td><td>49.145.*.*</td><td>—</td></tr>
+            </table>
+            <div class="note" style="margin-top:8px">保留 180 天；≥1 万条异步导出。权限码（cate=3）：开关 / 重新校验 / 驳回退回 / 日志查看导出，号段待分配。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- 改动对照 -->
+<section class="pane" id="p3">
+<div class="panel" style="max-width:1100px">
+  <h3>需求原文（第 5 条）</h3>
+  <p style="line-height:1.7"><b>KYC Verification Required Before Withdrawal | 提现前须通过 KYC 身份核验</b><br>Players must complete and pass KYC verification before they can withdraw funds. 玩家必须完成并通过 KYC 身份核验后，方可提现。</p>
+</div>
+<div class="panel" style="max-width:1100px">
+  <h3>现网 vs 本次（现网来自 Jira 知识库，未在 QA 后台逐项复核）</h3>
+  <table>
+    <tr><th>#</th><th>项目</th><th>现网</th><th>本次</th></tr>
+    <tr><td>1</td><td>放行条件</td><td>强制 KYC 在提现 / 绑卡时触发；「部分认证用户可提款」打开时部分认证也能提</td><td>只有 Fully Verified（APPROVED）可提；789games 关闭并锁定「部分认证可提款」</td></tr>
+    <tr><td>2</td><td>拦截位置</td><td>以前端弹窗为主</td><td>服务端 info / apply / bind / payout 四处校验，老包直调也拦</td></tr>
+    <tr><td>3</td><td>审核中 / 驳回</td><td>口径不统一（-6306 审核中重复弹窗）</td><td>K2 审核中、K3 驳回（含原因 + Resubmit）分开弹窗</td></tr>
+    <tr><td>4</td><td>3 天未 KYC 临时冻结</td><td>点提款时弹冻结弹窗</td><td>与 KYC 同时命中只弹 K1</td></tr>
+    <tr><td>5</td><td>在途订单</td><td>审核中 KYC 被驳回仍可能出款</td><td>出款前复核，转「待人工处理」，不调代付</td></tr>
+    <tr><td>6</td><td>后台</td><td>提现审核列表无 KYC 状态</td><td>加 KYC 状态列 / 筛选、新订单状态、KYC 拦截日志、状态条计数</td></tr>
+    <tr><td>7</td><td>埋点</td><td>withdraw_block reason=kyc</td><td>补 kyc_status、point；kyc_prompt_view 补 popup</td></tr>
+  </table>
+</div>
+<div class="panel" style="max-width:1100px">
+  <h3>待确认</h3>
+  <ol style="padding-left:18px;line-height:1.8;font-size:13px">
+    <li>是否同步 789bingo（默认只开 789games）</li>
+    <li>K1 / K4 是否沿用"强制 KYC 弹窗不可关闭"（默认可关闭但不能提交）</li>
+    <li>上线时在途单：转人工（默认）还是自动驳回退款</li>
+    <li>新开关默认值：合规要求上线即开（与"新开关默认关"惯例不同）</li>
+    <li>Verified / Fully Verified 后端枚举映射；绿色通道账号是否算 APPROVED</li>
+    <li>错误码、权限码号段</li>
+    <li>无手机号三方账号：先提示绑手机还是先 KYC（默认 KYC 优先）</li>
+  </ol>
+</div>
+</section>
+
+<script>
+const S={
+ UNVERIFIED:{label:'Unverified',bg:'#eee',c:'#555',k:'K1',code:4101},
+ PENDING:{label:'Pending',bg:'#fff3d6',c:'#a06a00',k:'K2',code:4102},
+ REJECTED:{label:'Rejected',bg:'#fde2e2',c:'#d23b3b',k:'K3',code:4103},
+ PARTIAL:{label:'Verified (Partial)',bg:'#e6eefc',c:'#2759b5',k:'K4',code:4104},
+ APPROVED:{label:'Fully Verified',bg:'#e3f5ea',c:'#17804f',k:null,code:0}
+};
+const K={
+ K1:{ico:'🪪',bg:'#e3f5ea',t:'Verify Your Identity',p:'Players must complete and pass KYC verification before they can withdraw funds. It only takes a few minutes.',b:[['Later','btn btn2','close'],['Verify Now','btn','kyc']],x:true},
+ K2:{ico:'⏳',bg:'#fff3d6',t:'Verification Under Review',p:'Your KYC is being reviewed. You can withdraw once it is approved. We will notify you when the review is complete.',b:[['Contact CS','btn btn3','cs'],['OK','btn','close']],x:true},
+ K3:{ico:'⚠️',bg:'#fde2e2',t:'Verification Not Approved',p:'Your KYC verification was rejected. Reason: <b>Photo is blurry or unclear</b>. Please resubmit your documents to withdraw.',b:[['Contact CS','btn btn3','cs'],['Resubmit','btn','kyc']],x:true},
+ K4:{ico:'🧩',bg:'#e6eefc',t:'Complete Your Verification',p:'Your verification is not yet complete. Please finish all steps to enable withdrawals.',b:[['Later','btn btn2','close'],['Continue','btn','kyc']],x:true}
+};
+let cur='UNVERIFIED';
+const $=id=>document.getElementById(id);
+const opts=$('opts');
+Object.keys(S).forEach(k=>{opts.insertAdjacentHTML('beforeend',`<label><input type="radio" name="st" value="${k}" ${k===cur?'checked':''}> ${S[k].label} <span style="color:#888;font-size:12px">(${k})</span></label>`)});
+opts.onchange=e=>{cur=e.target.value;enter()};
+function log(s){$('log').textContent+=s+'\n';$('log').scrollTop=1e9}
+function clearLog(){$('log').textContent=''}
+function render(){
+ const s=S[cur];$('tag').textContent=s.label;$('tag').style.background=s.bg;$('tag').style.color=s.c;
+ const ok=cur==='APPROVED';$('bar').style.display=ok?'none':'flex';
+ $('submit').className=ok?'btn':'btn dis';
+}
+function enter(){
+ render();closeK();
+ log('── 进入提现页 '+new Date().toLocaleTimeString('en-GB',{timeZone:'Asia/Manila'})+' GMT+8');
+ const ok=cur==='APPROVED';
+ log('GET /withdraw/info → kycStatus='+cur+', withdrawAllowed='+ok+(ok?'':', blockReason=KYC_'+cur));
+ if(ok){log('页面 W1：正常提现');return}
+ if($('oldpkg').checked){log('老包：不认识 blockReason，不自动弹窗（提交时由服务端拦）');return}
+ log('页面 W2：提示条 + Submit 置灰；自动弹 '+S[cur].k+'（本次进入仅 1 次）');
+ if($('frz').checked)log('同时命中临时冻结：不叠加冻结弹窗，只弹 '+S[cur].k);
+ openK();
+}
+function openK(){
+ const k=S[cur].k;if(!k)return;const d=K[k];
+ $('dlg').innerHTML=`<span class="code">${k}</span>${d.x?'<span class="x" onclick="closeK()">×</span>':''}<div class="ico" style="background:${d.bg}">${d.ico}</div><h3>${d.t}</h3><p>${d.p}</p><div class="btns">${d.b.map(b=>`<button class="${b[1]}" onclick="act('${b[2]}')">${b[0]}</button>`).join('')}</div>`;
+ $('mask').classList.add('on');log('弹窗 '+k+' 曝光 · kyc_prompt_view{trigger:withdraw,popup:'+k+'}');
+}
+function closeK(){$('mask').classList.remove('on')}
+function act(a){
+ closeK();
+ if(a==='kyc'){log('kyc_start{trigger:withdraw} → 进入 KYC 流程（模拟：审核通过）');setTimeout(()=>{cur='APPROVED';document.querySelector('input[value=APPROVED]').checked=true;log('kyc_result{result:pass} → 回到提现页自动刷新');enter()},700)}
+ else if(a==='cs')log('打开 Live Support');
+ else log('关闭弹窗，仍停留 W2，Submit 置灰');
+}
+function toast(t){const e=$('toast');e.textContent=t;e.style.display='block';setTimeout(()=>e.style.display='none',2200)}
+function trySubmit(){
+ if(cur==='APPROVED'){log('POST /withdraw/apply → 服务端 KYC=APPROVED ✓ → 订单创建，冻结 ₱'+$('amt').value+' · withdraw_submit');toast('Withdrawal submitted successfully');return}
+ if($('oldpkg').checked){log('POST /withdraw/apply → '+S[cur].code+' 拒绝（未建单、未冻结余额）· 拦截日志 point=apply');toast('Please complete KYC verification before withdrawing.');return}
+ log('点 Submit（置灰）→ withdraw_block{reason:kyc,kyc_status:'+cur.toLowerCase()+',point:submit}');openK();
+}
+function tryBind(){
+ if(cur==='APPROVED'){log('进入绑定提款账户（人脸比对，沿用现网）');return}
+ log('点 Add Account → withdraw_block{reason:kyc,point:bind}');
+ if($('oldpkg').checked){log('POST /withdraw/account/bind → '+S[cur].code+' 拒绝');toast('Please complete KYC verification before withdrawing.');return}
+ openK();
+}
+// tabs
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));$(b.dataset.p).classList.add('on')});
+document.querySelectorAll('.menu .i').forEach(i=>i.onclick=()=>{document.querySelectorAll('.menu .i').forEach(x=>x.classList.remove('on'));i.classList.add('on');document.querySelectorAll('.av').forEach(v=>v.style.display='none');$(i.dataset.a).style.display='block';$('crumb').textContent='位置 › 提现管理 › '+i.textContent.replace('新增','')});
+function toggleMain(){
+ const on=$('sw1').classList.contains('on');
+ if(!confirmBox((on?'关闭':'开启')+'「提现前须通过 KYC」？需输入 Google 验证码，操作写入日志。'))return;
+ $('sw1').classList.toggle('on');
+ const now=!on;$('sw2').classList.toggle('lock',now);$('sw2t').textContent=now?'已由「提现前须通过 KYC」接管':'可配置（关闭后恢复现网逻辑）';
+ $('sw3').classList.toggle('on',now);
+}
+function confirmBox(t){return window.confirm?confirm(t):true}
+function recheck(){$('st2').textContent='待人工处理（KYC 仍为 Rejected，不能出款）'}
+function alert0(){}
+function refund(){}
+render();enter();
+</script>
+</body>
+</html>

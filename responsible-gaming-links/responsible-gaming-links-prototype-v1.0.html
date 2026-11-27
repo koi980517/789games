@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>负责任博彩链接可点击（NPGH / RGD）原型 v1.0</title>
+<style>
+:root{--pri:#168078;--line:#e3e7ea;--bg:#f4f6f6;--fg:#303133;--muted:#8a9099;--new:#e8590c;--link:#0865d5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.5 "PingFang SC","Helvetica Neue",Arial,sans-serif}
+.proto{background:#fff7e0;color:#7a5a00;border-bottom:1px solid #f0dca0;padding:6px 16px;font-size:12px}
+header{background:#17504c;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px}
+header h1{font-size:15px;margin:0}header .ver{background:#f0a23b;border-radius:3px;padding:0 6px;font-size:11px}
+nav{background:#fff;border-bottom:1px solid var(--line);padding:0 16px;display:flex;gap:4px}
+nav button{border:0;background:none;padding:10px 14px;cursor:pointer;border-bottom:2px solid transparent;font:inherit}
+nav button.on{color:var(--pri);border-color:var(--pri);font-weight:600}
+.page{display:none;padding:16px}.page.on{display:flex;gap:20px;flex-wrap:wrap}
+.phone{width:390px;height:760px;border:10px solid #222;border-radius:36px;background:#fff;overflow:hidden;position:relative;flex:0 0 auto}
+.phone.pc{width:760px;border-radius:8px;border-width:8px}
+.scr{height:100%;overflow-y:auto;background:#eef7f4}
+.side{flex:1;min-width:320px;max-width:560px}
+.card{background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin-bottom:12px}
+.card h3{margin:0 0 8px;font-size:13px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}.seg button{border:1px solid #dcdfe6;background:#fff;border-radius:14px;padding:2px 12px;cursor:pointer;font:inherit}
+.seg button.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.lbl{color:var(--muted);font-size:12px}
+table{border-collapse:collapse;width:100%;font-size:12px}th,td{border:1px solid var(--line);padding:5px 7px;text-align:left;vertical-align:top}th{background:#f7f8fa}
+.log{font-family:Menlo,monospace;font-size:11px;background:#1f2430;color:#c9f5d9;border-radius:4px;padding:8px;min-height:80px;max-height:180px;overflow:auto;white-space:pre-wrap}
+/* 站点前台 */
+.topbar{height:52px;background:linear-gradient(90deg,#14b8a6,#1e3a8a);color:#fff;display:flex;align-items:center;padding:0 14px;font-weight:700}
+.fake{margin:10px;background:#fff;border-radius:10px;height:90px;display:flex;align-items:center;justify-content:center;color:#b0b7bf}
+.foot{background:#fff;margin-top:10px;padding:14px 12px 18px;font-size:11px;color:#555;text-align:center}
+.foot .url a{color:#555;display:block}
+/* RG 组件 */
+.rg{background:#fff;border-radius:8px;padding:10px;text-align:left;position:relative}
+.rg-logos{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.lg-pag{width:42px;height:42px;border-radius:50%;background:#1a4e9a;color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.lg-21{display:flex;align-items:center;gap:3px;font-size:7px;color:#c0392b;width:72px;line-height:1.1}.lg-21 b{border:2px solid #c0392b;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;flex:0 0 auto}
+.lg-npgh-old{border:1px solid #ccc;padding:3px 5px;font-size:9px;color:#1a4e9a;font-weight:700;line-height:1.1}
+.lg-npgh-old small{display:block;font-size:6px;font-weight:400;color:#555}
+.npgh-new{display:inline-block;line-height:0;border-radius:4px}
+.npgh-new img{height:54px}
+.need{font-size:10px;color:#333;line-height:1.3}
+.need.img{background:#f3f3f3;padding:2px 4px;border-radius:2px}
+.rg-desc{margin:8px 0;font-size:10px;color:#333}
+.rg-contact{display:flex;gap:8px;align-items:flex-start}
+.mail-ic{width:26px;height:26px;border-radius:50%;background:#0865d5;color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;flex:0 0 auto}
+.rg-mail{font-size:10px;color:#333;margin-bottom:4px}
+.rg-mail .addr{display:inline-block;font-size:12px;margin-top:1px}
+.addr.img{background:#f3f3f3;color:#333;padding:1px 4px;border-radius:2px}
+a.lk{color:var(--link);text-decoration:underline;cursor:pointer;min-height:28px;display:inline-flex;align-items:center}
+.brand{margin-left:auto;font-weight:800;font-size:14px;color:#e11d48;text-align:center;line-height:1}
+.brand small{display:block;color:#222;font-size:10px}
+.tag{position:relative;vertical-align:top;margin-right:3px;line-height:16px;background:var(--new);color:#fff;font-size:10px;border-radius:9px;padding:0 6px;font-weight:700;z-index:2}
+.show-tags .tag{display:inline-block}.tag{display:none}
+.pick{outline:2px dashed var(--new);outline-offset:2px}
+/* 弹窗 */
+.mask{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:14px;z-index:5}
+.dlg{background:#fff;border-radius:12px;width:100%;max-height:92%;overflow:auto;padding:14px}
+.dlg h4{margin:0 0 8px;text-align:center;font-size:15px}
+.chk{font-size:11px;color:#333;margin:4px 0}.chk li{margin:3px 0}
+.btns{display:flex;gap:8px;margin-top:10px}.btns button{flex:1;border:0;border-radius:20px;padding:9px;font-weight:700;cursor:pointer}
+.b-ok{background:linear-gradient(90deg,#22c55e,#16a34a);color:#fff}.b-no{background:#fff3c4;color:#7a5a00}
+.toast{position:absolute;left:50%;bottom:40px;transform:translateX(-50%);background:rgba(0,0,0,.82);color:#fff;padding:8px 12px;border-radius:8px;font-size:12px;max-width:85%;z-index:9;display:none;text-align:center}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#f2f2f7;border-radius:14px 14px 0 0;padding:14px;z-index:8;display:none;font-size:13px;text-align:center}
+.sheet b{display:block;font-size:15px;margin-bottom:6px}
+.sheet button{width:100%;margin-top:6px;border:0;border-radius:10px;padding:10px;background:#fff;color:#0a84ff;font-size:14px;cursor:pointer}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%}
+.cmp .card{margin:0}
+.no{color:#d93636;font-weight:700}.yes{color:#1f8a4c;font-weight:700}
+.note{background:#e8f1ff;border-left:3px solid #3b82f6;padding:8px 10px;font-size:12px;border-radius:3px;margin-bottom:12px}
+.note.o{background:#fff4e5;border-color:#f59e0b}.note.p{background:#fdecf3;border-color:#ec4899}
+</style></head><body>
+<div class="proto">原型 · 示例界面，非线上页面 · 时间 GMT+8 · PRD：<a href="https://claude.ai/artifact/2ADbtRR2x2do2Dmu3AWGy9" target="_blank">【789bingo / 789games】负责任博彩链接可点击 PRD v1.0</a> · NPGH 新标志为合规通知截图裁剪的示意图，正式素材待合规提供</div>
+<header><h1>负责任博彩链接可点击（NPGH / RGD）</h1><span class="ver">v1.0 · 2026-11-27</span></header>
+<nav><button class="on" data-p="p1">玩家端</button><button data-p="p2">字段示意图</button><button data-p="p3">改动对照</button></nav>
+
+<section class="page on" id="p1">
+  <div class="phone" id="phone"><div class="scr" id="scr"></div><div class="toast" id="toast"></div><div class="sheet" id="sheet"></div></div>
+  <div class="side">
+    <div class="card"><h3>模拟条件</h3>
+      <div class="lbl">站点</div><div class="seg" data-k="site"><button data-v="bingo" class="on">789bingo</button><button data-v="games">789games</button></div>
+      <div class="lbl">落点</div><div class="seg" data-k="place"><button data-v="popup" class="on">R1 21+ 负责任博彩弹窗</button><button data-v="footer">R2 页脚</button></div>
+      <div class="lbl">端</div><div class="seg" data-k="end"><button data-v="h5" class="on">H5</button><button data-v="app">App（WebView）</button><button data-v="pc">PC</button></div>
+      <div class="lbl">版本</div><div class="seg" data-k="ver"><button data-v="new" class="on">调整后</button><button data-v="old">现网（2026-11-27 读取）</button></div>
+    </div>
+    <div class="card"><h3>点击记录（模拟系统行为 + 埋点）</h3><div class="log" id="log">点左侧手机里的链接试试。</div></div>
+    <div class="note o"><b>本原型的取舍</b><br>· 弹窗的触发、勾选项、按钮保持现网，只换 NPGH 区块。<br>· 热线号码改为文字 + 电话图标；邮箱改为文字链接；NPGH 标志整张可点。<br>· 两站共用一个组件，只换右下角品牌标志。</div>
+    <div class="note p"><b>待确认</b><br>1 NPGH 官网最终地址（默认 https://npgh.ph）· 2 新标志原图 · 3 21+ 弹窗现网未触发验证 · 5 PC 点热线行为 · 6 App 是否已拦截 tel / mailto</div>
+  </div>
+</section>
+
+<section class="page" id="p2">
+  <div class="phone"><div class="scr" id="scr2"></div></div>
+  <div class="side">
+    <div class="card"><h3>可点击项 L1–L4（弹窗与页脚相同）</h3>
+      <table><tr><th>编号</th><th>元素</th><th>链接</th><th>点击后</th></tr>
+      <tr><td>L1</td><td>NPGH 标志（新版）</td><td><code>https://npgh.ph</code></td><td>H5/PC 新标签页；App 系统浏览器</td></tr>
+      <tr><td>L2</td><td>Need Help? Call us at (02) 8248 9568</td><td><code>tel:+63282489568</code></td><td>系统拨号盘；PC 复制号码 + Toast</td></tr>
+      <tr><td>L3</td><td>RGD_exclusion@pagcor.ph</td><td><code>mailto:RGD_exclusion@pagcor.ph</code></td><td>系统邮件，收件人已填</td></tr>
+      <tr><td>L4</td><td>RGD@pagcor.ph</td><td><code>mailto:RGD@pagcor.ph</code></td><td>系统邮件，收件人已填</td></tr></table>
+    </div>
+    <div class="card"><h3>通用规则</h3>
+      <ul style="margin:0;padding-left:18px">
+      <li>L2–L4 前端文字渲染，蓝色下划线，点击高度 ≥ 32px（390 基准）。</li>
+      <li>点击弹窗内链接：弹窗不关、不计同意。</li>
+      <li>游客、已登录都可点。</li>
+      <li>埋点 <code>rg_link_click</code>：target / placement / site。</li></ul>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="p3">
+  <div class="cmp">
+    <div class="card"><h3>现网（2026-11-27 读取正式站 H5 首页页脚）</h3>
+      <table><tr><th>元素</th><th>789games</th><th>789bingo</th></tr>
+      <tr><td>NPGH 标志</td><td class="no">旧图，不可点</td><td class="no">旧图，不可点</td></tr>
+      <tr><td>热线 (02) 8248 9568</td><td class="no">图片，不可点</td><td class="no">图片，不可点</td></tr>
+      <tr><td>RGD_exclusion@pagcor.ph</td><td class="yes">mailto，可点</td><td class="no">SVG 图片，不可点</td></tr>
+      <tr><td>RGD@pagcor.ph</td><td class="yes">mailto，可点</td><td class="no">SVG 图片，不可点</td></tr>
+      <tr><td>21+ 弹窗</td><td colspan="2">未触发验证；789bingo 代码显示弹窗内含同一 npgh 区块</td></tr></table>
+    </div>
+    <div class="card"><h3>调整后</h3>
+      <table><tr><th>元素</th><th>两站 × 弹窗 / 页脚</th></tr>
+      <tr><td>NPGH 标志</td><td class="yes">换新版，点开 npgh.ph</td></tr>
+      <tr><td>热线</td><td class="yes">文字 + 图标，tel: 拨号</td></tr>
+      <tr><td>RGD_exclusion@pagcor.ph</td><td class="yes">mailto 文字链接</td></tr>
+      <tr><td>RGD@pagcor.ph</td><td class="yes">mailto 文字链接</td></tr>
+      <tr><td>App WebView</td><td class="yes">拦截 tel / mailto / 外链，交给系统</td></tr></table>
+    </div>
+    <div class="card" style="grid-column:1/3"><h3>合规通知原文要点</h3>
+      The NPGH helpline and RGD exclusion email must be clickable in both the responsible gaming pop-up and the website footer. Each link must direct players to the designated page or open an email addressed to the designated mailbox. Please use this NPGH logo and make sure the link to the NPGH website is clickable.
+    </div>
+  </div>
+</section>
+
+<script>
+const NPGH="data:image/webp;base64,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";
+const S={site:'bingo',place:'popup',end:'h5',ver:'new'};
+const $=id=>document.getElementById(id);
+function brand(){return S.site==='bingo'?'<div class="brand">789<small>BINGO</small></div>':'<div class="brand" style="color:#0f9d58">789<small>GAMES</small></div>'}
+function rg(ver,site,tags){
+  const old=ver==='old';
+  const t=n=>tags?`<span class="tag">${n}</span>`:'';
+  const npgh=old?`<div class="lg-npgh-old">NPGH<small>NATIONAL PROBLEM<br>GAMBLING HELPLINE</small></div>`
+    :`<a class="npgh-new lk" data-t="npgh_site" style="text-decoration:none">${t('L1')}<img src="${NPGH}" alt="NPGH National Problem Gambling Helpline"></a>`;
+  const need=old?`<div class="need img">Need Help? Call us at<br><b>(02) 8248 9568</b></div>`
+    :`<div class="need">${t('L2')}Need Help? Call us at<br><a class="lk" data-t="hotline">&#9742;&nbsp;<b>(02) 8248 9568</b></a></div>`;
+  const mailOld=site==='bingo'&&old;
+  const m=(addr,tg,n)=>mailOld?`<span class="addr img">${addr}</span>`:(old?`<a class="lk addr" data-t="${tg}" data-old="1">${addr}</a>`:`${t(n)}<a class="lk addr" data-t="${tg}">${addr}</a>`);
+  return `<div class="rg">
+    <div class="rg-logos"><div class="lg-pag">PAGCOR</div><div class="lg-21"><b>21</b>GAMBLING CAN BE ADDICTIVE. KNOW WHEN TO STOP</div>${npgh}${old?need:''}</div>
+    ${old?'':need}
+    <div class="rg-desc">Free, confidential, non-judgement support for anyone affected by gambling, including family and friends.</div>
+    <div class="rg-contact"><div class="mail-ic">&#9993;</div><div>
+      <div class="rg-mail">For player exclusion concerns:<br>${m('RGD_exclusion@pagcor.ph','rgd_exclusion','L3')}</div>
+      <div class="rg-mail">For other responsible gaming concerns:<br>${m('RGD@pagcor.ph','rgd','L4')}</div></div>${brand()}</div></div>`;
+}
+function page(inner,popup){
+  return `<div class="topbar">${S.site==='bingo'?'789Bingo':'789Games'}</div><div class="fake">Banner</div><div class="fake">Games</div><div class="fake">Games</div>
+  <div class="foot"><div style="margin-bottom:8px">Gambling doesn’t guarantee earnings or financial improvement. Stay within your limits. For 21+ only. PLAY RESPONSIBLY.</div>
+  <div class="url"><a>www.pagcor.ph/regulatory/responsible-gaming.php</a><a>https://OSEA.pagcor.ph</a></div>
+  <div style="margin:10px 0" class="${popup?'':'pick'}">${popup?rg(S.ver,S.site,false).replace(/data-t=/g,'data-x='):inner}</div>
+  <div style="color:#737373">Copyright © 2026 ${S.site==='bingo'?'789Bingo':'789Games'}. All rights reserved.</div></div>`;
+}
+function render(){
+  document.querySelectorAll('.seg').forEach(g=>g.querySelectorAll('button').forEach(b=>b.classList.toggle('on',S[g.dataset.k]===b.dataset.v)));
+  $('phone').classList.toggle('pc',S.end==='pc');
+  const box=rg(S.ver,S.site,false);
+  let html;
+  if(S.place==='footer'){html=page(box,false)}
+  else{html=page('',true)+`<div class="mask"><div class="dlg pick"><h4>Responsible Gaming</h4>
+    <ul class="chk"><li>I am over 21 years of age.</li><li>I am not a government official or employee connected directly with the operation of the government or any of its agencies…</li><li>I am not a member of the AFP, PNP…</li><li>I am not a person included in the NDRP / PAGCOR exclusion list.</li></ul>
+    ${box}<div class="btns"><button class="b-no" data-a="exit">Exit</button><button class="b-ok" data-a="agree">I Agree</button></div></div></div>`}
+  $('scr').innerHTML=html;
+  if(S.place==='popup'){ $('scr').scrollTop=0; }
+  else{ $('scr').scrollTop=9999; }
+}
+function log(s){const l=$('log');if(l.dataset.init!=='1'){l.textContent='';l.dataset.init='1'}const d=new Date(Date.now()+8*3600e3).toISOString().slice(11,19);l.textContent=`[${d} GMT+8] ${s}\n`+l.textContent}
+function toast(s){const t=$('toast');t.textContent=s;t.style.display='block';clearTimeout(t._h);t._h=setTimeout(()=>t.style.display='none',2200)}
+function sheet(h){const s=$('sheet');s.innerHTML=h+'<button onclick="this.parentNode.style.display=\'none\'">Close</button>';s.style.display='block'}
+const TG={npgh_site:'https://npgh.ph',hotline:'tel:+63282489568',rgd_exclusion:'mailto:RGD_exclusion@pagcor.ph',rgd:'mailto:RGD@pagcor.ph'};
+$('phone').addEventListener('click',e=>{
+  const a=e.target.closest('[data-t]'),btn=e.target.closest('[data-a]');
+  if(btn){toast(btn.dataset.a==='agree'?'（现网逻辑）勾选同意后进入首页':'（现网逻辑）退出');return}
+  if(!a){const im=e.target.closest('.need.img,.addr.img,.lg-npgh-old');if(im){toast('现网：这是图片，点击无反应');log('现网｜点击图片，无反应 ✗')}return}
+  const t=a.dataset.t,url=TG[t];
+  if(a.dataset.old){log(`现网｜${url}`)}
+  else log(`rg_link_click target=${t} placement=${S.place} site=789${S.site} end=${S.end}｜${url}`);
+  if(t==='npgh_site'){S.end==='app'?sheet('<b>系统浏览器</b>正在打开 npgh.ph'):toast('新标签页打开 https://npgh.ph')}
+  else if(t==='hotline'){S.end==='pc'?toast('Number copied: (02) 8248 9568 — call from your phone'):sheet('<b>Call (02) 8248 9568?</b>系统拨号盘，号码已预填')}
+  else{const ad=url.slice(7);S.end==='pc'?toast('默认邮件客户端：收件人 '+ad):sheet(`<b>New Message</b>To: ${ad}<br><span style="color:#888;font-size:12px">未装邮件 App 时：Toast「Email address copied」并复制地址</span>`)}
+  if(S.place==='popup')setTimeout(()=>toast('弹窗保持打开，未计同意'),2300);
+});
+document.querySelectorAll('.seg').forEach(g=>g.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;S[g.dataset.k]=b.dataset.v;$('sheet').style.display='none';render()}));
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===b.dataset.p))});
+render();
+$('scr2').innerHTML=`<div class="topbar">字段示意（调整后 · 789bingo 页脚）</div><div class="foot show-tags"><div class="pick">${rg('new','bingo',true)}</div></div>`;
+</script>
+</body></html>

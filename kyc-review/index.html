@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KYC 后台审核显示对齐 原型 v1.0</title>
+<style>
+:root{--top:#17504c;--stat:#1d5f5a;--pri:#168078;--pri-soft:#e6f3f1;--bg:#f4f6f6;--line:#ebeef5;--line2:#dcdfe6;--fg:#303133;--muted:#909399;--sub:#606266;--warn:#c77a17;--warn-bg:#fdf3e6;--red:#d93636;--red-bg:#fdecec;--green:#1f8a4c;
+--font:"PingFang SC","Helvetica Neue",Helvetica,"Microsoft YaHei",Arial,sans-serif;color-scheme:light}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.5 var(--font)}
+button,select,input{font:inherit;color:inherit}button{cursor:pointer}
+.proto{background:#fff7e0;color:#7a5a00;border-bottom:1px solid #f0dca0;padding:6px 16px;font-size:12px;display:flex;flex-wrap:wrap;gap:4px 16px}
+.proto a{color:#7a5a00}
+.tabs{display:flex;gap:2px;background:#fff;border-bottom:1px solid var(--line2);padding:0 16px}
+.tabs button{border:0;background:none;padding:10px 16px;border-bottom:2px solid transparent;color:var(--sub)}
+.tabs button.on{color:var(--pri);border-color:var(--pri);font-weight:600}
+.top{background:var(--top);color:#fff;height:40px;display:flex;align-items:center;gap:10px;padding:0 16px}
+.top .qa{background:#f0a23b;border-radius:3px;padding:0 6px;font-size:11px}
+.shell{display:flex;min-height:calc(100vh - 120px)}
+.side{width:180px;background:#fff;border-right:1px solid var(--line)}
+.side div{padding:9px 18px;color:var(--sub)}.side .on{background:var(--pri-soft);color:var(--pri);font-weight:600}
+.main{flex:1;padding:16px;min-width:0}
+.card{background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.chip{border:1px solid var(--line2);background:#fff;border-radius:3px;padding:4px 10px}
+.chip.on{border-color:var(--pri);color:var(--pri);background:var(--pri-soft)}
+/* dialog */
+.dlg{max-width:760px;margin:0 auto;background:#fff;border-radius:4px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.dlg h3{margin:0;padding:12px 18px;border-bottom:1px solid var(--line);font-size:15px;display:flex;justify-content:space-between}
+.dlg .bd{padding:14px 18px;max-height:none}
+.sec{font-weight:600;margin:14px 0 8px;padding-left:8px;border-left:3px solid var(--pri)}
+.row{display:grid;grid-template-columns:210px 1fr;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:center}
+.row .l{color:var(--sub);text-align:right}.row .l i{color:var(--red);font-style:normal;margin-left:2px}
+.row.miss .l{color:var(--red)}
+.v{word-break:break-word}
+.pend{display:inline-block;background:var(--warn-bg);color:var(--warn);border:1px solid #f3cf9c;border-radius:3px;padding:0 8px;font-size:12px}
+.off{display:inline-block;background:#f0f0f0;color:#888;border-radius:3px;padding:0 6px;font-size:11px;margin-left:6px}
+.new{color:#e8590c;font-size:11px;margin-left:4px}
+.sum{background:var(--warn-bg);color:var(--warn);border:1px solid #f3cf9c;border-radius:3px;padding:8px 12px;margin-bottom:6px;cursor:pointer}
+.ok{background:#eaf6ef;color:var(--green);border:1px solid #bfe3cc;border-radius:3px;padding:8px 12px;margin-bottom:6px}
+.img{width:120px;height:76px;border:1px solid var(--line2);border-radius:3px;background:repeating-linear-gradient(45deg,#f3f5f7,#f3f5f7 8px,#eceff2 8px,#eceff2 16px);display:inline-flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;margin-right:6px}
+.ft{display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--line)}
+.btn{border:1px solid var(--line2);background:#fff;border-radius:3px;padding:6px 16px}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#fff}.btn.r{background:var(--red);border-color:var(--red);color:#fff}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:9}
+.mask .box{background:#fff;border-radius:4px;width:380px;padding:18px}
+.mask ul{margin:8px 0;padding-left:20px;color:var(--red)}
+.hl{outline:2px solid var(--warn);outline-offset:2px;transition:outline .3s}
+/* player */
+.pwrap{display:flex;gap:28px;justify-content:center;padding:24px;flex-wrap:wrap}
+.phone{width:375px;background:#f5f6f8;border-radius:28px;border:8px solid #222;overflow:hidden;position:relative;min-height:760px}
+.ph{background:#fff;padding:14px 16px;font-weight:700;font-size:16px;text-align:center;border-bottom:1px solid #eee}
+.pf{padding:12px 16px 90px}
+.pf label{display:block;font-size:12px;color:#555;margin:10px 0 4px}.pf label i{color:#e5484d;font-style:normal;margin-left:2px}
+.pf .in{background:#fff;border:1px solid #dfe2e7;border-radius:8px;padding:10px 12px;font-size:14px;min-height:40px;display:flex;align-items:center;justify-content:space-between}
+.pf .in.ph2{color:#aab}.pf .in.dd::after{content:"▾";color:#999}
+.cta{position:absolute;left:16px;right:16px;bottom:18px;height:46px;border:0;border-radius:10px;color:#fff;font-weight:700;font-size:15px;background:linear-gradient(90deg,#7b4dff,#1fbf8f)}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:16px 16px 0 0;box-shadow:0 -6px 20px rgba(0,0,0,.15);max-height:70%;display:flex;flex-direction:column}
+.sheet .h{padding:14px 16px;font-weight:700;border-bottom:1px solid #eee;display:flex;justify-content:space-between}
+.sheet .ls{overflow:auto}.sheet .ls div{padding:12px 16px;border-bottom:1px solid #f2f2f2;font-size:14px}
+.sheet .ls .gone{color:#d33;text-decoration:line-through;background:#fff4f4}
+.dim{position:absolute;inset:0;background:rgba(0,0,0,.35)}
+.note{max-width:340px;background:#fffbe6;border:1px solid #f0dca0;border-radius:6px;padding:12px 14px;font-size:12px;color:#5c4a00;align-self:flex-start}
+.note h4{margin:0 0 6px}
+table{border-collapse:collapse;width:100%;background:#fff}
+th,td{border:1px solid var(--line2);padding:7px 10px;text-align:left;vertical-align:top}th{background:#f5f7fa}
+td.del{color:var(--red)}td.add{color:var(--green)}
+</style></head><body>
+<div class="proto"><b>KYC 后台审核显示对齐 · 原型 v1.0</b><span>2026-11-27 · Koi</span><a href="https://github.com/koi980517/789games/blob/main/kyc-review/docs/PRD.md" target="_blank">PRD v1.0</a><span>站点：789games / 789bingo</span><span>示意数据，非现网</span></div>
+<div class="tabs" role="tablist">
+<button class="on" data-t="admin">运营后台 · KYC 审核</button><button data-t="player">玩家端 · KYC 表单</button><button data-t="diff">改动对照</button></div>
+
+<section id="t-admin">
+<div class="top"><b>789games 管理后台</b><span class="qa">QA</span></div>
+<div class="shell"><div class="side"><div>首页</div><div class="on">会员</div><div>代理</div><div>投注站</div><div>报表</div></div>
+<div class="main">
+<div class="bar"><span style="color:var(--sub)">示例会员：</span>
+<button class="chip on" data-u="full">user1001 · 资料完整</button>
+<button class="chip" data-u="miss">user1002 · 必填缺失</button>
+<button class="chip" data-u="old">user1003 · 存量 Legal Clerk</button></div>
+<div class="dlg" id="dlg"></div>
+</div></div>
+</section>
+
+<section id="t-player" hidden>
+<div class="pwrap">
+<div class="phone"><div class="ph">KYC Verification</div><div class="pf" id="pform"></div><button class="cta">Confirm</button></div>
+<div class="phone"><div class="ph">KYC Verification</div><div class="pf" id="pform2"></div><div class="dim"></div>
+<div class="sheet"><div class="h">Nature of Work <span style="color:#999">✕</span></div><div class="ls" id="works"></div></div></div>
+<div class="note"><h4>前台规则</h4>
+① 字段顺序沿用 BB789BINGO-7671 定稿顺序。<br>② Nature of Work 下拉移除 <b>Youth Worker</b>、<b>Legal Clerk</b>（右图红色删除线仅示意，上线后不显示）。<br>③ 存量已选这两项的用户重新编辑 KYC 时需重新选择。<br>④ 完整选项以 works/queryAll 字典为准，图中为部分示意。</div>
+</div>
+</section>
+
+<section id="t-diff" hidden><div class="main"><div class="card">
+<table><tr><th style="width:22%">项目</th><th>现状</th><th>本期</th></tr>
+<tr><td>字段顺序</td><td class="del">基本信息/证件信息/补充信息分组，顺序与前台不同</td><td class="add">按前台表单顺序 1–15 显示</td></tr>
+<tr><td>性别 Gender</td><td class="del">KYC 弹窗无此字段</td><td class="add">新增，显示用户提交值</td></tr>
+<tr><td>投注站 Game Venue</td><td class="del">另一套名称（LAGUNA、BUENDIA PASAY…）</td><td class="add">与前台同一套投注站列表</td></tr>
+<tr><td>字段标签</td><td class="del">中文，部分合并（全名/名/中间名/姓）</td><td class="add">中文 + 英文原名，逐项拆开</td></tr>
+<tr><td>必填项为空</td><td class="del">空白</td><td class="add">「待验证 Pending Verification」+ 顶部汇总；通过前二次确认</td></tr>
+<tr><td>No middle name / Same as current</td><td class="del">不体现</td><td class="add">显示「无 N/A」/「同当前地址」，不算缺失</td></tr>
+<tr><td>后台独有资料</td><td class="del">与用户资料混排</td><td class="add">移到「审核附加信息」区</td></tr>
+<tr><td>按钮</td><td class="del">save / Pass KYC / Reject KYC</td><td class="add">保存 / 通过 KYC / 拒绝 KYC</td></tr>
+<tr><td>Nature of Work</td><td class="del">含 Youth Worker、Legal Clerk</td><td class="add">前台 + 后台移除；存量显示原值 +「已下线选项」</td></tr>
+</table></div></div></section>
+
+<script>
+const F=[ // key,label,required,sec
+['idType','证件类型 ID Type',1],['idNo','证件号码 ID Number',1],['first','名 First Name',1],['middle','中间名 Middle Name',0],['last','姓 Last Name',1],
+['birthday','生日 Birthday',1],['gender','性别 Gender',1,'new'],['venue','投注站 Game Venue',1],['pob','出生地 Place of Birth',1],
+['cur','当前地址 Current Home Address',1],['perm','永久居住地 Permanent Home Address',1],['nat','国籍 Nationality',1],
+['income','收入来源 Source of Income',1],['work','工作性质 Nature of Work',1],['photo','证件照 / eKYC 截屏',1]];
+const base={idType:"Driver's License",idNo:'N03-12-345678',first:'Juan',middle:'Santos',last:'Dela Cruz',birthday:'1994-06-12',gender:'Male',venue:'PASAY BUENDIA',pob:'Quezon City',
+cur:'123 Rizal St., Brgy. 5, Pasay City, Metro Manila 1300',perm:'@same',nat:'Filipino',income:'Salary',work:'Accountant',photo:1};
+const U={full:{acc:'user1001',st:'待审核',d:base},
+miss:{acc:'user1002',st:'待审核',d:{...base,first:'Maria',middle:'@none',last:'Reyes',gender:'',pob:'  ',perm:'',work:'',photo:0}},
+old:{acc:'user1003',st:'完全验证',d:{...base,first:'Ana',last:'Lim',work:'Legal Clerk',gender:'Female'}}};
+const OFF=['Youth Worker','Legal Clerk'];
+const empty=v=>v===undefined||v===null||v===0||String(v).trim()==='';
+let cur='full';
+function render(){
+ const u=U[cur],d=u.d,miss=[];
+ const rows=F.map(([k,l,req,tag])=>{
+  let v=d[k],html;
+  if(k==='middle'&&v==='@none')html='无 N/A <span class="off">No middle name</span>';
+  else if(k==='perm'&&v==='@same')html='同当前地址<div style="color:var(--muted);font-size:12px">'+d.cur+'</div>';
+  else if(empty(v)){if(req){miss.push(l);html='<span class="pend">待验证 Pending Verification</span>'}else html='--'}
+  else if(k==='photo')html='<span class="img">证件正面</span><span class="img">eKYC 截屏</span>';
+  else html=v+(k==='work'&&OFF.includes(v)?'<span class="off">已下线选项</span>':'');
+  const m=req&&empty(v)&&!(k==='perm'&&v==='@same');
+  return `<div class="row${m?' miss':''}" id="r-${k}"><div class="l">${l}${req?'<i>*</i>':''}${tag?'<span class="new">新增</span>':''}</div><div class="v">${html}</div></div>`}).join('');
+ const full=[d.first,d.middle==='@none'?'':d.middle,d.last].filter(x=>!empty(x)).join(' ');
+ const firstMiss=F.find(([k,,r])=>r&&empty(d[k]));
+ document.getElementById('dlg').innerHTML=`<h3>KYC信息 <span style="color:var(--muted);font-weight:400">✕</span></h3><div class="bd">
+ ${miss.length?`<div class="sum" id="sum">⚠ 有 ${miss.length} 项必填信息待验证（点击定位）：${miss.map(x=>x.split(' ')[0]).join('、')}</div>`:'<div class="ok">✓ 用户端必填信息完整</div>'}
+ <div class="row"><div class="l">账号</div><div class="v">${u.acc}　（KYC 状态：${u.st}）</div></div>
+ <div class="row"><div class="l">全名 Full Name</div><div class="v">${full||'--'} <span style="color:var(--muted);font-size:12px">（名 + 中间名 + 姓 自动拼接）</span></div></div>
+ <div class="sec">用户提交资料（与用户端顺序一致）</div>${rows}
+ <div class="sec">审核附加信息（后台独有）</div>
+ <div class="row"><div class="l">证件背面 / 自拍照 / 收入证明</div><div class="v"><span class="img">证件背面</span><span class="img">自拍照</span></div></div>
+ <div class="row"><div class="l">NDRP 图片</div><div class="v">--</div></div>
+ <div class="row"><div class="l">备注</div><div class="v"><input style="width:100%;border:1px solid var(--line2);border-radius:3px;padding:5px 8px" placeholder="请输入备注"></div></div>
+ </div><div class="ft"><button class="btn">保存</button><button class="btn r">拒绝 KYC</button><button class="btn p" id="pass">通过 KYC</button></div>`;
+ const s=document.getElementById('sum');
+ if(s)s.onclick=()=>{const r=document.getElementById('r-'+firstMiss[0]);r.scrollIntoView({behavior:'smooth',block:'center'});r.classList.add('hl');setTimeout(()=>r.classList.remove('hl'),1500)};
+ document.getElementById('pass').onclick=()=>{
+  const m=document.createElement('div');m.className='mask';
+  m.innerHTML=miss.length?`<div class="box"><b>以下必填信息待验证，确认通过 KYC？</b><ul>${miss.map(x=>'<li>'+x+'</li>').join('')}</ul><div style="display:flex;justify-content:flex-end;gap:8px"><button class="btn">取消</button><button class="btn p">确认通过</button></div></div>`
+  :`<div class="box"><b>确认通过该会员 KYC？</b><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px"><button class="btn">取消</button><button class="btn p">确认</button></div></div>`;
+  m.onclick=e=>{if(e.target.tagName==='BUTTON'||e.target===m)m.remove()};document.body.appendChild(m)};
+}
+document.querySelectorAll('[data-u]').forEach(b=>b.onclick=()=>{cur=b.dataset.u;document.querySelectorAll('[data-u]').forEach(x=>x.classList.toggle('on',x===b));render()});
+document.querySelectorAll('[data-t]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-t]').forEach(x=>x.classList.toggle('on',x===b));['admin','player','diff'].forEach(t=>document.getElementById('t-'+t).hidden=t!==b.dataset.t)});
+render();
+// player form
+const P=[['ID Type',"Driver's License",1,1],['First Name','Juan',1],['Middle Name','Santos',0],['Last Name','Dela Cruz',1],['Birthday','1994-06-12',1,1],['Gender','● Male　○ Female　○ Others',1],
+['Game Venue','PASAY BUENDIA',1,1],['Place of Birth','Quezon City',1],['Current Home Address','123 Rizal St., Pasay City',1],['Permanent Home Address','☑ Same as current address',1],
+['Nationality','Filipino',1,1],['Source of Income','Salary',1,1],['Nature of Work','Select',1,1]];
+const ph=P.map(([l,v,r,dd])=>`<label>${l}${r?'<i>*</i>':''}</label><div class="in${dd?' dd':''}${v==='Select'?' ph2':''}">${v}</div>`).join('');
+document.getElementById('pform').innerHTML=ph;document.getElementById('pform2').innerHTML=ph;
+document.getElementById('works').innerHTML=['Accountant','Architect','Assistant','Associate','Engineer','Government Employee','Lawyer','Legal Clerk','Nurse','Sales','Self-employed','Teacher','Youth Worker','Others']
+ .map(w=>`<div class="${OFF.includes(w)?'gone':''}">${w}${OFF.includes(w)?'　<small>移除</small>':''}</div>`).join('');
+</script>
+</body></html>

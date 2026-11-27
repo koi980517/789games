@@ -118,7 +118,6 @@ td{padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
      </table>
      <div class="btns">
       <button class="btn pri" id="save" disabled>保存</button><button class="btn" id="reset" disabled>取消修改</button>
-      <span class="perm">模拟权限：<select id="perm"><option value="edit">查看 + 修改</option><option value="view">仅查看</option></select></span>
      </div>
     </div>
     <div class="card">
@@ -185,7 +184,7 @@ S.draft={...S.cfg[S.site]};
 const $=id=>document.getElementById(id);
 
 function renderBO(){
- const c=S.cfg[S.site],d=S.draft,canEdit=$('perm').value==='edit';
+ const c=S.cfg[S.site],d=S.draft,canEdit=true;
  $('rows').innerHTML=KEYS.map(k=>`<tr><td><span class="ic">${ICON[k]}${NAME[k]}</span></td>
   <td><span class="sw ${d[k]?'on':''}" data-k="${k}" style="${canEdit?'':'cursor:not-allowed;opacity:.6'}"></span><span class="sw-l">${d[k]?'显示':'隐藏'}</span>${d[k]!==c[k]?'<span class="chg">未保存</span>':''}</td>
   <td class="muted">${S.meta[S.site][k].by} · ${S.meta[S.site][k].at}</td></tr>`).join('');
@@ -209,10 +208,9 @@ function renderFE(){
 }
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',1800)}
 
-$('rows').onclick=e=>{const s=e.target.closest('.sw');if(!s||$('perm').value!=='edit')return;S.draft[s.dataset.k]=!S.draft[s.dataset.k];renderBO()};
+$('rows').onclick=e=>{const s=e.target.closest('.sw');if(!s)return;S.draft[s.dataset.k]=!S.draft[s.dataset.k];renderBO()};
 $('sites').onclick=e=>{const s=e.target.dataset.s;if(!s)return;S.site=s;S.draft={...S.cfg[s]};renderBO()};
 $('reset').onclick=()=>{S.draft={...S.cfg[S.site]};renderBO()};
-$('perm').onchange=()=>{S.draft={...S.cfg[S.site]};renderBO()};
 $('save').onclick=()=>{
  const c=S.cfg[S.site];
  $('mSite').textContent='站点：'+S.site;

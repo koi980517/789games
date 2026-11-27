@@ -3,7 +3,7 @@
 后台按站点控制登录 / 注册弹窗的 Google、Facebook、Telegram 按钮显示或隐藏，保存即时生效，H5 与 App 一致。
 
 - PRD：[docs/PRD.md](docs/PRD.md)
-- 原型：[third-login-switch-prototype-v1.0.html](https://koi980517.github.io/789games/third-login-switch/third-login-switch-prototype-v1.0.html)（左侧后台改开关 → 保存 → 右侧手机即时刷新；可模拟站点、接口失败、仅查看权限）
+- 原型：[third-login-switch-prototype-v1.0.html](https://koi980517.github.io/789games/third-login-switch/third-login-switch-prototype-v1.0.html)（左侧后台改开关 → 保存 → 右侧手机即时刷新；可模拟站点、接口失败）
 
 | 场景 | 表现 |
 |---|---|

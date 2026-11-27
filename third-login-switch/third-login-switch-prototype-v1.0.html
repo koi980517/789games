@@ -131,8 +131,6 @@ td{padding:12px;border-bottom:1px solid #f0f0f0;vertical-align:middle}
   <div class="sim">
    <h4>前台读取（模拟）</h4>
    <div class="row"><label><input type="checkbox" id="fail"> 配置接口失败（兜底三个都显示）</label></div>
-   <div class="row">当前场景 <span class="code" id="scene">L1</span><span class="muted" id="sceneTxt"></span></div>
-   <div class="api" id="api"></div>
   </div>
   <div class="phone"><div class="screen" id="screen">
    <span class="lbl">登录 / 注册弹窗</span>
@@ -192,14 +190,9 @@ function renderBO(){
 function renderFE(){
  const site=S.site,fail=$('fail').checked;
  const cfg=fail?{google:true,facebook:true,telegram:true}:S.cfg[site];
- $('api').textContent=fail?`GET /api/front/config/thirdLogin  → 失败（超时）\n前端兜底：三个都显示`:`GET /api/front/config/thirdLogin\n→ ${JSON.stringify(cfg)}`;
  const on=KEYS.filter(k=>cfg[k]),last='google';
  $('icons').innerHTML=on.map(k=>`<div class="ib" data-k="${k}">${k===last?'<span class="last">LAST</span>':''}${ICON[k]}</div>`).join('');
  $('third').classList.toggle('hide',on.length===0);
- let sc,t;
- if(on.length===3){sc='L1';t='三个都开，与现网一致'}else if(on.length===0){sc='L3';t='全部关闭，分隔线与按钮区整块隐藏'}else{sc='L2';t='部分关闭，剩余按钮居中'}
- if(last&&!cfg[last]&&on.length){t+='；L4：上次登录方式已关闭，不显示 LAST'}
- $('scene').textContent=sc+((last&&!cfg[last]&&on.length)?' + L4':'');$('sceneTxt').textContent=t;
 }
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',1800)}
 

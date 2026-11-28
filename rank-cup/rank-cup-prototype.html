@@ -370,11 +370,10 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="wrap">
   <div class="top">
     <h1>VIP 排行榜</h1>
-    <span class="ver">原型 v0.17 · 2026-11-28 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
+    <span class="ver">原型 v0.18 · 2026-11-28 · <a href="https://wiki.bbops.ph/pages/viewpage.action?pageId=56689721" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">PRD</a> · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
     <div class="seg" role="tablist" id="viewSeg">
       <button data-v="h5" class="on">前台 H5</button>
       <button data-v="adm">运营后台</button>
-      <button data-v="doc">规则与口径</button>
     </div>
   </div>
 
@@ -398,65 +397,16 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
       </div></div>
       <div class="note-side">
         <div class="card">
-          <h3>首页入口：Banner 图</h3>
-          <ul>
-            <li>Rank Cup 以 Banner 图的形式放在首页 Banner 位，<b>具体位置不指定</b>，由运营配置；图中位置仅为示例。点红框进入排行榜，左上角 ‹ 回首页。</li>
-            <li>在后台首页 Banner 配置中新增 Rank Cup 的 Banner 图并开启。</li>
-            <li>跳转：H5 <code>/promo/leaderboard</code>（默认打开 VIP Tab）；App 需新增 <code>target=leaderboard</code>，未支持前用 <code>promo_detail</code> + activity_id。游客先登录再跳转。</li>
-            <li>₱300,000 写在图上，对应 VIP 周榜第 1 名奖金；奖金改了要换图。</li>
-            <li>素材：按所放 Banner 位的现有尺寸出图。</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>首页入口二：右侧挂件</h3>
-          <ul>
-            <li>在现有首页挂件（Lucky Spin / Daily Gift / Invite Now）里加一个 <b>Rank Cup</b>（虚线框）。挂件最多同时显示 3 个，超过时每 3 秒自动轮播。</li>
-            <li>排序先按资格分档：有资格有奖可领 &gt; 有资格 &gt; 无资格；同档按后台排序。</li>
-            <li>角标：上期获奖且奖金已在 10:00 自动到账（当天内）→ <b>Won</b> + 抖动，点击打开 Previous 查看；已上榜 → 我的名次；未上榜 → Join；VIP 不够 → 置灰排最后。</li>
-            <li>挂件沿用现网位置，在右侧。Hide 后收起为现网的猫抱礼盒图标（红色 !），点击再展开；可拖动、吸附左右边缘。</li>
-            <li>图标和名称为前端默认图片，后台只控制开启 / 关闭（「排行榜活动 › 活动列表」顶部「入口设置」）。</li>
-            <li>试一下：右边「我的状态」切换，或点挂件的 Won 进入 Previous 查看后回首页，看挂件角标变化。</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>排行榜页</h3>
-          <ul>
-            <li><b>顶部 Tab = 一个榜单</b>：VIP（综合榜：Slot + 真人，VIP 等级门槛）+ 各厂商榜 JILI / PG / FC / PP / OTG。Tab 名称和顺序在后台配置，横向滑动。</li>
-            <li>主视觉：活动名、活动日期、<b>Ends in</b>（到本期结束的倒计时，GMT+8）。</li>
-            <li><b>Previous / Current</b>：Current 为本期实时（每 5 分钟刷新），Previous 为上一期最终结果（奖金已于 10:00 自动到账，无需领取）。</li>
-            <li>领奖台 Top3：头像、脱敏昵称、Bet、<b>该玩家最近玩的游戏</b>（本榜计分范围内，带 ▶）、奖金。点游戏图标直接进入该游戏；游客先登录，游戏维护中提示维护。下面是 Rank / Player / Bet / Bonus 列表。</li>
-            <li>底部紫色 <b>ME</b> 行常驻：我的名次（未上榜显示 --）、我的有效投注、预估奖金。上方一行提示与上一名 / 进入奖励区的差距。</li>
-            <li><b>底部悬浮游戏框</b>：复用活动详情页现有的「PLAY MORE! WIN MORE」模块（游戏卡 + PLAY，横向滑动）；展示本榜计分范围内的游戏，点 PLAY 直接进游戏。ME 行贴在它上方。</li>
-            <li>同一笔注单可以同时计入 VIP 榜和对应厂商榜。</li>
-          </ul>
-        </div>
-        <div class="card">
-          <h3>发奖到账弹窗 + 通知</h3>
-          <ul>
-            <li><b>自动到账</b>：10:00 发奖时直接入账余额，不需要用户在线或领取；长期没登录的用户也照常到账。</li>
-            <li><b>到账弹窗</b>：发奖后用户第一次进入<b>首页</b>或<b>排行榜页</b>自动弹出，列出本次到账的奖励和合计。看过一次就不再弹（按用户 + 发奖批次记录）；离开期间累积的多期奖励合并在一个弹窗里。View Results 打开对应 Tab 的 Previous。</li>
-            <li>与首页其他弹窗同时出现时，到账弹窗优先。VIP 等级不足 / 没获奖的用户不弹。</li>
-            <li><b>推送 / 短信提醒</b>：二期，一期不做（见「规则与口径」末尾「二期」）。</li>
-          </ul>
-          <div class="filter" style="margin:6px 0 0">
-            <label>场景 <select id="rwScene"><option value="today">今天 10:00 发奖</option><option value="away">长期未登录（累积 3 期）</option></select></label>
-            <button class="btn" id="rwReplay" type="button">重新模拟进入首页</button>
-          </div>
-        </div>
-        <div class="card">
-          <h3>模拟</h3>
-          <p><b>前后台已打通</b>：后台的配置会直接驱动前台——新增并发布的榜单出现在顶部 Tab（按排序）；开启 / 关闭、名称、活动类型、日期（未开始显示 Starts in）、排名指标、奖池与名次占比、VIP / 最低投注门槛、稽核倍数、指定游戏（领奖台游戏图标、底部游戏框、规则文案）、底部游戏框开关、首页挂件开关，都即时同步。后台列表和编辑页可点「前台预览」直接跳到该榜。头像为示例，游戏图无素材时用厂商色块占位。</p>
-          <div class="filter" style="margin:0">
-            <label>我的状态
-              <select id="meMode">
+          <h3>演示</h3>
+          <p style="font-size:12px;color:#666;margin:0 0 8px">规则与口径见 <a href="https://wiki.bbops.ph/pages/viewpage.action?pageId=56689721" target="_blank" rel="noopener">PRD（Wiki）</a>。</p>
+          <div class="filter" style="margin:0 0 8px"><label>我的状态 <select id="meMode">
                 <option value="in">已上榜（奖励区内）</option>
                 <option value="out">已上榜（奖励区外）</option>
                 <option value="vip">等级不足（VIP）</option>
                 <option value="below">已投注，未达上榜门槛</option>
                 <option value="none">本期还没有有效投注</option>
-              </select>
-            </label>
-          </div>
+              </select></label></div>
+          <div class="filter" style="margin:0"><label>到账弹窗 <select id="rwScene"><option value="today">今天 10:00 发奖</option><option value="away">长期未登录（累积 3 期）</option></select></label><button class="btn" id="rwReplay" type="button">重新模拟进入首页</button></div>
         </div>
       </div>
     </div>
@@ -491,10 +441,6 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
     </div>
   </section>
 
-  <!-- ========== 口径 ========== -->
-  <section id="v-doc" hidden>
-    <div class="doc" id="docBody"></div>
-  </section>
 </div>
 <div id="drawer"></div>
 
@@ -939,7 +885,7 @@ function admEdit(){
       <label class="chk"><input type="checkbox" checked disabled> 投注结果为 0（派彩 = 下注）不计</label>
       ${b.type!=='slot'?`<label class="chk"><input type="checkbox" checked disabled> 对冲注单整局不计（同局反向下注的双方全部剔除）</label>
       <span style="width:100%"></span>轮盘单局覆盖 ≥ <input type="number" id="e-rou" value="${b.roulette}" style="width:56px"> % 号码视为对冲，整局不计`:'<label class="chk"><input type="checkbox" checked disabled> Free Spin 局不计；Buy Feature 按购买价计</label>'}
-      <span class="hint">详细定义和例子见「规则与口径」。</span></div>
+      <span class="hint">详细定义和例子见 PRD（Wiki）。</span></div>
   </div>
   ${errs.length?`<div class="alert b">无法保存：<br>${errs.map(esc).join('<br>')}</div>`:''}
   <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" data-ecancel="1">取消</button><button class="btn pri" id="savePub" ${errs.length?'disabled style="opacity:.5"':''}>${b.status==='草稿'?'保存并发布':'更新完成并发布'}</button></div>
@@ -1440,134 +1386,15 @@ document.addEventListener('click',e=>{ const t=e.target.closest('[data-dclose]')
 document.querySelectorAll('.adm .sub').forEach(x=>x.onclick=()=>{S.admP=x.dataset.ap||'list';renderAdm();});
 
 /* ---------- 口径 ---------- */
-function renderDoc(){
-  $('#docBody').innerHTML=`
-  <div class="card"><h3>有效投注定义（计榜投注）</h3>
-    <div class="formula">计榜投注 = Σ 本期结算的 validBetAmount<br>&nbsp;&nbsp;− 结果为 0 / 和局 − 对冲注单（整局）− 撤单 / 冲正金额<br>按<b>每个排行榜</b>分别记录与汇总（活动ID + 期号 + 会员）</div>
-    <ul>
-      <li>数据源：投注事件流“结算有效投注变动”消息，按<b>结算时间</b>归期。</li>
-      <li>只统计后台所选厂商、所选游戏；单一钱包厂商实时计分，转账钱包厂商不支持。</li>
-      <li>参与门槛（VIP 等级、KYC、账号状态）以投注结算时刻的状态判断。</li>
-      <li>结算后厂商回滚、撤单：在冲正消息到达时扣回；发奖后才发生的冲正不追回奖金，进风控报表人工处理。</li>
-    </ul></div>
-  <div class="card"><h3>后端投注记录（按游戏类型 / 厂商）</h3>
-    <ul>
-      <li><b>记录范围</b>：活动所选类型 + 厂商的全部结算注单都写入排行榜投注记录表，<b>被剔除的也保留</b>（计榜投注 = 0，并记剔除原因），方便对账和客诉，不物理删除。</li>
-      <li><b>游戏类型</b>取平台游戏分类（不是厂商类目），按结算时刻快照写入；之后改分类不回溯。</li>
-      <li><b>写入</b>：消费“结算有效投注变动”消息，唯一键 = 厂商 + 厂商注单号；重复消息只更新不新增，防重复计分。</li>
-      <li><b>无效投注</b>：validBetAmount = 0、Free Spin、不满足门槛、和局退本、对冲 → 计榜投注记 0，原因写入。</li>
-      <li><b>厂商取消 / 撤销 / 回滚</b>：收到取消或撤销消息 → 原记录状态改“已撤销”，计榜投注归 0，另写一条冲正记录（负数），重算该会员本期总额和名次。</li>
-      <li>撤销所属期<b>未发奖</b>：直接扣回、名次重算。<b>已发奖</b>：不自动追回奖金，进风控报表人工处理。</li>
-      <li><b>重新结算</b>（厂商改派彩 / 改 validBet）：按新值覆盖，差额写冲正记录。</li>
-      <li>后台「投注记录」页：按类型、厂商、计榜状态、剔除原因、会员 / 注单号、结算时间筛选；上方按类型 / 厂商汇总原始投注、各类剔除、计榜投注和剔除率；可导出。</li>
-      <li>记录保留：活动结束后 90 天（与三方数据 5 年保留是两回事）。</li>
-    </ul>
-    <table><tr><th>字段</th><th>说明</th></tr>
-      <tr><td>activity_id / period_no</td><td>活动 ID、期号（同一注单可同时计入多个活动，各存一条）</td></tr>
-      <tr><td>vendor / vendor_bet_no</td><td>厂商、厂商注单号（唯一键）</td></tr>
-      <tr><td>game_type / game_id / round_no / bet_item</td><td>平台类型快照、游戏、局号、下注项（对冲判定用）</td></tr>
-      <tr><td>bet_amount / valid_bet / payout</td><td>厂商原始值</td></tr>
-      <tr><td>bet_status</td><td>已结算 / 已取消 / 已撤销</td></tr>
-      <tr><td>count_amount / exclude_amount / exclude_reason</td><td>计榜投注、剔除金额、剔除原因</td></tr>
-      <tr><td>settle_time / cancel_time / updated_at</td><td>GMT+8</td></tr>
-    </table></div>
-  <div class="card"><h3>周末榜（开放日后台可选）</h3>
-    <ul>
-      <li>活动类型新增<b>周末榜</b>：只在后台勾选的开放日计分（默认周五、周六、周日，可改为如周四 – 周六）；非开放日前台显示“下一轮开始”倒计时，不计分。</li>
-      <li><b>每个开放日单独排名</b>：每天 00:00:00 – 23:59:59 为一期，每日 00:00 重置。</li>
-      <li>新增<b>排名指标</b>（所有榜可选）：有效投注（默认）/ <b>总赢额 = 总派彩 − 总投注</b>。总赢额只算计入的注单，结果为 0、和局、对冲、取消的注单不记录为有效投注；总赢额 ≤ 0 不上榜。</li>
-      <li>示例（Weekend Winners）：Slot + Casino，按总赢额，每日 Top 500，每期奖池 ₱200,000：#1 ₱50,000、#2 ₱20,000、#3 ₱10,000、#4–10 ₱5,000、#11–20 ₱1,000、#21–50 ₱500、#51–100 ₱300、#101–200 ₱200、#201–300 ₱100、#301–500 ₱75；稽核 3 倍（可配）。</li>
-      <li>发奖：每个开放日的次日 10:00 自动发放。</li>
-      <li>风险：按赢额排名会奖励高赢家，返还率和预算波动大，配置奖池时注意；对冲在赢额榜上影响较小，但跨账号对冲仍按风控预警处理。</li>
-    </ul></div>
-  <div class="card"><h3>机器人（补位展示）</h3>
-    <ul>
-      <li>真实用户上榜门槛（每个榜单配置）：本期有效投注达到设定金额才显示在榜上、参与排名和发奖；未达到的不上榜，投注照常累计。</li>
-      <li>每个榜单可单独开启（默认关闭）：达到上榜门槛的真实用户少于“补足到”人数时，用机器人补位，避免冷启动或低峰时榜单空荡。真实人数达到后机器人自动退出。</li>
-      <li><b>补位规则（勾选生效，不勾选不生效）</b>：① 始终排在全部真实玩家之后（默认勾选；不勾选时按数值穿插，但只在奖励区之外，奖励区内真实玩家位置不变）；② 不进后台投注记录和榜单明细（默认勾选；不勾选时在明细中标“机器人”显示）；③ 前台规则披露“榜单含系统展示账号”（默认不勾选，待合规确认）。</li>
-      <li><b>系统固定</b>：机器人不发奖、奖金显示“—”，所占名次的奖金按「名次空缺处理」执行（回收或重新分配）；不计入预算和返还率，不会让真实玩家掉出奖励区；系统机器人账号（is_robot = 1）不可登录、充值、提现；任何时候都不进风控和财务对账。</li>
-      <li>可配：补足到人数、每次刷新的增长区间、上限比例、VIP 等级区间；昵称走统一脱敏，头像随机，最近玩的游戏从指定游戏随机。</li>
-      <li>后台「榜单数据与发奖」单独显示真实上榜人数和机器人数量；开关和参数改动写操作日志。</li>
-      <li>不做“机器人占前排 / 占奖励名次”：那样会让玩家以为奖金被别人拿走、或真实名次被压低，容易引发客诉和合规风险（PAGCOR 活动公平性），如确有需要需合规书面确认。</li>
-    </ul></div>
-  <div class="card"><h3>风控预警：防大额对冲</h3>
-    <p>计分口径已把<b>同账号</b>同局对冲整局剔除（不计入排行榜）；真正的风险是<b>多个账号互相对冲</b>（A 押庄、B 押闲），整体几乎不亏，却同时把两个账号刷上榜。后台「风控预警」页签做事中预警 + 发奖前拦截。</p>
-    <table><tr><th>规则</th><th>默认条件</th><th>等级 / 动作</th></tr>
-      <tr><td>R1 跨账号同局反向（有关联）</td><td>同桌同局反向、金额差 ≤ 10%、单局 ≥ ₱5,000、本期 ≥ 3 局，且同 IP / 设备 / 代理上级 / 提款账户 / 手机号段任一</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
-      <tr><td>R2 跨账号高频配对</td><td>同局反向 ≥ 10 局，合计盈亏率 ≤ 2%，配对金额 ≥ ₱200,000（无关联也查）</td><td>高 · 暂停计分 + 暂缓发奖</td></tr>
-      <tr><td>R3 低风险大额投注</td><td>Casino 本期 ≥ ₱200,000 且净盈亏率 ≤ 1%</td><td>中 · 标记</td></tr>
-    </table>
-    <ul><li>R1 / R2 按桌台 + 局号建索引每 5 分钟跑；R3 每 30 分钟。高等级即时推送风控群并在顶栏计数。</li>
-    <li>10:00 发奖前，奖励区账号有未处理中 / 高预警的暂缓发放；误报 → 恢复计分并补发；确认违规 → 取消资格、剔除对冲注单、名次顺延，可加黑名单 / 冻结。</li>
-    <li>阈值、等级、动作后台可调（需 Google 验证码），条件需风控与运营按上线后 1–2 周数据校准。</li></ul></div>
-  <div class="card"><h3>不计入的注单</h3>
-    <table><tr><th>类型</th><th>判定</th><th>处理</th></tr>
-    <tr><td>投注结果为 0</td><td>派彩 = 下注额，输赢为 0（含 Slot 打平的局）</td><td>整笔不计</td></tr>
-    <tr><td>和局</td><td>开“和”导致庄 / 闲（龙 / 虎）注单退回本金（Push）</td><td>整笔不计</td></tr>
-    <tr><td>押“和”</td><td>玩家主动押和局，中奖或输掉（结果不为 0）</td><td><b>计入</b></td></tr>
-    <tr><td>对冲（同局反向）</td><td>同一会员、同一桌台、同一局号同时押庄+闲、龙+虎、大+小、单+双、红+黑</td><td><b>整局不计</b>（双方注单全部剔除）</td></tr>
-    <tr><td>轮盘覆盖</td><td>单局覆盖号码数 / 37 ≥ 配置比例（默认 70%）</td><td>整局不计</td></tr>
-    <tr><td>无效投注</td><td>厂商返回 validBetAmount = 0</td><td>不计</td></tr>
-    <tr><td>厂商取消</td><td>厂商作废该局、退回本金</td><td>不计</td></tr>
-    <tr><td>厂商撤销 / 回滚</td><td>已结算后厂商撤销或回滚</td><td>已计的扣回（冲正），名次重算</td></tr>
-    <tr><td>Slot Free Spin</td><td>免费局无实际投注</td><td>不计；Buy Feature 按购买价计</td></tr>
-    </table></div>
-  <div class="card"><h3>计算示例</h3>
-    <table><tr><th>下注</th><th>结果</th><th class="r">原始投注</th><th class="r">计榜投注</th></tr>
-    <tr><td>庄 20,000 + 闲 18,000</td><td>闲赢</td><td class="r">38,000</td><td class="r">0</td></tr>
-    <tr><td>庄 10,000 + 闲 10,000</td><td>庄赢</td><td class="r">20,000</td><td class="r">0</td></tr>
-    <tr><td>闲 5,000</td><td>和（退本）</td><td class="r">5,000</td><td class="r">0</td></tr>
-    <tr><td>闲 5,000 + 和 500</td><td>和</td><td class="r">5,500</td><td class="r">500</td></tr>
-    <tr><td>庄 8,000 + 闲 3,000 + 和 1,000</td><td>庄赢</td><td class="r">12,000</td><td class="r">1,000</td></tr>
-    <tr><td>Slot 下注 1,000，派彩 1,000</td><td>输赢 0</td><td class="r">1,000</td><td class="r">0</td></tr>
-    </table>
-    <p style="font-size:12px;color:#666;margin-top:6px">同局庄闲（龙虎、大小、单双、红黑）反向下注即为对冲，双方整笔不计。倒数第二行：庄闲对冲整局剔除，只计押“和”的 1,000。</p></div>
-  <div class="card"><h3>排名与奖励</h3>
-    <ul>
-      <li>按计榜投注从高到低排名；同额时先达到该金额者（最后一笔计分注单结算时间更早）排前。</li>
-      <li>每人奖金 = 本期奖池 × 该名次占比；保留 2 位小数，按 ₱ 向下取整到分，误差不补发。</li>
-      <li>前台“预估奖励” = 本期奖池 × 我当前名次占比；页面注明“以期末结算为准”。</li>
-      <li>名次占比要求：从第 1 名起连续、单人占比不递增、合计 100%，否则不能保存。</li>
-      <li>发奖：<b>自动发奖，固定每期结束后 10:00（GMT+8）</b>——日榜次日 10:00、周榜下周一 10:00、周末榜开放日次日 10:00。00:00–10:00 补拉迟到注单、处理撤销冲正、完成风控审核，10:00 直接入账余额，无需领取；奖金为彩金，账变类型“活动金额”，写入稽核倍数（默认 1 倍）。审核未通过的名次暂缓发放。推送 / 短信提醒为二期。</li>
-    </ul></div>
-  <div class="card"><h3>发奖到账提醒</h3>
-    <ul>
-      <li><b>到账</b>：10:00 自动入账（含长期未登录用户），不依赖用户登录或领取。</li>
-      <li><b>到账弹窗</b>：发奖后首次进入首页或排行榜页弹出；按 用户 + 发奖批次 记录已展示，展示过不再弹；未看过的多期奖励合并展示。</li>
-      <li>风控暂缓发奖的名次：不弹窗；人工放款后按新批次弹窗。</li>
-      <li>推送 / 短信提醒为二期，见本页末「二期」。</li>
-    </ul></div>
-  <div class="card"><h3>后台配置项一览</h3>
-    <table><tr><th>分组</th><th>配置项</th></tr>
-    <tr><td>基础</td><td>名称（多语言）、前台 Tab 与排序、指定游戏（Slot / Casino，游戏类型按所选游戏自动识别）、底部游戏框</td></tr>
-    <tr><td>时间</td><td>日榜 / 周榜 / 周末榜（开放日可选）、排名指标（有效投注 / 总赢额）、活动起止日期、预热展示日、每期发奖时间（GMT+8）</td></tr>
-    <tr><td>奖励</td><td>每期奖池（固定）、名次区间与每人占比、空缺处理、稽核倍数（发放方式固定为 10:00 自动发奖）</td></tr>
-    <tr><td>测算</td><td>预估每期有效投注 → 总预算、返还率、Top1/3/10 占比、每人金额分布</td></tr>
-    <tr><td>门槛</td><td>VIP 等级、最低有效投注、KYC、同 IP 上限、黑名单</td></tr>
-    <tr><td>口径</td><td>轮盘覆盖比例（对冲固定为整局不计，不可配置）</td></tr>
-    </table></div>
-  <div class="card"><h3>待确认（需求方）</h3>
-    <ul>
-      <li><span class="pill w">待确认</span> 适用站点：只用于 789games，还是 789bingo 也要上？（若上，Bingo 类游戏需加回指定游戏范围）</li>
-      <li><span class="pill w">待确认</span> 机器人的奖金是否同样在排行榜显示。</li>
-    </ul></div>
-  <div class="card" style="border-style:dashed;opacity:.85"><h3>二期（不在一期范围）· 推送 / 短信提醒</h3>
-    <p style="font-size:12px;color:#666">一期发奖后只通过「到账弹窗」触达，不发推送 / 短信。以下为二期设计参考，后台「推送管理 › 奖励发放推送」「营销短信 › 奖励发放提醒」页面置灰。</p>
-    <ul>
-      <li><b>唤起</b>：发奖后打开 App / 登录 H5（到账弹窗已展示），或点击推送 / 短信链接。已唤起的不再收到后续提醒。</li>
-      <li><b>推送</b>（推送管理 › 奖励发放推送，EngageLab）：① 发奖时（10:00）发给全部获奖用户；② 发奖后 +4 小时（14:00，可配 2–8 小时）发给仍未唤起的。同批次多榜合并为一条，每批次每人最多 2 条。</li>
-      <li><b>短信</b>（营销短信 › 奖励发放提醒，M360）：推送 ② 后再 +2 小时（16:00）仍未唤起的发 1 条；没有推送 token 的用户同一时间判断。过滤：已绑定手机号、未退订、非黑名单、奖金 ≥ 下限；发送时段 09:00–21:00，超出顺延；每人每天上限；文案带退订说明。</li>
-      <li>风控暂缓发奖的名次：不发提醒；人工放款后按新批次走同样流程。</li>
-    </ul></div>`;
-}
+
 
 /* ---------- 视图切换 ---------- */
 $('#viewSeg').addEventListener('click',e=>{ const t=e.target.closest('button'); if(!t) return; S.view=t.dataset.v;
   document.querySelectorAll('#viewSeg button').forEach(x=>x.classList.toggle('on',x===t));
-  ['h5','adm','doc'].forEach(v=>$('#v-'+v).hidden=v!==S.view);
+  ['h5','adm'].forEach(v=>$('#v-'+v).hidden=v!==S.view);
   try{localStorage.setItem('lbView',S.view);}catch(_){}
 });
-renderH5(); renderAdm(); renderDoc(); showHome(true); maybeRewardPop();
+renderH5(); renderAdm(); showHome(true); maybeRewardPop();
 try{ const v=localStorage.getItem('lbView'); if(v&&v!=='h5'){ const btn=document.querySelector(`#viewSeg [data-v="${v}"]`); btn&&btn.click(); } }catch(_){}
 })();
 </script>

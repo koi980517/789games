@@ -93,7 +93,7 @@ tr.cmp.cmp7 td{background:#f4f7fb}tr.cmp td{background:#fafafa;color:var(--muted
 .cmpchk{flex-direction:row!important;align-items:center;gap:4px!important;color:var(--fg)!important;align-self:center}
 @media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
 </style></head><body>
-<div class="proto"><span><b>数据报表中心原型 · v2.7</b>：取款改为 笔数 / 金额 / 平均（小时表、累计表、日表统一）；v2.6 前50名「当日用户游戏系统」h5 拆成 ios h5 / 安卓 h5；v2.5 「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
+<div class="proto"><span><b>数据报表中心原型 · v2.8</b>：取款恢复为 人数 / 金额 / 人均（撤回 v2.7）；佣金明细移除「人数」列；v2.6 前50名「当日用户游戏系统」h5 拆成 ios h5 / 安卓 h5；v2.5 「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
 <header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
 <div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
@@ -136,9 +136,9 @@ depAmount:["充值 · 金额","按成功到账时间统计的充值订单金额�
 depDailyAvg:["充值 · 平均日存","口径表未定义。上一版为「所选区间平均每天的充值金额」，只在合计行有意义（待确认 Q2）。","区间充值金额 ÷ 天数"],
 depAvg:["充值 · 人均","","充值金额 ÷ 充值人数"],
 wdUsers:["取款 · 人数","按成功出款时间，提款成功的去重人数。",""],
-wdCount:["取款 · 笔数","按成功出款时间统计的提款订单数（小时表 / 累计表 / 日表统一用笔数）。",""],
+wdCount:["取款 · 笔数","日表需求表此列为笔数（小时表为人数，待确认 Q3）。按成功出款时间统计的提款订单数。",""],
 wdAmount:["取款 · 金额","按成功出款时间统计的提款金额合计。",""],
-wdAvg:["取款 · 平均","每笔平均提款金额。","取款金额 ÷ 取款笔数"],
+wdAvg:["取款 · 人均 / 平均","小时表：提款金额 ÷ 提款人数。日表需求表公式为金额 ÷ 笔数。","提款金额 ÷ 人数（日表 ÷ 笔数）"],
 net:["盈亏金额 / 存提差","口径表「充提差额」：不等于游戏收入或利润。","充值金额 − 提款金额"],
 netRate:["杀率 / 存提差÷充值","口径表「充提差额率」，不是游戏杀率；日表需求表沿用旧名「杀率」，建议改名（Q5）。","充提差额 ÷ 充值金额"],
 fissionUsers:["裂变 · 人数","通过代理及邀请好友系统来的充值人数（需求表批注）。口径表未定义。",""],
@@ -179,9 +179,9 @@ depUsers:["充值 · 人数","00:00 到该整点充值成功的去重人数；�
 depAmount:["充值 · 金额","00:00 到该整点成功到账的充值金额合计。",""],
 depDailyAvg:["充值 · 平均日存","累计表不出（日表合计行才有意义）。",""],
 depAvg:["充值 · 人均","用累计后的金额和人数重算。","累计充值金额 ÷ 累计充值人数"],
-wdCount:["取款 · 笔数","00:00 到该整点成功出款订单数；0-24 = 日表取款笔数。",""],
+wdUsers:["取款 · 人数","00:00 到该整点提款成功的去重人数；0-24 = 日表取款人数。",""],
 wdAmount:["取款 · 金额","00:00 到该整点成功出款金额合计；0-24 = 日表取款金额。",""],
-wdAvg:["取款 · 平均","用累计后的金额和笔数重算。","累计取款金额 ÷ 累计取款笔数"],
+wdAvg:["取款 · 人均","用累计后的金额和人数重算。","累计取款金额 ÷ 累计取款人数"],
 net:["盈亏金额","累计充值金额 − 累计取款金额；0-24 = 日表盈亏金额。","累计充值 − 累计取款"],
 netRate:["杀率","用累计值重算（实为存提差率）；0-24 = 日表杀率。","累计存提差 ÷ 累计充值"],
 retUsers:["留存明细 · 人数","累计充值人数 − 累计首充人数；0-24 = 日表留存人数。","累计充值人数 − 累计首充人数"],
@@ -205,21 +205,21 @@ bDep:["充值金额","00:00 到该整点成功到账充值金额，和「每小�
 };
 const G_H=[["时间",[["time",""]]],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首笔",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"]]],["转换率",[["convRate",""]]],["当日充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdUsers","人数"],["wdAmount","金额"],["wdAvg","人均"]]],["存提差",[["net",""]]],["存提差/充值",[["netRate",""]]],["留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总投注"],["betMultiple","倍数（投注/充值）"],["killRate","杀率（1-rtp）"],["ggr","ggr"]]],["活动奖金",[["promoAmount","金额"],["promoRatio","比例（奖金/充值）"]]]];
 const G_D=[["日期",[["time",""]]],["星期",[["weekday",""]]],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首充",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"],["fdAgent","代理"],["fdOfficial","官网"]]],["转换率",[["convRate",""]]],["当日首充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdCount","笔数"],["wdAmount","金额"],["wdAvg","平均"]]],["盈亏金额",[["net",""]]],["杀率",[["netRate",""]]],["裂变",[["fissionUsers","人数"],["fissionRate","比率"]]],["裂变佣金明细",[["commUsers","人数"],["commAmount","金额"],["commRatio","占比"]]],["充值留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总打码"],["betMultiple","倍数"],["killRate","盈利率（杀率）"],["ggr","金额（ggr）"]]],["优惠",[["promoAmount","金额"],["promoRatio","比例"]]]];
-const G_SHEET=cum=>[["时间",[["time","日期"],["weekday","星期"]].concat(cum?[["slot","时段"]]:[])],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首笔",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"],["fdAgent","代理"],["fdOfficial","官网"]]],["转换率",[["convRate",""]]],["当日首充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["三充",[["tdUsers","人数"],["tdAmount","金额"],["tdAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdCount","笔数"],["wdAmount","金额"],["wdAvg","平均"]]],["盈亏金额",[["net",""]]],["杀率",[["netRate",""]]],["裂变",[["fissionUsers","人数"],["fissionRate","比率"]]],["佣金明细",[["commUsers","人数"],["commAmount","金额"],["commRatio","占比"]]],["留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总打码"],["betMultiple","倍数"],["killRate","盈利率"],["ggr","金额"]]],["优惠",[["promoAmount","金额"],["promoRatio","比例"]]]];
+const G_SHEET=cum=>[["时间",[["time","日期"],["weekday","星期"]].concat(cum?[["slot","时段"]]:[])],["当时人数",[["online","在线"],["bettors","投注"],["registers","注册"]]],["首笔",[["fdUsers","人数"],["fdAmount","金额"],["fdAvg","人均"],["fdAgent","代理"],["fdOfficial","官网"]]],["转换率",[["convRate",""]]],["当日首充总额",[["fdtUsers","人数"],["fdtAmount","金额"],["fdtAvg","人均"]]],["三充",[["tdUsers","人数"],["tdAmount","金额"],["tdAvg","人均"]]],["充值",[["depUsers","人数"],["depAmount","金额"],["depDailyAvg","平均日存"],["depAvg","人均"]]],["取款",[["wdUsers","人数"],["wdAmount","金额"],["wdAvg","人均"]]],["盈亏金额",[["net",""]]],["杀率",[["netRate",""]]],["裂变",[["fissionUsers","人数"],["fissionRate","比率"]]],["佣金明细",[["commAmount","金额"],["commRatio","占比"]]],["留存明细",[["retUsers","人数"],["retAmount","金额"],["retAvg","人均"]]],["留存人数占比",[["retRatio",""]]],["充提笔数",[["depCount","充值"],["depCountAvg","人均笔数"],["wdCountB","提款"]]],["平台报表",[["validBet","总打码"],["betMultiple","倍数"],["killRate","盈利率"],["ggr","金额"]]],["优惠",[["promoAmount","金额"],["promoRatio","比例"]]]];
 /* 改动标注：对照对象 = 每小时累计表对 v2.0 原型，日表对 v1.0 现网。new 新增 / ren 改名 / chg 口径或结构调整 */
 const CHG={
  hourlyCum:{vs:"v2.0 原型（列同现网「每小时数据」33 列）",cols:{
   "g:时间":["chg","原一列「11-16 0-1」，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["chg","时段 0-2、0-4 … 0-24，每 2 小时一行（同在线表格；原每小时一行 0-1 … 0-24）"],
   "g:当时人数":["ren","原「累计人数」"],online:["chg","原 = 0 点到该小时末活跃去重；改为该时段末整点的在线快照（同在线表格）"],
-  fdAgent:["new","首笔 · 代理"],fdOfficial:["new","首笔 · 官网"],"g:当日首充总额":["ren","原「当日充总额」"],wdCount:["chg","原「人数」，改为「笔数」（同每日数据）"],wdAvg:["chg","原「人均」= 金额 ÷ 人数，改为「平均」= 金额 ÷ 笔数"],"g:三充":["new","三充：人数 / 金额 / 人均"],
-  "g:盈亏金额":["ren","原「存提差」"],"g:杀率":["ren","原「存提差/充值」"],"g:裂变":["new","裂变：人数 / 比率"],"g:佣金明细":["new","佣金明细：人数 / 金额 / 占比"],
+  fdAgent:["new","首笔 · 代理"],fdOfficial:["new","首笔 · 官网"],"g:当日首充总额":["ren","原「当日充总额」"],"g:三充":["new","三充：人数 / 金额 / 人均"],
+  "g:盈亏金额":["ren","原「存提差」"],"g:杀率":["ren","原「存提差/充值」"],"g:裂变":["new","裂变：人数 / 比率"],"g:佣金明细":["new","佣金明细：金额 / 占比（在线表格的「人数」列移除）"],
   validBet:["ren","原「总投注」"],betMultiple:["ren","原「倍数（投注/充值）」"],killRate:["ren","原「杀率（1-rtp）」"],ggr:["ren","原「ggr」"],
   "g:优惠":["ren","原「活动奖金」"],promoRatio:["ren","原「比例（奖金/充值）」"],retAmount:["chg","公式按在线表格：充值 − 当日首充总额"]},
   page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序；按时间点比对默认倒序"],["chg","列结构改为和「每日数据」一样（在线表格 44 列）"],["chg","改为每 2 小时一行：0-2、0-4 … 0-24，每天 12 行（同在线表格）"],["keep","保留「较昨日」对比行（v2.1）"],["new","新增「较近7日均」对比行：和前 7 天同一时段的平均值比较（▲/▼ + 百分比，比率列为 pp），筛选栏「显示较近7日均」"],["new","新增「按时间点比对」：选一个时段，每天一行（对应在线表格「数据表横向日期比对」）"]]},
  daily:{vs:"v1.0 现网「每日数据」",cols:{
   "g:时间":["chg","原「日期」「星期」两个单独表头，合并到「时间」下"],online:["chg","原 = 平台报表活跃用户；在线表格取次日 00:00 在线快照（待确认）"],
-  "g:三充":["new","三充：人数 / 金额 / 人均（原需求表隐藏、现网未做）"],
-  "g:佣金明细":["ren","原「裂变佣金明细」"],"g:留存明细":["ren","原「充值留存明细」"],killRate:["ren","原「盈利率（杀率）」"],ggr:["ren","原「金额（ggr）」"],retAmount:["chg","公式按在线表格：充值 − 当日首充总额"]},
+  "g:三充":["new","三充：人数 / 金额 / 人均（原需求表隐藏、现网未做）"],wdUsers:["chg","原「笔数」，改为人数"],wdAvg:["chg","原「平均」= 金额 ÷ 笔数，改为「人均」= 金额 ÷ 人数"],
+  "g:佣金明细":["ren","原「裂变佣金明细」；移除「人数」列，只留 金额 / 占比"],"g:留存明细":["ren","原「充值留存明细」"],killRate:["ren","原「盈利率（杀率）」"],ggr:["ren","原「金额（ggr）」"],retAmount:["chg","公式按在线表格：充值 − 当日首充总额"]},
   page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"],["del","删除最后一行「合计」（在线表格没有）"],["chg","0-24 行 = 每日数据：日表取「每小时数据（累计）」当天 0-24 行"]]},
  hourlyBonusCum:{vs:"v2.0 原型（列同现网「每小时彩金」）",cols:{
   "g:时间":["chg","原一列，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["chg","时段 0-2、0-4 … 0-24，每 2 小时一行（原每小时一行）"],
@@ -232,11 +232,11 @@ const CHG={
   page:[["chg","「当日用户游戏系统」h5 扩展为 ios h5 或 安卓 h5"]]},
  hourly:{vs:"v1.0 现网「每小时数据」",cols:{
   "g:时间":["chg","原一列「11-16 00:00」，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["new","时段 00:00-01:00 … 23:00-24:00（仍每小时一行）"],
-  fdAgent:["new","首笔 · 代理"],fdOfficial:["new","首笔 · 官网"],"g:当日首充总额":["ren","原「当日充总额」"],wdCount:["chg","原「人数」，改为「笔数」（同每日数据）"],wdAvg:["chg","原「人均」= 金额 ÷ 人数，改为「平均」= 金额 ÷ 笔数"],"g:三充":["new","三充：人数 / 金额 / 人均"],
-  "g:盈亏金额":["ren","原「存提差」"],"g:杀率":["ren","原「存提差/充值」"],"g:裂变":["new","裂变：人数 / 比率"],"g:佣金明细":["new","佣金明细：人数 / 金额 / 占比"],
+  fdAgent:["new","首笔 · 代理"],fdOfficial:["new","首笔 · 官网"],"g:当日首充总额":["ren","原「当日充总额」"],"g:三充":["new","三充：人数 / 金额 / 人均"],
+  "g:盈亏金额":["ren","原「存提差」"],"g:杀率":["ren","原「存提差/充值」"],"g:裂变":["new","裂变：人数 / 比率"],"g:佣金明细":["new","佣金明细：金额 / 占比（在线表格的「人数」列移除）"],
   validBet:["ren","原「总投注」"],betMultiple:["ren","原「倍数（投注/充值）」"],killRate:["ren","原「杀率（1-rtp）」"],ggr:["ren","原「ggr」"],
   "g:优惠":["ren","原「活动奖金」"],promoRatio:["ren","原「比例（奖金/充值）」"]},
-  page:[["chg","表头和「每小时数据（累计）」一致：33 列 → 45 列（同在线表格 44 列 + 时段）"],["keep","仍每小时一行，数值为该小时内的数；当日首充总额、转换率仍从 00:00 累计；留存金额仍 = 本小时充值 − 本小时首笔金额"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]},
+  page:[["chg","表头和「每小时数据（累计）」一致：33 列 → 44 列（在线表格 44 列 + 时段，去掉佣金明细 · 人数）"],["keep","仍每小时一行，数值为该小时内的数；当日首充总额、转换率仍从 00:00 累计；留存金额仍 = 本小时充值 − 本小时首笔金额"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]},
  hourlyBonus:{vs:"v1.0 现网「每小时彩金」",cols:{
   "g:时间":["chg","原一列「11-16 00:00」，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["new","时段 00:00-01:00 … 23:00-24:00（仍每小时一行）"],
   ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],totalRatio:["new","汇总 · 占充值"]},
@@ -319,7 +319,7 @@ function rowFrom(o,d,hEnd,regCum,sheet){
  r.ggr=o.ggr;
  const fdt=dayFdt(d,hEnd);r.fdtUsers=fdt.u;r.fdtAmount=fdt.a;r.fdtAvg=div(fdt.a,fdt.u);
  r.convRate=div(fdt.u,regCum);
- r.fdAvg=div(r.fdAmount,r.fdUsers);r.depAvg=div(r.depAmount,r.depUsers);r.depDailyAvg=null;r.wdCount=r.wdCountB;r.wdAvg=div(r.wdAmount,r.wdCount); // v2.7：取款统一用笔数
+ r.fdAvg=div(r.fdAmount,r.fdUsers);r.depAvg=div(r.depAmount,r.depUsers);r.depDailyAvg=null;r.wdAvg=div(r.wdAmount,r.wdUsers);
  r.net=r.depAmount-r.wdAmount;r.netRate=div(r.net,r.depAmount);
  r.retUsers=r.depUsers-r.fdUsers;r.retAmount=r.depAmount-r.fdAmount;r.retAvg=div(r.retAmount,r.retUsers);r.retRatio=div(r.retUsers,r.depUsers);
  r.depCountAvg=div(r.depCount,r.depUsers);r.betMultiple=div(r.validBet,r.depAmount);r.killRate=div(r.ggr,r.validBet);r.promoRatio=div(r.promoAmount,r.depAmount);
@@ -380,6 +380,8 @@ function infoOf(k){
  if(!cur.daily&&!cur.cum&&H1[k])return H1[k];
  if(X[k])return X[k];
  if(cur.daily&&k==="online")return ["在线","在线表格取次日 00:00 那一刻的在线人数快照（原现网 = 平台报表活跃用户，待确认）。",""];
+ if(cur.daily&&k==="wdUsers")return ["取款 · 人数","按成功出款时间，提款成功的去重人数（原现网为笔数）。",""];
+ if(cur.daily&&k==="wdAvg")return ["取款 · 人均","","取款金额 ÷ 取款人数"];
  return base[k]||X[k]||[k,"",""];}
 function cell(r,k){
  const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);

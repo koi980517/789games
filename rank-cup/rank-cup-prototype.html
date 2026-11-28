@@ -370,7 +370,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="wrap">
   <div class="top">
     <h1>VIP 排行榜</h1>
-    <span class="ver">原型 v0.14 · 2026-11-28 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
+    <span class="ver">原型 v0.15 · 2026-11-28 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
     <div class="seg" role="tablist" id="viewSeg">
       <button data-v="h5" class="on">前台 H5</button>
       <button data-v="adm">运营后台</button>
@@ -1478,7 +1478,7 @@ function renderDoc(){
       <li>新增<b>排名指标</b>（所有榜可选）：有效投注（默认）/ <b>总赢额 = 总派彩 − 总投注</b>。总赢额只算计入的注单，结果为 0、和局、对冲、取消的注单不记录为有效投注；总赢额 ≤ 0 不上榜。</li>
       <li>示例（Weekend Winners）：Slot + Casino，按总赢额，每日 Top 500，每期奖池 ₱200,000：#1 ₱50,000、#2 ₱20,000、#3 ₱10,000、#4–10 ₱5,000、#11–20 ₱1,000、#21–50 ₱500、#51–100 ₱300、#101–200 ₱200、#201–300 ₱100、#301–500 ₱75；稽核 3 倍（可配）。</li>
       <li>发奖：每个开放日的次日 10:00 自动发放。</li>
-      <li>风险：按赢额排名会奖励高赢家，返还率和预算波动大，需财务评估；对冲在赢额榜上影响较小，但跨账号对冲仍按风控预警处理。</li>
+      <li>风险：按赢额排名会奖励高赢家，返还率和预算波动大，配置奖池时注意；对冲在赢额榜上影响较小，但跨账号对冲仍按风控预警处理。</li>
     </ul></div>
   <div class="card"><h3>机器人（补位展示）</h3>
     <ul>
@@ -1548,14 +1548,15 @@ function renderDoc(){
     </table></div>
   <div class="card"><h3>待确认 / 风险</h3>
     <ul>
-      <li><span class="pill w">待确认</span> OTG 是单一钱包还是转账钱包：转账钱包无法实时计分，前台榜单只能 T+1。</li>
-      <li><span class="pill w">待确认</span> 各厂商注单是否带“桌台 + 局号 + 下注项”字段，这是对冲判定的前提；OTG 需要对接文档确认。</li>
+      <li><span class="pill w">待确认 · 需求方</span> 适用站点：只用于 789games，还是 789bingo 也要上？（若上，Bingo 类游戏需加回指定游戏范围）</li>
+      <li><span class="pill w">待确认 · 需求方</span> 机器人的奖金是否同样在排行榜显示。其余机器人参数后台可配；已定：机器人所占名次的奖金按「名次空缺处理」执行。</li>
+      <li><span class="pill w">待确认 · 技术</span> OTG 是单一钱包还是转账钱包：转账钱包无法实时计分，前台榜单只能 T+1。</li>
+      <li><span class="pill w">待确认 · 技术</span> 各厂商注单是否带“桌台 + 局号 + 下注项”字段，这是对冲判定的前提；OTG 需要对接文档确认。</li>
+      <li><span class="pill w">待确认 · 技术</span> App 新增 <code>target=leaderboard</code> 的排期；未支持前用 <code>promo_detail</code> + activity_id。</li>
       <li><span class="pill b">资金</span> 发奖幂等（活动ID + 期号 + 会员ID 唯一键），防止重复派彩。</li>
-      <li><span class="pill b">资金</span> 返还率与实时返水叠加后的总成本，需财务确认上限（参考 PAGCOR 返水 1.5%）。</li>
       <li><span class="pill w">合规</span> 前台活动期写法沿用 “Promo Period” 格式；奖金为彩金非现金。</li>
       <li><span class="pill n">稳定性</span> 榜单查询走缓存（每 5 分钟刷新），不在投注链路同步算名次；注意 Redis 容量问题。</li>
       <li><span class="pill n">多端</span> H5 / iOS / Android / Flutter 需逐端验收倒计时和名次刷新。</li>
-      <li><span class="pill w">待确认</span> 机器人补位规则（补足人数、数值增长、排位方式、前台是否披露）：11-28（周六）与运营确认。已定：机器人所占名次的奖金按「名次空缺处理」执行。</li>
     </ul></div>
   <div class="card" style="border-style:dashed;opacity:.85"><h3>二期（不在一期范围）· 推送 / 短信提醒</h3>
     <p style="font-size:12px;color:#666">一期发奖后只通过「到账弹窗」触达，不发推送 / 短信。以下为二期设计参考，后台「推送管理 › 奖励发放推送」「营销短信 › 奖励发放提醒」页面置灰。</p>

@@ -370,7 +370,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="wrap">
   <div class="top">
     <h1>VIP 排行榜</h1>
-    <span class="ver">原型 v0.18 · 2026-11-28 · <a href="https://wiki.bbops.ph/pages/viewpage.action?pageId=56689721" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">PRD</a> · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
+    <span class="ver">原型 v0.19 · 2026-11-28 · <a href="https://wiki.bbops.ph/pages/viewpage.action?pageId=56689721" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">PRD</a> · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
     <div class="seg" role="tablist" id="viewSeg">
       <button data-v="h5" class="on">前台 H5</button>
       <button data-v="adm">运营后台</button>
@@ -397,7 +397,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
       </div></div>
       <div class="note-side">
         <div class="card">
-          <h3>演示</h3>
+          <h3>演示用（非产品功能）</h3>
           <p style="font-size:12px;color:#666;margin:0 0 8px">规则与口径见 <a href="https://wiki.bbops.ph/pages/viewpage.action?pageId=56689721" target="_blank" rel="noopener">PRD（Wiki）</a>。</p>
           <div class="filter" style="margin:0 0 8px"><label>我的状态 <select id="meMode">
                 <option value="in">已上榜（奖励区内）</option>
@@ -426,10 +426,6 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
           <div class="m"><span>游戏管理</span><span>▾</span></div>
           <div class="m"><span>活动配置 <span class="badge">5</span></span><span>▴</span></div>
           <button class="sub on" data-ap="list">排行榜活动</button>
-          <div class="m"><span>推送管理</span><span>▴</span></div>
-          <button class="sub" data-ap="push">奖励发放推送（二期）</button>
-          <div class="m"><span>营销短信</span><span>▴</span></div>
-          <button class="sub" data-ap="sms">奖励发放提醒（二期）</button>
           <div class="m"><span>代理结算</span><span>▾</span></div>
         </div>
         <div class="main">
@@ -728,9 +724,9 @@ function admPush(){
   ${nflow()}
   <div class="alert" style="margin:4px 0 12px">${WAKE}</div>
   <div class="frm">
-    <div class="l">功能开关</div><div class="v"><label class="sw"><input type="checkbox" data-nf="push.on" ${p.on?'checked':''} aria-label="奖励发放推送开关"><i></i></label><span class="pill ${p.on?'ok':'n'}">${p.on?'已开启':'已关闭'}</span><span class="hint">关闭后两次推送都不发；到账弹窗不受影响。短信判断照常（关闭推送时，短信在发奖后 +${p.gap+S.ntf.sms.wait} 小时发）。</span></div>
-    <div class="l">触发</div><div class="v"><span>排行榜每期自动发奖完成后（10:00 GMT+8）按发奖名单触发</span><span class="hint">只发给本批次实际到账的用户；风控暂缓发奖的名次不发，人工放款后再补发一次推送 ①。机器人账号不发。</span></div>
-    <div class="l">推送通道</div><div class="v"><span>EngageLab（App 推送）</span><span class="hint">没有推送 token 的用户（只用 H5、卸载 App、关闭通知）收不到推送，直接进入短信判断。</span></div>
+    <div class="l">功能开关</div><div class="v"><label class="sw"><input type="checkbox" data-nf="push.on" ${p.on?'checked':''} aria-label="奖励发放推送开关"><i></i></label><span class="pill ${p.on?'ok':'n'}">${p.on?'已开启':'已关闭'}</span></div>
+    <div class="l">触发</div><div class="v"><span>排行榜每期自动发奖完成后（10:00 GMT+8）按发奖名单触发</span></div>
+    <div class="l">推送通道</div><div class="v"><span>EngageLab（App 推送）</span></div>
     <div class="l"><span class="req">*</span> 第一次推送</div><div class="v" style="display:block">
       <label class="chk"><input type="checkbox" data-nf="push.p1" ${p.p1?'checked':''}> 发奖时推送</label> <span style="color:#555">· 10:00 · 对象：本批次全部获奖用户（含长期未登录）</span>
       <div style="margin-top:6px"><input class="w" type="text" data-nf="push.t1" value="${esc(p.t1)}" aria-label="推送①标题" maxlength="50"></div>
@@ -740,8 +736,8 @@ function admPush(){
       <select data-nf="push.gap" aria-label="间隔小时">${[2,3,4,6,8].map(n=>`<option value="${n}" ${n===p.gap?'selected':''}>${n}</option>`).join('')}</select> 小时（${t.t2}）· 对象：<b>到这时仍未唤起</b>的获奖用户
       <div style="margin-top:6px"><input class="w" type="text" data-nf="push.t2" value="${esc(p.t2)}" aria-label="推送②标题" maxlength="50"></div>
       <div style="margin-top:6px"><textarea data-nf="push.b2" aria-label="推送②内容" maxlength="150">${esc(p.b2)}</textarea></div></div>
-    <div class="l">变量</div><div class="v"><span class="hint" style="margin:0"><code>{nickname}</code> 昵称 · <code>{board}</code> 榜单名 · <code>{rank}</code> 名次 · <code>{amount}</code> 奖金 · <code>{period}</code> 期次。同一用户同批次多个榜获奖合并成一条：{board} 显示「VIP Rank Cup 等 2 个榜」，{amount} 为合计，{rank} 取最好名次。</span></div>
-    <div class="l">点击跳转</div><div class="v"><span>排行榜页 · 对应 Tab 的 Previous</span><span class="hint">未登录先登录再跳转；进入后弹到账弹窗。</span></div>
+    <div class="l">变量</div><div class="v"></div>
+    <div class="l">点击跳转</div><div class="v"><span>排行榜页 · 对应 Tab 的 Previous</span></div>
     <div class="l">预览</div><div class="v"><div class="npv" id="ntfPv">${ntfPreview('push')}</div></div>
     <div class="l"></div><div class="v"><button class="btn pri" data-nsave="push">保存</button><span id="ntfDirty" style="display:contents">${ntfDirty('push')}</span></div>
   </div></div></div>
@@ -761,20 +757,20 @@ function admSms(){
   <div class="alert" style="margin:4px 0 12px">${WAKE}</div>
   <div class="frm">
     <div class="l">功能开关</div><div class="v"><label class="sw"><input type="checkbox" data-nf="sms.on" ${sm.on?'checked':''} aria-label="奖励发放提醒开关"><i></i></label><span class="pill ${sm.on?'ok':'n'}">${sm.on?'已开启':'已关闭'}</span></div>
-    <div class="l"><span class="req">*</span> 触发条件</div><div class="v"><span>${p.on&&p.p2?'第二次推送':'第二次推送时间点（推送已关闭）'}后</span><select data-nf="sms.wait" aria-label="等待小时">${[1,2,3,4,6].map(n=>`<option value="${n}" ${n===sm.wait?'selected':''}>${n}</option>`).join('')}</select><span>小时仍未唤起 → 发短信（按当前设置为 <b>${t.sms}</b>）</span><span class="hint">没有推送 token 的用户同一时间判断。推送设置在 <button type="button" class="btn lnk" data-ap2="push">推送管理 › 奖励发放推送</button>。</span></div>
-    <div class="l"><span class="req">*</span> 发送时段</div><div class="v"><input type="time" data-nf="sms.w0" value="${sm.w0}" aria-label="开始"> – <input type="time" data-nf="sms.w1" value="${sm.w1}" aria-label="结束"><span class="hint">超出时段顺延到下一个时段开始时发送，顺延前再判断一次是否已唤起。</span></div>
+    <div class="l"><span class="req">*</span> 触发条件</div><div class="v"><span>${p.on&&p.p2?'第二次推送':'第二次推送时间点（推送已关闭）'}后</span><select data-nf="sms.wait" aria-label="等待小时">${[1,2,3,4,6].map(n=>`<option value="${n}" ${n===sm.wait?'selected':''}>${n}</option>`).join('')}</select><span>小时仍未唤起 → 发短信（按当前设置为 <b>${t.sms}</b>）</span></div>
+    <div class="l"><span class="req">*</span> 发送时段</div><div class="v"><input type="time" data-nf="sms.w0" value="${sm.w0}" aria-label="开始"> – <input type="time" data-nf="sms.w1" value="${sm.w1}" aria-label="结束"></div>
     <div class="l">发送对象</div><div class="v" style="display:block;line-height:1.9">
       <label class="chk dis"><input type="checkbox" checked disabled> 已绑定手机号</label>
       <label class="chk dis"><input type="checkbox" checked disabled> 未退订营销短信</label>
       <label class="chk dis"><input type="checkbox" checked disabled> 非黑名单 / 未冻结</label><br>
-      本批次奖金合计 ≥ ₱<input type="number" min="0" data-nf="sms.minAmt" value="${sm.minAmt}" style="width:80px" aria-label="最低奖金"> 才发<span class="hint">奖金太小的不发，控制短信成本；填 0 表示全部发。</span></div>
-    <div class="l">频控</div><div class="v">同一用户每天最多 <input type="number" min="1" max="3" data-nf="sms.cap" value="${sm.cap}" style="width:56px" aria-label="每天上限"> 条奖励提醒短信<span class="hint">同一批次多个榜获奖合并成一条；与其他营销短信共用全局每日上限。</span></div>
+      本批次奖金合计 ≥ ₱<input type="number" min="0" data-nf="sms.minAmt" value="${sm.minAmt}" style="width:80px" aria-label="最低奖金"> 才发</div>
+    <div class="l">频控</div><div class="v">同一用户每天最多 <input type="number" min="1" max="3" data-nf="sms.cap" value="${sm.cap}" style="width:56px" aria-label="每天上限"> 条奖励提醒短信</div>
     <div class="l">短信通道</div><div class="v"><span>M360（现有营销短信通道）· Sender ID：789games</span></div>
     <div class="l"><span class="req">*</span> 短信文案</div><div class="v" style="display:block"><textarea data-nf="sms.tpl" aria-label="短信文案" maxlength="300">${esc(sm.tpl)}</textarea>
       <div class="hint" id="smsCnt">${smsCount()}</div>
       <div class="hint">变量：<code>{amount}</code> <code>{board}</code> <code>{rank}</code> <code>{link}</code>（短链，打开排行榜 Previous，未登录先登录）。英文，不用 emoji（会按 Unicode 计费，70 字符一条）。</div></div>
     <div class="l">预览</div><div class="v"><div class="npv" id="ntfPv" style="background:#fff;border:1px solid #e3e8ec">${ntfPreview('sms')}</div></div>
-    <div class="l">单价</div><div class="v">₱<input type="number" step="0.01" min="0" data-nf="sms.price" value="${sm.price}" style="width:70px" aria-label="单价"> / 条<span class="hint">按通道合同填，用于下方费用估算。</span></div>
+    <div class="l">单价</div><div class="v">₱<input type="number" step="0.01" min="0" data-nf="sms.price" value="${sm.price}" style="width:70px" aria-label="单价"> / 条</div>
     <div class="l"></div><div class="v"><button class="btn pri" data-nsave="sms">保存</button><span id="ntfDirty" style="display:contents">${ntfDirty('sms')}</span></div>
   </div></div></div>
   <div class="box"><div class="bh"><span>发送记录（按发奖批次）</span><span><button class="btn">导出</button></span></div><div class="bb">
@@ -811,16 +807,14 @@ function maybeRewardPop(){
 function admList(){
   const rows=S.boards.map((b,i)=>b.status==='草稿'?'':`<tr><td>${b.id}</td><td>${esc(b.name)}</td><td>${esc(b.tab||'')} <small style="color:#888">#${b.sort}</small></td><td style="white-space:nowrap">${catText(b)}</td><td style="white-space:nowrap">${perLabel(b)}${isWin(b)?'<br><small style="color:#888">按总赢额</small>':''}</td><td>${b.prov.join('、')}</td><td style="white-space:nowrap">${b.start}<br>~ ${b.end}</td><td class="r">${fmt(poolOf(b))}</td><td class="r">${cycles(b)}</td><td class="r">${fmt(poolOf(b)*cycles(b))}</td><td>Top ${lastRank(b)}</td><td>${b.on===false&&b.status!=='草稿'?'<span class="pill n">已关闭</span>':`<span class="pill ${b.status==='草稿'?'n':b.status==='未开始'?'w':'ok'}">${b.status}</span>`}</td><td><label class="sw" title="${b.status==='草稿'?'草稿需先保存并发布':''}"><input type="checkbox" data-on="${i}" ${b.on!==false&&b.status!=='草稿'?'checked':''} ${b.status==='草稿'?'disabled':''} aria-label="开启或关闭 ${esc(b.name)}"><i></i></label></td><td class="ops"><button class="btn lnk" data-edit="${i}">编辑</button><button class="btn lnk" data-data="${i}">榜单数据</button></td></tr>`).join('');
   const pc=S.pwCfg;
-  const entry=`<div class="box"><div class="bh"><span>入口设置</span><span style="font-weight:400;color:#888;font-size:12px">对所有榜单生效</span></div><div class="bb"><div class="frm">
-    <div class="l">首页挂件（右侧）</div><div class="v"><label class="chk"><input type="checkbox" data-pw="on" id="pw-on" ${pc.on?'checked':''}> 开启</label><span class="pill ${pc.on?'ok':'n'}">${pc.on?'已开启':'已关闭'}</span><span class="hint">只能开启或关闭。图标、名称（默认「排行榜活动」）为前端默认，后台不可改；点击打开排序第 1 的榜单 Tab。开启后加入现有首页挂件（Lucky Spin / Daily Gift / Invite Now），最多同时显示 3 个，超过时每 3 秒自动轮播；排序按资格分档。关闭后挂件里不显示 Rank Cup，其他挂件不受影响。</span></div>
-    <div class="l">角标规则</div><div class="v" style="display:block;font-size:12px;line-height:1.7;color:#555">上期获奖（10:00 已自动到账，当天内）：显示 <b>Won</b> + 抖动，点击打开该 Tab 的 Previous 查看<br>已上榜：显示我的名次（如 #14）<br>本期未上榜：显示 Join<br>不满足 VIP 门槛：显示 VIP3+，图标置灰，排在最后</div>
-    <div class="l">首页 Banner</div><div class="v"><span class="hint" style="width:auto">Rank Cup 的 Banner 图在后台首页 Banner 配置中新增并开启，位置不指定。</span></div>
+  const entry=`<div class="box"><div class="bh"><span>入口设置</span></div><div class="bb"><div class="frm">
+    <div class="l">首页挂件（右侧）</div><div class="v"><label class="chk"><input type="checkbox" data-pw="on" id="pw-on" ${pc.on?'checked':''}> 开启</label><span class="pill ${pc.on?'ok':'n'}">${pc.on?'已开启':'已关闭'}</span></div>
   </div></div></div>`;
   return entry+`<div class="box"><div class="bh"><span>排行榜活动列表</span><span><button class="btn pri" data-new="1">+ 新增排行榜</button></span></div><div class="bb">
   <div class="filter"><label>活动名称 <input type="text" id="f1"></label><label>游戏类型 <select id="f2"><option>全部</option><option>Slot</option><option>Casino</option></select></label><label>活动类型 <select id="f3"><option>全部</option><option>日榜</option><option>周榜</option><option>周末榜</option></select></label><label>状态 <select id="f4"><option>全部</option><option>未开始</option><option>预热中</option><option>进行中</option><option>已结束</option><option>已下架</option></select></label><button class="btn pri">查询</button></div>
   <div class="tw"><table class="t"><tr><th>活动ID</th><th>活动名称</th><th>前台 Tab / 排序</th><th>游戏类型</th><th>活动类型</th><th>计入厂商</th><th>活动日期 (GMT+8)</th><th class="r">每期奖池</th><th class="r">期数</th><th class="r">预估总预算</th><th>获奖名次</th><th>状态</th><th>开启 / 关闭</th><th>操作</th></tr>${rows}
   <tr><td>LB2610003</td><td>Slot Weekly 测试</td><td>—</td><td>Slot</td><td>周榜</td><td>JILI</td><td style="white-space:nowrap">2026-10-05<br>~ 2026-10-25</td><td class="r">₱50,000</td><td class="r">3</td><td class="r">₱150,000</td><td>Top 30</td><td><span class="pill n">已结束</span></td><td><label class="sw"><input type="checkbox" disabled aria-label="已结束"><i></i></label></td><td class="ops"><button class="btn lnk">查看</button><button class="btn lnk">榜单数据</button></td></tr></table></div>
-  <div class="alert w">状态说明：未开始 → 预热中（前台可见，不计分）→ 进行中 → 已结束（最后一期发奖完成）。<b>进行中的活动只能改素材和文案</b>，时间、厂商、奖池、名次占比锁定，需要调整时先关闭再新建。<br>开启 / 关闭：在列表直接切换，即时生效。关闭后前台立即隐藏该榜单 Tab、停止计分，当期不结算；已结束期次的奖金已于 10:00 自动发放，不受影响。已结束的不可再开启。每次切换写操作日志。</div>
+  
   </div></div>`;
 }
 
@@ -833,59 +827,50 @@ function admEdit(){
   <div class="box"><div class="bh"><span>${b.status==='草稿'?'新增排行榜':'编辑排行榜 · '+esc(b.name)}</span>${b.status==='草稿'?'':`<button class="btn sm" data-preview="${S.edit}">在前台查看 ›</button>`}</div><div class="bb">
   <div class="frm">
     <div class="sec">一、基础信息</div>
-    ${b.status==='草稿'?'':`<div class="l">活动ID</div><div class="v"><b style="font-family:ui-monospace,Menlo,monospace;font-size:13px">${b.id}</b><span class="hint">发布时系统生成的唯一编号，不可修改；用于发奖唯一键、投注记录和操作日志。</span></div>`}
-    <div class="l"><span class="req">*</span> 活动名称</div><div class="v"><input type="text" id="e-name" value="${esc(b.name)}" style="width:260px"><span class="hint">规则弹窗标题，支持多语言（EN / Filipino）</span></div>
-    <div class="l"><span class="req">*</span> 前台 Tab</div><div class="v">名称 <input type="text" id="e-tab" value="${esc(b.tab||'')}" style="width:90px" maxlength="8"> 排序 <input type="number" id="e-sort" min="1" value="${b.sort||1}" style="width:56px"><span class="hint">排行榜页顶部 Tab，≤8 字符，数字小的在前；首页入口默认打开排序第 1 的 Tab。</span></div>
-    <div class="l">游戏类型</div><div class="v">${(ensureG(b),b.cats||[]).map(k=>`<span class="pill n">${catLabel(k)}</span>`).join(' ')||'<span class="hint" style="width:auto">选择指定游戏后自动识别</span>'}<span class="hint">读取后端存储的游戏分类（仅 Slot / Casino 两类），按所选指定游戏自动识别，不手动选择。含 Casino 时显示对冲与轮盘口径。</span></div>
+    ${b.status==='草稿'?'':`<div class="l">活动ID</div><div class="v"><b style="font-family:ui-monospace,Menlo,monospace;font-size:13px">${b.id}</b></div>`}
+    <div class="l"><span class="req">*</span> 活动名称</div><div class="v"><input type="text" id="e-name" value="${esc(b.name)}" style="width:260px"></div>
+    <div class="l"><span class="req">*</span> 前台 Tab</div><div class="v">名称 <input type="text" id="e-tab" value="${esc(b.tab||'')}" style="width:90px" maxlength="8"> 排序 <input type="number" id="e-sort" min="1" value="${b.sort||1}" style="width:56px"></div>
+    <div class="l">游戏类型</div><div class="v">${(ensureG(b),b.cats||[]).map(k=>`<span class="pill n">${catLabel(k)}</span>`).join(' ')||'<span class="hint" style="width:auto">选择指定游戏后自动识别</span>'}</div>
     <div class="l"><span class="req">*</span> 指定游戏</div><div class="v" style="display:block">${gameField(b)}</div>
-    <div class="l">底部游戏框</div><div class="v"><label class="chk"><input type="checkbox" id="e-gbar" ${b.gbarOn!==false?'checked':''}> 显示</label><label class="radio"><input type="radio" name="e-gsrc" value="auto" ${b.gsrc!=='pick'?'checked':''}> 自动：计入范围内热度前 10</label><label class="radio"><input type="radio" name="e-gsrc" value="pick" ${b.gsrc==='pick'?'checked':''}> 手动选择</label>${b.gsrc==='pick'?'<button class="btn sm">选择游戏（复用 Promo 选游戏组件）</button>':''}<span class="hint">复用活动详情页现有的底部悬浮游戏框（PLAY MORE! WIN MORE），样式与交互不改。手动选择时只能选计入范围内的游戏，最多 20 个，可拖动排序。</span></div>
+    <div class="l">底部游戏框</div><div class="v"><label class="chk"><input type="checkbox" id="e-gbar" ${b.gbarOn!==false?'checked':''}> 显示</label><label class="radio"><input type="radio" name="e-gsrc" value="auto" ${b.gsrc!=='pick'?'checked':''}> 自动：计入范围内热度前 10</label><label class="radio"><input type="radio" name="e-gsrc" value="pick" ${b.gsrc==='pick'?'checked':''}> 手动选择</label>${b.gsrc==='pick'?'<button class="btn sm">选择游戏（复用 Promo 选游戏组件）</button>':''}</div>
 
     <div class="sec">二、活动时间（GMT+8）</div>
-    <div class="l"><span class="req">*</span> 活动类型</div><div class="v"><label class="radio"><input type="radio" name="e-per" value="day" ${b.period==='day'?'checked':''}> 日榜（每天 00:00:00 – 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="week" ${b.period==='week'?'checked':''}> 周榜（周一 00:00 – 周日 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="weekend" ${b.period==='weekend'?'checked':''}> 周末榜（开放日可选，每天单独排名）</label>${b.period==='weekend'?`<span style="width:100%"></span>开放日 ${[1,2,3,4,5,6,0].map(d=>`<label class="chk"><input type="checkbox" data-wkd="${d}" ${wkDaysOf(b).includes(d)&&(b.wkDays||[]).length?'checked':''}> ${WDN[d]}</label>`).join('')}<span class="hint">默认周五、周六、周日，可改（如周四 – 周六）。每个开放日 00:00:00 – 23:59:59 单独一期，每日重置；非开放日不计分，前台显示下一轮开始倒计时。</span>`:''}</div>
-    <div class="l"><span class="req">*</span> 排名指标</div><div class="v"><label class="radio"><input type="radio" name="e-metric" value="bet" ${!isWin(b)?'checked':''}> 有效投注（默认）</label><label class="radio"><input type="radio" name="e-metric" value="win" ${isWin(b)?'checked':''}> 总赢额（总派彩 − 总投注）</label><span class="hint">总赢额只统计指定游戏中计入的注单（结果为 0、和局、对冲、取消的注单不记录为有效投注）；总赢额 ≤ 0 不上榜；同额先达到者排前。</span></div>
+    <div class="l"><span class="req">*</span> 活动类型</div><div class="v"><label class="radio"><input type="radio" name="e-per" value="day" ${b.period==='day'?'checked':''}> 日榜（每天 00:00:00 – 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="week" ${b.period==='week'?'checked':''}> 周榜（周一 00:00 – 周日 23:59:59）</label><label class="radio"><input type="radio" name="e-per" value="weekend" ${b.period==='weekend'?'checked':''}> 周末榜（开放日可选，每天单独排名）</label>${b.period==='weekend'?`<span style="width:100%"></span>开放日 ${[1,2,3,4,5,6,0].map(d=>`<label class="chk"><input type="checkbox" data-wkd="${d}" ${wkDaysOf(b).includes(d)&&(b.wkDays||[]).length?'checked':''}> ${WDN[d]}</label>`).join('')}`:''}</div>
+    <div class="l"><span class="req">*</span> 排名指标</div><div class="v"><label class="radio"><input type="radio" name="e-metric" value="bet" ${!isWin(b)?'checked':''}> 有效投注（默认）</label><label class="radio"><input type="radio" name="e-metric" value="win" ${isWin(b)?'checked':''}> 总赢额（总派彩 − 总投注）</label></div>
     <div class="l"><span class="req">*</span> 活动日期</div><div class="v"><input type="date" id="e-start" value="${b.start}"> 00:00:00 至 <input type="date" id="e-end" value="${b.end}"> 23:59:59<span class="hint">共 ${days(b)} 天 → <b>${cy}</b> 期。</span></div>
-    <div class="l">预热展示日</div><div class="v"><input type="date" id="e-show" value="${b.show}"><span class="hint">此日起前台可见，显示“即将开始”和奖池，不计分。</span></div>
-    <div class="l"><span class="req">*</span> 发奖时间</div><div class="v"><b>每期结束后 10:00:00（GMT+8）</b>　日榜 = 次日 10:00；周榜 = 下周一 10:00；周末榜 = 每个开放日的次日 10:00<span class="hint">固定，不可修改。00:00–10:00 之间补拉厂商迟到注单、处理撤销冲正、完成 Top3 和异常账号风控审核；期末前下注、10:00 前结算的注单仍计入上一期。</span></div>
+    <div class="l">预热展示日</div><div class="v"><input type="date" id="e-show" value="${b.show}"></div>
+    <div class="l"><span class="req">*</span> 发奖时间</div><div class="v"><b>每期结束后 10:00:00（GMT+8）</b></div>
 
     <div class="sec">三、奖励配置</div>
-    <div class="l"><span class="req">*</span> 每期奖池</div><div class="v">₱ <input type="number" id="e-pool" min="0" step="1000" value="${b.pool}" style="width:130px"><span class="hint">固定奖池，每期金额相同。</span></div>
-    <div class="l">预估每期有效投注</div><div class="v">₱ <input type="number" id="e-est" step="100000" value="${b.estBet}" style="width:150px"><span class="hint">仅用于测算返还率，不影响发奖。可参考近 4 周同范围日均 / 周均有效投注。</span></div>
+    <div class="l"><span class="req">*</span> 每期奖池</div><div class="v">₱ <input type="number" id="e-pool" min="0" step="1000" value="${b.pool}" style="width:130px"></div>
+    <div class="l">预估每期有效投注</div><div class="v">₱ <input type="number" id="e-est" step="100000" value="${b.estBet}" style="width:150px"></div>
     <div class="l"><span class="req">*</span> 名次与占比</div><div class="v" style="display:block">
       
       <div class="tw"><table class="rk"><tr><th>起始名次</th><th>结束名次</th><th>人数</th><th>每人占比</th><th>每人金额</th><th>区间占比</th><th>区间小计</th><th></th></tr>${rk}</table></div>
       <div class="sumline"><button class="btn sm" data-addrow="1">+ 添加名次区间</button><span>合计占比 <b style="color:${Math.abs(s-100)<0.001?'var(--ok)':'var(--bad)'}">${pct(s)}</b> · 获奖人数 ${lr} · 合计 ${fmt(pool*s/100)}</span></div>
     </div>
-    <div class="l">名次空缺处理</div><div class="v"><label class="radio"><input type="radio" name="e-unf" value="recycle" ${b.unfilled==='recycle'?'checked':''}> 不发放，回收预算</label><label class="radio"><input type="radio" name="e-unf" value="none" ${b.unfilled==='none'?'checked':''}> 按实际上榜人数重新分配</label><span class="hint">上榜人数少于获奖名次时（如凌晨低峰），默认空缺名次的奖金不发。机器人补位占用的名次同样视为空缺，按此处理。</span></div>
-    <div class="l"><span class="req">*</span> 发放方式</div><div class="v"><b>自动发奖</b><span class="hint">固定自动发放，无需玩家领取：10:00 直接入账平台余额，账变类型“活动金额”，按下方稽核倍数写入提现稽核；风控审核未通过的名次暂缓发放，人工处理。</span></div>
-    <div class="l">到账通知</div><div class="v"><span class="hint" style="margin:0">所有排行榜共用：用户进入首页 / 排行榜页弹「到账弹窗」。推送 / 短信提醒为二期，一期不发。</span></div>
-    <div class="l"><span class="req">*</span> 稽核倍数</div><div class="v"><input type="number" id="e-audit" min="0" step="0.5" value="${b.audit}" style="width:60px"> 倍 <label class="chk"><input type="checkbox" checked disabled> 仅奖金</label><span class="hint">账变类型“活动金额”，入账写入提现稽核（1 倍 = 100%）。</span></div>
+    <div class="l">名次空缺处理</div><div class="v"><label class="radio"><input type="radio" name="e-unf" value="recycle" ${b.unfilled==='recycle'?'checked':''}> 不发放，回收预算</label><label class="radio"><input type="radio" name="e-unf" value="none" ${b.unfilled==='none'?'checked':''}> 按实际上榜人数重新分配</label></div>
+    <div class="l"><span class="req">*</span> 发放方式</div><div class="v"><b>自动发奖</b></div>
+    <div class="l"><span class="req">*</span> 稽核倍数</div><div class="v"><input type="number" id="e-audit" min="0" step="0.5" value="${b.audit}" style="width:60px"> 倍 <label class="chk"><input type="checkbox" checked disabled> 仅奖金</label></div>
 
     <div class="sec">四、参与门槛</div>
-    <div class="l">VIP 等级</div><div class="v">≥ VIP <input type="number" id="e-vip" min="0" value="${b.vip}" style="width:56px"><span class="hint">填 0 = 不限 VIP，所有用户都可参与。</span></div>
-    <div class="l">可参与用户</div><div class="v"><span class="pill ${eligOpen(b)?'ok':'w'}">${eligCN(b)}</span><span class="hint">不满足 VIP 门槛的用户，投注不计分、不上榜；期内达到条件后，从达到时刻起的投注开始计分。</span></div>
+    <div class="l">VIP 等级</div><div class="v">≥ VIP <input type="number" id="e-vip" min="0" value="${b.vip}" style="width:56px"></div>
+    <div class="l">可参与用户</div><div class="v"><span class="pill ${eligOpen(b)?'ok':'w'}">${eligCN(b)}</span></div>
     <div class="l">其他条件</div><div class="v"><label class="chk"><input type="checkbox" id="e-kyc" ${b.kyc?'checked':''}> 须完成 KYC</label><label class="chk"><input type="checkbox" checked disabled> 冻结 / 停用 / 禁止投注账号不上榜</label>同 IP 上榜账号 ≤ <input type="number" id="e-ip" value="${b.ip}" style="width:50px"> 个 <button class="btn sm">导入黑名单</button></div>
 
     <div class="sec">五、上榜门槛与机器人补位</div>
-    <div class="l">机器人</div><div class="v"><label class="sw"><input type="checkbox" id="e-bot" ${b.bot&&b.bot.on?'checked':''} aria-label="启用机器人"><i></i></label><span class="pill ${b.bot&&b.bot.on?'ok':'n'}">${b.bot&&b.bot.on?'已开启':'已关闭'}</span><span class="hint">达到上榜门槛的真实用户不足时，用机器人补位，让榜单不显得空。默认关闭。</span></div>
+    <div class="l">机器人</div><div class="v"><label class="sw"><input type="checkbox" id="e-bot" ${b.bot&&b.bot.on?'checked':''} aria-label="启用机器人"><i></i></label><span class="pill ${b.bot&&b.bot.on?'ok':'n'}">${b.bot&&b.bot.on?'已开启':'已关闭'}</span></div>
     <div class="l"><span class="req">*</span> 真实用户上榜门槛</div><div class="v">本期有效投注 ≥ ₱ <input type="number" id="e-minbet" min="0" value="${b.minBet}" style="width:110px"> 才上榜
-      <span class="hint">达到门槛的真实用户才显示在榜上、参与排名和发奖；没达到的不上榜（投注照常累计，达到后自动上榜）。空出的位置：机器人开启时由机器人补位，关闭时留空。填 0 = 有计分注单即上榜。<br><b>有效投注</b>：本榜计分口径的有效投注（剔除结果为 0 / 和局 / 对冲 / 取消）。</span></div>
-    ${b.bot&&b.bot.on?`<div class="l">补足到</div><div class="v">达到门槛的真实用户 &lt; <input type="number" id="e-bfill" min="1" value="${b.bot.fill||lastRank(b)}" style="width:70px"> 人时补位，补足到该人数<span class="hint">建议 = 获奖名次数（本榜 ${lastRank(b)}）。真实人数达到后机器人自动退出。</span></div>
+      </div>
+    ${b.bot&&b.bot.on?`<div class="l">补足到</div><div class="v">达到门槛的真实用户 &lt; <input type="number" id="e-bfill" min="1" value="${b.bot.fill||lastRank(b)}" style="width:70px"> 人时补位，补足到该人数</div>
     <div class="l">数值增长</div><div class="v">每次刷新（5 分钟）增长 <input type="number" id="e-bgmin" value="${b.bot.growMin}" style="width:56px"> % ~ <input type="number" id="e-bgmax" value="${b.bot.growMax}" style="width:56px"> %，且不超过最后一名真实玩家的 <input type="number" id="e-bcap" value="${b.bot.cap}" style="width:56px"> %</div>
-    <div class="l">机器人画像</div><div class="v">VIP 等级随机 <input type="number" id="e-bvmin" value="${b.bot.vipMin}" style="width:50px"> ~ <input type="number" id="e-bvmax" value="${b.bot.vipMax}" style="width:50px"><span class="hint">昵称从随机昵称库生成并走平台统一脱敏规则，头像随机，“最近玩的游戏”从本榜指定游戏中随机。</span></div>
+    <div class="l">机器人画像</div><div class="v">VIP 等级随机 <input type="number" id="e-bvmin" value="${b.bot.vipMin}" style="width:50px"> ~ <input type="number" id="e-bvmax" value="${b.bot.vipMax}" style="width:50px"></div>
     <div class="l">补位规则</div><div class="v" style="display:block;font-size:12px;line-height:1.8;color:#444">
-      <label class="chk"><input type="checkbox" data-br="behind" ${br(b).behind?'checked':''}> 始终排在全部真实玩家之后</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：机器人只出现在最后一名真实玩家之后。不勾选：机器人按数值穿插在真实玩家之间，但<b>奖励区内的真实玩家位置不受影响</b>（只在奖励区之外穿插）。</span>
-      <label class="chk"><input type="checkbox" data-br="report" ${br(b).report?'checked':''}> 不进后台投注记录和榜单明细</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：后台只看到机器人数量。不勾选：机器人出现在「榜单数据与发奖」明细里，标“机器人”，方便核对；任何时候都不进风控和财务对账。</span>
-      <label class="chk"><input type="checkbox" data-br="disclose" ${br(b).disclose?'checked':''}> 在前台规则中说明榜单含系统展示账号</label><span class="hint" style="display:block;margin:0 0 6px 22px">勾选：前台规则增加一句 “This leaderboard may include system display accounts, which do not receive prizes.”。是否必须勾选待合规确认。</span>
-      <div style="margin-top:6px;padding:6px 8px;background:#f7f9fb;border:1px solid #e3e8ec">系统固定（不可配置）：机器人不发奖、奖金显示“—”，所占名次的奖金按「名次空缺处理」执行（回收或重新分配）；不计入预算和返还率，不会让真实玩家掉出奖励区；使用系统机器人账号（is_robot = 1），不可登录 / 充值 / 提现。</div></div>`:''}
-    <div class="sec">六、有效投注口径</div>
-    <div class="l">计分规则</div><div class="v">
-      <label class="chk"><input type="checkbox" checked disabled> 仅已结算注单，按结算时间归期</label>
-      <label class="chk"><input type="checkbox" checked disabled> 和局退本金不计</label>
-      <label class="chk"><input type="checkbox" checked disabled> 取消 / 撤单 / 冲正扣回</label><button type="button" class="qtip" aria-label="冲正扣回说明" data-tip="撤销之前的一笔入账，并把相应金额扣回去。例如，之前误转入、重复到账，或交易被撤销后，系统会把那笔钱收回。">?</button>
-      <label class="chk"><input type="checkbox" checked disabled> 投注结果为 0（派彩 = 下注）不计</label>
-      ${b.type!=='slot'?`<label class="chk"><input type="checkbox" checked disabled> 对冲注单整局不计（同局反向下注的双方全部剔除）</label>
-      <span style="width:100%"></span>轮盘单局覆盖 ≥ <input type="number" id="e-rou" value="${b.roulette}" style="width:56px"> % 号码视为对冲，整局不计`:'<label class="chk"><input type="checkbox" checked disabled> Free Spin 局不计；Buy Feature 按购买价计</label>'}
-      <span class="hint">详细定义和例子见 PRD（Wiki）。</span></div>
+      <label class="chk"><input type="checkbox" data-br="behind" ${br(b).behind?'checked':''}> 始终排在全部真实玩家之后</label>
+      <label class="chk"><input type="checkbox" data-br="report" ${br(b).report?'checked':''}> 不进后台投注记录和榜单明细</label>
+      <label class="chk"><input type="checkbox" data-br="disclose" ${br(b).disclose?'checked':''}> 在前台规则中说明榜单含系统展示账号</label></div>`:''}
+    ${b.type!=='slot'?`<div class="sec">六、有效投注口径</div>
+    <div class="l">轮盘覆盖</div><div class="v">单局覆盖 ≥ <input type="number" id="e-rou" value="${b.roulette}" style="width:56px"> % 号码，整局不计</div>`:''}
   </div>
   ${errs.length?`<div class="alert b">无法保存：<br>${errs.map(esc).join('<br>')}</div>`:''}
   <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" data-ecancel="1">取消</button><button class="btn pri" id="savePub" ${errs.length?'disabled style="opacity:.5"':''}>${b.status==='草稿'?'保存并发布':'更新完成并发布'}</button></div>
@@ -929,7 +914,7 @@ const gName=id=>{ for(const k in GAMES){ const g=GAMES[k].find(x=>x[0]===id); if
 function gameField(b){
   ensureG(b); const n=b.gsel.length;
   const chips=b.gsel.slice(0,10).map(id=>{ const [nm,k]=gName(id); return `<span>${esc(nm)}（${k}）</span>`; }).join('')+(n>10?`<span>等 ${n} 款</span>`:'');
-  return `<div class="gfield"><button class="btn" data-gmopen="1">选择指定游戏</button><span>已选 <b>${n}</b> 款</span><span class="muted">只能从 Slot / Casino 两类游戏中选择；只有指定游戏的有效投注计入排行榜</span></div>${n?`<div class="gchips">${chips}</div>`:'<div class="gchips"><span style="background:#fde8e8;border-color:#f3c4c4;color:var(--bad)">未选择游戏</span></div>'}`;
+  return `<div class="gfield"><button class="btn" data-gmopen="1">选择指定游戏</button><span>已选 <b>${n}</b> 款</span></div>${n?`<div class="gchips">${chips}</div>`:'<div class="gchips"><span style="background:#fde8e8;border-color:#f3c4c4;color:var(--bad)">未选择游戏</span></div>'}`;
 }
 S.gm=null;
 function gmRender(){
@@ -1065,8 +1050,8 @@ function previewPanel(b){
     <div style="font-size:12px;color:#666">每人奖金分布</div>
     <div class="bars">${bars.map(x=>`<div class="br"><span>${x[0]}</span><i style="width:${Math.max(1,x[1]/mx*100)}%"></i><em>${fmt(x[1])}</em></div>`).join('')}</div>
     </div></div>
-    ${warn.map(w=>`<div class="alert w">${w}</div>`).join('')}
-    <div class="alert ok">预算告警：已发放达到总预算 70% 时顶栏告警。</div>
+    
+    
   </div></div></div>`;
 }
 
@@ -1093,8 +1078,8 @@ function admData(){
     <div class="stat"><span>本期奖池</span><b>${fmt(poolOf(b))}</b></div>
     <div class="stat"><span>返还率</span><b>${pct(ag.c?poolOf(b)/ag.c*100:0)}</b></div>
   </div>
-  <div class="tw"><table class="t"><tr><th>名次</th><th>会员ID</th><th>VIP</th><th class="r">原始投注</th><th class="r">和局退本</th><th class="r">对冲剔除</th><th class="r">撤单/冲正<button type="button" class="qtip down" aria-label="冲正扣回说明" data-tip="撤销之前的一笔入账，并把相应金额扣回去。例如，之前误转入、重复到账，或交易被撤销后，系统会把那笔钱收回。">?</button></th><th class="r">有效投注（计榜）</th><th class="r">预估奖励</th><th>状态</th><th>操作</th></tr>${tr}</table></div>
-  <div class="alert w">发奖流程：期末 → 00:00–10:00 补拉迟到注单 → 生成最终名单 → <b>第 1–3 名及带“对冲 / 同 IP”标记的账号进入风控审核</b> → 审核通过后 <b>10:00 自动发放</b>到余额（未通过的暂缓，人工处理）。取消资格后名次顺延，空缺按配置处理。所有发奖用 活动ID + 期号 + 会员ID 做唯一键，防止重复派彩。</div>
+  <div class="tw"><table class="t"><tr><th>名次</th><th>会员ID</th><th>VIP</th><th class="r">原始投注</th><th class="r">和局退本</th><th class="r">对冲剔除</th><th class="r">撤单/冲正</th><th class="r">有效投注（计榜）</th><th class="r">预估奖励</th><th>状态</th><th>操作</th></tr>${tr}</table></div>
+  
   </div></div>`;
 }
 function betsDrawer(uid){
@@ -1117,7 +1102,7 @@ function betsDrawer(uid){
   $('#drawer').innerHTML=`<div class="drawer" data-dclose="1"><div class="dp"><h3>注单明细 · 会员 ${uid} <button class="btn" data-dclose="1">关闭</button></h3>
   <div class="tw"><table class="t" style="min-width:640px"><tr><th>结算时间</th><th>厂商</th><th>游戏 / 局号</th><th>下注</th><th>结果</th><th class="r">计榜投注</th><th>说明</th></tr>
   ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td><td class="r"><b>${fmt(r[5])}</b></td><td>${r[6]}</td></tr>`).join('')}</table></div>
-  <p style="font-size:12px;color:#666;margin-top:8px">对冲判定以“同一会员 + 同一桌台 + 同一局号”为单位；跨账号对冲（多人同 IP / 同设备反向下注）由风控在审核环节处理。</p></div></div>`;
+  </div></div>`;
 }
 
 /* ---------- 投注记录 ---------- */
@@ -1175,7 +1160,7 @@ function admRisk(){
   const al=S.alerts.filter(a=>(S.rf.lv==='all'||a.lv===S.rf.lv)&&(S.rf.st==='all'||a.st===S.rf.st));
   const held=S.alerts.filter(a=>a.st==='pend'&&a.act==='hold').length;
   const rulesHtml=S.rules.map((r,i)=>`<tr class="rrule"><td><label class="sw"><input type="checkbox" data-rule-on="${i}" ${r.on?'checked':''} aria-label="启用 ${r.name}"><i></i></label></td>
-    <td><b>${r.id} ${r.name}</b><div class="hint" style="color:#888;font-size:11px;max-width:300px">${r.note}</div></td>
+    <td><b>${r.id} ${r.name}</b></td>
     <td class="cond">${r.cond.map((c,j)=>c.length>1?`${c[0]} <input type="number" data-rule="${i}" data-ci="${j}" value="${c[1]}">${c[2]||''}`:c[0]).join('<br>')}</td>
     <td><select data-rule-lv="${i}">${['h','m','l'].map(k=>`<option value="${k}" ${r.lv===k?'selected':''}>${LVN[k]}</option>`).join('')}</select></td>
     <td><select data-rule-act="${i}" style="max-width:220px">${Object.entries(ACT).map(([k,v])=>`<option value="${k}" ${r.act===k?'selected':''}>${v}</option>`).join('')}</select></td></tr>`).join('');
@@ -1192,10 +1177,9 @@ function admRisk(){
     <div class="stat"><span>暂停计分 / 暂缓发奖账号</span><b style="color:var(--bad)">${held*2}</b></div>
     <div class="stat"><span>距今日 10:00 发奖</span><b>已过 · 下次 11/03 10:00</b></div>
   </div>
-  <div class="box"><div class="bh"><span>预警规则（对所有排行榜生效）</span><span style="font-weight:400;font-size:12px;color:#888">修改需 Google 验证码，写操作日志</span></div><div class="bb">
+  <div class="box"><div class="bh"><span>预警规则（对所有排行榜生效）</span></div><div class="bb">
     <div class="tw"><table class="t" style="min-width:900px"><tr><th>启用</th><th>规则</th><th>触发条件（满足全部）</th><th>等级</th><th>自动动作</th></tr>${rulesHtml}</table></div>
-    <div class="alert w">执行方式：消费“结算有效投注变动”消息，同账号同局对冲已在计分时整局剔除，不再单独预警；跨账号配对（R1 / R2）按 桌台 + 局号 建索引，每 5 分钟跑一次，覆盖本期全部注单；R3 每 30 分钟。命中高等级立即在顶栏「排行榜风控预警」计数并推送风控群（Telegram）。<br>
-    发奖联动：每期 10:00 发奖前，奖励区内账号有<b>未处理的中 / 高预警</b>的一律暂缓发放；处理为“误报”后补发，“确认违规”后取消资格、剔除全部对冲注单计分、名次顺延，可选加入活动黑名单 / 冻结账号。</div>
+    
   </div></div>
   <div class="box"><div class="bh"><span>预警列表</span><span style="display:flex;gap:8px;flex-wrap:wrap;font-weight:400;font-size:12px">等级 ${sel('lv',[['all','全部'],['h','高'],['m','中'],['l','低']])} 状态 ${sel('st',[['all','全部'],['pend','待处理'],['vio','已确认违规'],['fp','误报'],['done','已记录']])}<button class="btn">导出</button></span></div><div class="bb">
     <div class="tw"><table class="t" style="min-width:1200px"><tr><th>预警ID / 时间</th><th>等级</th><th>规则</th><th>账号（VIP · 名次）</th><th>关联特征 / 证据</th><th>游戏 / 局数</th><th class="r">涉及金额</th><th class="r">合计盈亏</th><th>自动动作</th><th>状态</th><th>操作</th></tr>${rows||'<tr><td colspan="11" style="text-align:center;color:#888;padding:16px">没有符合条件的预警</td></tr>'}</table></div>
@@ -1209,7 +1193,7 @@ function riskDrawer(id){
   <div class="pair"><div class="acc"><b>账号 A：${a.a.uid}</b><br>VIP ${a.a.vip} · ${a.board} ${a.a.rank}<br>本期计榜投注 ₱1,182,400</div>${a.b?`<div class="acc"><b>账号 B：${a.b.uid}</b><br>VIP ${a.b.vip} · ${a.board} ${a.b.rank}<br>本期计榜投注 ₱1,096,800</div>`:'<div class="acc" style="color:#888">单账号预警</div>'}</div>
   <div style="margin-bottom:8px">${a.feat.map(f=>`<span class="feat">${f}</span>`).join('')}</div>
   <div class="tw"><table class="t" style="min-width:640px"><tr><th>局号</th><th>桌台</th><th>A 下注</th><th>B 下注</th><th>结果</th><th class="r">A 盈亏</th><th class="r">B 盈亏</th></tr>${rounds.map(x=>`<tr>${x.map((c,i)=>`<td class="${i>4?'r':''}">${c}</td>`).join('')}</tr>`).join('')}</table></div>
-  <p style="font-size:12px;color:#666">仅展示前 4 局，共 ${a.hits||1} 局；可导出完整注单。确认违规后：两个账号取消本期全部榜单资格，相关注单在投注记录中标记“对冲（跨账号）”并剔除计分，名次顺延；可勾选加入活动黑名单 / 冻结账号 / 通知风控。</p>
+  <p style="font-size:12px;color:#666">仅展示前 4 局，共 ${a.hits||1} 局</p>
   ${a.st==='pend'?`<div style="display:flex;gap:8px;justify-content:flex-end"><label class="chk"><input type="checkbox" checked> 加入活动黑名单</label><label class="chk"><input type="checkbox"> 冻结账号</label><button class="btn" data-rfp="${a.id}">标记误报（恢复计分）</button><button class="btn pri" style="background:var(--bad);border-color:var(--bad)" data-rvio="${a.id}">确认违规</button></div>`:''}
   </div></div>`;
 }
@@ -1249,11 +1233,11 @@ function admLog(){
   const per=10, pages=Math.max(1,Math.ceil(list.length/per)); if(f.page>pages) f.page=pages;
   const rows=list.slice((f.page-1)*per,f.page*per).map(l=>`<tr><td style="white-space:nowrap">${l[0]}</td><td>${esc(l[1])}</td><td style="white-space:nowrap">${esc(l[2])}</td><td>${esc(l[3])}</td><td style="white-space:nowrap">${esc(l[4])}</td><td>${esc(l[5])}</td></tr>`).join('');
   const sel=(k,o)=>`<select data-lf="${k}">${o.map(x=>`<option value="${x[0]}" ${String(f[k])===String(x[0])?'selected':''}>${x[1]}</option>`).join('')}</select>`;
-  return `<div class="box"><div class="bh"><span>操作日志</span><span style="font-weight:400;font-size:12px;color:#888">只读 · 保留 365 天 · 时间 GMT+8</span></div><div class="bb">
+  return `<div class="box"><div class="bh"><span>操作日志</span></div><div class="bb">
     <div class="filter"><label>操作类型 ${sel('type',[['all','全部'],...types.map(t=>[t,t])])}</label><label>活动 ${sel('board',[['all','全部'],...S.boards.filter(b=>b.id).map(b=>[b.id,b.id+' '+b.name])])}</label></div>
     <div class="tw"><table class="t" style="min-width:900px"><tr><th>时间</th><th>操作人</th><th>操作类型</th><th>活动</th><th>模块</th><th>变更内容（旧值 → 新值）</th></tr>${rows||'<tr><td colspan="6" style="text-align:center;color:#888;padding:16px">暂无日志</td></tr>'}</table></div>
     <div class="sumline"><span>共 ${list.length} 条</span><span style="display:flex;gap:4px;align-items:center">${Array.from({length:pages},(_,i)=>`<button class="btn sm ${i+1===f.page?'pri':''}" data-lpage="${i+1}">${i+1}</button>`).join('')}</span></div>
-    <div class="alert w" style="margin-top:10px">记录范围：新增并发布、更新并发布（逐字段旧值 → 新值）、开启 / 关闭、入口设置、风控规则修改、风控处理（确认违规 / 误报）、系统自动发奖与暂缓。日志不可删除、不可编辑；不记录 IP（同首页 Banner 配置）。</div>
+    
   </div></div>`;
 }
 function alertMsg(m){ const el=document.createElement('div'); el.className='alert w'; el.style.cssText='position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:40;box-shadow:0 4px 14px rgba(0,0,0,.15)'; el.textContent=m; document.body.appendChild(el); setTimeout(()=>el.remove(),2200); }
@@ -1284,10 +1268,10 @@ function admBets(){
   </div>
   <div style="font-weight:700;margin:4px 0 6px">按类型 / 厂商汇总（本期，全部会员）</div>
   <div class="tw"><table class="t"><tr><th>游戏类型</th><th>厂商</th><th class="r">注单数</th><th class="r">原始投注</th><th class="r">无效投注</th><th class="r">厂商取消/撤销</th><th class="r">和局退本</th><th class="r">对冲剔除</th><th class="r">Free Spin/门槛</th><th class="r">计榜投注</th><th class="r">剔除率</th></tr>${agg.map(aggRow).join('')}${totRow}</table></div>
-  <div style="font-weight:700;margin:14px 0 6px">注单明细 <span style="font-weight:400;color:#888">（${list.length} 条，示例数据；按排行榜分别记录，同一注单计入多个榜时每个榜各存一条；结果为 0、和局、对冲等不计的注单保留记录并标原因，不物理删除）</span></div>
+  <div style="font-weight:700;margin:14px 0 6px">注单明细 <span style="font-weight:400;color:#888">（${list.length} 条）</span></div>
   <div class="tw"><table class="t" style="min-width:1500px"><tr><th>厂商注单号</th><th>会员ID</th><th>游戏类型</th><th>厂商</th><th>游戏</th><th>局号</th><th>下注项</th><th class="r">下注额</th><th class="r">有效投注</th><th class="r">派彩</th><th>结算时间</th><th>注单状态</th><th class="r">计榜投注</th><th class="r">剔除金额</th><th>计榜结果</th><th>说明</th></tr>${rows||'<tr><td colspan="16" style="text-align:center;color:#888;padding:18px">没有符合条件的注单，换个筛选条件试试</td></tr>'}</table></div>
-  <div style="font-weight:700;margin:14px 0 6px">撤销 / 冲正记录<button type="button" class="qtip" aria-label="冲正扣回说明" data-tip="撤销之前的一笔入账，并把相应金额扣回去。例如，之前误转入、重复到账，或交易被撤销后，系统会把那笔钱收回。">?</button></div>
-  <div class="tw"><table class="t"><tr><th>收到时间</th><th>厂商注单号</th><th>会员ID</th><th>厂商</th><th>事件</th><th class="r">原计榜投注</th><th class="r">冲正<button type="button" class="qtip down" aria-label="冲正扣回说明" data-tip="撤销之前的一笔入账，并把相应金额扣回去。例如，之前误转入、重复到账，或交易被撤销后，系统会把那笔钱收回。">?</button></th><th>所属期</th><th>该期是否已发奖</th><th>处理结果</th></tr>
+  <div style="font-weight:700;margin:14px 0 6px">撤销 / 冲正记录</div>
+  <div class="tw"><table class="t"><tr><th>收到时间</th><th>厂商注单号</th><th>会员ID</th><th>厂商</th><th>事件</th><th class="r">原计榜投注</th><th class="r">冲正</th><th>所属期</th><th>该期是否已发奖</th><th>处理结果</th></tr>
     <tr><td>11/02 15:40:12</td><td>FC-20261102-0091</td><td>10422906</td><td>FC</td><td>结算后回滚</td><td class="r">₱2,000</td><td class="r">−₱2,000</td><td>11/02</td><td>否</td><td><span class="pill ok">已扣回，名次重算</span></td></tr>
     <tr><td>11/02 19:05:33</td><td>EVO-5521873</td><td>10301452</td><td>EVO</td><td>结算后撤销</td><td class="r">₱15,000</td><td class="r">−₱15,000</td><td>11/02–11/08</td><td>否</td><td><span class="pill ok">已扣回，名次重算</span></td></tr>
     <tr><td>11/02 01:12:40</td><td>JILI-a7f09912</td><td>10512240</td><td>JILI</td><td>结算后撤销</td><td class="r">₱6,500</td><td class="r">−₱6,500</td><td>11/01</td><td>是（00:30 已发）</td><td><span class="pill w">不追回奖金，转风控</span></td></tr>
@@ -1338,7 +1322,7 @@ admPage.addEventListener('click',e=>{
   else if(t.dataset.addrow){const b=S.boards[S.edit],lr=lastRank(b);b.rows.push({s:lr+1,e:lr+10,p:0});renderAdm();}
   else if(t.dataset.delrow!=null){S.boards[S.edit].rows.splice(+t.dataset.delrow,1);renderAdm();renderH5();}
   else if(t.dataset.bets){betsDrawer(t.dataset.bets);}
-  else if(t.id==='savePub'){const b=S.boards[S.edit]; const isNew=b.status==='草稿'; if(isNew){b.id=genId();b.status='未开始';addLog('新增并发布',bTarget(b),'新增 / 编辑',`创建活动；${perLabel(b)} · ${isWin(b)?'总赢额':'有效投注'} · Top${lastRank(b)} · 每期 ${fmt(poolOf(b))}`);renderAdm();renderH5();} else { addLog('更新并发布',bTarget(b),'新增 / 编辑',diffText(S.snap||snap(b),snap(b))); S.snap=snap(b); } $('#saveMsg').innerHTML=isNew?'<div class="alert ok">已保存并发布（原型），系统生成活动ID：<b>'+b.id+'</b>。活动开始后时间、指定游戏、奖池、名次占比将锁定。</div>':'<div class="alert ok">已更新并发布（原型），前台 5 分钟内生效，修改记录写入操作日志。进行中的活动只能更新素材和文案。</div>';}
+  else if(t.id==='savePub'){const b=S.boards[S.edit]; const isNew=b.status==='草稿'; if(isNew){b.id=genId();b.status='未开始';addLog('新增并发布',bTarget(b),'新增 / 编辑',`创建活动；${perLabel(b)} · ${isWin(b)?'总赢额':'有效投注'} · Top${lastRank(b)} · 每期 ${fmt(poolOf(b))}`);renderAdm();renderH5();} else { addLog('更新并发布',bTarget(b),'新增 / 编辑',diffText(S.snap||snap(b),snap(b))); S.snap=snap(b); } $('#saveMsg').innerHTML=isNew?'<div class="alert ok">已保存并发布，活动ID：<b>'+b.id+'</b></div>':'<div class="alert ok">已更新并发布</div>';}
 });
 admPage.addEventListener('input',e=>{ const nf=e.target.dataset.nf; if(nf&&(e.target.tagName==='TEXTAREA'||e.target.type==='text')){ const [k,f]=nf.split('.'); S.ntf[k][f]=e.target.value; const pv=$('#ntfPv'); if(pv) pv.innerHTML=ntfPreview(k); const cc=$('#smsCnt'); if(cc&&k==='sms') cc.innerHTML=smsCount(); const dd=$('#ntfDirty'); if(dd) dd.innerHTML=ntfDirty(k); return; }
   if(e.target.id==='tq'){ S.tree.q=e.target.value; const pos=e.target.selectionStart; renderAdm(); const n=$('#tq'); if(n){ n.focus(); n.setSelectionRange(pos,pos); } } });

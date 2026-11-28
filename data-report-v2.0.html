@@ -93,7 +93,7 @@ tr.cmp.cmp7 td{background:#f4f7fb}tr.cmp td{background:#fafafa;color:var(--muted
 .cmpchk{flex-direction:row!important;align-items:center;gap:4px!important;color:var(--fg)!important;align-self:center}
 @media (max-width:820px){.side{display:none}.content{padding:12px 16px}}
 </style></head><body>
-<div class="proto"><span><b>数据报表中心原型 · v2.8</b>：取款恢复为 人数 / 金额 / 人均（撤回 v2.7）；佣金明细移除「人数」列；充值移除「平均日存」列；v2.6 前50名「当日用户游戏系统」h5 拆成 ios h5 / 安卓 h5；v2.5 「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
+<div class="proto"><span><b>数据报表中心原型 · v2.9</b>：彩金表最后加「现有汇总」（只加表上 10 个活动）；v2.8 取款恢复为 人数 / 金额 / 人均（撤回 v2.7）；佣金明细移除「人数」列；充值移除「平均日存」列；v2.6 前50名「当日用户游戏系统」h5 拆成 ios h5 / 安卓 h5；v2.5 「每小时数据」「每小时彩金」表头改为和对应累计表一致；v2.4 累计表新增「较近7日均」对比行；v2.3 两张累计表改为每 2 小时一行（0-2、0-4 … 0-24）；v2.2 按在线表格《789games-数据表》调整「每小时数据（累计）」「每小时彩金（累计）」「每日数据」「每日彩金」；表头上 <b style="color:#e8590c">新增</b> / <b style="color:#1c6dd0">改名</b> / <b style="color:#7b3fc4">调整</b> 标签 = 本版改动，每页底部「更新日志」有改动清单</span><span>菜单加粗 = v2.0 新页面，「● 调整」= 原有页面本版有改动；其余页同 v1.0 上线版</span><span>示例数据逐笔模拟，模拟“现在”= 2026-11-16 14:20 · v1.0 上线版：<a href="https://koi980517.github.io/789games/">index.html</a></span></div>
 <header class="top"><span>当前时间: <span class="clk" id="clk">2026/11/16 14:20:00 +08:00</span></span><span class="qa">QA环境</span><span class="sp"></span><span>简体中文</span><span>pm_koi ▾</span></header>
 <div class="stat"><span>在线人数: <b>9</b></span><span>当日注册: <b>7</b></span><span>实名认证-待处理: <b>0</b></span><span>当日充值成功: <b>10</b></span><span>充值: <span class="r">0</span></span><span>提款: <span class="g">1</span></span><span>预算告警: <span class="r">0</span></span></div>
 <div class="shell">
@@ -223,10 +223,10 @@ const CHG={
   page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"],["del","删除最后一行「合计」（在线表格没有）"],["del","移除「充值 · 平均日存」（在线表格此列为空）"],["chg","0-24 行 = 每日数据：日表取「每小时数据（累计）」当天 0-24 行"]]},
  hourlyBonusCum:{vs:"v2.0 原型（列同现网「每小时彩金」）",cols:{
   "g:时间":["chg","原一列，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["chg","时段 0-2、0-4 … 0-24，每 2 小时一行（原每小时一行）"],
-  ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],totalRatio:["new","汇总 · 占充值"]},
+  ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],"g:现有汇总":["new","现有汇总：人数 / 金额 / 占充值率，只加表上 10 个活动；「汇总」取接口返回的全部活动（含表上没有的活动），两者可能不同"],totalRatio:["new","汇总 · 占充值"]},
   page:[["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序；按时间点比对默认倒序"],["chg","活动列固定 10 个，按在线表格顺序（原按接口返回的活动生成）"],["chg","改为每 2 小时一行：0-2 … 0-24，每天 12 行"],["keep","保留较昨日对比行"],["new","新增「较近7日均」对比行（同每小时数据（累计））"],["new","新增「按时间点比对」（对应在线表格「彩金数据表横向日期比对」）"]]},
  dailyBonus:{vs:"v1.0 现网「每日彩金」",cols:{
-  "g:时间":["chg","日期 + 星期"],weekday:["new","星期"],"g:汇总":["new","汇总：人数 / 金额 / 占充值"]},
+  "g:时间":["chg","日期 + 星期"],weekday:["new","星期"],"g:汇总":["new","汇总：人数 / 金额 / 占充值（取接口全部活动）"],"g:现有汇总":["new","现有汇总：人数 / 金额 / 占充值率，只加表上 10 个活动；「汇总」取接口返回的全部活动（含表上没有的活动），两者可能不同"]},
   page:[["chg","活动列固定 10 个，按在线表格顺序（原按接口返回生成，含测试活动）"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认倒序（同在线表格，最新日期在上；原现网为正序）"]]},
  top50:{vs:"v1.0 现网「前50名」",cols:{plat:["chg","h5 拆成 ios h5 / 安卓 h5（按浏览器 UA 区分）；取值 ios、安卓、ios h5、安卓 h5、pwa，可多个"]},
   page:[["chg","「当日用户游戏系统」h5 扩展为 ios h5 或 安卓 h5"]]},
@@ -239,7 +239,7 @@ const CHG={
   page:[["chg","表头和「每小时数据（累计）」一致：33 列 → 43 列（在线表格 44 列 + 时段，去掉 佣金明细 · 人数、充值 · 平均日存）"],["del","移除「充值 · 平均日存」（在线表格此列为空）"],["keep","仍每小时一行，数值为该小时内的数；当日首充总额、转换率仍从 00:00 累计；留存金额仍 = 本小时充值 − 本小时首笔金额"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]},
  hourlyBonus:{vs:"v1.0 现网「每小时彩金」",cols:{
   "g:时间":["chg","原一列「11-16 00:00」，拆成 日期 / 星期 / 时段"],weekday:["new","星期"],slot:["new","时段 00:00-01:00 … 23:00-24:00（仍每小时一行）"],
-  ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],totalRatio:["new","汇总 · 占充值"]},
+  ratio:["new","每个活动新增「占充值」"],"g:汇总":["ren","原「总计」"],"g:现有汇总":["new","现有汇总：人数 / 金额 / 占充值率，只加表上 10 个活动；「汇总」取接口返回的全部活动（含表上没有的活动），两者可能不同"],totalRatio:["new","汇总 · 占充值"]},
   page:[["chg","表头和「每小时彩金（累计）」一致：24 列 → 37 列"],["chg","活动列固定 10 个，按在线表格顺序（原按接口返回的活动生成）"],["chg","没有参与的活动显示 0 / 0.00 / 0.00%（原空白）"],["new","新增「时间排序」：正序（01→30）/ 倒序（30→01）切换，默认正序（同现网）"]]}
 };
 const CHGTXT={new:"新增",ren:"改名",chg:"调整",del:"删除",keep:"保留"};
@@ -286,6 +286,7 @@ for(let d=0;d<NDAYS;d++){EV[d]=[];const lastH=d===NDAYS-1?NOWH-1:23;
    e.online=Math.round(8+40*f*R());
   }
   EV[d][h]=e;}}
+{const R4=rng(4242);for(let d=0;d<NDAYS;d++)for(let h=0;h<24;h++){if(R4()<0.12){const e=EV[d][h];e.act.push({a:10+Math.floor(R4()*2),u:Math.floor(R4()*POOL),amt:Math.round((5+R4()*80)*100)/100})}}} // 接口里有、表上 10 列没有的活动（如 PAMPASWERTE BONUS、测试活动），只进「汇总」不进「现有汇总」
 // 首充识别：全生命周期第一笔
 for(let u=0;u<POOL;u++)if(u%9)firstDep[u]=[-1]; // 老用户：11 月前已首充
 for(let d=0;d<NDAYS;d++)for(let h=0;h<24;h++)EV[d][h].dep.forEach((x,i)=>{if(!(x.u in firstDep)){firstDep[x.u]=[d,h,i];x.first=true}});
@@ -365,7 +366,7 @@ function rows(){
  return sortDesc?out.reverse():out;} // 时间排序：正序 01→30 / 倒序 30→01
 function groups(list){
  if(!cur.bonus)return G_SHEET(!cur.daily); // v2.5：小时表表头和累计表一致
- if(true){const g=[["时间",[["time","日期"],["weekday","星期"]].concat(!cur.daily?[["slot","时段"]]:[])]];ACTS.forEach((n,a)=>g.push([n,[["a"+a+"Users","人数"],["a"+a+"Amount","金额"],["a"+a+"Ratio","占充值"]]]));g.push(["汇总",[["totalTimes","人数"],["totalAmount","金额"],["totalRatio","占充值"]]]);g.push(["充值金额",[["bDep",""]]]);return g;}
+ if(true){const g=[["时间",[["time","日期"],["weekday","星期"]].concat(!cur.daily?[["slot","时段"]]:[])]];ACTS.forEach((n,a)=>g.push([n,[["a"+a+"Users","人数"],["a"+a+"Amount","金额"],["a"+a+"Ratio","占充值"]]]));g.push(["汇总",[["totalTimes","人数"],["totalAmount","金额"],["totalRatio","占充值"]]]);g.push(["充值金额",[["bDep",""]]]);g.push(["现有汇总",[["curTimes","人数"],["curAmount","金额"],["curRatio","占充值率"]]]);return g;}
  const seen=new Set();list.forEach(r=>r._acts&&Object.keys(r._acts).forEach(a=>seen.add(+a)));
  const acts=[...seen].sort((x,y)=>x-y);
  const g=[["时间",[["time",""]]]];acts.forEach(a=>g.push([ACTS[a],cur.daily?[["a"+a+"Users","人数"],["a"+a+"Amount","金额"],["a"+a+"Ratio","占充值"]]:[["a"+a+"Users","人数"],["a"+a+"Amount","金额"]]]));
@@ -375,7 +376,7 @@ function infoOf(k){
  const base=cur.cum?Object.assign({},INFO,CINFO):INFO;
  const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);
  if(m){const t=base["act"+m[2]];return[ACTS[+m[1]]+" · "+t[0],t[1],t[2]]}
- const X={weekday:["星期","日期对应的星期。",""],slot:["时段","每 2 小时一行：0-2 = 00:00–02:00，0-4 = 00:00–04:00 … 0-24 = 全天；每行是 00:00 到该整点的累计。",""],tdUsers:["三充 · 人数","本时段完成第 3 笔成功充值的人数（按用户全生命周期计第 3 笔）。",""],tdAmount:["三充 · 金额","第 3 笔充值的金额合计。",""],tdAvg:["三充 · 人均","","三充金额 ÷ 三充人数"],commUsers:["佣金明细 · 人数","本时段产生佣金的代理人数。",""],commAmount:["佣金明细 · 金额","人头费用 + 投注返还。在线表格目前每行填同一个固定值，待确认取数。",""],commRatio:["佣金明细 · 占比","","佣金金额 ÷ 优惠金额"],totalRatio:["汇总 · 占充值","","全部活动金额 ÷ 充值金额"],totalTimes:["汇总 · 人数","各活动人数相加（人次）。",""],totalAmount:["汇总 · 金额","全部活动金额合计。",""]};
+ const X={weekday:["星期","日期对应的星期。",""],slot:["时段","每 2 小时一行：0-2 = 00:00–02:00，0-4 = 00:00–04:00 … 0-24 = 全天；每行是 00:00 到该整点的累计。",""],tdUsers:["三充 · 人数","本时段完成第 3 笔成功充值的人数（按用户全生命周期计第 3 笔）。",""],tdAmount:["三充 · 金额","第 3 笔充值的金额合计。",""],tdAvg:["三充 · 人均","","三充金额 ÷ 三充人数"],commUsers:["佣金明细 · 人数","本时段产生佣金的代理人数。",""],commAmount:["佣金明细 · 金额","人头费用 + 投注返还。在线表格目前每行填同一个固定值，待确认取数。",""],commRatio:["佣金明细 · 占比","","佣金金额 ÷ 优惠金额"],totalRatio:["汇总 · 占充值","","接口全部活动金额 ÷ 充值金额"],totalTimes:["汇总 · 人数","接口返回的全部活动人数相加（人次），含表上 10 个以外的活动。",""],totalAmount:["汇总 · 金额","接口返回的全部活动金额合计（同活动费用报表），含表上 10 个以外的活动。",""],curTimes:["现有汇总 · 人数","只加表上 10 个活动的人数（人次，跨活动不去重）。和「汇总 · 人数」的差 = 表上没有的活动。",""],curAmount:["现有汇总 · 金额","只加表上 10 个活动的金额。","10 个活动金额相加"],curRatio:["现有汇总 · 占充值率","","现有汇总金额 ÷ 充值金额"]};
  const H1={slot:["时段","每小时一行：00:00-01:00 … 23:00-24:00；数值为该小时内的数（当日首充总额、转换率从 00:00 累计）。",""],net:["盈亏金额","本小时充值金额 − 取款金额（原「存提差」）。","充值 − 取款"],netRate:["杀率","原「存提差/充值」，实为存提差率。","盈亏金额 ÷ 充值金额"],validBet:["平台报表 · 总打码","本小时有效投注合计（原「总投注」）。",""],betMultiple:["平台报表 · 倍数","原「倍数（投注/充值）」。","总打码 ÷ 充值金额"],killRate:["平台报表 · 盈利率","原「杀率（1-rtp）」。","GGR ÷ 总打码"],ggr:["平台报表 · 金额（GGR）","本小时 GGR（原「ggr」）。","有效投注 − 派彩"],promoAmount:["优惠 · 金额","本小时全部活动费用（原「活动奖金」）。",""],promoRatio:["优惠 · 比例","原「比例（奖金/充值）」。","优惠金额 ÷ 充值金额"],retAmount:["留存明细 · 金额","本小时充值 − 本小时首笔金额（小时表保持单小时口径）。",""]};
  if(!cur.daily&&!cur.cum&&H1[k])return H1[k];
  if(X[k])return X[k];
@@ -386,6 +387,8 @@ function infoOf(k){
 function cell(r,k){
  const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);
  if(m){const x=r._acts&&r._acts[m[1]];if(!x)return r._empty?"":(true?(m[2]==="Users"?"0":m[2]==="Amount"?"0.00":"0.00%"):"");if(m[2]==="Users")return String(x.users);if(m[2]==="Amount")return fmt(x.amount,"amount");return fmt(div(x.amount,r.depAmount),"Ratio")}
+ const curSum=f=>Object.entries(r._acts||{}).filter(([a])=>+a<ACTS.length).reduce((s,[,x])=>s+x[f],0); // 现有汇总：只加表上 10 个活动
+ if(k==="curTimes")return r._empty?"":String(curSum("users"));if(k==="curAmount")return r._empty?"":fmt(curSum("amount"),"amount");if(k==="curRatio")return r._empty?"":fmt(div(curSum("amount"),r.depAmount),"Ratio");
  if(k==="totalTimes"){if(r._empty)return"";return String(Object.values(r._acts||{}).reduce((s,x)=>s+x.users,0))}
  if(k==="totalAmount"){if(r._empty)return"";return fmt(Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0),"amount")}
  if(k==="totalRatio"){if(r._empty)return"";return fmt(div(Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0),r.depAmount),"Ratio")}
@@ -394,6 +397,7 @@ function cell(r,k){
  return fmt(r[k],k);}
 function cmpVal(r,k){const m=k.match(/^a(\d+)(Users|Amount|Ratio)$/);if(m){const x=r._acts&&r._acts[m[1]];if(m[2]==="Ratio")return div(x?x.amount:0,r.depAmount);return x?(m[2]==="Users"?x.users:x.amount):0}
  if(k==="weekday"||k==="slot")return null;
+ const cs=f=>Object.entries(r._acts||{}).filter(([a])=>+a<ACTS.length).reduce((s,[,x])=>s+x[f],0);if(k==="curTimes")return cs("users");if(k==="curAmount")return cs("amount");if(k==="curRatio")return div(cs("amount"),r.depAmount);
  if(k==="totalRatio")return div(Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0),r.depAmount);
  if(k==="totalTimes")return Object.values(r._acts||{}).reduce((s,x)=>s+x.users,0);
  if(k==="totalAmount")return Object.values(r._acts||{}).reduce((s,x)=>s+x.amount,0);

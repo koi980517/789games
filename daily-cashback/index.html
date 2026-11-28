@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v2.1</title>
+<title>789bingo 次日返水与投注奖励活动（1.5%+2%）原型 v2.2</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:"PingFang SC","Microsoft YaHei","Noto Sans SC",Nunito,sans-serif;background:#EEF0F4;color:#1F2430}
@@ -297,7 +297,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
 .clog-ft{margin-top:10px;font-size:12px;color:#6B7480}
 </style>
 
-<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v2.1</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
+<div class="top"><b>789bingo · 次日返水与投注奖励活动（1.5%+2%）原型</b><span class="ver">v2.2</span><span class="note" style="color:#aab">示例数据，非线上配置 · 时间均为 GMT+8</span>
 <div class="tabs"><button class="on" data-v="front">前台 H5 / APP</button><button data-v="admin">运营后台</button><button data-v="pig">小金猪（游戏内）</button><button data-v="log">更新日志</button></div></div>
 
 <div id="front">
@@ -311,7 +311,7 @@ td.ops{min-width:190px;max-width:220px}td.ops a.lk{display:inline-block;white-sp
     <h4>Bet Bonus 演示（今日投注）</h4>
     <div class="seg"><button onclick="bbAdd(500)">+₱500</button><button onclick="bbAdd(1000)">+₱1,000</button><button onclick="bbAdd(5000)">+₱5,000</button><button onclick="bbAdd(0)">清零</button></div>
     <div class="note" style="margin-bottom:6px">原型演示：后台改动即时反映到前台与右侧预览，刷新恢复默认。21 岁提示弹窗未模拟。业务规则以 PRD 为准。</div>
-    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v2.1</a></div>
+    <div class="note">PRD：<a href="https://claude.ai/artifact/526VHHDfeci3Nkq8GicCcP" target="_blank">次日返水与投注奖励活动 PRD v2.2</a></div>
   </div>
   <div class="phone"><div class="scr" id="scr"></div></div>
 </div>
@@ -932,31 +932,35 @@ function cCategory(){
   ${cur.games.length?Object.keys(vend).map(v=>`<div class="gsel"><div class="gsel-v">${v} <span>${vend[v].length}</span></div><div class="gsel-l">${vend[v].map(g=>{const f=featOf(g);return `<span class="gchip">${g}<b title="移出" onclick="rmGame('${g.replace(/'/g,"\\'")}')">×</b></span>`}).join('')}</div></div>`).join(''):'<div class="tip warn">该类型还没有选择游戏，前台不显示、无返水。点「选择厂商与游戏」配置。</div>'}
   </div></div>`;
 }
-let pick=null,pickMode='cat';
-function openGamePick(m){pickMode=m||'cat';pick=new Set(pickMode==='sel'?S.featured[selG].games:CATS[selCat].games);drawPick()}
+let pick=null,pickMode='cat',pickQ='';
+const pqm=g=>!pickQ.trim()||g.toLowerCase().includes(pickQ.trim().toLowerCase());
+const pickQEsc=()=>pickQ.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+const hl=g=>{const q=pickQ.trim();if(!q)return g;const i=g.toLowerCase().indexOf(q.toLowerCase());return i<0?g:g.slice(0,i)+'<mark style="background:#FFE58F;padding:0">'+g.slice(i,i+q.length)+'</mark>'+g.slice(i+q.length)};
+function pickSearch(v){pickQ=v;drawPick();const e=document.getElementById('pickQ');if(e){e.focus();e.setSelectionRange(v.length,v.length)}}
+function openGamePick(m){pickMode=m||'cat';pickQ='';pick=new Set(pickMode==='sel'?S.featured[selG].games:CATS[selCat].games);drawPick()}
 let pickTier=0;
-function openBBPick(){pickMode='bbt';pick=new Set(S.bb.games||LIB.map(x=>x[0]));drawPick()}
+function openBBPick(){pickMode='bbt';pickQ='';pick=new Set(S.bb.games||LIB.map(x=>x[0]));drawPick()}
 if(S.bb.games==='DEF'){const ex=['Super Ace Deluxe','Fortune Gems 2','Pinata Wins','Pusoy Go','Fishing YiLuFa','Sic Bo','Mines','Bingo Adventure'];S.bb.games=LIB.map(x=>x[0]).filter(g=>!ex.includes(g))}
 function bbScope(){const g=S.bb.games||LIB.map(x=>x[0]);const v=new Set(LIB.filter(x=>g.includes(x[0])).map(x=>x[1]));return {txt:`已选择 ${v.size} 个厂商 / ${g.length} 个游戏`,v:v.size,n:g.length}}
 function drawPickAll(){
   const st=(arr)=>{const n=arr.filter(g=>pick.has(g)).length;return n===0?'':n===arr.length?'all':'some'};
   const box=(state,on)=>`<span class="tcb ${state}" onclick="${on}"></span>`;const J=a=>JSON.stringify(a).replace(/"/g,'&quot;');
-  const all=LIB.map(x=>x[0]);
+  const all=LIB.map(x=>x[0]),vis=all.filter(pqm);
   document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:780px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">选择参与活动游戏 · Bet Bonus</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
-  <p class="note" style="margin:8px 0">支持按 游戏类型 → 游戏厂商 → 具体游戏 三级选择，勾选上级自动联动下级，以最终勾选的游戏范围生效</p>
-  <div class="tree" style="max-height:460px"><div class="t1">${box(st(all),`pickAll(${J(all)})`)}<b>全部</b> <span>${all.filter(g=>pick.has(g)).length}/${all.length}</span></div>
-  ${CATS.map(c=>{const L=LIB.filter(x=>x[2]===c.k);const ga=L.map(x=>x[0]);const vs=[...new Set(L.map(x=>x[1]))];return `<div class="t2">▾ ${box(st(ga),`pickAll(${J(ga)})`)}<b>${c.n}</b> <span>${ga.filter(g=>pick.has(g)).length}/${ga.length}</span>${vs.map(v=>{const gs=L.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2" style="padding-left:22px">▾ ${box(st(gs),`pickAll(${J(gs)})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${g}</label>`).join('')}</div></div>`}).join('')}</div>`}).join('')}</div>
+  <div style="margin:10px 0 8px"><input id="pickQ" type="search" placeholder="搜索游戏名称" value="${pickQEsc()}" oninput="pickSearch(this.value)" style="width:100%;box-sizing:border-box;border:1px solid #CBD1DA;border-radius:4px;padding:6px 10px;font:inherit;font-size:13px"></div>
+  <div class="tree" style="max-height:460px"><div class="t1">${box(st(vis),`pickAll(${J(vis)})`)}<b>${pickQ.trim()?'全部搜索结果':'全部'}</b> <span>${vis.filter(g=>pick.has(g)).length}/${vis.length}</span></div>
+  ${CATS.map(c=>{const L=LIB.filter(x=>x[2]===c.k&&pqm(x[0]));if(!L.length)return '';const ga=L.map(x=>x[0]);const vs=[...new Set(L.map(x=>x[1]))];return `<div class="t2">▾ ${box(st(ga),`pickAll(${J(ga)})`)}<b>${c.n}</b> <span>${ga.filter(g=>pick.has(g)).length}/${ga.length}</span>${vs.map(v=>{const gs=L.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2" style="padding-left:22px">▾ ${box(st(gs),`pickAll(${J(gs)})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${hl(g)}</label>`).join('')}</div></div>`}).join('')}</div>`}).join('')}${pickQ.trim()&&!LIB.some(x=>pqm(x[0]))?'<div class="note" style="padding:16px;text-align:center">无匹配游戏</div>':''}</div>
   <div class="foot" style="justify-content:flex-end;margin-top:12px"><button class="ab" onclick="pick=null;document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="savePick()">确定（${all.filter(g=>pick.has(g)).length} 款）</button></div></div></div>`;
 }
 function drawPick(){if(pickMode==='bbt')return drawPickAll();
-  const sel=pickMode==='sel';const cur=sel?(CATS.find(c=>c.k==='slot')||CATS[0]):CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k&&(sel||!(cur.k==='slot'&&S.sel.on&&featOf(x[0]))));const vs=[...new Set(L.map(x=>x[1]))];
+  const sel=pickMode==='sel';const cur=sel?(CATS.find(c=>c.k==='slot')||CATS[0]):CATS[selCat];const L=LIB.filter(x=>x[2]===cur.k&&(sel||!(cur.k==='slot'&&S.sel.on&&featOf(x[0]))));const Lv=L.filter(x=>pqm(x[0]));const vs=[...new Set(Lv.map(x=>x[1]))];
   const st=(arr)=>{const n=arr.filter(g=>pick.has(g)).length;return n===0?'':n===arr.length?'all':'some'};
   const box=(state,on)=>`<span class="tcb ${state}" onclick="${on}"></span>`;
-  const all=L.map(x=>x[0]);
+  const all=L.map(x=>x[0]),vis=Lv.map(x=>x[0]);
   document.getElementById('modal').innerHTML=`<div class="mbg"><div class="mbox" style="width:760px;max-width:92vw"><div style="display:flex;align-items:center"><h3 style="margin:0">${sel?'Selected Games 游戏 · '+cur.n:'可以参与活动游戏 · '+cur.n}</h3><span style="margin-left:auto;cursor:pointer;font-size:18px;color:#9AA1AD" onclick="pick=null;document.getElementById('modal').innerHTML=''">×</span></div>
-  <p class="note" style="margin:8px 0">支持按 游戏类型 → 游戏厂商 → 具体游戏 三级选择，勾选上级自动联动下级，以最终勾选的游戏范围生效</p>
-  <div class="tree"><div class="t1">${box(st(all),`pickAll(${JSON.stringify(all).replace(/"/g,'&quot;')})`)}<b>${cur.n}</b> <span>${all.filter(g=>pick.has(g)).length}/${all.length}</span></div>
-  ${vs.map(v=>{const gs=L.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2">▾ ${box(st(gs),`pickAll(${JSON.stringify(gs).replace(/"/g,'&quot;')})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${g}</label>`).join('')}</div></div>`}).join('')}</div>
+  <div style="margin:10px 0 8px"><input id="pickQ" type="search" placeholder="搜索游戏名称" value="${pickQEsc()}" oninput="pickSearch(this.value)" style="width:100%;box-sizing:border-box;border:1px solid #CBD1DA;border-radius:4px;padding:6px 10px;font:inherit;font-size:13px"></div>
+  <div class="tree"><div class="t1">${box(st(vis),`pickAll(${JSON.stringify(vis).replace(/"/g,'&quot;')})`)}<b>${cur.n}${pickQ.trim()?' · 搜索结果':''}</b> <span>${vis.filter(g=>pick.has(g)).length}/${vis.length}</span></div>
+  ${vs.map(v=>{const gs=Lv.filter(x=>x[1]===v).map(x=>x[0]);return `<div class="t2">▾ ${box(st(gs),`pickAll(${JSON.stringify(gs).replace(/"/g,'&quot;')})`)}<b>${v}</b> <span>${gs.filter(g=>pick.has(g)).length}/${gs.length}</span><div class="t3">${gs.map(g=>`<label>${box(pick.has(g)?'all':'',`pickOne('${g.replace(/'/g,"\\'")}')`)}${hl(g)}</label>`).join('')}</div></div>`}).join('')}${pickQ.trim()&&!vis.length?'<div class="note" style="padding:16px;text-align:center">无匹配游戏</div>':''}</div>
   <div class="foot" style="justify-content:flex-end;margin-top:12px"><button class="ab" onclick="pick=null;document.getElementById('modal').innerHTML=''">取消</button><button class="ab p" onclick="savePick()">确定（${all.filter(g=>pick.has(g)).length} 款）</button></div></div></div>`;
 }
 function pickOne(g){pick.has(g)?pick.delete(g):pick.add(g);drawPick()}
@@ -1129,6 +1133,8 @@ function aRecords(){
 
 document.querySelectorAll('.top .tabs button').forEach(b=>b.onclick=()=>{document.querySelectorAll('.top .tabs button').forEach(x=>x.classList.remove('on'));b.classList.add('on');document.getElementById('front').style.display=b.dataset.v==='front'?'flex':'none';document.getElementById('admin').style.display=b.dataset.v==='admin'?'block':'none';document.getElementById('clog').style.display=b.dataset.v==='log'?'block':'none';document.getElementById('pigv').style.display=b.dataset.v==='pig'?'block':'none';if(b.dataset.v==='pig'&&window.pgSync)pgSync();if(b.dataset.v==='front')render();else if(b.dataset.v==='admin')arender()});
 const CLOG=[
+  {v:'v2.2',d:'2026-11-28',sum:'游戏选择弹窗新增搜索',
+   sec:[['后台',['新增游戏选择弹窗的搜索功能（Category、Selected Games、Bet Bonus 参与活动游戏）。']]]},
   {v:'v2.1',d:'2026-11-26',sum:'新增小金猪功能（游戏内）',
    sec:[['用户侧',['新增小金猪：活动进行中，游戏内显示小金猪，投注时金币飞入；点击查看 Cashback、Bet Bonus 今日预估。']],
         ['后台',['新增「⑤ 页面素材 › 小金猪」开关。']]]},

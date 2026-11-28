@@ -370,7 +370,7 @@ table.rk td.r{text-align:right;font-variant-numeric:tabular-nums}
 <div class="wrap">
   <div class="top">
     <h1>VIP 排行榜</h1>
-    <span class="ver">原型 v0.15 · 2026-11-28 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
+    <span class="ver">原型 v0.16 · 2026-11-28 · VIP 综合榜 + 厂商榜（JILI / PG / FC / PP / OTG）· 时间口径 GMT+8</span>
     <div class="seg" role="tablist" id="viewSeg">
       <button data-v="h5" class="on">前台 H5</button>
       <button data-v="adm">运营后台</button>
@@ -508,7 +508,7 @@ const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',
 
 const PROV={
   slot:[{k:'JILI',w:'单一钱包'},{k:'PG',w:'单一钱包'},{k:'PP',w:'单一钱包'},{k:'FC',w:'单一钱包'},{k:'JDB',w:'单一钱包'},{k:'Rich88',w:'转账钱包',dis:true}],
-  live:[{k:'OTG',w:'钱包类型待确认'},{k:'EVO',w:'单一钱包'},{k:'SA',w:'转账钱包',dis:true}]
+  live:[{k:'OTG',w:''},{k:'EVO',w:'单一钱包'},{k:'SA',w:'转账钱包',dis:true}]
 };
 PROV.mix=[...PROV.slot,...PROV.live];
 const TYPE_NAME={slot:'Slot 电子',live:'真人视讯',mix:'综合（Slot + 真人）'};
@@ -1047,7 +1047,7 @@ function scopeTree(b){
     return `<div class="it ${t===S.tree.type?'on':''}"><input type="checkbox" data-tst="${t}" ${n&&all?'checked':''} ${n&&!all?'data-ind="1"':''} aria-label="${TYPE_NAME[t]}"><button class="nm" data-tft="${t}">${t==='slot'?'Slot 电子':'真人视讯'}</button><small>${n}/${ps.length}</small><span class="arr">›</span></div>`; }).join('');
   const pcol=provs.map(p=>{ const st=provState(b,p.k), tot=availFor(b,p.k).length, v=b.sel[p.k];
     const cnt=p.dis?p.w:st==='none'?`0/${tot}`:st==='all'?'全部':`${v.length}/${tot}`;
-    return `<div class="it ${p.k===S.tree.prov?'on':''} ${p.dis?'dis':''}"><input type="checkbox" data-tsp="${p.k}" ${st==='all'||st==='full'?'checked':''} ${st==='part'?'data-ind="1"':''} ${p.dis?'disabled':''} aria-label="${p.k}"><button class="nm" ${p.dis?'disabled':`data-tfp="${p.k}"`}>${p.k}${p.k==='OTG'?' <small>钱包待确认</small>':''}</button><small>${cnt}</small><span class="arr">›</span></div>`; }).join('');
+    return `<div class="it ${p.k===S.tree.prov?'on':''} ${p.dis?'dis':''}"><input type="checkbox" data-tsp="${p.k}" ${st==='all'||st==='full'?'checked':''} ${st==='part'?'data-ind="1"':''} ${p.dis?'disabled':''} aria-label="${p.k}"><button class="nm" ${p.dis?'disabled':`data-tfp="${p.k}"`}>${p.k}</button><small>${cnt}</small><span class="arr">›</span></div>`; }).join('');
   const k=S.tree.prov, q=S.tree.q.toLowerCase();
   let gcol='<div class="empty">选择左侧厂商查看游戏</div>';
   if(k){ const v=b.sel[k]; const isOn=id=>v==='all'||(Array.isArray(v)&&v.includes(id));
@@ -1460,7 +1460,7 @@ function renderDoc(){
       <li>撤销所属期<b>未发奖</b>：直接扣回、名次重算。<b>已发奖</b>：不自动追回奖金，进风控报表人工处理。</li>
       <li><b>重新结算</b>（厂商改派彩 / 改 validBet）：按新值覆盖，差额写冲正记录。</li>
       <li>后台「投注记录」页：按类型、厂商、计榜状态、剔除原因、会员 / 注单号、结算时间筛选；上方按类型 / 厂商汇总原始投注、各类剔除、计榜投注和剔除率；可导出。</li>
-      <li>记录保留：活动结束后 90 天（待确认，与三方数据 5 年保留是两回事）。</li>
+      <li>记录保留：活动结束后 90 天（与三方数据 5 年保留是两回事）。</li>
     </ul>
     <table><tr><th>字段</th><th>说明</th></tr>
       <tr><td>activity_id / period_no</td><td>活动 ID、期号（同一注单可同时计入多个活动，各存一条）</td></tr>
@@ -1546,17 +1546,10 @@ function renderDoc(){
     <tr><td>门槛</td><td>VIP 等级、最低有效投注、KYC、同 IP 上限、黑名单</td></tr>
     <tr><td>口径</td><td>轮盘覆盖比例（对冲固定为整局不计，不可配置）</td></tr>
     </table></div>
-  <div class="card"><h3>待确认 / 风险</h3>
+  <div class="card"><h3>待确认（需求方）</h3>
     <ul>
-      <li><span class="pill w">待确认 · 需求方</span> 适用站点：只用于 789games，还是 789bingo 也要上？（若上，Bingo 类游戏需加回指定游戏范围）</li>
-      <li><span class="pill w">待确认 · 需求方</span> 机器人的奖金是否同样在排行榜显示。其余机器人参数后台可配；已定：机器人所占名次的奖金按「名次空缺处理」执行。</li>
-      <li><span class="pill w">待确认 · 技术</span> OTG 是单一钱包还是转账钱包：转账钱包无法实时计分，前台榜单只能 T+1。</li>
-      <li><span class="pill w">待确认 · 技术</span> 各厂商注单是否带“桌台 + 局号 + 下注项”字段，这是对冲判定的前提；OTG 需要对接文档确认。</li>
-      <li><span class="pill w">待确认 · 技术</span> App 新增 <code>target=leaderboard</code> 的排期；未支持前用 <code>promo_detail</code> + activity_id。</li>
-      <li><span class="pill b">资金</span> 发奖幂等（活动ID + 期号 + 会员ID 唯一键），防止重复派彩。</li>
-      <li><span class="pill w">合规</span> 前台活动期写法沿用 “Promo Period” 格式；奖金为彩金非现金。</li>
-      <li><span class="pill n">稳定性</span> 榜单查询走缓存（每 5 分钟刷新），不在投注链路同步算名次；注意 Redis 容量问题。</li>
-      <li><span class="pill n">多端</span> H5 / iOS / Android / Flutter 需逐端验收倒计时和名次刷新。</li>
+      <li><span class="pill w">待确认</span> 适用站点：只用于 789games，还是 789bingo 也要上？（若上，Bingo 类游戏需加回指定游戏范围）</li>
+      <li><span class="pill w">待确认</span> 机器人的奖金是否同样在排行榜显示。</li>
     </ul></div>
   <div class="card" style="border-style:dashed;opacity:.85"><h3>二期（不在一期范围）· 推送 / 短信提醒</h3>
     <p style="font-size:12px;color:#666">一期发奖后只通过「到账弹窗」触达，不发推送 / 短信。以下为二期设计参考，后台「推送管理 › 奖励发放推送」「营销短信 › 奖励发放提醒」页面置灰。</p>
